@@ -36,7 +36,8 @@ mkdir -p ${RPM_BUILD_ROOT}/tmp
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%ghost %attr(644,jenkins,jenkins) /var/log/httpd/%{hostname}-update_log
+%{inst_dir}/*
+%ghost %attr(644,jenkins,jenkins) /var/log/httpd/shinyapps-update_log
 
 %post
 /usr/local/bin/shiny-server
