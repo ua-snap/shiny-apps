@@ -29,8 +29,9 @@ rm -rf ${RPM_BUILD_ROOT}
 
 mkdir -p ${RPM_BUILD_ROOT}/%{inst_dir}
 mkdir -p ${RPM_BUILD_ROOT}/home/jenkins/
-mkdir -p ${RPM_BUILD_ROOT}/etc/cron.weekly/
 mkdir -p ${RPM_BUILD_ROOT}/tmp
+
+cp -aR * ${RPM_BUILD_ROOT}/%{inst_dir}/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
