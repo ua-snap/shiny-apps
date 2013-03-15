@@ -38,8 +38,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %{inst_dir}/*
-%exclude build
-%exclude README.md
+%exclude /build
+%exclude /README.md
 %ghost %attr(644,jenkins,jenkins) /var/log/httpd/shinyapps-update_log
 
 %post
