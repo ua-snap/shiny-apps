@@ -1,0 +1,46 @@
+function(data,id,stat="None",n.mo=1,alpha="50",...){
+	require(maptools)
+	if(nchar(alpha)==1) alpha <- paste(0,alpha,sep="")
+	if(n.mo>1) if(length(stat)) if(stat!="None") data <- cbind("placeholder",cast(data,Year+Variable~City,value="Values"))
+	m <- as.matrix(data[-c(1:3)])
+	rank.ord <- order(apply(m,2,mean))
+	clrs <- paste(c("#000080","#CD3700","#ADFF2F","#8B4513","#006400","#2F4F4F","#CD9B1D",
+				"#000080","#CD3700","#ADFF2F","#8B4513","#006400","#2F4F4F","#CD9B1D",
+				"#000080","#CD3700","#ADFF2F","#8B4513","#006400","#2F4F4F","#CD9B1D",
+				"#000080","#CD3700","#ADFF2F","#8B4513","#006400","#2F4F4F","#CD9B1D",
+				"#000080","#CD3700","#ADFF2F","#8B4513"),alpha,sep="")[1:ncol(m)]
+	xlm <- range(m); xlm[1] <- 0.98*xlm[1]; xlm[2] <- 1.02*(xlm[2])
+	ylm <- 0
+	tmp <- list()
+	for(z in rank.ord){ tmp[[z]] <- smooth.spline(density(m[,z]),df=20); tmp[[z]]$y[tmp[[z]]$y<0] <- 0; ylm <- max(ylm,max(tmp[[z]]$y)) }
+	ylm <- c(0,1.02*ylm)
+	par(mar=c(4,1,3,1))
+	plot(0,0,type="n",xlim=xlm,ylim=ylm,yaxt="n",...)
+	
+	rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col="gray")
+	x1 <- par()$xaxp[1]; x2 <- par()$xaxp[2]; x3 <- par()$xaxp[3]
+	y1 <- par()$yaxp[1]; y2 <- par()$yaxp[2]; y3 <- par()$yaxp[3]
+	seq.v <- seq(x1,x2,l=x3+1);	seq2.v <- seq(x1,x2,l=2*x3+1); dif.v <- diff(seq.v)[1]; dif2.v <- diff(seq2.v)[1]
+	seq.v <- seq(x1-3*dif.v,x2+3*dif.v,by=dif.v); seq2.v <- seq(x1-3*dif2.v,x2+3*dif2.v,by=dif2.v)
+	seq.h <- seq(y1,y2,l=y3+1); seq2.h <- seq(y1,y2,l=2*y3+1); dif.h <- diff(seq.h)[1]; dif2.h <- diff(seq2.h)[1]
+	seq.h <- seq(y1-3*dif.h,y2+3*dif.h,by=dif.h); seq2.h <- seq(y1-3*dif2.h,y2+3*dif2.h,by=dif2.h)
+	abline(v=seq.v,lwd=2,col="white")
+	abline(h=seq.h,lwd=2,col="white")
+	abline(v=seq2.v,lwd=1,col="#DBDBDB")
+	abline(h=seq2.h,lwd=1,col="#DBDBDB")
+	axis(1,at=range(seq2.v),labels=rep("",2),tck=0)
+	axis(2,at=range(seq2.h),las=1,labels=rep("",2),tck=0)
+	axis(3,at=range(seq2.v),labels=rep("",2),tck=0)
+	axis(4,at=range(seq2.h),labels=rep("",2),tck=0)
+	
+	peak <- c()
+	for(z in 1:ncol(m)){
+		tmp2 <- tmp[[z]]
+		x1 <- 1; x2 <- length(tmp2$x)
+		with(tmp2, polygon(x=c(x[c(x1,x1:x2,x2)]), y=c(0,y[x1:x2],0), col=clrs[z]))
+		peak.ind <- which(tmp2$y==max(tmp2$y))
+		peak <- rbind(peak,c(tmp2$x[peak.ind],tmp2$y[peak.ind]))
+		#lines(tmp2,lwd=2,col="#000000")
+	}
+	pointLabel(peak[,1],peak[,2],id,cex=1.5)
+}
