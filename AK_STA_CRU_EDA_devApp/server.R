@@ -40,7 +40,7 @@ shinyServer(function(input,output){
 		if(input$dataset=="Weather stations (CRU-substituted NAs)" | input$dataset=="Weather stations (w/ missing data)") sta.names else if(input$dataset=="2-km downscaled CRU 3.1") cru.names
 		})
 	
-	output$cityNames <- reactiveUI(function(){
+	output$cityNames <- renderUI(function(){
 		selectInput("city","Choose a city:",choices=city.names(),multiple=T)
 	})
 
@@ -62,7 +62,7 @@ shinyServer(function(input,output){
 		map.dat
 	})
 
-	output$yearSlider <- reactiveUI(function(){
+	output$yearSlider <- renderUI(function(){
 		if(length(input$city)){
 			if(length(input$city)==1){
 				r <- range(DATASET()$Year[!is.na(DATASET()[input$city])])
@@ -79,11 +79,11 @@ shinyServer(function(input,output){
 		#}
 	})
 	
-	output$Var <- reactiveUI(function(){
+	output$Var <- renderUI(function(){
 		if(length(input$city)) selectInput("var","Choose a variable:",choices=c("Precipitation","Temperature"))
 	})
 	
-	output$Mo <- reactiveUI(function(){
+	output$Mo <- renderUI(function(){
 		if(length(input$city)) selectInput("mo","Choose a month:",choices=c(mos,"Choose multiple"))
 	})
 	
@@ -129,7 +129,7 @@ shinyServer(function(input,output){
 		x
 	})
 	
-	output$histBin <- reactiveUI(function(){
+	output$histBin <- renderUI(function(){
 		if(length(input$city)){
 			if(length(input$city)==1){
 				checkboxInput("hb","Vary number of histogram bins",FALSE)
@@ -141,7 +141,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$histBinNum <- reactiveUI(function(){
+	output$histBinNum <- renderUI(function(){
 		if(length(input$hb)){
 			if(input$hb){
 				if(!length(input$multiplot)){
@@ -153,7 +153,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$histDensCurve <- reactiveUI(function(){
+	output$histDensCurve <- renderUI(function(){
 		if(length(input$city)){
 			if(!length(input$multiplot)){
 				checkboxInput("hdc","Overlay density curve",FALSE)
@@ -163,7 +163,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$histDensCurveBW <- reactiveUI(function(){
+	output$histDensCurveBW <- renderUI(function(){
 		if(length(input$hdc)){
 			if(!length(input$multiplot)){
 				if(input$hdc) sliderInput("hdcBW","bandwidth:",0.2,2,1,0.2)
@@ -173,7 +173,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$histIndObs <- reactiveUI(function(){
+	output$histIndObs <- renderUI(function(){
 		if(length(input$city)){
 			if(!length(input$multiplot)){
 				checkboxInput("hio","Show individual observations",FALSE)
@@ -183,7 +183,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$multMo <- reactiveUI(function(){
+	output$multMo <- renderUI(function(){
 		if(length(input$mo)){
 			if(input$mo=="Choose multiple"){
 				checkboxGroupInput("mo2","Select consecutive months:",mos)
@@ -191,7 +191,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$multMo2 <- reactiveUI(function(){
+	output$multMo2 <- renderUI(function(){
 		if(length(input$mo)){
 			if(length(input$mo2)>1 & input$mo=="Choose multiple" & input$var=="Precipitation"){
 				selectInput("stat","Choose seasonal statistic:",choices=c("None","Total","Std. Dev.","Minimum","Maximum"),selected="None")
@@ -202,7 +202,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$multCity <- reactiveUI(function(){
+	output$multCity <- renderUI(function(){
 		if(length(input$city)>1){
 			radioButtons("multiplot","Plot view for multiple cities:",c("Separate histograms","Common-axis density estimation plots"),"Separate histograms")
 		}
@@ -215,7 +215,7 @@ shinyServer(function(input,output){
 		}
 	)
 	
-	output$plot <- reactivePlot(function(){
+	output$plot <- renderPlot(function(){
 		if(length(input$city) & !is.null(dat2())){
 			if(input$mo!="Choose multiple") mo <- input$mo else mo <- input$mo2
 			## Print as if selection implies consecutive months. Still need to ensure that months must actually be consecutive. Users can still leave gaps in selection.
@@ -286,7 +286,7 @@ shinyServer(function(input,output){
 	}
 	)
 
-	output$summary <- reactivePrint(function(){
+	output$summary <- renderPrint(function(){
 		if(!is.null(dat())){
 			x <- list(summary(dat()[-c(1:3)]))
 			if(input$mo!="Choose multiple") mo <- input$mo else mo <- input$mo2
@@ -313,23 +313,23 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$regInputX <- reactiveUI(function(){
+	output$regInputX <- renderUI(function(){
 	if(length(input$city)){
 		selectInput("regX","Explanatory variable(s)",c("Year","Precipitation","Temperature"),selected="Year")
 	}
 	})
 	
-	output$regInputY <- reactiveUI(function(){
+	output$regInputY <- renderUI(function(){
 	if(length(input$city)){
 		selectInput("regY","Response variable",c("Year","Precipitation","Temperature"),selected="Precipitation")
 	}
 	})
 	
-	#output$regCondCity <- reactiveUI(function(){
+	#output$regCondCity <- renderUI(function(){
 	#	selectInput("regbycity","Condition on one or more cities:",c(city.names()),multiple=T)
 	#})
 	
-	output$regCondMo <- reactiveUI(function(){
+	output$regCondMo <- renderUI(function(){
 	if(length(input$city)){
 		selectInput("regbymo","Select consecutive months:",c("All",mos),selected="All")
 	}
@@ -365,37 +365,37 @@ shinyServer(function(input,output){
 	}
 	})
 	
-	output$reglines <- reactiveUI(function(){
+	output$reglines <- renderUI(function(){
 	if(length(input$city) & length(input$regY) & length(input$regX)){
 		checkboxInput("reglns","Show time series line(s)",FALSE)
 	}
 	})
 	
-	output$regpoints <- reactiveUI(function(){
+	output$regpoints <- renderUI(function(){
 	if(length(input$city) & length(input$regY) & length(input$regX)){
 		checkboxInput("regpts","Show points",TRUE)
 	}
 	})
 	
-	output$regablines <- reactiveUI(function(){
+	output$regablines <- renderUI(function(){
 	if(length(input$city) & length(input$regY) & length(input$regX)){
 		checkboxInput("regablns","Show regression line(s)",FALSE)
 	}
 	})
 	
-	output$regGGPLOT <- reactiveUI(function(){
+	output$regGGPLOT <- renderUI(function(){
 	if(length(input$city) & length(input$regY) & length(input$regX)){
 		checkboxInput("reg.ggplot","Switch to ggplot version",FALSE)
 	}
 	})
 	
-	output$regGGPLOTse <- reactiveUI(function(){
+	output$regGGPLOTse <- renderUI(function(){
 	if(length(input$city) & length(input$regY) & length(input$regX) & length(input$regablns)){
 		if(input$regablns) checkboxInput("reg.ggplot.se","Show shaded confidence band for mean response",FALSE)
 	}
 	})
 	
-	output$regplot <- reactivePlot(function(){
+	output$regplot <- renderPlot(function(){
 	if(length(input$city) & length(input$regY) & length(input$regX) & length(input$reglns) & length(input$yrs) & length(reg.dat())){
 		ylm <- do.call(range,lapply(reg.dat(),function(x) range(x[[input$regY]],na.rm=T)))
 		alpha <- 70
@@ -456,7 +456,7 @@ shinyServer(function(input,output){
 	}
 	)
 	
-	output$regsum <- reactivePrint(function(){
+	output$regsum <- renderPrint(function(){
 	if(length(input$city) & length(input$regY) & length(input$regX) & !is.null(form())){
 		lapply(lm1(),summary)
 	}
@@ -472,7 +472,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$header <- reactiveUI(function(){
+	output$header <- renderUI(function(){
 		if(input$dataset=="Weather stations (CRU-substituted NAs)" | input$dataset=="Weather stations (w/ missing data)"){
 			h4(paste("Weather station historical time series climate data for",length(city.names()),"AK cities"))
 		} else if(input$dataset=="2-km downscaled CRU 3.1"){
@@ -480,7 +480,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$datname <- reactivePrint(function(){ # this is used for ghetto debugging by printing specific information to the headerPanel
+	output$datname <- renderPrint(function(){ # this is used for ghetto debugging by printing specific information to the headerPanel
 		x <- "cru31"
 		#x<-length(input$city) & length(input$yrs) & length(input$regbymo)
 		x
