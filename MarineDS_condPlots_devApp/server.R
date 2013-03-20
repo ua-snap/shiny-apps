@@ -10,39 +10,39 @@ library(maptools)
 
 shinyServer(function(input,output){
 
-	output$showMap <- reactiveUI(function(){
+	output$showMap <- renderUI(function(){
 		checkboxInput("showmap","Show location grid",F)
 	})
 	
-	output$showMapPlot <- reactiveUI(function(){
+	output$showMapPlot <- renderUI(function(){
 		if(length(input$showmap)) if(input$showmap) plotOutput("mapPlot",height="100%")
 	})
 
-	output$Mod <- reactiveUI(function(){
+	output$Mod <- renderUI(function(){
 		selectInput("mod","Choose model:",choices=mod.nam,selected=mod.nam[1])
 	})
 	
-	output$RCP <- reactiveUI(function(){
+	output$RCP <- renderUI(function(){
 		selectInput("rcp","Choose RCP:",choices=rcp.nam,selected=rcp.nam[1])
 	})
 	
-	output$Var <- reactiveUI(function(){
+	output$Var <- renderUI(function(){
 		selectInput("var","Choose variable:",choices=var.nam,selected=var.nam[1],multiple=T)
 	})
 	
-	output$Loc <- reactiveUI(function(){
+	output$Loc <- renderUI(function(){
 		selectInput("loc","Choose location:",choices=loc.nam,selected=loc.nam[1],multiple=T)
 	})
 	
-	output$CutT <- reactiveUI(function(){
+	output$CutT <- renderUI(function(){
 		selectInput("cut.t","Choose temperature (C) threshold:",choices=temp.cut,selected=temp.cut[1],multiple=T)
 	})
 	
-	output$CutW <- reactiveUI(function(){
+	output$CutW <- renderUI(function(){
 		selectInput("cut.w","Choose wind (m/s) threshold:",choices=wind.cut,selected=wind.cut[1],multiple=T)
 	})
 	
-	output$Cond <- reactiveUI(function(){
+	output$Cond <- renderUI(function(){
 		selectInput("cond","Choose a conditional variable:",choices=c("Model","RCP","Location","Threshold","Variable"),selected="Model")
 	})
 	
@@ -55,11 +55,11 @@ shinyServer(function(input,output){
 		thresh
 	})
 	
-	output$Direction <- reactiveUI(function(){
+	output$Direction <- renderUI(function(){
 		selectInput("direct","Days per month:",choices=c("Above threshold(s)","Below threshold(s)"),selected="Above threshold(s)")
 	})
 	
-	output$Mo <- reactiveUI(function(){
+	output$Mo <- renderUI(function(){
 		selectInput("mo","Show months:",choices=c("All",mos),selected="Jan",multiple=T)
 	})
 	
@@ -72,7 +72,7 @@ shinyServer(function(input,output){
 		mo.vec
 	})
 	
-	output$MoHi <- reactiveUI(function(){
+	output$MoHi <- renderUI(function(){
 		if(length(mo.vec())) selectInput("mohi","Highlight months:",choices=c("None",mo.vec()),selected="None",multiple=T)
 	})
 	
@@ -101,7 +101,7 @@ shinyServer(function(input,output){
 		dat
 	})
 	
-	output$plot <- reactivePlot(function(){
+	output$plot <- renderPlot(function(){
 	if(length(input$mo) & length(input$mohi) & length(input$cond) & length(input$rcp)){
 		yrs <- c(input$yrs[1],input$yrs[2])
 		mos.sub <- match(mo.vec(),mos)
@@ -125,7 +125,7 @@ shinyServer(function(input,output){
 		locs.active
 	})
 	
-	output$mapPlot <- reactivePlot(function(){
+	output$mapPlot <- renderPlot(function(){
 		r.tmp[] <- NA
 		par(mar=c(0,0,0,0)+0.1)
 		image(r.tmp,xlim=xlm,ylim=ylm,main="",xlab="PC Lon",ylab="Lat",cex.lab=1.2,cex.axis=1.2)
@@ -145,11 +145,11 @@ shinyServer(function(input,output){
 	height=300, width=480
 	)
 
-	output$header <- reactiveUI(function(){
+	output$header <- renderUI(function(){
 		h4(paste("CMIP5 quantile-mapped GCM daily data"))
 	})
 	
-	output$datname <- reactivePrint(function(){ # this is used for ghetto debugging by printing specific information to the headerPanel
+	output$datname <- renderPrint(function(){ # this is used for ghetto debugging by printing specific information to the headerPanel
 		x <- "something"
 		x
 	})
