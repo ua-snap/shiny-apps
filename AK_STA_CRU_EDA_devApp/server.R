@@ -36,15 +36,15 @@ clrs <- paste(c("#000080","#CD3700","#ADFF2F","#8B4513","#006400","#2F4F4F","#CD
 
 shinyServer(function(input,output){
 
-	city.names <- reactive(function(){
+	city.names <- reactive({
 		if(input$dataset=="Weather stations (CRU-substituted NAs)" | input$dataset=="Weather stations (w/ missing data)") sta.names else if(input$dataset=="2-km downscaled CRU 3.1") cru.names
 		})
 	
-	output$cityNames <- renderUI(function(){
+	output$cityNames <- renderUI({
 		selectInput("city","Choose a city:",choices=city.names(),multiple=T)
 	})
 
-	DATASET <- reactive(function(){
+	DATASET <- reactive({
 		if(input$dataset=="Weather stations (CRU-substituted NAs)"){
 			d <- sta.dat
 		} else if(input$dataset=="Weather stations (w/ missing data)"){
@@ -55,14 +55,14 @@ shinyServer(function(input,output){
 		d
 	})
 	
-	map.dat <- reactive(function(){
+	map.dat <- reactive({
 		ind <- match(city.names(),gsub("_"," ",cities.dat[,1]))
 		map.dat <- data.frame(cbind(city.names(),apply(cities.dat[ind,2:3],1,paste,sep="",collapse=":")))
 		names(map.dat) <- c("City","latlon")
 		map.dat
 	})
 
-	output$yearSlider <- renderUI(function(){
+	output$yearSlider <- renderUI({
 		if(length(input$city)){
 			if(length(input$city)==1){
 				r <- range(DATASET()$Year[!is.na(DATASET()[input$city])])
@@ -79,15 +79,15 @@ shinyServer(function(input,output){
 		#}
 	})
 	
-	output$Var <- renderUI(function(){
+	output$Var <- renderUI({
 		if(length(input$city)) selectInput("var","Choose a variable:",choices=c("Precipitation","Temperature"))
 	})
 	
-	output$Mo <- renderUI(function(){
+	output$Mo <- renderUI({
 		if(length(input$city)) selectInput("mo","Choose a month:",choices=c(mos,"Choose multiple"))
 	})
 	
-	curMo <- reactive(function(){
+	curMo <- reactive({
 		if(length(input$mo)){
 			if(length(input$mo2)>0 & !is.null(input$mo2) & input$mo=="Choose multiple") { curMo <- input$mo2
 			} else if(input$mo!="Choose multiple") { curMo <- input$mo
@@ -96,11 +96,11 @@ shinyServer(function(input,output){
 		curMo
 	})
 
-	cols <- reactive(function(){
+	cols <- reactive({
 		if(length(input$city)) cols <- c(1:3,match(input$city,names(DATASET()))) else cols <- NULL
 	})
 
-	dat <- reactive(function(){
+	dat <- reactive({
 		if(length(curMo()) & length(input$city) & !is.null(cols()) & length(input$yrs)){
 			mo <- DATASET()$Month %in% curMo()
 			d <- subset(DATASET(),Year>=input$yrs[1] & Year<=input$yrs[2] & mo & Variable==substr(input$var,1,1), select=cols())
@@ -109,7 +109,7 @@ shinyServer(function(input,output){
 		d
 	})
 	
-	dat2 <- reactive(function(){
+	dat2 <- reactive({
 		if(!is.null(dat())){
 			x <- as.numeric(t(as.matrix(dat()[-c(1:3)])))
 			v <- reshape.fun(dat())
@@ -129,7 +129,7 @@ shinyServer(function(input,output){
 		x
 	})
 	
-	output$histBin <- renderUI(function(){
+	output$histBin <- renderUI({
 		if(length(input$city)){
 			if(length(input$city)==1){
 				checkboxInput("hb","Vary number of histogram bins",FALSE)
@@ -141,7 +141,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$histBinNum <- renderUI(function(){
+	output$histBinNum <- renderUI({
 		if(length(input$hb)){
 			if(input$hb){
 				if(!length(input$multiplot)){
@@ -153,7 +153,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$histDensCurve <- renderUI(function(){
+	output$histDensCurve <- renderUI({
 		if(length(input$city)){
 			if(!length(input$multiplot)){
 				checkboxInput("hdc","Overlay density curve",FALSE)
@@ -163,7 +163,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$histDensCurveBW <- renderUI(function(){
+	output$histDensCurveBW <- renderUI({
 		if(length(input$hdc)){
 			if(!length(input$multiplot)){
 				if(input$hdc) sliderInput("hdcBW","bandwidth:",0.2,2,1,0.2)
@@ -173,7 +173,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$histIndObs <- renderUI(function(){
+	output$histIndObs <- renderUI({
 		if(length(input$city)){
 			if(!length(input$multiplot)){
 				checkboxInput("hio","Show individual observations",FALSE)
@@ -183,7 +183,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$multMo <- renderUI(function(){
+	output$multMo <- renderUI({
 		if(length(input$mo)){
 			if(input$mo=="Choose multiple"){
 				checkboxGroupInput("mo2","Select consecutive months:",mos)
@@ -191,7 +191,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$multMo2 <- renderUI(function(){
+	output$multMo2 <- renderUI({
 		if(length(input$mo)){
 			if(length(input$mo2)>1 & input$mo=="Choose multiple" & input$var=="Precipitation"){
 				selectInput("stat","Choose seasonal statistic:",choices=c("None","Total","Std. Dev.","Minimum","Maximum"),selected="None")
@@ -202,7 +202,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$multCity <- renderUI(function(){
+	output$multCity <- renderUI({
 		if(length(input$city)>1){
 			radioButtons("multiplot","Plot view for multiple cities:",c("Separate histograms","Common-axis density estimation plots"),"Separate histograms")
 		}
@@ -215,7 +215,17 @@ shinyServer(function(input,output){
 		}
 	)
 	
-	output$plot <- renderPlot(function(){
+	htfun <- function(){
+		n <- length(input$city)
+		if(n>1) n <- n + n%%2
+		ht1 <- 600
+		if(length(input$multiplot)){
+			if(n==1 | input$multiplot=="Common-axis density estimation plots") ht <- ht1 else if(input$multiplot=="Separate histograms") ht <- (n/2)*(ht1/2)
+		} else { ht <- ht1 }
+		ht
+	}
+	
+	output$plot <- renderPlot({
 		if(length(input$city) & !is.null(dat2())){
 			if(input$mo!="Choose multiple") mo <- input$mo else mo <- input$mo2
 			## Print as if selection implies consecutive months. Still need to ensure that months must actually be consecutive. Users can still leave gaps in selection.
@@ -239,7 +249,7 @@ shinyServer(function(input,output){
 					hist(x,breaks=h.brks,main=gsub("  "," ",paste(input$yrs[1],"-",input$yrs[2],input$city,mo,units,input$var)),
 						xlab=xlabel,col=clr,cex.main=1.3,cex.axis=1.3,cex.lab=1.3,prob=T)
 					if(length(input$hio)) if(input$hio) rug(x)
-					if(length(input$hdc)) if(input$hdc & length(input$hdcBW)) lines(density(x,adjust=input$hdcBW),lwd=2)
+					if(length(input$hdc)) if(input$hdc & length(input$hdcBW)) lines(density(na.omit(x),adjust=input$hdcBW),lwd=2)
 				}
 			} else if(!length(input$multiplot)){
 				if(n>1) layout(matrix(1:(n+n%%2),ceiling(n/2),2,byrow=T))
@@ -250,7 +260,7 @@ shinyServer(function(input,output){
 						hist(x,breaks=h.brks,main=gsub("  "," ",paste(input$yrs[1],"-",input$yrs[2],input$city[i],mo,units,input$var)),
 							xlab=xlabel,col=clr,cex.main=1.3,cex.axis=1.3,cex.lab=1.3,prob=T)
 						if(length(input$hio)) if(input$hio) rug(x)
-						if(length(input$hdc)) if(input$hdc & length(input$hdcBW)) lines(density(x,adjust=input$hdcBW),lwd=2)
+						if(length(input$hdc)) if(input$hdc & length(input$hdcBW)) lines(density(na.omit(x),adjust=input$hdcBW),lwd=2)
 					}
 				}
 			} else if(length(input$multiplot)){
@@ -263,7 +273,7 @@ shinyServer(function(input,output){
 							hist(x,breaks=h.brks,main=gsub("  "," ",paste(input$yrs[1],"-",input$yrs[2],input$city[i],mo,units,input$var)),
 								xlab=xlabel,col=clr,cex.main=1.3,cex.axis=1.3,cex.lab=1.3,prob=T)
 							if(length(input$hio)) if(input$hio) rug(x)
-							if(length(input$hdc)) if(input$hdc & length(input$hdcBW)) lines(density(x,adjust=input$hdcBW),lwd=2)
+							if(length(input$hdc)) if(input$hdc & length(input$hdcBW)) lines(density(na.omit(x),adjust=input$hdcBW),lwd=2)
 						}
 					}
 				} else if(n>1 & input$multiplot=="Common-axis density estimation plots"){
@@ -275,18 +285,10 @@ shinyServer(function(input,output){
 			}
 		}
 	},
-	height=function(){
-		n <- length(input$city)
-		if(n>1) n <- n + n%%2
-		ht1 <- 600
-		if(length(input$multiplot)){
-			if(n==1 | input$multiplot=="Common-axis density estimation plots") ht <- ht1 else if(input$multiplot=="Separate histograms") ht <- (n/2)*(ht1/2)
-		} else { ht <- ht1 }
-		ht
-	}
+	height=htfun
 	)
 
-	output$summary <- renderPrint(function(){
+	output$summary <- renderPrint({
 		if(!is.null(dat())){
 			x <- list(summary(dat()[-c(1:3)]))
 			if(input$mo!="Choose multiple") mo <- input$mo else mo <- input$mo2
@@ -307,35 +309,31 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$table <- reactiveTable(function(){
+	output$table <- renderTable({
 		if(!is.null(dat())){
 			dat()
 		}
 	})
 	
-	output$regInputX <- renderUI(function(){
+	output$regInputX <- renderUI({
 	if(length(input$city)){
 		selectInput("regX","Explanatory variable(s)",c("Year","Precipitation","Temperature"),selected="Year")
 	}
 	})
 	
-	output$regInputY <- renderUI(function(){
+	output$regInputY <- renderUI({
 	if(length(input$city)){
 		selectInput("regY","Response variable",c("Year","Precipitation","Temperature"),selected="Precipitation")
 	}
 	})
 	
-	#output$regCondCity <- renderUI(function(){
-	#	selectInput("regbycity","Condition on one or more cities:",c(city.names()),multiple=T)
-	#})
-	
-	output$regCondMo <- renderUI(function(){
+	output$regCondMo <- renderUI({
 	if(length(input$city)){
 		selectInput("regbymo","Select consecutive months:",c("All",mos),selected="All")
 	}
 	})
 	
-	reg.dat <- reactive(function(){
+	reg.dat <- reactive({
 	if(length(input$city) & length(input$yrs) & length(input$regbymo)){
 		d <- list()
 		for(i in 1:length(input$city)){
@@ -348,7 +346,7 @@ shinyServer(function(input,output){
 	}
 	})
 		
-	form <- reactive(function(){
+	form <- reactive({
 	if(length(input$city) & length(input$yrs) & length(input$regX) & length(input$regY) & length(input$regbymo)){
 		form <- c()
 		for(i in 1:length(input$city)) form <- c(form,paste(input$regY,"~",paste(input$regX,collapse="+")))
@@ -356,7 +354,7 @@ shinyServer(function(input,output){
 	form
 	})
 	
-	lm1 <- reactive(function(){
+	lm1 <- reactive({
 	if(length(input$city) & length(input$regY) & length(input$regX) & length(input$yrs) & length(input$regbymo) & !is.null(form())){
 		lm.list <- list()
 		for(i in 1:length(input$city)) lm.list[[i]] <- lm(formula=as.formula(form()[i]),data=reg.dat()[[i]])
@@ -365,37 +363,37 @@ shinyServer(function(input,output){
 	}
 	})
 	
-	output$reglines <- renderUI(function(){
+	output$reglines <- renderUI({
 	if(length(input$city) & length(input$regY) & length(input$regX)){
 		checkboxInput("reglns","Show time series line(s)",FALSE)
 	}
 	})
 	
-	output$regpoints <- renderUI(function(){
+	output$regpoints <- renderUI({
 	if(length(input$city) & length(input$regY) & length(input$regX)){
 		checkboxInput("regpts","Show points",TRUE)
 	}
 	})
 	
-	output$regablines <- renderUI(function(){
+	output$regablines <- renderUI({
 	if(length(input$city) & length(input$regY) & length(input$regX)){
 		checkboxInput("regablns","Show regression line(s)",FALSE)
 	}
 	})
 	
-	output$regGGPLOT <- renderUI(function(){
+	output$regGGPLOT <- renderUI({
 	if(length(input$city) & length(input$regY) & length(input$regX)){
 		checkboxInput("reg.ggplot","Switch to ggplot version",FALSE)
 	}
 	})
 	
-	output$regGGPLOTse <- renderUI(function(){
+	output$regGGPLOTse <- renderUI({
 	if(length(input$city) & length(input$regY) & length(input$regX) & length(input$regablns)){
 		if(input$regablns) checkboxInput("reg.ggplot.se","Show shaded confidence band for mean response",FALSE)
 	}
 	})
 	
-	output$regplot <- renderPlot(function(){
+	output$regplot <- renderPlot({
 	if(length(input$city) & length(input$regY) & length(input$regX) & length(input$reglns) & length(input$yrs) & length(reg.dat())){
 		ylm <- do.call(range,lapply(reg.dat(),function(x) range(x[[input$regY]],na.rm=T)))
 		alpha <- 70
@@ -456,13 +454,13 @@ shinyServer(function(input,output){
 	}
 	)
 	
-	output$regsum <- renderPrint(function(){
+	output$regsum <- renderPrint({
 	if(length(input$city) & length(input$regY) & length(input$regX) & !is.null(form())){
 		lapply(lm1(),summary)
 	}
 	})
 	
-	output$map <- reactive(function(){
+	output$map <- reactive({
 		if(input$showmap){
 			#selected <- map.dat[match(input$city,city.names),]
 			selected <- map.dat()
@@ -472,7 +470,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$header <- renderUI(function(){
+	output$header <- renderUI({
 		if(input$dataset=="Weather stations (CRU-substituted NAs)" | input$dataset=="Weather stations (w/ missing data)"){
 			h4(paste("Weather station historical time series climate data for",length(city.names()),"AK cities"))
 		} else if(input$dataset=="2-km downscaled CRU 3.1"){
@@ -480,7 +478,7 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$datname <- renderPrint(function(){ # this is used for ghetto debugging by printing specific information to the headerPanel
+	output$datname <- renderPrint({ # this is used for lazy debugging by printing specific information to the headerPanel
 		x <- "cru31"
 		#x<-length(input$city) & length(input$yrs) & length(input$regbymo)
 		x

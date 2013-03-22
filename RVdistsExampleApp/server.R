@@ -22,7 +22,7 @@ shinyServer(function(input,output){
 		return(list(do.call(dist,argList),names(f)))
 	})
 
-	output$dist1 <- reactiveUI(function(){
+	output$dist1 <- renderUI({
 		lab <- switch(input$dist,
 			norm="Mean:", unif="Minimum:", t="Degrees of freedom:", F="Numerator degrees of freedom:", gam="Shape:", exp="Rate:",
 			chisq="Degrees of freedom:", lnorm="Mean(log):", beta="Alpha:")
@@ -31,7 +31,7 @@ shinyServer(function(input,output){
 		numericInput(dat()[[2]][1],lab,ini)
 	})
 	
-	output$dist2 <- reactiveUI(function(){
+	output$dist2 <- renderUI({
 		lab <- switch(input$dist,
 			norm="Standard deviation:", unif="Maximum:", F="Denominator degrees of freedom:", gam="Rate:", lnorm="Standard deviation(log)", beta="Beta:")
 		ini <- switch(input$dist,
@@ -46,18 +46,18 @@ shinyServer(function(input,output){
 		}
 	)
 
-	output$plot <- reactivePlot(function(){
+	output$plot <- renderPlot({
 		dist <- input$dist
 		n <- input$n
 		hist(dat()[[1]],main="",xlab="Observations",col="orange",cex.axis=1.2,cex.lab=1.2,prob=T)
 		if(input$density) lines(density(dat()[[1]],adjust=input$bw),lwd=2)
 	})
 	
-	output$summary <- reactivePrint(function(){
+	output$summary <- renderPrint({
 		summary(dat()[[1]])
 	})
 	
-	output$table <- reactiveTable(function(){
+	output$table <- renderTable({
 		data.frame(x=dat()[[1]])
 	})
 })

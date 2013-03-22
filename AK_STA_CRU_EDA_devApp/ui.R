@@ -44,7 +44,7 @@ shinyUI(pageWithSidebar(
 	mainPanel(
 		tabsetPanel(
 			#tabPanel("Time Series",plotOutput("tsplot",height="1000px"),value="notmap"),
-			tabPanel("Distributions",plotOutput("plot",height="auto"),value="notmap"),
+			tabPanel("Distributions",plotOutput("plot",height="800px"),value="notmap"),
 			tabPanel("Summary Statistics",verbatimTextOutput("summary"),value="notmap"),
 			#tabPanel("Map",plotOutput("map"),value="map"),
 			tabPanel("Data",tableOutput("table"),value="notmap"),
