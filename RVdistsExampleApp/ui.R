@@ -16,7 +16,7 @@ shinyUI(pageWithSidebar(
 	),
 	mainPanel(
 		tabsetPanel(
-			tabPanel("Plot",plotOutput("plot")),
+			tabPanel("Plot",plotOutput("plot",height="600px")),
 			tabPanel("Summary",verbatimTextOutput("summary")),
 			tabPanel("Table",tableOutput("table"))
 		),

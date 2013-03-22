@@ -34,11 +34,6 @@ expr.lnorm <- expression(italic(paste(displaystyle(f(x)~"="~frac(1,x*sigma*sqrt(
 expr.beta <- expression(italic(paste(displaystyle(f(x)~"="~frac(Gamma(alpha+beta),Gamma(alpha)*Gamma(beta))*x^{alpha-1}*(1-x)^{beta-1})
 					~~~~displaystyle(list(paste(0<=x) <=1, paste(0<alpha) <infinity, paste(0<beta) <infinity))
 					)))
-					
-#plot(0,0,type="n")
-#text(0,0,expr.F,cex=.7)
-
-
 
 shinyServer(function(input,output){
 	dat <- reactive({
