@@ -22,7 +22,7 @@ shinyUI(pageWithSidebar(
 	),
 	mainPanel(
 		tabsetPanel(
-			tabPanel("Conditional Barplots",plotOutput("plot",height="800px"),value="notmap"),
+			tabPanel("Conditional Barplots",plotOutput("plot",height="auto"),value="notmap"),
 			#tabPanel("Map",plotOutput("mapPlot",height="600px",width="800px"),value="notmap"),
 			id="tsp"
 		),

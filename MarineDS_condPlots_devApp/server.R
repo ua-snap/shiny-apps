@@ -10,43 +10,43 @@ library(maptools)
 
 shinyServer(function(input,output){
 
-	output$showMap <- renderUI(function(){
+	output$showMap <- renderUI({
 		checkboxInput("showmap","Show location grid",F)
 	})
 	
-	output$showMapPlot <- renderUI(function(){
+	output$showMapPlot <- renderUI({
 		if(length(input$showmap)) if(input$showmap) plotOutput("mapPlot",height="100%")
 	})
 
-	output$Mod <- renderUI(function(){
+	output$Mod <- renderUI({
 		selectInput("mod","Choose model:",choices=mod.nam,selected=mod.nam[1])
 	})
 	
-	output$RCP <- renderUI(function(){
+	output$RCP <- renderUI({
 		selectInput("rcp","Choose RCP:",choices=rcp.nam,selected=rcp.nam[1])
 	})
 	
-	output$Var <- renderUI(function(){
+	output$Var <- renderUI({
 		selectInput("var","Choose variable:",choices=var.nam,selected=var.nam[1],multiple=T)
 	})
 	
-	output$Loc <- renderUI(function(){
+	output$Loc <- renderUI({
 		selectInput("loc","Choose location:",choices=loc.nam,selected=loc.nam[1],multiple=T)
 	})
 	
-	output$CutT <- renderUI(function(){
+	output$CutT <- renderUI({
 		selectInput("cut.t","Choose temperature (C) threshold:",choices=temp.cut,selected=temp.cut[1],multiple=T)
 	})
 	
-	output$CutW <- renderUI(function(){
+	output$CutW <- renderUI({
 		selectInput("cut.w","Choose wind (m/s) threshold:",choices=wind.cut,selected=wind.cut[1],multiple=T)
 	})
 	
-	output$Cond <- renderUI(function(){
+	output$Cond <- renderUI({
 		selectInput("cond","Choose a conditional variable:",choices=c("Model","RCP","Location","Threshold","Variable"),selected="Model")
 	})
 	
-	thresh <- reactive(function(){
+	thresh <- reactive({
 		if(length(input$var) & length(input$cut.t) & length(input$cut.w)){
 			if(input$var=="temperature") thresh <- input$cut.t else thresh <- input$cut.w
 		} else {
@@ -55,15 +55,15 @@ shinyServer(function(input,output){
 		thresh
 	})
 	
-	output$Direction <- renderUI(function(){
+	output$Direction <- renderUI({
 		selectInput("direct","Days per month:",choices=c("Above threshold(s)","Below threshold(s)"),selected="Above threshold(s)")
 	})
 	
-	output$Mo <- renderUI(function(){
+	output$Mo <- renderUI({
 		selectInput("mo","Show months:",choices=c("All",mos),selected="Jan",multiple=T)
 	})
 	
-	mo.vec <- reactive(function(){
+	mo.vec <- reactive({
 		if(length(input$mo)){
 			if(input$mo[1]=="All") mo.vec <- mos else mo.vec <- input$mo
 		} else {
@@ -72,11 +72,11 @@ shinyServer(function(input,output){
 		mo.vec
 	})
 	
-	output$MoHi <- renderUI(function(){
+	output$MoHi <- renderUI({
 		if(length(mo.vec())) selectInput("mohi","Highlight months:",choices=c("None",mo.vec()),selected="None",multiple=T)
 	})
 	
-	mos.lines.vec <- reactive(function(){
+	mos.lines.vec <- reactive({
 		if(length(input$mohi)){
 			if(input$mohi[1]=="None"){
 				mos.lines.vec <- NULL
@@ -89,7 +89,7 @@ shinyServer(function(input,output){
 		mos.lines.vec
 	})
 	
-	dat <- reactive(function(){
+	dat <- reactive({
 		if(length(input$loc)){
 			if(length(input$loc)>=1 & input$cond=="Location"){
 				dat <- c()
@@ -101,7 +101,7 @@ shinyServer(function(input,output){
 		dat
 	})
 	
-	output$plot <- renderPlot(function(){
+	output$plot <- renderPlot({
 	if(length(input$mo) & length(input$mohi) & length(input$cond) & length(input$rcp)){
 		yrs <- c(input$yrs[1],input$yrs[2])
 		mos.sub <- match(mo.vec(),mos)
@@ -115,17 +115,17 @@ shinyServer(function(input,output){
 	}
 	})
 	
-	cells.active <- reactive(function(){
+	cells.active <- reactive({
 		cells.active <- cells[match(input$loc,loc.nam)]
 		cells.active
 	})
 	
-	locs.active <- reactive(function(){
+	locs.active <- reactive({
 		locs.active <- match(cells.active(),cells)
 		locs.active
 	})
 	
-	output$mapPlot <- renderPlot(function(){
+	output$mapPlot <- renderPlot({
 		r.tmp[] <- NA
 		par(mar=c(0,0,0,0)+0.1)
 		image(r.tmp,xlim=xlm,ylim=ylm,main="",xlab="PC Lon",ylab="Lat",cex.lab=1.2,cex.axis=1.2)
@@ -145,11 +145,11 @@ shinyServer(function(input,output){
 	height=300, width=480
 	)
 
-	output$header <- renderUI(function(){
+	output$header <- renderUI({
 		h4(paste("CMIP5 quantile-mapped GCM daily data"))
 	})
 	
-	output$datname <- renderPrint(function(){ # this is used for ghetto debugging by printing specific information to the headerPanel
+	output$datname <- renderPrint({ # this is used for lazy debugging by printing specific information to the headerPanel
 		x <- "something"
 		x
 	})

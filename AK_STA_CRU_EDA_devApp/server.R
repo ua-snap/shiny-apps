@@ -438,7 +438,7 @@ shinyServer(function(input,output){
 			d2 <- data.frame(cond,x,y)
 			names(d2) <- c("City",input$regX,input$regY)
 			p <- ggplot(d2, aes_string(x=input$regX, y=input$regY, color="City")) +
-				scale_colour_hue(l=50) # Use a slightly darker palette than normal
+				scale_colour_hue(l=50) # Use a darker palette
 			if(input$regablns){
 				if(length(input$reg.ggplot.se)) SE <- input$reg.ggplot.se else SE <- F
 				p <- p +
