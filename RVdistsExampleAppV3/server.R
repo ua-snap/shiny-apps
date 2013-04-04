@@ -10,7 +10,7 @@ shinyServer(function(input,output){
 		dist <- switch(input$dist,
 			bern=rbern, bin=rbinom2, dunif=drunif, geom=rgeom2, hgeom=rhyper2, nbin=rnbinom2, poi=rpois2, # discrete
 			beta=rbeta2, cauchy=rcauchy2, chisq=rchisq2, exp=rexp2, F=rf2, gam=rgamma2, lap=rlaplace2, # continuous
-			logi=rlogis2, lnorm=rlnorm, norm=rnorm, pareto=rpareto2, t=rt2, unif=runif, weib=rweibull2,
+			logi=rlogis2, lognorm=rlognorm, norm=rnorm, pareto=rpareto2, t=rt2, unif=runif, weib=rweibull2,
 			)
 
 		def.args <- switch(input$dist,
@@ -31,7 +31,7 @@ shinyServer(function(input,output){
 			gam=c(input$gam.shape,input$gam.rate),
 			lap=c(input$lap.location,input$lap.scale),
 			logi=c(input$logi.location,input$logi.scale),
-			lnorm=c(input$meanlog,input$sdlog),
+			lognorm=c(input$meanlog,input$sdlog),
 			norm=c(input$mean,input$sd),
 			pareto=c(input$pareto.location,input$pareto.shape),
 			t=c(input$t.df),
@@ -52,12 +52,12 @@ shinyServer(function(input,output){
 		lab <- switch(input$dist,
 			bern="Probability:", bin="Size:", dunif="Discrete sequence minimum:", geom="Probability:", hgeom="M:", nbin="Number of successes:",	poi="Mean and Variance:", # discrete
 			beta="Alpha:", cauchy="Location:", chisq="Degrees of freedom:", exp="Rate:", F="Numerator degrees of freedom:", gam="Shape:", lap="Location:",
-			logi="Location:", lnorm="Mean(log):", norm="Mean:", pareto="Location:",	t="Degrees of freedom:", unif="Minimum:", weib="Shape:"
+			logi="Location:", lognorm="Mean(log):", norm="Mean:", pareto="Location:",	t="Degrees of freedom:", unif="Minimum:", weib="Shape:"
 			# logistic and log-normal are switched on plotmath expressions graphic!
 			)
 		ini <- switch(input$dist,
 			bern=0.5, bin=10, dunif=0, geom=0.5, hgeom=10, nbin=10, poi=10,	# discrete
-			beta=2, cauchy=0, chisq=1, exp=1, F=1, gam=1, lap=0, logi=0, lnorm=0, norm=0, pareto=1,	t=15, unif=0, weib=1 # continuous
+			beta=2, cauchy=0, chisq=1, exp=1, F=1, gam=1, lap=0, logi=0, lognorm=0, norm=0, pareto=1,	t=15, unif=0, weib=1 # continuous
 			)
 		numericInput(dat()[[2]][1],lab,ini)
 	})
@@ -66,14 +66,14 @@ shinyServer(function(input,output){
 		lab <- switch(input$dist,
 			bin="Probability:",	dunif="Discrete sequence maximum:",	hgeom="N:",	nbin="Probability:", # discrete
 			beta="Beta:", cauchy="Scale:", F="Denominator degrees of freedom:", gam="Rate:", lap="Scale:", # continuous
-			logi="Scale:", lnorm="Standard deviation(log)", norm="Standard deviation:", pareto="Shape:", unif="Maximum:", weib="Scale:"
+			logi="Scale:", lognorm="Standard deviation(log)", norm="Standard deviation:", pareto="Shape:", unif="Maximum:", weib="Scale:"
 			)
 		ini <- switch(input$dist,
 			bin=0.5, dunif=100, hgeom=20, nbin=0.5,
-			beta=2, cauchy=1, F=15, gam=1, lap=1, logi=1, lnorm=1, norm=1, pareto=3, unif=1, weib=1
+			beta=2, cauchy=1, F=15, gam=1, lap=1, logi=1, lognorm=1, norm=1, pareto=3, unif=1, weib=1
 			)
 		if(any(input$dist==c("bin","dunif","hgeom","nbin","cauchy","lap","logi","pareto","weib",
-							"beta","F","gam","lnorm","norm","unif"))) numericInput(dat()[[2]][2],lab,ini)
+							"beta","F","gam","lognorm","norm","unif"))) numericInput(dat()[[2]][2],lab,ini)
 	})
 	
 	output$dist3 <- renderUI({

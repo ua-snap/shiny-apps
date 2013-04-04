@@ -6,7 +6,7 @@ shinyUI(pageWithSidebar(
 			list(
 				"Bernoulli"="bern","Binomial"="bin","Discrete Uniform"="dunif","Geometric"="geom","Hypergeometric"="hgeom","Negative Binomial"="nbin","Poisson"="poi", # discrete
 				"Beta"="beta","Cauchy"="cauchy","Chi-squared"="chisq","Exponential"="exp","F"="F","Gamma"="gam","Laplace (Double Exponential)"="lap", # continuous
-				"Logistic"="logi","Log-Normal"="lnorm","Normal"="norm","Pareto"="pareto","t"="t","Uniform"="unif","Weibull"="weib"
+				"Logistic"="logi","Log-Normal"="lognorm","Normal"="norm","Pareto"="pareto","t"="t","Uniform"="unif","Weibull"="weib"
 				)
 		),
 		sliderInput("n","Sample size:",1,1000,500),
