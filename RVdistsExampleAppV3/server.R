@@ -53,7 +53,6 @@ shinyServer(function(input,output){
 			bern="Probability:", bin="Size:", dunif="Discrete sequence minimum:", geom="Probability:", hgeom="M:", nbin="Number of successes:",	poi="Mean and Variance:", # discrete
 			beta="Alpha:", cauchy="Location:", chisq="Degrees of freedom:", exp="Rate:", F="Numerator degrees of freedom:", gam="Shape:", lap="Location:",
 			logi="Location:", lognorm="Mean(log):", norm="Mean:", pareto="Location:",	t="Degrees of freedom:", unif="Minimum:", weib="Shape:"
-			# logistic and log-normal are switched on plotmath expressions graphic!
 			)
 		ini <- switch(input$dist,
 			bern=0.5, bin=10, dunif=0, geom=0.5, hgeom=10, nbin=10, poi=10,	# discrete
