@@ -113,7 +113,9 @@ shinyServer(function(input,output){
 		if(input$cond=="Variable") print(tsMoCond(dat(),cond="variable",mod=input$mod,rcp=input$rcp,loc=input$loc[1],threshold=c(input$cut.t[1],rep(input$cut.w[1],2)),yrs=yrs,mo=mos.sub,plotfile=path[4],mo.lines=mos.lines,direct=direct))
 		if(input$cond=="Threshold") print(tsMoCond(dat(),cond="threshold",mod=input$mod,rcp=input$rcp,loc=input$loc[1],varid=input$var[1],threshold=thresh(),yrs=yrs,mo=mos.sub,plotfile=path[5],mo.lines=mos.lines,direct=direct))
 	}
-	})
+	},
+	height=800
+	)
 	
 	cells.active <- reactive({
 		cells.active <- cells[match(input$loc,loc.nam)]
