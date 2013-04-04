@@ -8,7 +8,7 @@ rexp2 <- function(n=500,rate2=1){ rexp(n=n,rate=rate2) }
 formals(rbeta)[1:3] <- c(500,2,2)
 
 shinyServer(function(input,output){
-	dat <- reactive(function(){
+	dat <- reactive({
 		dist <- switch(input$dist,
 			norm=rnorm,	unif=runif,	t=rt2, F=rf, gam=rgamma, exp=rexp2,	chisq=rchisq2, lnorm=rlnorm, beta=rbeta)
 

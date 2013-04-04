@@ -3,7 +3,7 @@ shinyUI(pageWithSidebar(
 	headerPanel("Distributions of Random Variables"),
 	sidebarPanel(
 		radioButtons("dist","Distribution type:",
-			list("Normal"="norm","Uniform"="unif","t"="t","F","Gamma"="gam","Exponential"="exp","Chi-square"="chisq","Log-normal"="lnorm","Beta"="beta")),
+			list("Normal"="norm","Uniform"="unif","t"="t","F"="F","Gamma"="gam","Exponential"="exp","Chi-square"="chisq","Log-normal"="lnorm","Beta"="beta")),
 		sliderInput("n","Sample size:",1,1000,500),
 		uiOutput("dist1"),
 		uiOutput("dist2"),
