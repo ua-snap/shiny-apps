@@ -110,7 +110,7 @@ shinyServer(function(input,output){
 		if(input$cond=="Model") print(tsMoCond(dat(),cond="model",rcp=input$rcp,loc=input$loc[1],varid=input$var[1],threshold=thresh()[1],yrs=yrs,mo=mos.sub,plotfile=path[1],mo.lines=mos.lines,direct=direct))
 		if(input$cond=="RCP") print(tsMoCond(dat(),cond="rcp",mod=input$mod,loc=input$loc[1],varid=input$var[1],threshold=thresh()[1],yrs=yrs,mo=mos.sub,plotfile=path[2],mo.lines=mos.lines,direct=direct))
 		if(input$cond=="Location") print(tsMoCond(dat(),cond="location",mod=input$mod,rcp=input$rcp,varid=input$var[1],threshold=thresh()[1],yrs=yrs,mo=mos.sub,plotfile=path[3],mo.lines=mos.lines,direct=direct))
-		if(input$cond=="Variable") print(tsMoCond(dat(),cond="variable",mod=input$mod,rcp=input$rcp,loc=input$loc[1],threshold=c(input$cut.t[1],rep(input$cut.w[1],2)),yrs=yrs,mo=mos.sub,plotfile=path[4],mo.lines=mos.lines,direct=direct))
+		if(input$cond=="Variable") print(tsMoCond(dat(),cond="variable",mod=input$mod,rcp=input$rcp,loc=input$loc[1],varid=input$var,threshold=c(input$cut.t[1],rep(input$cut.w[1],length(var.nam)-1)),yrs=yrs,mo=mos.sub,plotfile=path[4],mo.lines=mos.lines,direct=direct))
 		if(input$cond=="Threshold") print(tsMoCond(dat(),cond="threshold",mod=input$mod,rcp=input$rcp,loc=input$loc[1],varid=input$var[1],threshold=thresh(),yrs=yrs,mo=mos.sub,plotfile=path[5],mo.lines=mos.lines,direct=direct))
 	}
 	},
@@ -152,7 +152,7 @@ shinyServer(function(input,output){
 	})
 	
 	output$datname <- renderPrint({ # this is used for lazy debugging by printing specific information to the headerPanel
-		x <- "something"
+		x <- c(input$cut.t[1],rep(input$cut.w[1],length(var.nam)-1))
 		x
 	})
 })
