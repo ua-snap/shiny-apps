@@ -114,7 +114,7 @@ shinyServer(function(input,output){
 		if(input$cond=="Threshold") print(tsMoCond(dat(),cond="threshold",mod=input$mod,rcp=input$rcp,loc=input$loc[1],varid=input$var[1],threshold=thresh(),yrs=yrs,mo=mos.sub,plotfile=path[5],mo.lines=mos.lines,direct=direct))
 	}
 	},
-	height=800
+	height=800, width=1000
 	)
 	
 	cells.active <- reactive({

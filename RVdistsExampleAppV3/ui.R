@@ -25,7 +25,6 @@ shinyUI(pageWithSidebar(
 			tabPanel("Plot",plotOutput("plot",height="auto")),
 			tabPanel("Summary",verbatimTextOutput("summary")),
 			tabPanel("Table",tableOutput("table"))
-		),
-		h3(textOutput("caption"))
+		)
 	)
 ))

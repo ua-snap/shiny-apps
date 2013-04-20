@@ -6,6 +6,20 @@ library(VGAM)
 load("samplingApp.RData", envir=.GlobalEnv)
 
 shinyServer(function(input,output){
+
+	output$distName <- renderUI({
+		if(input$dist.type=="Discrete"){
+			radioButtons("dist","Distribution:",selected="Bernoulli",
+				list("Bernoulli"="bern","Binomial"="bin","Discrete Uniform"="dunif","Geometric"="geom","Hypergeometric"="hgeom","Negative Binomial"="nbin","Poisson"="poi") # discrete
+			)
+		} else if(input$dist.type=="Continuous"){
+			radioButtons("dist","Distribution:",selected="Beta",
+				list("Beta"="beta","Cauchy"="cauchy","Chi-squared"="chisq","Exponential"="exp","F"="F","Gamma"="gam","Laplace (Double Exponential)"="lap", # continuous
+					"Logistic"="logi","Log-Normal"="lognorm","Normal"="norm","Pareto"="pareto","t"="t","Uniform"="unif","Weibull"="weib")
+			)
+		}
+	})
+		
 	dat <- reactive({
 		dist <- switch(input$dist,
 			bern=rbern, bin=rbinom2, dunif=drunif, geom=rgeom2, hgeom=rhyper2, nbin=rnbinom2, poi=rpois2, # discrete
@@ -49,6 +63,7 @@ shinyServer(function(input,output){
 	})
 
 	output$dist1 <- renderUI({
+	if(length(input$dist)){
 		lab <- switch(input$dist,
 			bern="Probability:", bin="Size:", dunif="Discrete sequence minimum:", geom="Probability:", hgeom="M:", nbin="Number of successes:",	poi="Mean and Variance:", # discrete
 			beta="Alpha:", cauchy="Location:", chisq="Degrees of freedom:", exp="Rate:", F="Numerator degrees of freedom:", gam="Shape:", lap="Location:",
@@ -59,9 +74,11 @@ shinyServer(function(input,output){
 			beta=2, cauchy=0, chisq=1, exp=1, F=1, gam=1, lap=0, logi=0, lognorm=0, norm=0, pareto=1,	t=15, unif=0, weib=1 # continuous
 			)
 		numericInput(dat()[[2]][1],lab,ini)
+	}
 	})
 	
 	output$dist2 <- renderUI({
+	if(length(input$dist)){
 		lab <- switch(input$dist,
 			bin="Probability:",	dunif="Discrete sequence maximum:",	hgeom="N:",	nbin="Probability:", # discrete
 			beta="Beta:", cauchy="Scale:", F="Denominator degrees of freedom:", gam="Rate:", lap="Scale:", # continuous
@@ -73,14 +90,17 @@ shinyServer(function(input,output){
 			)
 		if(any(input$dist==c("bin","dunif","hgeom","nbin","cauchy","lap","logi","pareto","weib",
 							"beta","F","gam","lognorm","norm","unif"))) numericInput(dat()[[2]][2],lab,ini)
+	}
 	})
 	
 	output$dist3 <- renderUI({
+	if(length(input$dist)){
 		lab <- switch(input$dist,
 			dunif="Step size:",	hgeom="K:")
 		ini <- switch(input$dist,
 			dunif=1, hgeom=5)
 		if(any(input$dist==c("dunif","hgeom"))) numericInput(dat()[[2]][3],lab,ini)
+	}
 	})
 	
 	output$dldat <- downloadHandler(
@@ -90,13 +110,31 @@ shinyServer(function(input,output){
 		}
 	)
 
+	output$sampDens <- renderUI({
+		if(input$dist.type=="Continuous") checkboxInput("density","Sample density curve",FALSE)
+	})
+	
+	output$BW <- renderUI({
+		if(length(input$density)){
+			if(input$density) numericInput("bw","bandwidth:",1)
+		}
+	})
+	
 	output$plot <- renderPlot({
+	if(length(input$dist)){
+		d <- dat()[[1]]
 		dist <- input$dist
 		n <- input$n
 		expr <- get(paste("expr",dist,sep="."))
 		par(mar=c(4,4,10,1))
-		hist(dat()[[1]],main=expr,xlab="Observations",col="orange",cex.main=1.5,cex.axis=1.3,cex.lab=1.3,prob=T)
-		if(input$density) lines(density(dat()[[1]],adjust=input$bw),lwd=2)
+		if(input$dist.type=="Discrete"){
+			barplot(as.numeric(table(d))/input$n,names.arg=names(table(d)),main=expr,xlab="Observations",ylab="Density",col="orange",cex.main=1.5,cex.axis=1.3,cex.lab=1.3)
+		}
+		if(input$dist.type=="Continuous"){
+			hist(d,main=expr,xlab="Observations",ylab="Density",col="orange",cex.main=1.5,cex.axis=1.3,cex.lab=1.3,prob=T)
+			if(length(input$density)) if(input$density & length(input$bw)) lines(density(d,adjust=input$bw),lwd=2)
+		}
+	}
 	},
 	height=750, width=1000
 	)

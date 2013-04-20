@@ -3,7 +3,6 @@ shinyUI(pageWithSidebar(
 	headerPanel(uiOutput("header")),
 	#headerPanel(h4(textOutput("datname"))), # for debugging
 	sidebarPanel(
-		#selectInput("dataset","Choose a dataset:",choices=c("Small","Medium","Large"),selected="Small"),
 		uiOutput("showMap"),
 		uiOutput("showMapPlot"),
 		sliderInput("yrs","Year range:",1958,2100,c(1981,2010),step=1,format="#"),
@@ -22,10 +21,8 @@ shinyUI(pageWithSidebar(
 	),
 	mainPanel(
 		tabsetPanel(
-			tabPanel("Conditional Barplots",plotOutput("plot",height="auto"),value="notmap"),
-			#tabPanel("Map",plotOutput("mapPlot",height="600px",width="800px"),value="notmap"),
+			tabPanel("Conditional Barplots",plotOutput("plot",height="auto"),value="barplots"),
 			id="tsp"
-		),
-		h3(textOutput("caption"))
+		)
 	)
 ))

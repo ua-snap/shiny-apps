@@ -50,7 +50,6 @@ shinyUI(pageWithSidebar(
 			tabPanel("Data",tableOutput("table"),value="notmap"),
 			tabPanel("Regression",plotOutput("regplot"),verbatimTextOutput("regsum"),value="reg"),
 			id="tsp"
-		),
-		h3(textOutput("caption"))
+		)
 	)
 ))
