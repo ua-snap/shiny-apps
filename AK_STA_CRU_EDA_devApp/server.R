@@ -1,10 +1,10 @@
 library(shiny)
-pkgs <- c("reshape","ggplot2","googleVis")
+pkgs <- c("reshape2","ggplot2","googleVis")
 pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
 if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
-library(reshape)
+library(reshape2)
 library(ggplot2)
-library(googleVis)
+#library(googleVis)
 
 cities.dat <- read.csv("dat1.csv",header=T,stringsAsFactors=F)
 cru.dat <- read.csv("dat2.csv",header=T,stringsAsFactors=F)
@@ -23,7 +23,7 @@ cru.dat$Month <- factor(cru.dat$Month,levels=mos)
 var <- c("T","P")
 reshape.fun <- function(x){
 	x <- melt(x,id=c("Year","Month","Variable"))
-	x <- cast(x,Year+Variable+variable~Month)
+	x <- dcast(x,Year+Variable+variable~Month)
 	rownames(x) <- NULL
 	x
 }
@@ -337,7 +337,7 @@ shinyServer(function(input,output){
 	if(length(input$city) & length(input$yrs) & length(input$regbymo)){
 		d <- list()
 		for(i in 1:length(input$city)){
-			d.tmp <- cast(subset(DATASET(),Year>=input$yrs[1] & Year<=input$yrs[2],select=c(1:3,which(names(DATASET())==input$city[i]))),Year+Month ~Variable,value=input$city[i])
+			d.tmp <- dcast(subset(DATASET(),Year>=input$yrs[1] & Year<=input$yrs[2],select=c(1:3,which(names(DATASET())==input$city[i]))),Year+Month ~Variable,value=input$city[i])
 			names(d.tmp)[3:4] <- c("Precipitation","Temperature")
 			if(length(input$regbymo)) if(input$regbymo!="All") d.tmp <- subset(d.tmp,d.tmp$Month==input$regbymo)
 			d[[i]] <- d.tmp
@@ -460,22 +460,25 @@ shinyServer(function(input,output){
 	}
 	})
 	
-	output$map <- reactive({
-		if(input$showmap){
-			#selected <- map.dat[match(input$city,city.names),]
-			selected <- map.dat()
-			#if(length(input$mapview)) maptype <- tolower(input$mapview) else maptype <- "terrain" ######### mapType=maptype
-			sites<-gvisMap(selected,locationvar="latlon",tipvar="City", options=list(useMapTypeControl=T))
-			plot(sites)
-		}
-	})
+	#output$map <- reactive({
+	#	if(input$showmap){
+	#		selected <- map.dat()
+	#		sites<-gvisMap(selected,locationvar="latlon",tipvar="City", options=list(useMapTypeControl=T))
+	#		plot(sites)
+	#	}
+	#})
 	
 	output$header <- renderUI({
 		if(input$dataset=="Weather stations (CRU-substituted NAs)" | input$dataset=="Weather stations (w/ missing data)"){
-			h4(paste("Weather station historical time series climate data for",length(city.names()),"AK cities"))
+			txt <- paste("Weather station historical time series climate data for",length(city.names()),"AK cities")
 		} else if(input$dataset=="2-km downscaled CRU 3.1"){
-			h4(paste("2-km downscaled CRU 3.1 historical time series climate data for",length(city.names()),"AK cities"))
+			txt <- paste("2-km downscaled CRU 3.1 historical time series climate data for",length(city.names()),"AK cities")
 		}
+		txt <- HTML(paste('<div id="stats_header">',txt,
+			'<a href="http://snap.uaf.edu" target="_blank">
+			<img id="stats_logo" align="right" alt="SNAP Logo" src="http://www.snap.uaf.edu/images/snap_acronym_rgb.gif" />
+			</a>
+			</div>',sep="",collapse=""))
 	})
 	
 	output$datname <- renderPrint({ # this is used for lazy debugging by printing specific information to the headerPanel

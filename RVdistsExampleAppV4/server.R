@@ -103,13 +103,6 @@ shinyServer(function(input,output){
 	}
 	})
 	
-	output$dldat <- downloadHandler(
-		filename = function() { paste(input$dist, '.csv', sep='') },
-		content = function(file) {
-			write.csv(data.frame(x=dat()[[1]]), file)
-		}
-	)
-
 	output$sampDens <- renderUI({
 		if(input$dist.type=="Continuous") checkboxInput("density","Sample density curve",FALSE)
 	})
@@ -120,23 +113,43 @@ shinyServer(function(input,output){
 		}
 	})
 	
-	output$plot <- renderPlot({
-	if(length(input$dist)){
-		d <- dat()[[1]]
-		dist <- input$dist
-		n <- input$n
-		expr <- get(paste("expr",dist,sep="."))
-		par(mar=c(4,4,10,1))
-		if(input$dist.type=="Discrete"){
-			barplot(as.numeric(table(d))/input$n,names.arg=names(table(d)),main=expr,xlab="Observations",ylab="Density",col="orange",cex.main=1.5,cex.axis=1.3,cex.lab=1.3)
-		}
-		if(input$dist.type=="Continuous"){
-			hist(d,main=expr,xlab="Observations",ylab="Density",col="orange",cex.main=1.5,cex.axis=1.3,cex.lab=1.3,prob=T)
-			if(length(input$density)) if(input$density & length(input$bw)) lines(density(d,adjust=input$bw),lwd=2)
+	doPlot <- function(margins){
+		if(length(input$dist)){
+			d <- dat()[[1]]
+			dist <- input$dist
+			n <- input$n
+			expr <- get(paste("expr",dist,sep="."))
+			par(mar=margins)
+			if(input$dist.type=="Discrete"){
+				barplot(as.numeric(table(d))/input$n,names.arg=names(table(d)),main=expr,xlab="Observations",ylab="Density",col="orange",cex.main=1.5,cex.axis=1.3,cex.lab=1.3)
+			}
+			if(input$dist.type=="Continuous"){
+				hist(d,main=expr,xlab="Observations",ylab="Density",col="orange",cex.main=1.5,cex.axis=1.3,cex.lab=1.3,prob=T)
+				if(length(input$density)) if(input$density & length(input$bw)) lines(density(d,adjust=input$bw),lwd=2)
+			}
 		}
 	}
+	
+	output$plot <- renderPlot({
+		doPlot(margins=c(4,4,10,1))
 	},
 	height=750, width=1000
+	)
+	
+	output$dlCurPlot <- downloadHandler(
+		filename = 'curPlot.pdf',
+		content = function(file){
+			pdf(file = file, width=11, height=8.5)
+			doPlot(margins=c(6,6,10,2))
+			dev.off()
+		}
+	)
+
+	output$dldat <- downloadHandler(
+		filename = function() { paste(input$dist, '.csv', sep='') },
+		content = function(file) {
+			write.csv(data.frame(x=dat()[[1]]), file)
+		}
 	)
 	
 	output$summary <- renderPrint({

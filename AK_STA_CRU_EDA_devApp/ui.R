@@ -1,8 +1,16 @@
 library(shiny)
+tabPanelAbout <- source("about.R")$value
 mos <- c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
+headerPanel_2 <- function(title, h, windowTitle=title) {    
+  tagList(
+    tags$head(tags$title(windowTitle)),
+      h(title)
+    )
+}
 
 shinyUI(pageWithSidebar(
-	headerPanel(uiOutput("header")),
+	#headerPanel(uiOutput("header")),
+	headerPanel_2( uiOutput("header"), h3, "CRU/Weather Station EDA" ),
 	#headerPanel(h4(textOutput("datname"))), # for debugging
 	sidebarPanel(
 		selectInput("dataset","Choose a dataset:",choices=c("Weather stations (w/ missing data)","Weather stations (CRU-substituted NAs)","2-km downscaled CRU 3.1"),selected="2-km downscaled CRU 3.1"),
@@ -49,6 +57,7 @@ shinyUI(pageWithSidebar(
 			#tabPanel("Map",plotOutput("map"),value="map"),
 			tabPanel("Data",tableOutput("table"),value="notmap"),
 			tabPanel("Regression",plotOutput("regplot"),verbatimTextOutput("regsum"),value="reg"),
+			tabPanelAbout(),
 			id="tsp"
 		)
 	)

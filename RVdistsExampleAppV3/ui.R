@@ -1,6 +1,16 @@
 library(shiny)
 shinyUI(pageWithSidebar(
-	headerPanel("Distributions of Random Variables"),
+	headerPanel(
+		HTML(
+			'<div id="stats_header">
+			Distributions of Random Variables
+			<a href="http://snap.uaf.edu" target="_blank">
+			<img id="stats_logo" align="right" alt="SNAP Logo" src="http://www.snap.uaf.edu/images/snap_acronym_rgb.gif" />
+			</a>
+			</div>'
+		),
+		"Distributions of Random Variables"
+	),
 	sidebarPanel(
 		radioButtons("dist","Distribution type:",
 			list(

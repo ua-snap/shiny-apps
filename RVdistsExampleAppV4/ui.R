@@ -1,6 +1,17 @@
 library(shiny)
+tabPanelAbout <- source("about.R")$value
 shinyUI(pageWithSidebar(
-	headerPanel("Distributions of Random Variables"),
+	headerPanel(
+		HTML(
+			'<div id="stats_header">
+			Distributions of Random Variables
+			<a href="http://snap.uaf.edu" target="_blank">
+			<img id="stats_logo" align="right" alt="SNAP Logo" src="http://www.snap.uaf.edu/images/snap_acronym_rgb.gif" />
+			</a>
+			</div>'
+		),
+		"Distributions of Random Variables"
+	),
 	sidebarPanel(
 		wellPanel( radioButtons("dist.type","Distribution type:",list("Discrete","Continuous"),selected="Discrete") ),
 		wellPanel(	uiOutput("distName") ),
@@ -13,6 +24,7 @@ shinyUI(pageWithSidebar(
 		wellPanel(
 			uiOutput("sampDens"),
 			uiOutput("BW"),
+			downloadButton("dlCurPlot", "Download Graphic"),
 			downloadButton('dldat', 'Download Sample')
 		)
 	),
@@ -20,7 +32,8 @@ shinyUI(pageWithSidebar(
 		tabsetPanel(
 			tabPanel("Plot",plotOutput("plot",height="auto")),
 			tabPanel("Summary",verbatimTextOutput("summary")),
-			tabPanel("Table",tableOutput("table"))
+			tabPanel("Table",tableOutput("table")),
+			tabPanelAbout()
 		)
 	)
 ))
