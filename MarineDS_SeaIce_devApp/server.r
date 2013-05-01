@@ -2,7 +2,7 @@ library(shiny)
 #pkgs <- c("raster","maps","mapproj","rasterVis")
 #pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
 #if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
-
+options(error=browser)
 load("Totals.RData", envir=.GlobalEnv)
 print(sessionInfo())
 library(raster); library(maps); library(mapproj); library(rasterVis)
