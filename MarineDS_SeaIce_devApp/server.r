@@ -4,7 +4,7 @@ library(shiny)
 #if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
 
 load("Totals.RData", envir=.GlobalEnv)
-sessionInfo()
+print(sessionInfo())
 library(raster); library(maps); library(mapproj); library(rasterVis)
 
 mm <- map("world", proj="stereographic", xlim=c(-180,180), ylim=c(47,90), interior=FALSE, lwd=1,plot=F)
