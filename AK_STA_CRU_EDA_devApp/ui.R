@@ -1,5 +1,5 @@
 library(shiny)
-tabPanelAbout <- source("about.R")$value
+tabPanelAbout <- source("about.r")$value
 mos <- c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
 headerPanel_2 <- function(title, h, windowTitle=title) {    
   tagList(

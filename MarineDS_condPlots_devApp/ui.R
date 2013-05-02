@@ -1,5 +1,5 @@
 library(shiny)
-tabPanelAbout <- source("about.R")$value
+tabPanelAbout <- source("about.r")$value
 headerPanel_2 <- function(title, h, windowTitle=title) {    
   tagList(
     tags$head(tags$title(windowTitle)),

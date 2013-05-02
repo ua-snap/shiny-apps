@@ -1,10 +1,9 @@
 library(shiny)
-#pkgs <- c("raster","maps","mapproj","rasterVis")
-#pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
-#if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
-options(error=browser)
+pkgs <- c("raster","maps","mapproj","rasterVis")
+pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
+if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
+
 load("Totals.RData", envir=.GlobalEnv)
-print(sessionInfo())
 library(raster); library(maps); library(mapproj); library(rasterVis)
 
 mm <- map("world", proj="stereographic", xlim=c(-180,180), ylim=c(47,90), interior=FALSE, lwd=1,plot=F)

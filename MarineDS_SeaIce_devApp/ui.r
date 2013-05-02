@@ -1,5 +1,5 @@
 library(shiny)
-tabPanelAbout <- source("about.R")$value
+tabPanelAbout <- source("about.r")$value
 shinyUI(pageWithSidebar(
 	#headerPanel(uiOutput("header")),
 	headerPanel(
