@@ -98,12 +98,16 @@ shinyServer(function(input,output){
 	yrs <- reactive({
 	if(length(input$yrs)){
 		yrs <- c(input$yrs[1],input$yrs[2])
-		if(length(input$mo)) if(input$mo=="Dec-Mar Avg") yrs[1] <- yrs[1] + 1
+		if(length(input$mo)) if(input$mo=="Dec-Mar Avg") yrs[1] <- max(1861,yrs[1])
 		yrs
 	} else NULL
 	})
 	
-	rows <- reactive({ (yrs()[1]-1860+1):(yrs()[2]-1860+1) })
+	rows <- reactive({
+		rows <- (yrs()[1]-1860+1):(yrs()[2]-1860+1)
+		if(input$mo=="Dec-Mar Avg") rows <- rows - 1
+		rows
+	})
 	
 	# Plot color specific to model
 	clr <- reactive({
