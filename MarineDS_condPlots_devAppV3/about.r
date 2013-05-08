@@ -6,7 +6,7 @@ function(){
 		Individual months can be highlighted by differently colored time series lines.'),
 		p(style="text-align:justify",'The key feature of the app is that the barplots are condititional barplots, such that a set of multiple time series barplots are displayed vertically for visual comparison,
 		conditional on levels or classes of a given categorical variable.
-		The user can view time series of extreme events for various specific climate variables, geographic locations, climate models, RCPs, and climate variable value thresholds,
+		The user can view time series of extreme events for various specific climate variables, geographic locations, climate models, RCPs, and climate variable value thresholds.
 		The user can select any one of these variables as a conditional variable to generate a comparative visual display of extreme events barplots by factor levels of the chosen variable.'),
 		p(style="text-align:justify",strong('Notes:'),' Geographic locations are represented by the names of the largest population centers,
 		or other sensible region name in the case of no population (e.g, open ocean), for ease of reference, and do not represent point data.

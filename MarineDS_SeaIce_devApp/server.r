@@ -359,13 +359,4 @@ shinyServer(function(input,output){
 			dev.off()
 		}
 	)
-	
-	#output$header <- renderUI({
-	#	h2(paste("Modeled Polar Sea Ice Coverage"))
-	#})
-	
-	output$datname <- renderPrint({ # this is used for lazy debugging by printing specific information to the headerPanel
-		x <- class(dat()[[1]])
-		x
-	})
 })

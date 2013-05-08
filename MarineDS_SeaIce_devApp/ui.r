@@ -1,7 +1,6 @@
 library(shiny)
 tabPanelAbout <- source("about.r")$value
 shinyUI(pageWithSidebar(
-	#headerPanel(uiOutput("header")),
 	headerPanel(
 		HTML(
 			'<div id="stats_header">
@@ -13,7 +12,6 @@ shinyUI(pageWithSidebar(
 		),
 		"Modeled Polar Sea Ice Coverage"
 	),
-	#headerPanel(h4(textOutput("datname"))), # for debugging
 	sidebarPanel(
 		wellPanel(
 			conditionalPanel( # Tab 1 only, part 1
