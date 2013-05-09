@@ -12,13 +12,19 @@ function(){
 		or other sensible region name in the case of no population (e.g, open ocean), for ease of reference, and do not represent point data.
 		Values for all GCMs are at a common 2.5 x 2.5 degree resolution after having been regridded for quantile mapping to ERA-40. Therefore the scale is much larger than the place names might suggest.'),
 		p(style="text-align:justify",'Positive values for directional wind velocity components indicate West to East and South to North, like an X-Y graph. Negative values indicate winds in the opposite directions.
-		For overall wind speed, naturally, only positive thresholds may be selected since speed is always non-negative. Wind is the square root of the sum of squares of the two velocity components.
-		To clarify, the term, above thresholds, for wind velocity components means greater than the selected threshold value(s), as it does for wind speed and temperature. It does not mean further from zero.'),
+		For overall wind speed, naturally, only positive thresholds may be selected since speed a magnitude (directionless) and thus is always non-negative. Wind is the square root of the sum of squares of the two velocity components.
+		To clarify, the term, above thresholds, for wind velocity components means greater than the selected threshold value(s), as it does for wind speed and temperature. It does not mean further from zero.
+		Note that any time the Wind variable is selected, wind threshold options will be limited.
+		For example, if you are trying to place wind velocities and wind speed on the same plot, your velocity thresholds will be restricted to positive values due to the concurrent selection of wind speed.
+		This is not a "bug" in the program, but rather an opporutnity to point out that this web app is not meant to do it all.
+		The purpose of the app is to provide a relatively simple and convenient way of interactively exploring a subset of the quantile-mapped daily GCM outputs that I have compiled.
+		The goal is not to develop the perfect web tool, but rather to showcase the data that I have been working with.
+		As such, there are no plans for continued development or refinement of this particular app.'),
 		p(style="text-align:justify",strong('Suggestions:'),'You may download a graphic in pdf form for your convenience using the download button.
 		Any plot your produce on the Conditional Barplots main tab, based on your selection of inputs in the sidebar panel, is downloadable in pdf form.
 		Whenever you click the download button, you get whatever graphic is currently displayed in your browser.
 		Formatting of the pdf plot will not match the browser plot exactly, but it will be a close approximation.'),
-		p(style="text-align:justify",'For both the browser display and the pdf download, graphical formatting of the automated visualizations is best when comparing two to four time series barplots.
+		p(style="text-align:justify",'For both the browser display and the pdf download, graphical formatting of the automated visualizations is best when comparing two to four time series barplots. Three is ideal.
 		Too many comparisons in one plot, such as conditioning on location and selecting many locations, will make it impossible to achieve nice formatting in the space provided.
 		Lastly, there is no appreciable performance hit for selecting several variables, models, RCPs, or thresholds.
 		However, in the case of conditioning on locations, each location added to the plot will result in roughly a linear increase in plotting time required.

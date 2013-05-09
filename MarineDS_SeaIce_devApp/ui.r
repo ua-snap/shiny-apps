@@ -36,7 +36,8 @@ shinyUI(pageWithSidebar(
 				uiOutput("reglineslo"),
 				uiOutput("loSpan"),
 				uiOutput("fixXY"),
-				uiOutput("semiTrans")
+				uiOutput("semiTrans"),
+				uiOutput("showObs")
 			)
 		),
 		wellPanel(

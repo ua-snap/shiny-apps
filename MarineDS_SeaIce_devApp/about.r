@@ -8,6 +8,9 @@ function(){
 		This graphic is for illustration purposes only and should not be treated as spatially accurate with respect to the displayed land masses.
 		Pixels from the original raster datasets, aggregated to a coarser scale (for app efficiency),
 		are not intended to line up perfectly with the overlain landmass outlines, which are provided only for convenient reference and visual orientation for the user.'),
+		p(style="text-align:justify",'The purpose of the app is to provide a relatively simple and convenient way of interactively exploring a subset of aggregated (across time and space) GCM sea ice outputs.
+		The goal is not to develop the perfect web tool, but rather to showcase some of the data.
+		As such, there are no plans for continued development or refinement of this particular app.'),
 		br(),
 
 		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),

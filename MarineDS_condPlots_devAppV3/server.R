@@ -35,9 +35,11 @@ shinyServer(function(input,output){
 		selectInput("cut.t","Temp. threshold (C):",choices=temp.cut,selected=temp.cut[1],multiple=T)
 	})
 	
+	windMagCheck <- reactive({ input$var[1]=="Wind" | (any(input$var=="Wind") & (input$cond=="Threshold" | input$cond=="Variable")) })
+	
 	output$CutW <- renderUI({
 		if(length(input$var)){
-			if(input$var=="Wind"){
+			if(windMagCheck()){
 				selectInput("cut.w","Wind threshold (m/s):",choices=wind.cut[wind.cut>0],selected=wind.cut[wind.cut>0][1],multiple=T)
 			} else {
 				selectInput("cut.w","Wind threshold (m/s):",choices=wind.cut,selected=wind.cut[1],multiple=T)
@@ -140,7 +142,12 @@ shinyServer(function(input,output){
 				if(input$cond=="Location"){
 					if(checkData())	print(tsMoCond(dat(),cond="location",mod=input$mod,rcp=input$rcp,varid=input$var[1],threshold=thresh()[1],yrs=yrs,mo=mos.sub,plotfile=path[3],mo.lines=mos.lines,direct=direct,...))
 				}
-				if(input$cond=="Variable") print(tsMoCond(dat(),cond="variable",mod=input$mod,rcp=input$rcp,loc=input$loc[1],varid=input$var,threshold=c(input$cut.t[1],rep(input$cut.w[1],length(var.nam)-1)),yrs=yrs,mo=mos.sub,plotfile=path[4],mo.lines=mos.lines,direct=direct,...))
+				if(input$cond=="Variable"){
+					thresh.tmp <- c(input$cut.t[1],rep(input$cut.w[1],length(var.nam)-1))[match(input$var,var.nam)]
+					if(!( (any(input$var=="Wind") & any(input$var=="temperature") & any(thresh.tmp[-1]<0)) | (any(input$var=="Wind") & !any(input$var=="temperature") & any(thresh.tmp<0)) )){
+						print(tsMoCond(dat(),cond="variable",mod=input$mod,rcp=input$rcp,loc=input$loc[1],varid=input$var,threshold=thresh.tmp,yrs=yrs,mo=mos.sub,plotfile=path[4],mo.lines=mos.lines,direct=direct,...))
+					}
+				}
 				if(input$cond=="Threshold") print(tsMoCond(dat(),cond="threshold",mod=input$mod,rcp=input$rcp,loc=input$loc[1],varid=input$var[1],threshold=thresh(),yrs=yrs,mo=mos.sub,plotfile=path[5],mo.lines=mos.lines,direct=direct,...))
 			}
 		}

@@ -149,6 +149,28 @@ shinyServer(function(input,output){
 		dat
 	})
 	
+	# Observed data, by month or seasonal average
+	datObs <- reactive({
+		dat <- list()
+		mos.sub <- match(mo.vec(),mos)
+		dat[[1]] <- ob.t[,mos.sub]
+		if(class(dat[[1]])=="data.frame"){
+			if(input$mo=="Dec-Mar Avg"){
+				dat[[1]] <- rowMeans(cbind(dat[[1]][-1,1:3], dat[[1]][-nrow(dat[[1]]),4]))
+			} else {
+				dat[[1]] <- rowMeans(dat[[1]])
+			}
+		}
+		dat
+	})
+	
+	# Observed, subsetted data
+	dat2Obs <- reactive({
+		dat <- list()
+		dat[[1]] <- na.omit(datObs()[[1]])
+		dat
+	})
+	
 	# Regression models
 	lm1 <- reactive({
 	if(!is.null(yrs())){
@@ -226,6 +248,10 @@ shinyServer(function(input,output){
 	}
 	})
 	
+	output$showObs <- renderUI({
+		checkboxInput("showObs","Show Observations (1979 - 2011)",FALSE)
+	})
+	
 	# Time series plot and fitted trend lines
 	doPlotTS <- function(margins=c(5,5,2,0)+0.1,main="",cex.lb=1.3,cex.ax=1.1,cex.leg=1.2){
 		if(length(input$dataset)){
@@ -264,7 +290,8 @@ shinyServer(function(input,output){
 				if(length(input$reglnslm2)) if(input$reglnslm2) lines(yrs()[1]:yrs()[2],fitted(lm2()[[i]]), lty=3, lwd=2, col=clr()[i])
 				if(length(input$reglnslo)) if(input$reglnslo) lines(yrs()[1]:yrs()[2],fitted(lo()[[i]]), lty=4, lwd=2, col=clr()[i])
 			}
-		mtext(text = main, side = 3, adj = 0, line=2, cex=1.3)
+			if(input$showObs) if(input$mo=="Dec-Mar Avg") lines(1980:2011,dat2Obs()[[1]],lwd=3,col=1) else lines(1979:2011,dat2Obs()[[1]],lwd=3,col=1)
+			mtext(text = main, side = 3, adj = 0, line=2, cex=1.3)
 		}
 	}
 	
