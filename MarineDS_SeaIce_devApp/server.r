@@ -49,7 +49,7 @@ shinyServer(function(input,output){
 	})
 	
 	output$semiTrans <- renderUI({
-		if(length(transparency())) if(transparency()) sliderInput("semi.trans","Samples transparency",10,90,60,step=10,format="#")
+		if(length(transparency())) if(transparency()) sliderInput("semi.trans","Samples transparency",10,90,40,step=10,format="#")
 	})
 	
 	transparency <- reactive({
@@ -256,15 +256,18 @@ shinyServer(function(input,output){
 	doPlotTS <- function(margins=c(5,5,2,0)+0.1,main="",cex.lb=1.3,cex.ax=1.1,cex.leg=1.2){
 		if(length(input$dataset)){
 			rng <- range(dat()); rng2 <- range(dat2())
+			if(input$showObs) { rng <- range(c(rng,dat2Obs())); rng2 <- range(c(rng2,dat2Obs())) }
 			par(mar=margins)
 			xlb <- "Year"
-			ylb <- expression("Sea Ice"~(km^2)~"")
+			ylb <- bquote(.(input$mo)~" Arctic Sea Ice Extent "~(km^2)~"")
 			if(input$fix.xy){
 				plot(0,0,type="n",xlim=c(1860,2099),xlab=xlb,ylab=ylb,ylim=rng,cex.lab=cex.lb,cex.axis=cex.ax)
-				legend(yrs()[1],rng[2]+0.1*diff(rng),input$dataset,col=clr(),pch=pch.vals(),cex=cex.leg,bty="n",horiz=T,xpd=T)
+				legend(1860,rng[2]+0.1*diff(rng),input$dataset,col=clr(),pch=pch.vals(),cex=cex.leg,bty="n",horiz=T,xpd=T)
+				if(input$showObs) legend(1860,rng[1]-0.1*diff(rng),"Observed Sea Ice Extent",col=1,lwd=3,cex=cex.leg,bty="n",horiz=T,xpd=T)
 			} else {
 				plot(yrs()[1]:yrs()[2],type="n",xlim=yrs(),xlab=xlb,ylab=ylb,ylim=rng2,cex.lab=cex.lb,cex.axis=cex.ax)
 				legend(yrs()[1],rng2[2]+0.1*diff(rng2),input$dataset,col=clr(),pch=pch.vals(),cex=cex.leg,bty="n",horiz=T,xpd=T)
+				if(input$showObs) legend(yrs()[1],rng2[1]-0.1*diff(rng2),"Observed Sea Ice Extent",col=1,lwd=3,cex=cex.leg,bty="n",horiz=T,xpd=T)
 			}
 			for(i in 1:length(dat())){
 				d <- dat2()[[i]]
@@ -350,8 +353,10 @@ shinyServer(function(input,output){
 			mm$y <- 0.87*( (mm$y-min(mm$y,na.rm=T))*dy2/dy1 + 1.08*ymin(b) )
 			mm$range <- extent(b)
 			brk <- c(-5.001,-0.001,seq(5,95,by=5),100.001)
-			p <- levelplot(b, par.settings=list(strip.background=list(col=c("tan"))), at=brk, col.regions=c("tan",rev(colorRampPalette(c("white","blue"))(20))),
-			main="Percent Sea Ice Concentration by Model",
+			p <- levelplot(b, par.settings=list(strip.background=list(col=c("tan"))), at=brk,
+							col.regions=c("tan",colorRampPalette(c("blue","white"))(20)),
+							colorkey=list(at=brk,c("tan",colorRampPalette(c("blue","white"))(20))),scales=list(draw=F),
+			main=paste(input$decade,mo2.vec(),"Decadal Average Percent Sea Ice Concentration by Model"),
 			par.strip.text=list(cex=1,lines=2),
 				panel = function(...){
 						grid.rect(gp=gpar(col=NA,fill="black"))
