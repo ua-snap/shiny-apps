@@ -132,7 +132,7 @@ shinyServer(function(input,output){
 	doPlot <- function(...){
 		if(length(input$mo) & length(input$mohi) & length(input$cond) & length(input$rcp)){
 		if(checkData()){
-			if(!(input$var=="Wind" & any(thresh()<0))){
+			if(!(input$var[1]=="Wind" & any(thresh()<0))){
 				yrs <- c(input$yrs[1],input$yrs[2])
 				mos.sub <- match(mo.vec(),mos)
 				mos.lines <- match(mos.lines.vec(),mos)
