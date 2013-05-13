@@ -13,7 +13,7 @@ BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch: 	noarch
 ExclusiveArch:  noarch
 
-%define inst_dir /var/shiny-server/www
+%define inst_dir /var/www/shiny-server
 %define hostname www.snap.uaf.edu
 
 %description
