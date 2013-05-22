@@ -2,7 +2,7 @@ function(){
 	tabPanel("About",
 		p(style="text-align:justify",'This web application provides summary statistics, graphics, and basic exploratory data analysis of temeprature and precipitation data from interior Alaska weather stations
 		as well as station-based observations from CRU (Climatological Research Unit) data.
-		The app showcases some of the data inputs considered for use in a comparison of waeather station data with downscaled Global Circulation Model (GCM) historical values at corresponding grid cells.'),
+		The app showcases some of the data inputs considered for use in a comparison of waeather station data with downscaled global climate model (GCM) historical values at corresponding grid cells.'),
 		br(),
 
 		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),

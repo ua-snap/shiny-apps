@@ -238,7 +238,7 @@ shinyServer(function(input,output){
 	
 	output$reglineslo <- renderUI({
 	if(length(input$dataset)){
-		checkboxInput("reglnslo","Locally weighted loess",FALSE)
+		checkboxInput("reglnslo","Locally weighted LOESS",FALSE)
 	}
 	})
 	

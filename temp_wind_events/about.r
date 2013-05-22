@@ -1,6 +1,6 @@
 function(){
 	tabPanel("About",
-		p(style="text-align:justify",'This web application shows the frequency (days per month) of extreme daily temperature and wind events from 1958 and projected through 2100 using global circulation model (GCM) values, 
+		p(style="text-align:justify",'This web application shows the frequency (days per month) of extreme daily temperature and wind events from 1958 and projected through 2100 using global climate model (GCM) values, 
 		which have been quantile mapped using the European Reanalysis (ERA-40) observation-based dataset as a historical baseline.
 		Frequencies of events are displayed using a time series barplot. A bar can be drawn for each of any subset of months per year.
 		Individual months can be highlighted by differently colored time series lines.'),
@@ -21,7 +21,7 @@ function(){
 		The goal is not to develop the perfect web tool, but rather to showcase the data that I have been working with.
 		As such, there are no plans for continued development or refinement of this particular app.'),
 		p(style="text-align:justify",strong('Suggestions:'),'You may download a graphic in pdf form for your convenience using the download button.
-		Any plot your produce on the Conditional Barplots main tab, based on your selection of inputs in the sidebar panel, is downloadable in pdf form.
+		Any plot you produce on the Conditional Barplots main tab, based on your selection of inputs in the sidebar panel, is downloadable in pdf form.
 		Whenever you click the download button, you get whatever graphic is currently displayed in your browser.
 		Formatting of the pdf plot will not match the browser plot exactly, but it will be a close approximation.'),
 		p(style="text-align:justify",'For both the browser display and the pdf download, graphical formatting of the automated visualizations is best when comparing two to four time series barplots. Three is ideal.

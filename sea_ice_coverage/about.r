@@ -1,8 +1,8 @@
 function(){
 	tabPanel("About",value="ts",
 		p(style="text-align:justify",'This web application shows sea ice coverage over the Arctic from 1860 and projected through 2099.
-		The first tab includes a time series plot of total sea ice extent by global circulation model (GCM), including a five-model averaged composite.
-		Linear, quadratic, and locally weighted Loess fitted trends are available for overlay.
+		The first tab includes a time series plot of total sea ice extent by global climate model (GCM), including a five-model averaged composite.
+		Linear, quadratic, and locally weighted LOESS fitted trends are available for overlay.
 		Fitted trend model output is displayed below the plot for each climate model and regression model.'),
 		p(style="text-align:justify",'The second tab shows a panel graphic of spatially explicit sea ice concentration values for each model including the composite.',
 		em('This graphic is for illustration purposes only'),' and should not be treated as spatially accurate with respect to the displayed land masses.
