@@ -1,7 +1,7 @@
 function(data,id,stat="None",n.mo=1,alpha="50",...){
 	require(maptools)
 	if(nchar(alpha)==1) alpha <- paste(0,alpha,sep="")
-	if(n.mo>1) if(length(stat)) if(stat!="None") data <- cbind("placeholder",cast(data,Year+Variable~City,value="Values"))
+	if(n.mo>1) if(length(stat)) if(stat!="None") data <- cbind("placeholder",dcast(data,Year+Variable~City,value="Values"))
 	m <- as.matrix(data[-c(1:3)])
 	rank.ord <- order(apply(m,2,mean))
 	clrs <- paste(c("#000080","#CD3700","#ADFF2F","#8B4513","#006400","#2F4F4F","#CD9B1D",
