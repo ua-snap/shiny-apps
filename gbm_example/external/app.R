@@ -106,6 +106,10 @@ doPlot.ri <- function(...){
 	} else NULL
 }
 
+output$no.vars.selected <- renderUI({
+	HTML(paste('<div>','Select at least one explanatory variable to use gradient boosting to estimate the response.','</div>',sep="",collapse=""))
+})
+
 output$plot.best.iter <- renderPlot({ doPlot.best.iter() }, height=800, width=1000)
 
 output$plot.ri <- renderPlot({ doPlot.ri() }, height=800, width=1000)
