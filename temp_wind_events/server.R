@@ -155,7 +155,7 @@ shinyServer(function(input,output){
 	}
 	
 	output$plot <- renderPlot({
-	doPlot()
+	doPlot(col=1)
 	},
 	height=800, width=1000
 	)
