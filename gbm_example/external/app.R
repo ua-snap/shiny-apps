@@ -110,4 +110,4 @@ output$plot.best.iter <- renderPlot({ doPlot.best.iter() }, height=800, width=10
 
 output$plot.ri <- renderPlot({ doPlot.ri() }, height=800, width=1000)
 
-output$num.cv.folds <- renderPrint({ names(gbm1()) })
+output$show.gbm1.object.names.if.created.successfully <- renderPrint({ names(gbm1()) })
