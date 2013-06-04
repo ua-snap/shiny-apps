@@ -10,7 +10,7 @@ sidebarPanel(
 	uiOutput("showMapPlot"),
 	wellPanel(
 		h5("Select dataset"),
-		div(class="row-fluid", div(class="span6", uiOutput("dat.name")), div(class="span6", uiOutput("vars"))),
+		div(class="row-fluid", div(class="span6", uiOutput("dat.name"), actionButton("goButton", "Build Model")), div(class="span6", uiOutput("vars"))),
 		tags$style(type="text/css", '#dat.name {width: 150px}'),
 		tags$style(type="text/css", '#vars {width: 150px}')
 	),
