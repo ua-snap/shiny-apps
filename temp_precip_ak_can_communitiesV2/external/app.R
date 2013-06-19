@@ -158,7 +158,7 @@ output$legendPos1 <- renderUI({
 })
 
 output$plotFontSize <- renderUI({
-		if(!is.null(dat.sub())) selectInput("plotFontSize","Font size",10:20,selected=16)
+		if(!is.null(dat.sub())) selectInput("plotFontSize","Font size",seq(12,24,by=2),selected=16)
 })
 
 output$altplot <- renderUI({
@@ -251,4 +251,4 @@ output$dlCurTable1 <- downloadHandler(
 	}
 )
 
-output$show.gbm1.object.names.if.created.successfully <- renderPrint({ pooled.var() })
+output$show.gbm1.object.names.if.created.successfully <- renderPrint({ "Hello, world." }) #input$plotFontSize })
