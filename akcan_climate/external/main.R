@@ -18,7 +18,7 @@ mainPanel(
 			)
 		),
 		value="communities"),
-		tabPanel("Regions", textOutput("show.gbm1.object.names.if.created.successfully"), value="regions"),
+		tabPanel("Tab #2", h5("This tab and others not yet available."), value="tab2"),
 		tabPanelAbout(),
 		id="tsp"
 	)
