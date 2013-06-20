@@ -10,8 +10,9 @@ function(){
 		The app allows the user to look at many different kinds of subsets of the data in many ways. There is as much control over how the output graphic looks as there is in determining what data it graphs.
 		There are also buttons at the bottom of the main panel for downloading a csv file of the currently selected data and a pdf of the current plot.'),
 		p(style="text-align:justify",strong('Notes:'),
-		'The app uses a large but not complete subset of the same cities from Alaska and Western Canada which are included in <a/ "http://www.snap.uaf.edu/charts.phpSNAPs" target="_blank">Community Charts tool</a>.
-		There are somewhat fewer communities, including only those with populations greater than 2,500.
+		'The app uses a large but incomplete subset of the same cities from Alaska and Western Canada which are included in the SNAP ',
+		a("Community Charts",href="http://www.snap.uaf.edu/charts.phpSNAPs", target="_blank"),
+		'tool. There are somewhat fewer communities, including only those with populations greater than 2,500.
 		However, there is more versatility in terms of data sources, selection/subsetting options, user control, plotting,
 		and direct access to tabular data and graphic output in file format rather than strictly as browser viewing.'),
 		p(style="text-align:justify",'Positive values for directional wind velocity components indicate...'),
