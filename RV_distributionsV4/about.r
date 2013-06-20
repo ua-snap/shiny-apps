@@ -28,7 +28,7 @@ function(){
 				HTML('</ul>')),
 				strong('Code'),
 				p('Source code available at',
-				a('GitHub', href='https://github.com/ua-snap/shiny-apps/tree/master/RV_distributionsV4')),
+				a('GitHub', href='https://github.com/ua-snap/shiny-apps/tree/master/RV_distributionsV4', target="_blank")),
 				br()
 			),
 			div(class="span3", strong('Related blog posts'),

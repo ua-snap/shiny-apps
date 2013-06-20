@@ -23,7 +23,7 @@ function(){
 				HTML('</ul>')),
 				strong('Code'),
 				p('Source code available at',
-				a('GitHub', href="https://github.com/ua-snap/shiny-apps/tree/devel/ak_station_cru_eda")),
+				a('GitHub', href="https://github.com/ua-snap/shiny-apps/tree/devel/ak_station_cru_eda", target="_blank")),
 				br()
 			),
 			div(class="span4", strong('Related blog posts'),

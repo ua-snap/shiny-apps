@@ -48,7 +48,7 @@ function(){
 				HTML('</ul>')),
 				strong('Code'),
 				p('Source code available at',
-				a('GitHub', href="https://github.com/ua-snap/shiny-apps/tree/master/temp_wind_events/")),
+				a('GitHub', href="https://github.com/ua-snap/shiny-apps/tree/master/temp_wind_events/", target="_blank")),
 				br()
 			),
 			div(class="span4", strong('Related blog posts'),

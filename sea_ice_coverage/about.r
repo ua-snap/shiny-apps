@@ -33,7 +33,7 @@ function(){
 				HTML('</ul>')),
 				strong('Code'),
 				p('Source code available at',
-				a('GitHub', href="https://github.com/ua-snap/shiny-apps/tree/master/sea_ice_coverage")),
+				a('GitHub', href="https://github.com/ua-snap/shiny-apps/tree/master/sea_ice_coverage", target="_blank")),
 				br()
 			),
 			div(class="span4", strong('Related blog posts'),

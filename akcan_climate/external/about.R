@@ -38,7 +38,7 @@ function(){
 				HTML('</ul>')),
 				strong('Code'),
 				p('Source code available at',
-				a('GitHub', href="https://github.com/ua-snap/shiny-apps/tree/master/akcan_climate/")),
+				a('GitHub', href="https://github.com/ua-snap/shiny-apps/tree/master/akcan_climate/", target="_blank")),
 				br()
 			),
 			div(class="span4", strong('Related blog posts'),
