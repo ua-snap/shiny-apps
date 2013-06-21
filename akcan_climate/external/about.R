@@ -11,7 +11,7 @@ function(){
 		There are also buttons at the bottom of the main panel for downloading a csv file of the currently selected data and a pdf of the current plot.'),
 		p(style="text-align:justify",strong('Notes:'),
 		'The app uses a large but incomplete subset of the same cities from Alaska and Western Canada which are included in the SNAP ',
-		a("Community Charts",href="http://www.snap.uaf.edu/charts.phpSNAPs", target="_blank"),
+		a("Community Charts",href="http://www.snap.uaf.edu/charts.php", target="_blank"),
 		'tool. There are somewhat fewer communities, including only those with populations greater than 2,500.
 		However, there is more versatility in terms of data sources, selection/subsetting options, user control, plotting,
 		and direct access to tabular data and graphic output in file format rather than strictly as browser viewing.'),
