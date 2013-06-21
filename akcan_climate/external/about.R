@@ -15,7 +15,6 @@ function(){
 		'tool. There are somewhat fewer communities, including only those with populations greater than 2,500.
 		However, there is more versatility in terms of data sources, selection/subsetting options, user control, plotting,
 		and direct access to tabular data and graphic output in file format rather than strictly as browser viewing.'),
-		p(style="text-align:justify",'Positive values for directional wind velocity components indicate...'),
 		p(style="text-align:justify",strong('Suggestions:'),'For the time being, this developmental version of the app should function very well. Stay tuned for updates.
 		There are a variety of features I am considering adding when I have time.
 		These will likely spill over onto additional main panel tabs, somewhere between the two currently called "Communities" and "About".'),
