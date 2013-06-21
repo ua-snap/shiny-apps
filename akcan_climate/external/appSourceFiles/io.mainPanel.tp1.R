@@ -1,6 +1,8 @@
 output$colorpalettes <- renderUI({
 	if(!is.null(input$colorseq)){
-		if(input$colorseq=="Nominal"){
+		if(input$colorseq=="Nominal" & is.null(input$group)){
+			pal <- c("Accent","Dark2","Pastel1","Pastel2","Paired","Set1","Set2","Set3")
+		} else if(input$colorseq=="Nominal"){
 			pal <- c("Accent","Dark2","Pastel1","Pastel2","Paired","Set1","Set2","Set3")
 			if(n.groups()<=7) pal <- c("CB-friendly",pal)
 			if(!is.null(input$altplot)) if(input$altplot & dat.sub()$Variable[1]=="Precipitation") pal <- paste(rep(pal,each=2),c("fill","border")) 
@@ -28,7 +30,7 @@ output$colorseq <- renderUI({
 		} else if(input$group!="Model"){
 			selectInput("colorseq","Color levels",c("Nominal","Increasing","Centered"),selected="Nominal")
 		} else selectInput("colorseq","Color levels",c("Nominal"),selected="Nominal")
-	}
+	} else if(!is.null(dat.sub())) selectInput("colorseq","Color levels",c("Nominal"),selected="Nominal")
 })
 
 output$legendPos1 <- renderUI({
