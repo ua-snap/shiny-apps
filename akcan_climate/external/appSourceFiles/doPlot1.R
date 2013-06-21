@@ -17,7 +17,7 @@ function(dat,x,y,facet.cols=min(facet.panels(),3)){
 			if(x1) fill <- NULL
 		}
 		if(length(input$vert.facet)) if(input$vert.facet) facet.cols <- 1
-		g <- ggplot(dat, aes_string(x=x,y=y,group=input$group,colour=color,fill=fill)) + 
+		g <- ggplot(dat, aes_string(x=x,y=y,group=input$group,order=input$group,colour=color,fill=fill)) + 
 			theme_grey(base_size=as.numeric(input$plotFontSize)) + ylab(ylb) + ggtitle(main) + theme(legend.position=tolower(input$legendPos1))
 		if(input$colorseq=="Nominal"){
 			if(scm) g <- g + scale_colour_manual(values=cbpalette)

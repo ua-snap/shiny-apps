@@ -18,7 +18,7 @@ mainPanel(
 			)
 		),
 		value="communities"),
-		tabPanel("Tab #2", h5("This tab and others not yet available."), value="tab2"),
+		tabPanel("Tab #2", uiOutput("debugging"), value="tab2"),
 		tabPanelAbout(),
 		id="tsp"
 	)

@@ -38,5 +38,5 @@ output$dlCurTable1 <- downloadHandler( # render table of data subset to csv for 
 	}
 )
 
-# Temporary debugging
-output$show.gbm1.object.names.if.created.successfully <- renderPrint({ "Hello, world." }) #input$plotFontSize })
+# Temporary debugging 
+output$debugging <- renderPrint({ levels(dat.sub()$Month) }) #"This tab and others not yet available." })

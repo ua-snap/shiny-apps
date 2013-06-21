@@ -12,9 +12,9 @@ colorsHCL <- function(n) hcl(h=seq(0,(n-1)/(n),length=n)*360,c=100,l=65,fixup=TR
 
 # So far, the apps uses AR4/CMIP3 historical and projected datasets
 decades.list <- list(paste0(seq(1870,1990,by=10),"s"),paste0(seq(2010,2090,by=10),"s"))
-scennames.list <- list("historical",unique(as.character(AR4_CMIP3_projected_data$Scenario)))
+scennames.list <- list("historical",levels(AR4_CMIP3_projected_data$Scenario))
 modnames <- unique(as.character(AR4_CMIP3_historical_data$Model))
-varnames <- rev(sort(unique(as.character(AR4_CMIP3_historical_data$Variable))))
+varnames <- rev(levels(AR4_CMIP3_historical_data$Variable))
 communities <<- sort(unique(as.character(AR4_CMIP3_historical_data$Community))) # global assignment
 
 cbpalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7") # colorblind-friendly palette option
