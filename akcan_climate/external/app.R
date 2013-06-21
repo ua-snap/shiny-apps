@@ -39,4 +39,4 @@ output$dlCurTable1 <- downloadHandler( # render table of data subset to csv for 
 )
 
 # Temporary debugging 
-output$debugging <- renderPrint({ levels(dat.sub()$Month) }) #"This tab and others not yet available." })
+output$debugging <- renderPrint({ "This tab and others not yet available." }) # levels(dat.sub()$Month) }) # 
