@@ -1,8 +1,8 @@
 library(shiny)
-pkgs <- c("ggplot2","gridExtra","Hmisc")
+pkgs <- c("ggplot2","gridExtra","Hmisc","png")
 pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
 if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
-library(ggplot2); library(gridExtra); library(Hmisc)
+library(ggplot2); library(gridExtra); library(png); library(Hmisc)
 load("external/AR4_CMIP3_historical_pop2500.RData",envir=.GlobalEnv) # global assignment
 load("external/AR4_CMIP3_projected_pop2500.RData",envir=.GlobalEnv) # global assignment
 
