@@ -1,9 +1,11 @@
-function(dat,x,y,facet.cols=min(facet.panels(),3)){
+function(dat,x,y,facet.cols=min(facet.panels(),3),show.logo=F){
 	scm <- sfm <- FALSE
 	bar.pos <- "dodge"
+	fontsize=as.numeric(input$plotFontSize)
+	if(show.logo) fontsize <- fontsize - 4
 	if(!is.null(dat.sub()) & !is.null(input$colorpalettes)){
 		if(dat.sub()$Variable[1]=="Temperature") ylb <- paste0("Temperature (",input$units,")") else ylb <- paste0("Precipitation (",input$units,")")
-		main <- paste(input$locationSelect,dat.sub()$Region[1],sep=", ")
+		main <- paste(strsplit(input$locationSelect,", ")[[1]][1],dat.sub()$Region[1],sep=", ")
 		if(input$jitterXY) point.pos <- position_jitter(0.1,0.1) else point.pos <- "identity"
 		if(!is.null(input$bartype) & !is.null(input$altplot)) if(input$altplot) bar.pos <- tolower(strsplit(input$bartype," ")[[1]])
 		color <- fill <- input$group
@@ -18,7 +20,8 @@ function(dat,x,y,facet.cols=min(facet.panels(),3)){
 		}
 		if(length(input$vert.facet)) if(input$vert.facet) facet.cols <- 1
 		g <- ggplot(dat, aes_string(x=x,y=y,group=input$group,order=input$group,colour=color,fill=fill)) + 
-			theme_grey(base_size=as.numeric(input$plotFontSize)) + ylab(ylb) + ggtitle(main) + theme(legend.position=tolower(input$legendPos1))
+			theme_grey(base_size=fontsize) + ylab(ylb) + theme(legend.position=tolower(input$legendPos1))
+		if(!show.logo) g <- g + ggtitle(main)
 		if(input$colorseq=="Nominal"){
 			if(scm) g <- g + scale_colour_manual(values=cbpalette)
 			if(sfm) g <- g + scale_fill_manual(values=cbpalette)
@@ -60,6 +63,16 @@ function(dat,x,y,facet.cols=min(facet.panels(),3)){
 				}
 				g <- g + stat_summary(data=dat.sub.collapseGroups(), fun.data="mean_cl_boot", geom="smooth", colour="black", fill="black")
 			}
+		}
+		if(show.logo){
+			grid.bot <- arrangeGrob(textGrob(""), g, textGrob(""), ncol=3, widths=c(1/40,19/20,1/40))
+			grid.top <- arrangeGrob(
+				textGrob(""),
+				textGrob(main, x=unit(0.075,"npc"), y=unit(0.5,"npc"), gp=gpar(fontsize=fontsize), just=c("left")),
+				rasterGrob(logo.mat, x=unit(0.85,"npc"), y=unit(0.5,"npc"), just=c("right")),
+				textGrob(""),
+				widths=c(1/40,0.8,0.2,1/40), ncol=4)
+			g <- grid.arrange(textGrob(""),grid.top,grid.bot,textGrob(""),heights=c(1/40,1/20,18/20,1/40),ncol=1)
 		}
 		print(g)
 	} else plot(0,0,type="n",axes=F,xlab="",ylab="")

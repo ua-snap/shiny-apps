@@ -1,13 +1,19 @@
 function(){
 	tabPanel("About",
 		p(style="text-align:justify",'This R Shiny web app is currently under development.
+		The data in the app and their varied representations are subject to change and should not be considered valid and vetted until the final version is released and this message has been removed.
 		This release includes both historical and projected global climate model (GCM) output for temperature and precipitation, in the form of decadal means and totals, respectively.
-		There are five AR4/CMIP3 GCMs and three emissions scenarios for each.'),
+		There are five Coupled Model Intercomparison Project Phase 3 (CMIP3) GCMs and three emissions scenarios for each.'),
 		p(style="text-align:justify",'The app currently has many features.
 		The upper sidebar panel is for selecting subsets of data, choosing units of measurement, and performing the subset action and creating a new plot.
-		The lower sidebar panel is for general plot formatting. Most options here will not auto-update the graphic in the main panel, but some may.
-		Generally the user must click the update button. The formatting options that appear in the main panel below the plot are ones that will force an auto-upate of the plot as soon as they are changed.
-		The app allows the user to look at many different kinds of subsets of the data in many ways. There is as much control over how the output graphic looks as there is in determining what data it graphs.
+		Any time data selections are altered, a new subset and plot must be generating by clicking the appropriate button.'),
+		p(style="text-align:justify",'The lower sidebar panel is for general plot formatting.
+		Most options here will not auto-update the graphic in the main panel, but currently some may.
+		Also, some options are mutually exclusive, so selecting one may immediately alter the selection of another, which may auto-update the plot.
+		Generally, however, as with data selection, the user must click the corresponding update button after making changes to formatting selections.
+		The formatting options that appear in the main panel below the plot are ones that will always force an auto-upate of the plot as soon as they are changed.'),
+		p(style="text-align:justify",'The app allows the user to look at many different kinds of subsets of the data in many ways.
+		There is as much control over how the output graphic looks as there is in determining which data it graphs.
 		There are also buttons at the bottom of the main panel for downloading a csv file of the currently selected data and a pdf of the current plot.'),
 		p(style="text-align:justify",strong('Notes:'),
 		'The app uses a large but incomplete subset of the same cities from Alaska and Western Canada which are included in the SNAP ',

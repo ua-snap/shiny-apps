@@ -26,7 +26,7 @@ output$dlCurPlot1 <- downloadHandler( # render plot from doPlot1 to pdf for down
 	filename = 'curPlot1.pdf',
 	content = function(file){
 		pdf(file = file, width=11, height=8.5)
-		doPlot1(dat=dat.sub(), x=input$xtime, y="value")
+		doPlot1(dat=dat.sub(), x=input$xtime, y="value",show.logo=T)
 		dev.off()
 	}
 )
