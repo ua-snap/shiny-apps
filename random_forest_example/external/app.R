@@ -190,7 +190,7 @@ output$dl_numVarPlot <- downloadHandler( # render plot to pdf for download
 	filename = 'numVarPlot.pdf',
 	content = function(file){
 		pdf(file = file, width=11, height=8.5)
-		numVarPlot(d=numVar, fs-fs.sub)
+		numVarPlot(d=numVar(), fs-fs.sub)
 		dev.off()
 	}
 )
