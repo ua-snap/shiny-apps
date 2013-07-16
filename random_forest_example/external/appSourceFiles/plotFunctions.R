@@ -110,6 +110,9 @@ errorRatePlot <- function(err,clrs,fontsize){
 	fontsize <- as.numeric(fontsize)
 	errors.dat <- cbind(1:nrow(err),melt(data.frame(err)))
 	names(errors.dat) <- c("Trees","Type","Error")
+	errors.dat$Type <- as.character(errors.dat$Type)
+	errors.dat$Type <-gsub("\\.\\.","\\. ",errors.dat$Type)
+	errors.dat$Type <- factor(errors.dat$Type)
 	errors.dat$Type <- factor(errors.dat$Type,levels(errors.dat$Type)[c(2:nlevels(errors.dat$Type),1)])
 	g1 <- ggplot(data=errors.dat,aes(x=Trees,y=Error,colour=Type,group=Type,order=Type)) + theme_grey(base_size=fontsize) + theme(legend.position="top") +
 	scale_colour_manual(values=c(clrs[1:(nlevels(errors.dat$Type)-1)],"#000000")) +

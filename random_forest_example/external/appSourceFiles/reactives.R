@@ -14,7 +14,6 @@ varnames <- reactive({
 })
 
 varnamesfactors <- reactive({
-	print(var.is.factor)
 	if(!is.null(varnames())) v <- varnames()[var.is.factor] else v <- NULL
 	v
 })
