@@ -2,7 +2,7 @@ function(){
 	tabPanel("About",
 		p(style="text-align:justify",'This R Shiny web app is currently under development.
 		The data in the app and their varied representations are subject to change and should not be considered valid and vetted until the final version is released and this message has been removed.
-		This release includes both historical and projected global climate model (GCM) output for temperature and precipitation, in the form of decadal means and totals, respectively.
+		This release includes both historical and projected global climate model (GCM) output for decadal mean temperature and precipitation.
 		There are five Coupled Model Intercomparison Project Phase 3 (CMIP3) GCMs and three emissions scenarios for each.'),
 		p(style="text-align:justify",'The app currently has many features.
 		The upper sidebar panel is for selecting subsets of data, choosing units of measurement, and performing the subset action and creating a new plot.
@@ -20,7 +20,9 @@ function(){
 		a("Community Charts",href="http://www.snap.uaf.edu/charts.php", target="_blank"),
 		'tool. There are somewhat fewer communities, including only those with populations greater than 2,500.
 		However, there is more versatility in terms of data sources, selection/subsetting options, user control, plotting,
-		and direct access to tabular data and graphic output in file format rather than strictly as browser viewing.'),
+		and direct access to tabular data and graphic output in file format rather than strictly as browser viewing.
+		I cannot vouch for the population data. I am sure that for some locations the population value shown in small table below the plot has low precision and/or accuracy, or is at least out of date,
+		but it is not relevant to the app. I only mention it since the numbers are in fact displayed on the screen.'),
 		p(style="text-align:justify",strong('Suggestions:'),'For the time being, this developmental version of the app should function very well. Stay tuned for updates.
 		There are a variety of features I am considering adding when I have time.
 		These will likely spill over onto additional main panel tabs, somewhere between the two currently called "Communities" and "About".'),

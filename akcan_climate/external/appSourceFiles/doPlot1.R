@@ -5,6 +5,7 @@ function(dat,x,y,facet.cols=min(facet.panels(),3),show.logo=F){
 	if(show.logo) fontsize <- fontsize - 4
 	if(!is.null(dat.sub()) & !is.null(input$colorpalettes)){
 		if(dat.sub()$Variable[1]=="Temperature") ylb <- paste0("Temperature (",input$units,")") else ylb <- paste0("Precipitation (",input$units,")")
+		if(dat.sub()$Variable[1]=="Precipitation" & input$altplot) if(input$bartype=="Fill (Proportions)") ylb <- "Precipitation (proportions)"
 		main <- paste(strsplit(input$locationSelect,", ")[[1]][1],dat.sub()$Region[1],sep=", ")
 		if(input$jitterXY) point.pos <- position_jitter(0.1,0.1) else point.pos <- "identity"
 		if(!is.null(input$bartype) & !is.null(input$altplot)) if(input$altplot) bar.pos <- tolower(strsplit(input$bartype," ")[[1]])
