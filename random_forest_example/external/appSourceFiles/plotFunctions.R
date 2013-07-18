@@ -82,7 +82,8 @@ pdPlot <- function(pd,clrs,fontsize){
 		g1 <- g1 + #scale_colour_gradient2( low = "orange4", mid="white", high = "purple4") +
 		theme(legend.position="top", legend.key.width=unit(0.1,"npc")) +
 		#geom_line(aes_string(colour=names(pd)[2]),size=1.5)
-		geom_line(colour="black",size=1.5)
+		geom_line(colour="black",size=1.5) +
+		labs(y=ylb)
 	} else {
 		g1 <- ggplot(data=pd,aes_string(x=names(pd)[1],y=names(pd)[2],colour=names(pd)[1],fill=names(pd)[1],order=names(pd)[1])) + theme_grey(base_size=fontsize)
 		g1 <- g1 + theme(legend.position="top") + geom_bar(stat="identity") +
