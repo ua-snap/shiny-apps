@@ -116,7 +116,7 @@ errorRatePlot <- function(err,clrs,fontsize){
 	errors.dat$Type <- factor(errors.dat$Type)
 	errors.dat$Type <- factor(errors.dat$Type,levels(errors.dat$Type)[c(2:nlevels(errors.dat$Type),1)])
 	g1 <- ggplot(data=errors.dat,aes(x=Trees,y=Error,colour=Type,group=Type,order=Type)) + theme_grey(base_size=fontsize) + theme(legend.position="top") +
-	scale_colour_manual(values=c(clrs[1:(nlevels(errors.dat$Type)-1)],"#000000")) +
+	scale_colour_manual(values=clrs[1:(nlevels(errors.dat$Type))]) +
 	geom_line(size=1) +	labs(y="Error Rate")
 	print(g1)
 }
