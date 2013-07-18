@@ -2,7 +2,7 @@ library(shiny)
 pkgs <- c("randomForest","ggplot2","plyr","reshape2","gridExtra","gtable")
 pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
 if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
-library(randomForest); library(ggplot2); library(plyr); library(reshape2); library(gridExtra); library(gtable); #library(parallel) # parallel experimental
+library(randomForest); library(ggplot2); library(plyr); library(reshape2); library(gridExtra); library(gtable); library(parallel) # parallel experimental
 d <- read.csv("external/flagData.csv")
 clrs <- c("#E69F00", "#56B4E9", "#8B4513", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#551A8B", "#999999")
 var.is.factor <- sapply(d[-1],is.factor)

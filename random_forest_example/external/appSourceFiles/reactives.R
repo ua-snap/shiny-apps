@@ -152,8 +152,14 @@ numVar <- reactive({
 		if(!is.null(input$cvRepsButton) & !is.null(input$n.reps)){
 			if(input$cvRepsButton!=0){
 				n <- as.numeric(input$n.reps)
-				#x <- some output from parLapply or parSapply??? #faster, depends on number of cores used, unfortuantely can't make this work, might not be possible with Shiny
-				x <- replicate(n, rfcv(d.sub2(), d.sub()[,input$response],step=0.75), simplify=FALSE) #slower, serial, takes about n minutes
+				r <- input$response
+				dsub <- d.sub()
+				dsub2 <- d.sub2()
+				cl <- makeCluster(getOption("cl.cores", n))
+				clusterExport(cl,c("dsub2","dsub","r"),envir=environment())
+				x <- parLapply(cl,1:n, fun = function(dummy) randomForest::rfcv(dsub2, dsub[,r],step=0.75))
+				stopCluster(cl)
+				#x <- replicate(n, rfcv(d.sub2(), d.sub()[,input$response],step=0.75), simplify=FALSE) #slower, serial, takes about n minutes
 				err.cv <- sapply(x, "[[", "error.cv")
 				d <- data.frame(x[[1]]$n.var, err.cv,rowMeans(err.cv))
 				names(d) <- c("NV",paste("Rep",c(1:n),sep="."),"Mean")
