@@ -4,7 +4,7 @@ sysCall <- reactive({
 	if(!is.null(input$goButton)){
 		if(input$goButton==0) return(x)
 		isolate(
-			system("/var/www/shiny-server/shiny-apps/system_call_test-devel/external/shell.txt /var/www/shiny-server/shiny-apps/system_call_test-devel/external/script.R")
+			system(paste0(getwd(),"/external/shell.txt ",getwd(),"/external/script.R",sep=""))
 			#system("Y:/Users/mfleonawicz/github/shiny-apps/system_call_test-devel/external/shell.txt Y:/Users/mfleonawicz/github/shiny-apps/system_call_test-devel/external/script.R")
 		)
 		x <- paste("Attempted to run system call. wd:",getwd())

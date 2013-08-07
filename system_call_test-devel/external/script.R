@@ -1,5 +1,4 @@
-sink(file="/var/www/shiny-server/shiny-apps/system_call_test-devel/system_call_test_results.txt")
-#sink(file="Y:/Shared/Users/mfleonawicz/tmp/system_call_test_results.txt")
+sink(file=file.path(getwd(),"system_call_test_results.txt"))
 getwd()
 x <- runif(1000,0,10)
 y <- 0.5*x + rnorm(1000,2,2)
