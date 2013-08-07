@@ -5,7 +5,7 @@ sysCall <- reactive({
 		if(input$goButton==0) return(x)
 		isolate(
 			observe({
-				system(paste0(getwd(),"/external/shell.txt ",getwd(),"/external/script.R",sep=""))
+				system("external/shell.txt external/script.R")
 				#system("Y:/Users/mfleonawicz/github/shiny-apps/system_call_test-devel/external/shell.txt Y:/Users/mfleonawicz/github/shiny-apps/system_call_test-devel/external/script.R")
 			})
 		)
