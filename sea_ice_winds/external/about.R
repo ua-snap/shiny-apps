@@ -1,0 +1,62 @@
+function(){
+	tabPanel("About",
+		p(style="text-align:justify",'This web application displays annual and decadal time series of mean monthly sea ice concentrations and proportion of days within a month exhibiting extreme wind events.
+		The graphics can be displayed as bar or line plots. Plots are for a specific month and range in 10-year increments, with a maximum time selection of 1960 - 2099.
+		Wind values are a three-model average of Global Climate Model (GCM) outputs. Sea ice values are a five-model average of GCM outputs. The wind and sea ice GCMs are not the same models.
+		Different model evaluation procedures were used to assess which Coupled Model Intercomparison Project (CMIP5) GCMs were well-suited to Alaska/Arctic analyses for winds and sea ice.'),
+		p(style="text-align:justify",'The CMIP5 composite model wind event frequencies are aggregated to counts per month from daily GCM outputs.
+		Sea ice concentration comes from GCM outputs originally at the monthly time scale.
+		Since proportions of days in a month and concentration values both range from zero to one, they conveniently plot on the same scale.'),
+		p(style="text-align:justify",'Selection of RCP 6.0 or RCP 8.5 refers to wind data only. All sea ice data are from RCP X.X [FILL THIS IN LATER].
+		The negative sign in wind threshold levels is ignored when the variable, Wind, is selected, since this is strictly wind magnitude.
+		When WE wind or NS wind are selected, the app plots frequencies of wind events GREATER than the threshold. For instance, greater than -10.8 m/s does not mean it is necessarily windy; there could be no wind.
+		Later I will add the ability to select less than a threshold in addtion to greater than a threshold.'),
+		p(style="text-align:justify",'There are three arctic seas to choose from. Sea ice concentration and wind speeds are averaged over their domains.
+		There is additionally the option of using the entire sea area or only a coastal portion of the sea.'),
+		br(),
+
+		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),
+		strong('Author'),
+		p('Matthew Leonawicz',br(),
+			'Statistician | useR',br(),
+			a('Scenarios Network for Alaska and Arctic Planning', href="http://www.snap.uaf.edu/", target="_blank"),
+			'|',
+			a('Blog', href="http://blog.snap.uaf.edu/", target="_blank")
+		),
+		br(),
+		
+		div(class="row-fluid",
+			div(class="span4",strong('Related apps'),
+				p(HTML('<ul>'),
+					HTML('<li>'),a("Coastal Alaska Extreme Temperature and Wind Events", href="http://shiny.snap.uaf.edu/temp_wind_events/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Arctic Sea Ice Extents and Concentrations", href="http://shiny.snap.uaf.edu/sea_ice_coverage/", target="_blank"),HTML('</li>'),
+				HTML('</ul>')),
+				strong('Code'),
+				p('Source code available at',
+				a('GitHub', href="https://github.com/ua-snap/shiny-apps/tree/master/sea_ice_wind", target="_blank")),
+				br()
+			),
+			div(class="span4", strong('Related blog posts'),
+				p(HTML('<ul>'),
+					HTML('<li>'),a("Sea ice concentration and extreme wind events in the arctic", href="ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Alaska climate data EDA", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-alaska-climate-data-eda/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Alaska/western Canada communities and climate", href="http://blog.snap.uaf.edu/2013/07/16/r-shiny-app-alaskawestern-canada-communities-and-climate/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Coastal Alaska extreme temperature and wind events", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-extreme-events/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Arctic sea ice extents and concentrations", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-sea-ice/", target="_blank"),HTML('</li>'),
+				HTML('</ul>')),
+				br()
+			),
+			div(class="span4",
+				strong('References'),
+				p(HTML('<ul>'),
+					HTML('<li>'),a('Coded in R', href="http://www.r-project.org/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a('Built with the Shiny package', href="http://www.rstudio.com/shiny/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),"Additional supporting R packages",HTML('</li>'),
+					HTML('<ul>'),
+						HTML('<li>'),a('Hmisc', href="http://cran.r-project.org/web/packages/Hmisc/index.html", target="_blank"),HTML('</li>'),
+					HTML('<ul>'),
+				HTML('</ul>'))
+			)
+		)
+	)
+}

@@ -1,0 +1,59 @@
+# Source reactive expressions and other code
+source("external/appSourceFiles/reactives.R",local=T) # source reactive expressions
+
+source("external/appSourceFiles/io.sidebar.wp1.R",local=T) # source input/output objects associated with sidebar wellPanel 1
+
+#source("external/appSourceFiles/io.sidebar.wp2.R",local=T) # source input/output objects associated with sidebar wellPanel 2
+
+source("external/appSourceFiles/io.mainPanel.tp1.R",local=T) # source input/output objects associated with mainPanel tabPanel 1
+
+source("external/appSourceFiles/plotFunctions.R",local=T) # source plotting functions
+
+wind.cut <- reactive({ if(input$var!="Wind") input$cut else abs(as.numeric(input$cut)) })
+varname <- reactive({ if(input$var!="Wind") input$var else tolower(input$var) })
+ylab.ann <- "Annual concentration / fraction"
+main.ann <- reactive({ paste0("Annual ",input$mo,". sea ice concentration and fraction of days with ",varname(),"s > ",wind.cut()," m/s") })
+ylab.dec <- "Decadal mean concentration / fraction"
+main.dec <- reactive({ paste0("Decadal mean ",input$mo,". sea ice concentration and fraction of days with ",varname(),"s > ",wind.cut()," m/s") })
+cex <- 1.7
+
+# Primary outputs
+# Plot class error and confusion matrix
+output$plotByYear <- renderPlot({ # render plot for mainPanel tabsetPanel tabPanel
+		if(!is.null(w.prop.dec()) & !is.null(i.prop.dec()) & !is.null(input$annstyle)){
+			tsPlot(w.prop.yrs()$Year,w.prop.yrs()$Freq,i.prop.yrs()$Con,input$yrs,v1name=input$var,v2name="Sea ice",style=input$annstyle,cex1=cex,
+				ylim=c(0,1),xlb="Year",ylb=ylab.ann,mn=main.ann())
+		}
+}, height=480, width=1600)
+
+output$dl_plotByYear <- downloadHandler( # render plot to pdf for download
+	filename = 'plotByYear.pdf',
+	content = function(file){
+		pdf(file = file, width=16, height=4.8)
+		tsPlot(w.prop.yrs()$Year,w.prop.yrs()$Freq,i.prop.yrs()$Con,input$yrs,v1name=input$var,v2name="Sea ice",style=input$annstyle,cex1=cex-0.4,
+			ylim=c(0,1),xlb="Year",ylb=ylab.ann,mn=main.ann())
+		dev.off()
+	}
+)
+
+output$plotByDecade <- renderPlot({ # render plot for mainPanel tabsetPanel tabPanel
+		if(!is.null(w.prop.dec()) & !is.null(i.prop.dec()) & !is.null(input$decstyle)){
+			if(nrow(i.prop.dec())>1){
+				tsPlot(w.prop.dec()$Year,w.prop.dec()$Freq,i.prop.dec()$Con,decadal=T,input$yrs,v1name=input$var,v2name="Sea ice",style=input$decstyle,xaxt="n",cex1=cex,
+					ylim=c(0,1),xlb="Decade",ylb=ylab.dec,mn=main.dec())
+			}
+		}
+}, height=480, width=1600)
+
+output$dl_plotByDecade <- downloadHandler( # render plot to pdf for download
+	filename = 'plotByDecade.pdf',
+	content = function(file){
+		pdf(file = file, width=16, height=4.8)
+		tsPlot(w.prop.dec()$Year,w.prop.dec()$Freq,i.prop.dec()$Con,decadal=T,input$yrs,v1name=input$var,v2name="Sea ice",style=input$decstyle,xaxt="n",cex1=cex-0.4,
+			ylim=c(0,1),xlb="Decade",ylb=ylab.dec,mn=main.dec())
+		dev.off()
+	}
+)
+
+# Temporary debugging 
+output$debugging <- renderPrint({ input$yrs }) #"Tab not yet available." })
