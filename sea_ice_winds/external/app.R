@@ -15,7 +15,7 @@ ylab.ann <- "Annual concentration / fraction"
 main.ann <- reactive({ paste0("Annual ",input$mo,". sea ice concentration and fraction of days with ",varname(),"s > ",wind.cut()," m/s") })
 ylab.dec <- "Decadal mean concentration / fraction"
 main.dec <- reactive({ paste0("Decadal mean ",input$mo,". sea ice concentration and fraction of days with ",varname(),"s > ",wind.cut()," m/s") })
-cex <- 1.7
+cex <- 1.3
 
 # Primary outputs
 # Plot class error and confusion matrix
@@ -24,12 +24,12 @@ output$plotByYear <- renderPlot({ # render plot for mainPanel tabsetPanel tabPan
 			tsPlot(w.prop.yrs()$Year,w.prop.yrs()$Freq,i.prop.yrs()$Con,input$yrs,v1name=input$var,v2name="Sea ice",style=input$annstyle,cex1=cex,
 				ylim=c(0,1),xlb="Year",ylb=ylab.ann,mn=main.ann())
 		}
-}, height=480, width=1600)
+}, height=400, width=1200)
 
 output$dl_plotByYear <- downloadHandler( # render plot to pdf for download
 	filename = 'plotByYear.pdf',
 	content = function(file){
-		pdf(file = file, width=16, height=4.8)
+		pdf(file = file, width=12, height=4)
 		tsPlot(w.prop.yrs()$Year,w.prop.yrs()$Freq,i.prop.yrs()$Con,input$yrs,v1name=input$var,v2name="Sea ice",style=input$annstyle,cex1=cex-0.4,
 			ylim=c(0,1),xlb="Year",ylb=ylab.ann,mn=main.ann())
 		dev.off()
@@ -43,12 +43,12 @@ output$plotByDecade <- renderPlot({ # render plot for mainPanel tabsetPanel tabP
 					ylim=c(0,1),xlb="Decade",ylb=ylab.dec,mn=main.dec())
 			}
 		}
-}, height=480, width=1600)
+}, height=400, width=1200)
 
 output$dl_plotByDecade <- downloadHandler( # render plot to pdf for download
 	filename = 'plotByDecade.pdf',
 	content = function(file){
-		pdf(file = file, width=16, height=4.8)
+		pdf(file = file, width=12, height=4)
 		tsPlot(w.prop.dec()$Year,w.prop.dec()$Freq,i.prop.dec()$Con,decadal=T,input$yrs,v1name=input$var,v2name="Sea ice",style=input$decstyle,xaxt="n",cex1=cex-0.4,
 			ylim=c(0,1),xlb="Decade",ylb=ylab.dec,mn=main.dec())
 		dev.off()

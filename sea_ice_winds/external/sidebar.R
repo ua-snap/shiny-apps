@@ -1,10 +1,10 @@
 sidebarPanel_2(
-	span="span2",
+	span="span3",
 	tags$head(
-		tags$style(type="text/css", "select { max-width: 150px; }"),
-		tags$style(type="text/css", "textarea { max-width: 200px; }"),
-		tags$style(type="text/css", ".jslider { max-width: 200px; }"),
-		tags$style(type='text/css', ".well { max-width: 250px; }")
+		tags$style(type="text/css", "select { max-width: 120px; }"),
+		tags$style(type="text/css", "textarea { max-width: 300px; }"),
+		tags$style(type="text/css", ".jslider { max-width: 400px; }"),
+		tags$style(type='text/css', ".well { max-width: 400px; }")
 	),
 	wellPanel(
 		checkboxInput("showWP1",h5("Data selection"),FALSE),
@@ -19,7 +19,7 @@ sidebarPanel_2(
 			),
 			div(class="row-fluid",
 				div(class="span11",uiOutput("rcp")),
-				div(class="span1",helpPopup('Choose an RCP','You may select a single RCP. Only two RCPs are available for the wind data.'))
+				div(class="span1",helpPopup('Choose an RCP','You may select a single RCP. Only two RCPs are available for the wind data. Sea ice data are strictly RCP 8.5.'))
 			),
 			div(class="row-fluid",
 				div(class="span11",uiOutput("var")),

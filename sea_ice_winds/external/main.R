@@ -1,5 +1,5 @@
 mainPanel_2(
-	span="span10",
+	span="span9",
 	tabsetPanel(
 		tabPanel("Time series plots",
 			#uiOutput("debugging"),
@@ -7,12 +7,12 @@ mainPanel_2(
 				div(class="span3", uiOutput("tp.annualts")),
 				div(class="span3", uiOutput("tp.annstyle"))
 			),
-			plotOutput("plotByYear"),
+			plotOutput("plotByYear",height="400px"),
 			div(class="row-fluid",
 				div(class="span3", uiOutput("tp.decadalts")),
 				div(class="span3", uiOutput("tp.decstyle"))
 			),
-			plotOutput("plotByDecade"),
+			plotOutput("plotByDecade",height="400px"),
 			div(class="row-fluid",
 				div(class="span3", downloadButton("dl_plotByYear","Download annual graphic")),
 				div(class="span3", downloadButton("dl_plotByDecade","Download decadal graphic"))

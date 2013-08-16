@@ -1,2 +1,2 @@
-# Random Forest meta-parameters
+# Second sidebar wellPanel not currently in use
 

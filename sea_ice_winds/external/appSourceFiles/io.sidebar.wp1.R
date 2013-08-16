@@ -8,7 +8,7 @@ output$mo <- renderUI({
 })
 
 output$rcp <- renderUI({
-		selectInput("rcp","RCP:",choices=c("RCP 6.0","RCP 8.5"),selected="RCP 6.0")
+		selectInput("rcp","Winds RCP:",choices=c("RCP 6.0","RCP 8.5"),selected="RCP 6.0")
 })
 
 output$var <- renderUI({
