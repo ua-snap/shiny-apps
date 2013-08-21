@@ -1,6 +1,8 @@
 sidebarPanel_2(
 	span="span3",
 	tags$head(
+		#tags$link(rel="stylesheet", type="text/css", href="styles_black_orange.css"),
+		#tags$link(rel="stylesheet", type="text/css", href="jquery.slider.min.css"),
 		tags$style(type="text/css", "select { max-width: 120px; }"),
 		tags$style(type="text/css", "textarea { max-width: 300px; }"),
 		tags$style(type="text/css", ".jslider { max-width: 400px; }"),

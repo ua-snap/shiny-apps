@@ -8,6 +8,7 @@ mainPanel_2(
 				div(class="span3", uiOutput("tp.annstyle"))
 			),
 			plotOutput("plotByYear",height="400px"),
+			br(),
 			div(class="row-fluid",
 				div(class="span3", uiOutput("tp.decadalts")),
 				div(class="span3", uiOutput("tp.decstyle"))

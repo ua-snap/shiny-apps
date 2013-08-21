@@ -11,8 +11,11 @@ shinyUI(pageWithSidebar(
 		HTML(
 			'<div id="stats_header">
 			CMIP5 Quantile-mapped GCM Daily Data
+			<a href="http://accap.uaf.edu" target="_blank">
+			<img id="stats_logo" align="right" alt="ACCAP Logo" src="./img/accap_sidebyside.png" />
+			</a>
 			<a href="http://snap.uaf.edu" target="_blank">
-			<img id="stats_logo" align="right" alt="SNAP Logo" src="images/SNAP-ACCAP_color_sidebyside.png" />
+			<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/snap_sidebyside.png" />
 			</a>
 			</div>'
 		), h3, "CMIP5 Quantile-mapped GCM Daily Data"
