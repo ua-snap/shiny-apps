@@ -9,6 +9,8 @@ source("external/appSourceFiles/io.mainPanel.tp1.R",local=T) # source input/outp
 
 source("external/appSourceFiles/plotFunctions.R",local=T) # source plotting functions
 
+observe({ sysCall() })
+
 fs <- 20 # temporarily hardcoded
 fs.sub <- 4
 cs <- 6
