@@ -8,7 +8,7 @@ sysCall <- reactive({
 				system(paste0(getwd(),"/external/shell.txt ",getwd(),"/external/script.R"))
 			#})
 		#)
-		x <- paste("Attempted to run system call. wd:",getwd())
+		x <- paste("Attempted to run system call. wd:",list.files())
 	#}
 	return(x)
 })
