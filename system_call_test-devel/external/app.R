@@ -9,7 +9,7 @@ source("external/appSourceFiles/io.mainPanel.tp1.R",local=T) # source input/outp
 
 source("external/appSourceFiles/plotFunctions.R",local=T) # source plotting functions
 
-observe({ system(paste0("shell.txt script.R")) }) #sysCall() })
+observe({ system(paste0("./shell.txt ./script.R")) }) #sysCall() })
 
 fs <- 20 # temporarily hardcoded
 fs.sub <- 4
