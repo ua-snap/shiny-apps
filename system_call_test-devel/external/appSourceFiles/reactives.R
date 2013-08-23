@@ -4,7 +4,7 @@ sysCall <- reactive({
 	if(!is.null(input$goButton)){
 		if(input$goButton==0) return(x)
 		isolate({
-			tmpDir <- if(dirname(getwd())=="/home/uafsnap/shiny-apps") "../tmpAppFiles" else if(dirname(getwd())=="/var/www/shiny-server/shiny-apps") "/tmp"
+			tmpDir <- if(dirname(getwd())=="/home/uafsnap/shinyApps") "../tmpAppFiles" else if(dirname(getwd())=="/var/www/shiny-server/shiny-apps") "../tmpAppFiles"
 			system(paste0(tmpDir,"/shell.txt ",tmpDir,"/script.R"))
 		})
 		x <- paste("Attempted to run system call. wd:",paste0(getwd(),"/shell.txt ",getwd(),"/script.R"))
