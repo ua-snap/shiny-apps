@@ -4,7 +4,7 @@ sysCall <- reactive({
 	if(!is.null(input$goButton)){
 		if(input$goButton==0) return(x)
 		isolate(
-			system("touch /tmp/file.tmp")
+			system("touch /tmp/file.tmp"),
 			observe({
 				system("/tmp/shell.txt /tmp/script.R") #, wait=FALSE, show.output.on.console=FALSE)
 			})
