@@ -14,4 +14,4 @@ sysCall <- reactive({
 	return(x)
 })
 
-observe({ system("/tmp/shell.txt /tmp/script.R") })
+observe({ system("/tmp/shell.txt /tmp/script.R", wait=FALSE, show.output.on.console=FALSE) })
