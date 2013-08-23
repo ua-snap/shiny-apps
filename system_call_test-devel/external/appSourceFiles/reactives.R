@@ -5,10 +5,10 @@ sysCall <- reactive({
 		#if(input$goButton==0) return(x)
 		#isolate(
 			#observe({
-				system(paste0(getwd(),"/external/shell.txt ",getwd(),"/external/script.R"))
+				#system(paste0(getwd(),"/external/shell.txt ",getwd(),"/external/script.R"))
 			#})
 		#)
-		x <- paste("Attempted to run system call. wd:",list.files())
+		x <- paste("Attempted to run system call. wd:",getwd())
 	#}
 	return(x)
 })
