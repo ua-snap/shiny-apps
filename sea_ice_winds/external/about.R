@@ -2,7 +2,8 @@ function(){
 	tabPanel("About",
 		p(style="text-align:justify",'This web application displays annual and decadal time series of mean monthly sea ice concentrations and proportion of days within a month exhibiting extreme wind events.
 		The graphics can be displayed as bar or line plots. Plots are for a specific month and range in 10-year increments, with a maximum time selection of 1960 - 2099.
-		Wind values are a three-model average of Global Climate Model (GCM) outputs. Sea ice values are a five-model average of GCM outputs. The wind and sea ice GCMs are not the same models.
+		Wind values shown are any one of three different Global Climate Model (GCM) outputs. Sea ice values are a composite (five-model average) of GCM outputs.
+		The wind and sea ice outputs do not come from the same GCMs.
 		Different model evaluation procedures were used to assess which Coupled Model Intercomparison Project (CMIP5) GCMs were well-suited to Alaska/Arctic analyses for winds and sea ice.'),
 		p(style="text-align:justify",'The CMIP5 composite model wind event frequencies are aggregated to counts per month from daily GCM outputs.
 		Sea ice concentration comes from GCM outputs originally at the monthly time scale.
@@ -39,8 +40,8 @@ function(){
 			div(class="span4", strong('Related blog posts'),
 				p(HTML('<ul>'),
 					HTML('<li>'),a("Sea ice concentration and extreme wind events in the arctic", href="ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ", target="_blank"),HTML('</li>'),
-					HTML('<li>'),a("Alaska climate data EDA", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-alaska-climate-data-eda/", target="_blank"),HTML('</li>'),
-					HTML('<li>'),a("Alaska/western Canada communities and climate", href="http://blog.snap.uaf.edu/2013/07/16/r-shiny-app-alaskawestern-canada-communities-and-climate/", target="_blank"),HTML('</li>'),
+					#HTML('<li>'),a("Alaska climate data EDA", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-alaska-climate-data-eda/", target="_blank"),HTML('</li>'),
+					#HTML('<li>'),a("Alaska/western Canada communities and climate", href="http://blog.snap.uaf.edu/2013/07/16/r-shiny-app-alaskawestern-canada-communities-and-climate/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Coastal Alaska extreme temperature and wind events", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-extreme-events/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Arctic sea ice extents and concentrations", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-sea-ice/", target="_blank"),HTML('</li>'),
 				HTML('</ul>')),
