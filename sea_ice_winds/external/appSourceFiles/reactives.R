@@ -16,7 +16,7 @@ ice.dat <- reactive({
 wind.dat <- reactive({
 	if(!is.null(suffix())){
 		if(input$var!="Wind") v <- as.numeric(input$cut) else v <- abs(as.numeric(input$cut))
-		x <- subset(get(paste0("w.",tolower(input$sea),suffix())), Year>=input$yrs[1] & Year<as.numeric(tail(input$yrs,1))+10 & Month==input$mo & RCP==input$rcp & Var==input$var & Cut==v, c("Year","Freq"))
+		x <- subset(get(paste0("w.",tolower(input$sea),".",input$mod,suffix())), Year>=input$yrs[1] & Year<as.numeric(tail(input$yrs,1))+10 & Month==input$mo & RCP==input$rcp & Var==input$var & Cut==v, c("Year","Freq"))
 	} else x <- NULL
 	x
 })

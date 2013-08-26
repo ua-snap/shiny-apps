@@ -7,6 +7,10 @@ output$mo <- renderUI({
 	selectInput("mo","Month:",choices=month.abb,selected=month.abb[1])
 })
 
+output$mod <- renderUI({
+		selectInput("mod","Winds model:",choices=models,selected=models[1])
+})
+
 output$rcp <- renderUI({
 		selectInput("rcp","Winds RCP:",choices=c("RCP 6.0","RCP 8.5"),selected="RCP 6.0")
 })
