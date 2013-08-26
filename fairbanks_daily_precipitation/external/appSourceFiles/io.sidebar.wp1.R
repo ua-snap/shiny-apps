@@ -4,7 +4,7 @@ output$loc <- renderUI({
 })
 
 output$yrs <- renderUI({
-	sliderInput("yrs","",years[1],tail(years,1),range(years),step=1,format="#")
+	sliderInput("yrs","",years[1],tail(years,1),range(years),step=4,format="#")
 })
 
 output$mo <- renderUI({

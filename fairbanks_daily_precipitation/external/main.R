@@ -8,7 +8,7 @@ mainPanel_2(
 				div(class="span2", downloadButton("dl_plotDailyPrecipPNG","Download PNG")),
 				div(class="span2", downloadButton("dl_plotDailyPrecipPDF","Download PDF"))
 			),
-			plotOutput("plotDailyPrecip",height="1200px"),
+			plotOutput("plotDailyPrecip",height="auto"),
 			br(), value="daily"),
 		tabPanelAbout(),
 		id="tsp"

@@ -14,7 +14,7 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,dates,main.title=
 		dates <- dates[c(day1:365,1:(day1-1)),] # reorder dates by new cycle
 		yrs.p <- c(paste(yrs-1,yrs,sep="-"),paste(tail(yrs,1),tail(yrs,1)+1,sep="-")) # rename years
 		n <- length(yrs.p)
-		n.end.yr.avail <- length(which(d$Year==tail(yrs,1))) # these lines make a new year name vector based on existing time series
+		n.end.yr.avail <- min(length(which(d$Year==tail(yrs,1))),365) # these lines make a new year name vector based on existing time series
 		yrs.new <- c(rep(yrs.p[1],day1-1),rep(yrs.p[2:(n-2)],each=365),rep(yrs.p[n-1],365-day1+1+min(n.end.yr.avail,day1-1)))
 		if(n.end.yr.avail > day1-1) yrs.new <- c(yrs.new, rep(tail(yrs.p,1),n.end.yr.avail-day1+1)) else yrs.p <- yrs.p[-length(yrs.p)]
 	}
@@ -48,17 +48,20 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,dates,main.title=
 	x.at <- which(d$Day[d$Year==yrs[2]]==xaxis.day) # Using 2nd year guarantees full 365-day cycle
 	if(mo1==1) mo.ind <- 1:12 else mo.ind <- c(mo1:12,1:(mo1-1))
 	x.labels <- paste(month.abb,xaxis.day)[mo.ind]
-	if(!is.null(file)) png(file,width=3000,height=3000,res=300)
+	max.pix <- 3000
+	ht <- min((1/3)*max.pix+(yrs.n/16)*(2/3)*max.pix, max.pix)
+	if(!is.null(file)) png(file,width=max.pix,height=ht,res=300)
+	par(bg=bg.plot)
 	if(bars & marginal){
-		layout(matrix(c(1,1,2,3,4,5),3,2,byrow=T),width=c(4,1),height=c(1,3,13))
+		layout(matrix(c(1,1,2,3,4,5),3,2,byrow=T),width=c(4,1),height=c(1,3,yrs.n))
 	} else if(bars & !marginal){
-		layout(matrix(c(1,1,2,3),2,2,byrow=T),width=c(4,1),height=c(1,13))
+		layout(matrix(c(1,1,2,3),2,2,byrow=T),width=c(4,1),height=c(1,yrs.n))
 	} else if(marginal){
-		layout(matrix(1:3,nrow=3),height=c(1,3,13))
+		layout(matrix(1:3,nrow=3),height=c(1,3,yrs.n))
 	} else {
-		layout(matrix(1:2,nrow=2),height=c(1,13))
+		layout(matrix(1:2,nrow=2),height=c(1,yrs.n))
 	}
-	par(mar=c(0,0,0,0),bg=bg.plot)
+	par(mar=c(0,0,0,0))
 	plot.new()
 	legend("center",main.title,bty="n",text.col=col.ax.lab,cex=1.7)
 	
@@ -145,7 +148,8 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,dates,main.title=
 		require(png)
 		require(grid)
 		p <- readPNG(logofile)
-		p <- rasterGrob(image=p,x=unit(0.925,"npc"),y=unit(0.025,"npc"),width=unit(.26/2,"npc"),height=unit(.1/2,"npc")) # hardcoded size/position for specific logo
+		if(is.null(file)) p <- rasterGrob(image=p,x=unit(0.925,"npc"),y=unit(0.025,"npc"),width=unit(.26/2,"npc"),height=unit(.1/2,"npc")) # hardcoded size/position for specific logo
+		if(!is.null(file)) p <- rasterGrob(image=p,x=unit(0.925,"npc"),y=unit(0.025,"npc"),width=unit(.26/2,"npc"),height=unit((max.pix/ht)*.1/2,"npc")) # hardcoded size/position for specific logo
 		par(mar=c(2,2,2,2))
 		grid.draw(p)
 	}
