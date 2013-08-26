@@ -36,6 +36,10 @@ sidebarPanel_2(
 				div(class="span1",helpPopup('Choose an threshold','You may select from among 6 different thresholds when viewing directional wind compoents. For wind magnitude, the negative sign is ignored.'))
 			),
 			div(class="row-fluid",
+				div(class="span11",uiOutput("direction")),
+				div(class="span1",helpPopup('Above/below threshold','When looking for extreme events using one of the direction wind compoents, it is pertinent to select above and below for positively and negatively valued threshold velocities, respectively.'))
+			),
+			div(class="row-fluid",
 				div(class="span11",uiOutput("sea")),
 				div(class="span1",helpPopup('Choose a sea','You may select from among three different arctic seas.'))
 			),

@@ -24,7 +24,7 @@ wind.dat <- reactive({
 dpm.tmp <- reactive({
 	if(!is.null(wind.dat())){
 		x <- rep(dpm[which(month.abb==input$mo)],nrow(wind.dat()))
-		if(input$mo=="Feb") x[wind.dat()$Year %in% seq(1960,2090,4)] <- 29
+		if(input$mo=="Feb") x[wind.dat()$Year %in% seq(1960,2099,4)] <- 29
 	} else x <- NULL
 	x
 })
@@ -53,7 +53,7 @@ w.prop.yrs <- reactive({
 	x <- NULL
 	if(!is.null(wind.dat())){
 		x <- wind.dat()
-		x$Freq <- x$Freq/dpm.tmp()
+		x$Freq <- if(input$direction=="Above") x$Freq/dpm.tmp() else if(input$direction=="Below") 1-x$Freq/dpm.tmp()
 	}
 	x
 })

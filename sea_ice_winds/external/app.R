@@ -21,8 +21,8 @@ cex <- 1.3
 # Plot class error and confusion matrix
 output$plotByYear <- renderPlot({ # render plot for mainPanel tabsetPanel tabPanel
 		if(!is.null(w.prop.dec()) & !is.null(i.prop.dec()) & !is.null(input$annstyle)){
-			tsPlot(w.prop.yrs()$Year,w.prop.yrs()$Freq,i.prop.yrs()$Con,input$yrs,v1name=input$var,v2name="Sea ice",style=input$annstyle,cex1=cex,
-				ylim=c(0,1),xlb="Year",ylb=ylab.ann,mn=main.ann())
+			tsPlot(w.prop.yrs()$Year,w.prop.yrs()$Freq,i.prop.yrs()$Con,input$yrs,v1name=paste(input$mod,input$var),v2name="Sea ice",style=input$annstyle,cex1=cex,
+				ylim=c(0,1),xlb="Year",ylb=ylab.ann,mn=main.ann(),inset=c(0,-0.225))
 		}
 }, height=400, width=1200)
 
@@ -30,8 +30,8 @@ output$dl_plotByYear <- downloadHandler( # render plot to pdf for download
 	filename = 'plotByYear.pdf',
 	content = function(file){
 		pdf(file = file, width=12, height=4)
-		tsPlot(w.prop.yrs()$Year,w.prop.yrs()$Freq,i.prop.yrs()$Con,input$yrs,v1name=input$var,v2name="Sea ice",style=input$annstyle,cex1=cex-0.4,
-			ylim=c(0,1),xlb="Year",ylb=ylab.ann,mn=main.ann())
+		tsPlot(w.prop.yrs()$Year,w.prop.yrs()$Freq,i.prop.yrs()$Con,input$yrs,v1name=paste(input$mod,input$var),v2name="Sea ice",style=input$annstyle,cex1=cex-0.4,
+			ylim=c(0,1),xlb="Year",ylb=ylab.ann,mn=main.ann(),inset=c(0,-0.3))
 		dev.off()
 	}
 )
@@ -39,8 +39,8 @@ output$dl_plotByYear <- downloadHandler( # render plot to pdf for download
 output$plotByDecade <- renderPlot({ # render plot for mainPanel tabsetPanel tabPanel
 		if(!is.null(w.prop.dec()) & !is.null(i.prop.dec()) & !is.null(input$decstyle)){
 			if(nrow(i.prop.dec())>1){
-				tsPlot(w.prop.dec()$Year,w.prop.dec()$Freq,i.prop.dec()$Con,decadal=T,input$yrs,v1name=input$var,v2name="Sea ice",style=input$decstyle,xaxt="n",cex1=cex,
-					ylim=c(0,1),xlb="Decade",ylb=ylab.dec,mn=main.dec())
+				tsPlot(w.prop.dec()$Year,w.prop.dec()$Freq,i.prop.dec()$Con,decadal=T,input$yrs,v1name=paste(input$mod,input$var),v2name="Sea ice",style=input$decstyle,xaxt="n",cex1=cex,
+					ylim=c(0,1),xlb="Decade",ylb=ylab.dec,mn=main.dec(),inset=c(0,-0.225))
 			}
 		}
 }, height=400, width=1200)
@@ -49,8 +49,8 @@ output$dl_plotByDecade <- downloadHandler( # render plot to pdf for download
 	filename = 'plotByDecade.pdf',
 	content = function(file){
 		pdf(file = file, width=12, height=4)
-		tsPlot(w.prop.dec()$Year,w.prop.dec()$Freq,i.prop.dec()$Con,decadal=T,input$yrs,v1name=input$var,v2name="Sea ice",style=input$decstyle,xaxt="n",cex1=cex-0.4,
-			ylim=c(0,1),xlb="Decade",ylb=ylab.dec,mn=main.dec())
+		tsPlot(w.prop.dec()$Year,w.prop.dec()$Freq,i.prop.dec()$Con,decadal=T,input$yrs,v1name=paste(input$mod,input$var),v2name="Sea ice",style=input$decstyle,xaxt="n",cex1=cex-0.4,
+			ylim=c(0,1),xlb="Decade",ylb=ylab.dec,mn=main.dec(),inset=c(0,-0.3))
 		dev.off()
 	}
 )

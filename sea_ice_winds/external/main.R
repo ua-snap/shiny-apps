@@ -7,13 +7,13 @@ mainPanel_2(
 				div(class="span3", uiOutput("tp.annualts")),
 				div(class="span3", uiOutput("tp.annstyle"))
 			),
-			plotOutput("plotByYear",height="400px"),
+			plotOutput("plotByYear",height="auto"),
 			br(),
 			div(class="row-fluid",
 				div(class="span3", uiOutput("tp.decadalts")),
 				div(class="span3", uiOutput("tp.decstyle"))
 			),
-			plotOutput("plotByDecade",height="400px"),
+			plotOutput("plotByDecade",height="auto"),
 			br(),
 			div(class="row-fluid",
 				div(class="span3", downloadButton("dl_plotByYear","Download annual graphic")),

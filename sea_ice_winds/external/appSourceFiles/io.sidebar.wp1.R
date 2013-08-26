@@ -23,6 +23,10 @@ output$cut <- renderUI({
 	selectInput("cut","Threshold:",choices=cuts,selected=cuts[1])
 })
 
+output$direction <- renderUI({
+	selectInput("direction","Above/below threshold:",choices=c("Above","Below"),selected="Above")
+})
+
 output$sea <- renderUI({
 	selectInput("sea","Sea:",choices=seas,selected=seas[1])
 })
