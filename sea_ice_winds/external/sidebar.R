@@ -9,8 +9,8 @@ sidebarPanel_2(
 		tags$style(type='text/css', ".well { max-width: 400px; }")
 	),
 	wellPanel(
-		checkboxInput("showWP1",h5("Data selection"),FALSE),
-		conditionalPanel(condition="input.showWP1",
+		#checkboxInput("showWP1",h5("Data selection"),FALSE),
+		#conditionalPanel(condition="input.showWP1",
 			div(class="row-fluid",
 				div(class="span11",uiOutput("yrs")),
 				div(class="span1",helpPopup('Choose years','Years are chosen in groups by decade.'))
@@ -47,6 +47,6 @@ sidebarPanel_2(
 				div(class="span11",uiOutput("coast")),
 				div(class="span1",helpPopup('Choose an area','For any sea, you may focus on wind events and sea ice concentrations averaed over the entire sea or over a coastal segment of the sea only.'))
 			)
-		)
+		#)
 	)
 )

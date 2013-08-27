@@ -1,4 +1,6 @@
 # Datasets, variables
+yrs <- reactive({ as.numeric(gsub("s","",input$yrs)) })
+
 suffix <- reactive({
 	if(!is.null(input$coast)){
 		if(input$coast=="Full sea") x <- "" else if(input$coast=="Coastal only") x <- ".c"
@@ -8,7 +10,7 @@ suffix <- reactive({
 
 ice.dat <- reactive({
 	if(!is.null(suffix())){
-		x <- subset(get(paste0("i.",tolower(input$sea),suffix())), Year>=input$yrs[1] & Year<as.numeric(tail(input$yrs,1))+10, c("Year",input$mo))
+		x <- subset(get(paste0("i.",tolower(input$sea),suffix())), Year>=yrs()[1] & Year<as.numeric(tail(yrs(),1))+10, c("Year",input$mo))
 	} else x <- NULL
 	x
 })
@@ -16,7 +18,7 @@ ice.dat <- reactive({
 wind.dat <- reactive({
 	if(!is.null(suffix())){
 		if(input$var!="Wind") v <- as.numeric(input$cut) else v <- abs(as.numeric(input$cut))
-		x <- subset(get(paste0("w.",tolower(input$sea),".",input$mod,suffix())), Year>=input$yrs[1] & Year<as.numeric(tail(input$yrs,1))+10 & Month==input$mo & RCP==input$rcp & Var==input$var & Cut==v, c("Year","Freq"))
+		x <- subset(get(paste0("w.",tolower(input$sea),".",input$mod,suffix())), Year>=yrs()[1] & Year<as.numeric(tail(yrs(),1))+10 & Month==input$mo & RCP==input$rcp & Var==input$var & Cut==v, c("Year","Freq"))
 	} else x <- NULL
 	x
 })

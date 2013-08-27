@@ -5,7 +5,9 @@ mainPanel_2(
 			#uiOutput("debugging"),
 			div(class="row-fluid",
 				div(class="span3", uiOutput("tp.annualts")),
-				div(class="span3", uiOutput("tp.annstyle"))
+				div(class="span3", uiOutput("tp.annstyle")),
+				div(class="span3", downloadButton("dl_plotByYear","Download annual graphic")),
+				div(class="span3", downloadButton("dl_plotByDecade","Download decadal graphic"))
 			),
 			plotOutput("plotByYear",height="auto"),
 			br(),
@@ -14,11 +16,7 @@ mainPanel_2(
 				div(class="span3", uiOutput("tp.decstyle"))
 			),
 			plotOutput("plotByDecade",height="auto"),
-			br(),
-			div(class="row-fluid",
-				div(class="span3", downloadButton("dl_plotByYear","Download annual graphic")),
-				div(class="span3", downloadButton("dl_plotByDecade","Download decadal graphic"))
-			), br(), value="ts"),
+			br(), value="ts"),
 		tabPanelAbout(),
 		id="tsp"
 	)

@@ -1,6 +1,6 @@
 # Datasets, variables
 output$yrs <- renderUI({
-	sliderInput("yrs","",decades[1],tail(decades,1),range(decades),step=10,format="#")
+	selectInput("yrs","Decades:",choices=dec.lab,selected=dec.lab,multiple=T)
 })
 
 output$mo <- renderUI({
