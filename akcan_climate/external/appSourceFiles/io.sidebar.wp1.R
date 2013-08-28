@@ -16,17 +16,17 @@ output$units <- renderUI({
 })
 
 output$models <- renderUI({
-	if(!is.null(dat()))	selectInput("models","Climate models:",choices=modnames,selected=modnames[1],multiple=T)
+	if(!is.null(dat()))	selectInput("models","Climate models:",choices=modnames,selected=modnames,multiple=T)
 })
 
 output$scens <- renderUI({
-	if(!is.null(dat()))	selectInput("scens","Emissions scenarios:",choices=scennames(),selected=scennames()[1],multiple=T)
+	if(!is.null(dat()))	selectInput("scens","Emissions scenarios:",choices=scennames(),selected=scennames(),multiple=T)
 })
 
 output$mos <- renderUI({
-	if(!is.null(dat()))	selectInput("mos","Months:",choices=mos,selected=mos[1],multiple=T)
+	if(!is.null(dat()))	selectInput("mos","Months:",choices=mos,selected=mos,multiple=T)
 })
 
 output$decs <- renderUI({
-	if(!is.null(dat()))	selectInput("decs","Decades:",choices=decades(),selected=decades()[1],multiple=T)
+	if(!is.null(dat()))	selectInput("decs","Decades:",choices=decades(),selected=decades(),multiple=T)
 })
