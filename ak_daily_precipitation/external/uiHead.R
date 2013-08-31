@@ -1,5 +1,3 @@
-library(shinyIncubator)
-
 helpPopup <- function(title, content,
                       placement=c('right', 'top', 'left', 'bottom'),
                       trigger=c('click', 'hover', 'focus', 'manual')) {
@@ -19,6 +17,8 @@ helpPopup <- function(title, content,
     )
   )
 }
+
+source("external/appSourceFiles/help.popups.R",local=T)
 
 tabPanelAbout <- source("external/about.R",local=T)$value
 

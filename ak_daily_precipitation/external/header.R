@@ -1,10 +1,10 @@
 headerPanel_2(
 	HTML(
 		'<div id="stats_header">
-		Customizable charts: Fairbanks, Alaska daily precipitation
+		Customizable charts: Alaska communities, daily precipitation
 		<a href="http://snap.uaf.edu" target="_blank">
 		<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/snap_sidebyside_black-bkgrnd.png" />
 		</a>
 		</div>'
-	), h3, "Fairbanks, AK daily precipitation"
+	), h3, "AK daily precipitation"
 )

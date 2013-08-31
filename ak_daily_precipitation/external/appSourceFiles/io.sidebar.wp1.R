@@ -1,10 +1,10 @@
 # Datasets, variables
 output$loc <- renderUI({
-	selectInput("loc","Location:",choices="Fairbanks, AK",selected="Fairbanks, AK")
+	selectInput("loc","Location:",choices=paste0(loc.names,", AK"),selected=paste0(loc.names[1],", AK"))
 })
 
 output$yrs <- renderUI({
-	sliderInput("yrs","",years[1],tail(years,1),range(years),step=5,format="#")
+	if(!is.null(yrs())) sliderInput("yrs","",yrs()[1],tail(yrs(),1),range(yrs()),step=1,format="#")
 })
 
 output$mo <- renderUI({
@@ -29,4 +29,8 @@ output$ph3 <- renderUI({
 
 output$dailyColPal <- renderUI({
 	selectInput("dailyColPal","Color theme:",palettes,palettes[1])
+})
+
+output$genPlotButton <- renderUI({
+	actionButton("genPlotButton", "Generate Plot")
 })
