@@ -8,9 +8,10 @@ function(){
 		p(style="text-align:justify",'The CMIP5 composite model wind event frequencies are aggregated to counts per month from daily GCM outputs.
 		Sea ice concentration comes from GCM outputs originally at the monthly time scale.
 		Since proportions of days in a month and concentration values both range from zero to one, they conveniently plot on the same scale.'),
-		p(style="text-align:justify",'Selection of RCP 6.0 or RCP 8.5 refers to wind data only. All sea ice data are from RCP X.X [FILL THIS IN LATER].
+		p(style="text-align:justify",'Selection of RCP 6.0 or RCP 8.5 refers to wind data only. All sea ice data are from RCP 8.5.
 		The negative sign in wind threshold levels is ignored when the variable, Wind, is selected, since this is strictly wind magnitude.
-		When WE wind or NS wind are selected, the app plots frequencies of wind events GREATER than the threshold. For instance, greater than -10.8 m/s does not mean it is necessarily windy; there could be no wind.
+		When WE wind or NS wind are selected, the app plots frequencies of wind events greater or less than than the selected threshold.
+		For instance, when examining extreme winds in a negative direction, e.g., -10.8 m/s, view events below (less than) the threshold; for positive thresholds, choose above (greater than).
 		Later I will add the ability to select less than a threshold in addtion to greater than a threshold.'),
 		p(style="text-align:justify",'There are three arctic seas to choose from. Sea ice concentration and wind speeds are averaged over their domains.
 		There is additionally the option of using the entire sea area or only a coastal portion of the sea.'),

@@ -1,10 +1,7 @@
 dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot",xlb="x-axis",colpalvec=c("orange","purple"),num.colors=20,alpha=50,
-					   col.ax.lab="black", col.totals="gray", logo=F, logofile=NULL,
+					   col.ax.lab="black", col.totals="gray", logo=F, logofile=NULL, show.title=T,
 					   tformSize=function(x) log(x+1), tformCol=function(x) log(x+1), tformColBar=function(x) log(x+1), tformColMar=function(x) log(x+1),
-					   bg.plot="white", bars=F, bar.means=F, marginal=F, loess.span=0.50, cex.master=1.3, px.wd=3000, px.ht=3000, resolution=300, marg.ht.exp=10, max.na.per.month=5, max.na.per.year=30, ...){
-	print(bars)
-	print(bar.means)
-	print(marginal)
+					   bg.plot="white", bars=F, bar.means=F, marginal=F, loess.span=0.50, cex.axis=1.1, cex.master=1.3, px.wd=3000, px.ht=3000, resolution=300, marg.ht.exp=10, max.na.per.month=5, max.na.per.year=30, ...){
 	# setup: the year cycle (start and end dates)
 	yrs <- unique(d$Year)
 	if(length(d$Year[d$Year==yrs[1]])<365) { d <- subset(d,Year>yrs[1]); yrs <- unique(d$Year) }
@@ -60,9 +57,16 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 	x.at <- which(d$Day[d$Year==yrs[2]]==xaxis.day) # Using 2nd year guarantees full 365-day cycle
 	if(mo1==1) mo.ind <- 1:12 else mo.ind <- c(mo1:12,1:(mo1-1))
 	x.labels <- paste(month.abb,xaxis.day)[mo.ind]
-	#max.pix <- px.ht
-	#ht <- min((1/3)*max.pix+(yrs.n/16)*(2/3)*max.pix, max.pix)
-	if(!is.null(file)) png(file,width=px.wd,height=px.ht,res=resolution)
+	if(!is.null(file) | show.title==T){
+		if(!is.null(file)) png(file,width=px.wd,height=px.ht,res=resolution)
+		png.adjust.cex <- (sqrt(72/resolution))
+		cex.exp <- cex.exp*png.adjust.cex
+		marginal.pts.cex <- 2.0*png.adjust.cex
+		cex.axis <- cex.axis*png.adjust.cex
+	} else {
+		png.adjust.cex <- 1.0
+		marginal.pts.cex <- 2.0
+	}
 	par(bg=bg.plot)
 	if(bars & marginal){
 		layout(matrix(c(1,1,2,3,4,5),3,2,byrow=T),width=c(4,1),height=c(1,marg.ht.exp,yrs.n))
@@ -75,7 +79,7 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 	}
 	par(mar=c(0,0,0,0))
 	plot.new()
-	legend("center",main.title,bty="n",text.col=col.ax.lab,cex=1.7)
+	if(show.title) legend("center",main.title,bty="n",text.col=col.ax.lab,cex=3*png.adjust.cex)
 	
 	# Plot: smoothed marginal seasonal signal (optional) and bar means (optional)
 	if(marginal){
@@ -89,9 +93,9 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 		y <- tapply(d$P_in[d$Year %in% names(ind)], rep(1:365,length(ind)),mean,na.rm=T)
 		lo <- loess(y~x,span=loess.span)
 		clrs.margin <- gsub(paste0("NA",alpha),"#000000",paste0(pal(num.colors)[as.numeric(cut(tformColMar(y),breaks=num.colors))],alpha))
-		par(mar=c(1,10,1,2),mgp=c(4,1,0))
-		plot(x,y,xlim=c(1,365),pch=21,col=col.ax.lab,bg=clrs.margin,cex=2.0,axes=F,ylab=expression("Historical mean"~('in')~""),col.lab=col.ax.lab,cex.lab=cex.master)
-		axis(2,col=col.ax.lab,...)
+		par(mar=c(1,10*png.adjust.cex,1,2),mgp=c(4*png.adjust.cex,1,0))
+		plot(x,y,xlim=c(1,365),ylim=c(0,max(y)),pch=21,col=col.ax.lab,bg=clrs.margin,cex=marginal.pts.cex,axes=F,ylab=expression("Historical mean"~('in')~""),col.lab=col.ax.lab,cex.lab=cex.master*png.adjust.cex)
+		axis(2,at=signif(seq(0,signif(max(y),2),length=5),3),col=col.ax.lab,cex.axis=cex.axis,...)
 		lines(predict(lo),lwd=3,col=col.ax.lab)
 	}
 	
@@ -116,7 +120,7 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 			v.bars.list[[i]] <- v
 		}
 		clrs.all <- matrix(gsub(paste0("NA",alpha),"#000000",paste0(pal(num.colors)[as.numeric(cut(tformColBar(abs(unlist(v.bars.list))),breaks=num.colors))],alpha)),nrow=2)
-		par(mar=c(1,7,1,2),mgp=c(3,1,0))
+		par(mar=c(1,5*png.adjust.cex,1,2),mgp=c(3*png.adjust.cex,1,0))
 		if(marginal & !bar.means){ # if bars==TRUE, must leave a blank plotting region to the right, above the bars, before proceeding, unless also plotting bar means
 			plot.new()
 		} else if(marginal) {
@@ -124,19 +128,18 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 			drop.ind <- unique(c(1,ncol(means),drop.yrs))
 			means <- abs(rowMeans(means[,-drop.ind],na.rm=T))
 			clrs.means <- gsub(paste0("NA",alpha),"#000000",paste0(pal(num.colors)[as.numeric(cut(tformColBar(c(means,abs(unlist(v.bars.list)))),breaks=num.colors))],alpha))[1:2]
-			bp <- barplot(means,col=clrs.means,border=NA,axes=F,ylab=expression("Mean 6-mo. totals"~('in')~""),col.lab=col.ax.lab,cex.lab=cex.master)
-			text(bp,max(means)/20,labels=c(expression(italic("before")),expression(italic("after"))),col=col.totals,pos=4,srt=90,cex=cex.master)
-			axis(2,col=col.ax.lab,...)
+			bp <- barplot(means,col=clrs.means,border=NA,axes=F,ylab=expression("Mean 6-mo. totals"~('in')~""),col.lab=col.ax.lab,cex.lab=cex.master*png.adjust.cex)
+			text(bp,max(means)/20,labels=c(expression(italic("before")),expression(italic("after"))),col=col.totals,pos=4,srt=90,cex=cex.master*png.adjust.cex)
+			axis(2,col=col.ax.lab,cex.axis=cex.axis,...)
 		}
 	}
 	
 	# Plot: setup main panel graphic
-	par(mar=c(5,10,0,2))
+	par(mar=c(5,10*png.adjust.cex,0,2))
 	plot(0, 0, xlim=c(1,365), ylim=c(1-1,yrs.n+1), type="n", axes=F, xlab=xlb, main="", xaxs="i", yaxs="i",...)
-	axis(1,at=x.at,labels=x.labels,col=col.ax.lab,...)
-	#axis(2,at=1:yrs.n,labels=gsub("-"," -\n",as.character(yrs)),col=col.ax.lab,...)
+	axis(1,at=x.at,labels=x.labels,col=col.ax.lab,cex.axis=cex.axis,...)
 	col.na <- "#FF00FF90" # hard-coded
-	axis(2,at=1:yrs.n,labels=gsub("-"," - ",as.character(yrs)),col=col.ax.lab,...)
+	axis(2,at=1:yrs.n,labels=gsub("-"," - ",as.character(yrs)),col=col.ax.lab,cex.axis=cex.axis,...)
 	abline(h=1:yrs.n,lty=1,col="gray")
 	abline(v=x.at,lty=2,col="gray")
 	if(mo1!=1) arrows(x0=365-day1,y0=1-0.4,y1=1+0.4,length=0.125,angle=90,code=3,col=col.ax.lab,lwd=3)
@@ -150,7 +153,7 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 		points(x, rep((1:yrs.n)[i],length(v)), col=col.ax.lab, bg=clrs.list[[i]], cex=cex.exp*(tfs-mean(tfs)-min(0,tfs)),...)
 		if(i %in% drop.yrs){
 			na.ind <- which(is.na(v))
-			text(x[na.ind], jitter(rep((1:yrs.n)[i],length(na.ind)), 0.1),"NA", col=col.na, cex=3)
+			text(x[na.ind], jitter(rep((1:yrs.n)[i],length(na.ind)), 0.1),"NA", col=col.na, cex=3*png.adjust.cex)
 		}
 	}
 	box(col=col.ax.lab)
@@ -164,14 +167,14 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 			rect(v[1], (1:yrs.n)[i]-0.25, 0, (1:yrs.n)[i]+0.25, col=clrs.all[1,i],border=NA,...) # floating bars are made using rect(), not barplot()
 			rect(0, (1:yrs.n)[i]-0.25, v[2], (1:yrs.n)[i]+0.25, col=clrs.all[2,i],border=NA,...)
 			abline(v=0,col=col.ax.lab)
-			text(0,(1:yrs.n)[i],labels=paste(abs(v[1]),"in"),pos=2,col=col.totals,cex=cex.master)
-			text(0,(1:yrs.n)[i],labels=paste(v[2],"in"),pos=4,col=col.totals,cex=cex.master)
+			text(0,(1:yrs.n)[i],labels=paste(abs(v[1]),"in"),pos=2,col=col.totals,cex=cex.master*png.adjust.cex)
+			text(0,(1:yrs.n)[i],labels=paste(v[2],"in"),pos=4,col=col.totals,cex=cex.master*png.adjust.cex)
 		}
 		par(xpd=T)
-		text(0,(1:yrs.n)[1]-0.5,expression(italic("before")),pos=2,col=col.totals,cex=cex.master)
+		text(0,(1:yrs.n)[1]-0.5,expression(italic("before")),pos=2,col=col.totals,cex=cex.master*png.adjust.cex)
 		BA.date <- paste(as.numeric(dates[n1+1,]),sep="",collapse="/")
 		after <- paste(as.character(bquote("after"~.(BA.date)))[2:3],collapse=" ")
-		text(0,(1:yrs.n)[1]-0.5,bquote(italic(.(after))),pos=4,col=col.totals,cex=cex.master)
+		text(0,(1:yrs.n)[1]-0.5,bquote(italic(.(after))),pos=4,col=col.totals,cex=cex.master*png.adjust.cex)
 	}
 	
 	# Plot: Add a logo to bottom right of plot

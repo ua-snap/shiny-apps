@@ -1,6 +1,6 @@
 function(){
 	tabPanel("About",
-		p(style="text-align:justify",'This web application displays daily precipitation data for Fairbanks, Alaska.
+		p(style="text-align:justify",'This web application displays daily precipitation data for locations around Alaska.
 		The main panel in the graphic shows a time series for each year, where circles indicate daily precipitation frequency and circle size and color indicate relative intensity.
 		To the right, opposing bars indicate six-month total precipitation prior to and following the first of the month on which the precipitation years are centered.
 		Aggregate summaries appear above both of these panel graphics, where the top left scatterplot and loess smoothing curve represent the average of daily obserrvations across the selected years.
@@ -29,7 +29,7 @@ function(){
 				HTML('</ul>')),
 				strong('Code'),
 				p('Source code available at',
-				a('GitHub', href="https://github.com/ua-snap/shiny-apps/tree/master/fairbanks_daily_precipitation/", target="_blank")),
+				a('GitHub', href="https://github.com/ua-snap/shiny-apps/tree/master/ak_daily_precipitation/", target="_blank")),
 				br()
 			),
 			div(class="span4", strong('Related blog posts'),
