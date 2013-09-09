@@ -1,7 +1,7 @@
 headerPanel_2(
 	HTML(
 		'<div id="stats_header">
-		Extreme Wind Events and Sea Ice Concentrations
+		Sea Ice Concentrations and Wind Events
 		<a href="http://accap.uaf.edu" target="_blank">
 		<img id="stats_logo" align="right" alt="ACCAP Logo" src="./img/accap_sidebyside.png" />
 		</a>
