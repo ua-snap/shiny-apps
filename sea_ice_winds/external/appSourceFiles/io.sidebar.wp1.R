@@ -20,7 +20,7 @@ output$var <- renderUI({
 })
 
 output$cut <- renderUI({
-	selectInput("cut","Threshold:",choices=cuts,selected=cuts[1])
+	selectInput("cut","Threshold (m/s):",choices=cuts,selected=cuts[1])
 })
 
 output$direction <- renderUI({
@@ -32,5 +32,5 @@ output$sea <- renderUI({
 })
 
 output$coast <- renderUI({
-	radioButtons("coast","Area:",choices=c("Full sea","Coastal only"),selected="Full sea")
+	radioButtons("coast","Area:",choices=c("Coastal only","Full sea"),selected="Coastal only")
 })
