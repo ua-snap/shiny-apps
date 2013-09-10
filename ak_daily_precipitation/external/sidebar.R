@@ -85,5 +85,17 @@ sidebarPanel_2(
 			)
 		)
 	),
+		wellPanel(
+		checkboxInput("showWP4",h5("Allowable missing values"),FALSE),
+		conditionalPanel(condition="input.showWP4",
+			div(class="row-fluid",
+				div(class="span11",uiOutput("maxNAperMo")),
+				div(class="span1",helpPopup('Missing values',hp.missingValues))
+			),
+			div(class="row-fluid",
+				div(class="span11",uiOutput("maxNAperYr"))
+			)
+		)
+	),
 	uiOutput("genPlotButton")
 )

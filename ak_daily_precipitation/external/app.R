@@ -7,6 +7,8 @@ source("external/appSourceFiles/io.sidebar.wp2.R",local=T) # source input/output
 
 source("external/appSourceFiles/io.sidebar.wp3.R",local=T) # source input/output objects associated with sidebar wellPanel 3
 
+source("external/appSourceFiles/io.sidebar.wp4.R",local=T) # source input/output objects associated with sidebar wellPanel 4
+
 source("external/appSourceFiles/io.mainPanel.tp1.R",local=T) # source input/output objects associated with mainPanel tabPanel 1
 
 source("external/appSourceFiles/plotFunctions.R",local=T) # source plotting functions
@@ -21,7 +23,8 @@ doPlot <- function(filename,addLogo=F, cex.master=1.3, cex.lab=1.3, cex.axis=1.1
 		bars=plotBars(), bar.means=plotMeanBars(), marginal=plotMarginal(), loess.span=0.2, col.totals="gray80", bg.plot="black",
 		main.title=paste(input$loc,"daily precipitation"), xlb="", ylab="", logo=addLogo, logofile=logo, show.title=show.title,
 		pch=21, col.ax.lab="white", col.main="white", col.lab="white", col.axis="white", cex.lab=cex.lab, cex.axis=cex.axis, las=2, cex.master=cex.master, px.wd=2*1200, px.ht=2*plotHeight(), resolution=2*150,
-		marg.ht.exp=10*ht.compression())
+		marg.ht.exp=10*ht.compression(),
+		max.na.per.month=input$maxNAperMo, max.na.per.year=input$maxNAperYr)
 }
 
 plotHeight <- function() if(!is.null(input$yrs)) 800*((4+length(seq(input$yrs[1],input$yrs[2],by=1)))/14)/as.numeric(input$htCompress) else 0

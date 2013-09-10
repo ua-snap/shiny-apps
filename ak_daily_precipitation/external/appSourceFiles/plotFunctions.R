@@ -6,10 +6,6 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 	yrs <- unique(d$Year)
 	if(length(d$Year[d$Year==yrs[1]])<365) { d <- subset(d,Year>yrs[1]); yrs <- unique(d$Year) }
 	rownames(d) <- NULL
-	na.per.mo <- tapply(d$P_in,paste(d$Year,c(paste0("0",1:9),10:12)),function(z) length(which(is.na(z))))
-	na.per.mo <- tapply(na.per.mo,rep(yrs,each=12),function(z) any(z>max.na.per.month))
-	na.per.yr <- tapply(d$P_in,d$Year,function(z) length(which(is.na(z))) > max.na.per.year)
-	drop.yrs <- sort(unique(c(which(na.per.mo),which(na.per.yr))))	
 	dates <- d[d$Year==unique(d$Year)[1],2:3]
 	mo1 <- mo1-6 # Month 1 changes meaning from year start date to six months earlier for centering start date on plot
 	if(mo1<1) mo1 <- mo1 + 12
@@ -24,7 +20,7 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 		yrs.new <- c(rep(yrs.p[1],day1-1),rep(yrs.p[2:(n-2)],each=365),rep(yrs.p[n-1],365-day1+1+min(n.end.yr.avail,day1-1)))
 		if(n.end.yr.avail > day1-1) yrs.new <- c(yrs.new, rep(tail(yrs.p,1),n.end.yr.avail-day1+1)) else yrs.p <- yrs.p[-length(yrs.p)]
 	}
-	# seteup: colors based on values, force 365-day years in dataframe, overwrite old year info based on given year definition
+	# setup: colors based on values, force 365-day years in dataframe, overwrite old year info based on given year definition
 	pal <- colorRampPalette(colpalvec)
 	clrs.all <- gsub(paste0("NA",alpha),"#000000",paste0(pal(num.colors)[as.numeric(cut(tformCol(d$P_in),breaks=num.colors))],alpha))
 	clrs.vec <- c()
@@ -40,6 +36,11 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 	}
 	d <- d[-drp.vec,]
 	if(mo1!=1){ d$Year <- yrs.new; yrs <- yrs.p }
+	if(mo1==1) mo.ind <- 1:12 else mo.ind <- c(mo1:12,1:(mo1-1))
+	na.per.mo <- tapply(d$P_in,paste(d$Year,d$Month),function(z) length(which(is.na(z))))
+	na.per.mo <- tapply(na.per.mo,sapply(strsplit(names(na.per.mo)," "),"[[",1),function(z) any(z>max.na.per.month))
+	na.per.yr <- tapply(d$P_in,d$Year,function(z) length(which(is.na(z))) > max.na.per.year)
+	drop.yrs <- sort(unique(c(which(na.per.mo),which(na.per.yr))))	
 	d$clrs <- clrs.vec
 	yrs.n <- length(yrs)
 	clrs.list <- v.list <- tfSizeVals.list <- list()
@@ -55,7 +56,6 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 	
 	# Plot: Complete setup, open PNG device, create plotting regions, margins, title, axes, background lines
 	x.at <- which(d$Day[d$Year==yrs[2]]==xaxis.day) # Using 2nd year guarantees full 365-day cycle
-	if(mo1==1) mo.ind <- 1:12 else mo.ind <- c(mo1:12,1:(mo1-1))
 	x.labels <- paste(month.abb,xaxis.day)[mo.ind]
 	if(!is.null(file) | show.title==T){
 		if(!is.null(file)) png(file,width=px.wd,height=px.ht,res=resolution)

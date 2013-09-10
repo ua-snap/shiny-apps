@@ -19,3 +19,6 @@ hp.marginalPanels <- '<p style="text-align:justify">(1) Historical mean scatterp
 	<p style="text-align:justify">(3) Annual six-month totals for the periods before and after then 1st of the month on which the plot is centered (lower right).</p>
 	<p style="text-align:justify">Incomplete first and last years and years defined as having too many missing values are excluded from calucation of marginal plots.
 	Historical 6-month totals, the most aggregated data (top right panel), require all four panels to be plotted (all three boxes checked). The main panel of daily observations is always plotted.</p>'
+
+hp.missingValues <- '<p style="text-align:justify">These settings determine how many missing values to permit within a single month and within an entire 12-month period, respectively.
+	If the maximum number of allowable missing values per month is exceeded for even a single month, or if the maximum per year is exceeded, the entire 12-month period is excluded from any marginal calculations.</p>'
