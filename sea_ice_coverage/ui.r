@@ -4,7 +4,7 @@ shinyUI(pageWithSidebar(
 	headerPanel(
 		HTML(
 			'<div id="stats_header">
-			Modeled Polar Sea Ice Coverage
+			Modeled Arctic Sea Ice Coverage
 			<a href="http://accap.uaf.edu" target="_blank">
 			<img id="stats_logo" align="right" alt="ACCAP Logo" src="./img/accap_sidebyside.png" />
 			</a>
