@@ -40,7 +40,7 @@ function(){
 			),
 			div(class="span4", strong('Related blog posts'),
 				p(HTML('<ul>'),
-					HTML('<li>'),a("Arctic sea ice concentration and extreme wind events", href="ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Arctic sea ice concentration and extreme wind events", href="http://blog.snap.uaf.edu/2013/09/09/r-shiny-app-arctic-sea-ice-concentration-and-extreme-winds/", target="_blank"),HTML('</li>'),
 					#HTML('<li>'),a("Alaska climate data EDA", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-alaska-climate-data-eda/", target="_blank"),HTML('</li>'),
 					#HTML('<li>'),a("Alaska/western Canada communities and climate", href="http://blog.snap.uaf.edu/2013/07/16/r-shiny-app-alaskawestern-canada-communities-and-climate/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Coastal Alaska extreme temperature and wind events", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-extreme-events/", target="_blank"),HTML('</li>'),
