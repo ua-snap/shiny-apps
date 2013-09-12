@@ -40,9 +40,7 @@ plotHeight2 <- reactive({
 output$plotDailyPrecip <- renderPlot({ # render plot for mainPanel tabsetPanel tabPanel
 	input$genPlotButton
 	isolate({
-		if(input$genPlotButton==0) {
-			par(mar=c(0,0,0,0),bg="black"); plot(0,0,type="n",axes=F)
-		} else if(!is.null(colPal())) {
+		if(!is.null(colPal())) {
 			if(length(seq(input$yrs[1],input$yrs[2],by=1))>1) doPlot(filename=NULL, cex.master=1.8, cex.lab=1.8, cex.axis=1.5, show.title=F) else { par(mar=c(0,0,0,0),bg="black"); plot(0,0,type="n",axes=F) }
 		} else { par(mar=c(0,0,0,0),bg="black"); plot(0,0,type="n",axes=F) }
 	})

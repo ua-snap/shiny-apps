@@ -9,7 +9,10 @@ sidebarPanel_2(
 		tags$style(type='text/css', ".well { max-width: 400px; }")
 	),
 	wellPanel(
-		checkboxInput("showWP1",h5("Data selection"),FALSE),
+		div(class="row-fluid",
+		div(class="span6", checkboxInput("showWP1",h5("Data selection"),TRUE)),
+		div(class="span6", uiOutput("genPlotButton"))
+		),
 		conditionalPanel(condition="input.showWP1",
 			div(class="row-fluid",
 				div(class="span11",uiOutput("loc")),
@@ -96,6 +99,5 @@ sidebarPanel_2(
 				div(class="span11",uiOutput("maxNAperYr"))
 			)
 		)
-	),
-	uiOutput("genPlotButton")
+	)
 )

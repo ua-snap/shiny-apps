@@ -6,6 +6,8 @@ function(){
 		Aggregate summaries appear above both of these panel graphics, where the top left scatterplot and loess smoothing curve represent the average of daily obserrvations across the selected years.
 		To the right, the two bars also represent averages of the selected years. In both cases, the averages exclude data from the first and/or last year if either year is incomplete.'),
 		p(style="text-align:justify",'I plan to add more geographic locations, and possibly more variables, to this app when time permits.'),
+		p(style="text-align:justify",'Data were provided by Kevin Galloway at the',a("Alaska Climate Research Center", href="http://akclimate.org/", target="_blank"),'.'),
+		p(style="text-align:justify","Inspiration for the plot format came from Stephen Von Worley's",a("Is California heading into a drought?", href="http://www.datapointed.net/2012/02/san-francisco-rain-year-before-after-valentines-day/", target="_blank"),'graphic.'),
 		br(),
 
 		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),
@@ -36,7 +38,7 @@ function(){
 				p(HTML('<ul>'),
 					HTML('<li>'),a("Daily precipitation", href="ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Coastal Alaska extreme temperature and wind events", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-extreme-events/", target="_blank"),HTML('</li>'),
-					HTML('<li>'),a("Sea ice concentration and extreme wind events in the arctic", href="ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Sea ice concentration and extreme wind events in the arctic", href="http://blog.snap.uaf.edu/2013/09/09/r-shiny-app-arctic-sea-ice-concentration-and-extreme-winds/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Arctic sea ice extents and concentrations", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-sea-ice/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Alaska climate data EDA", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-alaska-climate-data-eda/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Alaska/western Canada communities and climate", href="http://blog.snap.uaf.edu/2013/07/16/r-shiny-app-alaskawestern-canada-communities-and-climate/", target="_blank"),HTML('</li>'),
