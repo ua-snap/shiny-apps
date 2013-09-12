@@ -24,7 +24,7 @@ sidebarPanel_2(
 			),
 			div(class="row-fluid",
 				div(class="span11",uiOutput("mo")),
-				div(class="span1",helpPopup('Choose 1st month of precipitation year','<p style="text-align:justify">The annual precipitation cycle is defined as the 1st day of the selected month.</p>'))
+				div(class="span1",helpPopup('Choose center month of precipitation year','<p style="text-align:justify">The annual precipitation cycle is defined as the 1st day of the selected month. The graphic is centered on this month.</p>'))
 			),
 			#div(class="row-fluid",
 			#	div(class="span11",uiOutput("ph1")),

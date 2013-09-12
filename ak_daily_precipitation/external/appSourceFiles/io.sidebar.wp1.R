@@ -8,7 +8,7 @@ output$yrs <- renderUI({
 })
 
 output$mo <- renderUI({
-	selectInput("mo","1st month of precipitation year:",choices=month.abb,selected=month.abb[7])
+	selectInput("mo","Center graphic on month:",choices=month.abb,selected=month.abb[7])
 })
 
 output$ph1 <- renderUI({
