@@ -36,7 +36,7 @@ function(){
 			),
 			div(class="span4", strong('Related blog posts'),
 				p(HTML('<ul>'),
-					HTML('<li>'),a("Daily precipitation", href="ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Alaska communities daily precipitation charts", href="http://blog.snap.uaf.edu/2013/09/17/customizable-charts-with-r-base-graphics-and-shiny/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Coastal Alaska extreme temperature and wind events", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-extreme-events/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Sea ice concentration and extreme wind events in the arctic", href="http://blog.snap.uaf.edu/2013/09/09/r-shiny-app-arctic-sea-ice-concentration-and-extreme-winds/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Arctic sea ice extents and concentrations", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-sea-ice/", target="_blank"),HTML('</li>'),
