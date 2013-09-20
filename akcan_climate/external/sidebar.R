@@ -8,7 +8,7 @@ sidebarPanel(
 		tags$style(type='text/css', ".span4 { max-width: 500px; }")
 	),
 	wellPanel(
-		checkboxInput("showDataPanel1",h5("Data Selection Panel"),FALSE),
+		checkboxInput("showDataPanel1",h5("Data Selection Panel"),TRUE),
 		conditionalPanel(condition="input.showDataPanel1",
 			div(class="row-fluid",
 				div(class="span6", uiOutput("dat.name")),
@@ -29,7 +29,7 @@ sidebarPanel(
 		)
 	),
 	wellPanel(
-		checkboxInput("showDisplayPanel1",h5("Plot Options Panel"),FALSE),
+		checkboxInput("showDisplayPanel1",h5("Plot Options Panel"),TRUE),
 		conditionalPanel(condition="input.showDisplayPanel1",
 			div(class="row-fluid", div(class="span4", uiOutput("xtime")), div(class="span4", uiOutput("group")), div(class="span4", uiOutput("facet"))),
 			div(class="row-fluid", div(class="span4", uiOutput("jitterXY")), div(class="span4", uiOutput("altplot")), div(class="span4", uiOutput("vert.facet"))),
