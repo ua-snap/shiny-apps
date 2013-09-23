@@ -28,7 +28,7 @@ shinyServer(function(input,output){
 	})
 	
 	output$Loc <- renderUI({
-		selectInput("loc","Geographic location:",choices=loc.nam,selected=loc.nam[1],multiple=T)
+		selectInput("loc","Geographic location:",choices=sort(loc.nam),selected=sort(loc.nam)[1],multiple=T)
 	})
 	
 	output$CutT <- renderUI({
