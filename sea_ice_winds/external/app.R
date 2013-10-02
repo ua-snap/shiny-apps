@@ -11,10 +11,11 @@ source("external/appSourceFiles/plotFunctions.R",local=T) # source plotting func
 
 wind.cut <- reactive({ if(input$var!="Wind") input$cut else abs(as.numeric(input$cut)) })
 varname <- reactive({ if(input$var!="Wind") input$var else tolower(input$var) })
+main.prefix <- reactive({ if(input$sea=="Coastal only") "Coastal " else "Full " })
 ylab.ann <- "Annual concentration / fraction"
-main.ann <- reactive({ paste0("Annual ",input$mo,". sea ice concentration and fraction of days with ",varname(),"s > ",wind.cut()," m/s") })
+main.ann <- reactive({paste0(main.prefix(),input$sea," annual ",input$mo,". sea ice concentration and fraction of days with ",varname(),"s > ",wind.cut()," m/s") })
 ylab.dec <- "Decadal mean concentration / fraction"
-main.dec <- reactive({ paste0("Decadal mean ",input$mo,". sea ice concentration and fraction of days with ",varname(),"s > ",wind.cut()," m/s") })
+main.dec <- reactive({ paste0(paste0(main.prefix(),input$sea," decadal mean ",input$mo,". sea ice concentration and fraction of days with ",varname(),"s > ",wind.cut()," m/s") })
 cex <- 1.3
 
 # Primary outputs
