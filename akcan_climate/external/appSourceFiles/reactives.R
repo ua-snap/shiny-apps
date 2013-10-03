@@ -72,8 +72,8 @@ dat.sub <- reactive({
 	isolate(
 		if(!is.null(dat())){
 			d <- subset(dat(), Community==strsplit(input$locationSelect,", ")[[1]][1] & Model %in% input$models & Scenario %in% input$scens & Variable %in% input$vars & Month %in% input$mos & Decade %in% substr(input$decs,1,4))
-			if(input$vars=="Temperature" & input$units=="F") d$value <- round((5/9)*d$value + 32,1)
-			if(input$vars=="Precipitation" & input$units=="in") d$value <- round(25.4*d$value,3)
+			if(input$vars=="Temperature" & input$units=="F") d$value <- round((9/5)*d$value + 32,1)
+			if(input$vars=="Precipitation" & input$units=="in") d$value <- round(d$value/25.4,3)
 			rownames(d) <- NULL
 			d
 		} else return()
