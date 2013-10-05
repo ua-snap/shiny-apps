@@ -28,11 +28,12 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 	for(i in 1:length(yrs)){
 		v <- d$P_in[d$Year==yrs[i]]
 		clrs <- clrs.all[d$Year==yrs[i]]
-		drp <- which.min(abs(which(v==0)-60))
+		zero.ind <- which(v==0)
+		if(!length(zero.ind)) drp <- 1 else	drp <- zero.ind[which.min(abs(zero.ind-60))]
 		n.v <- c(n.v,length(v))
 		if(n.v[i]==366) { v <- v[-drp]; clrs <- clrs[-drp] }
 		clrs.vec <- c(clrs.vec,clrs)
-		if(i==1 & n.v[i]==366) drp.vec <- drp else if(i>1 & n.v[i]==366) drp.vec <- c(drp.vec,drp+sum(n.v[1:(i-1)]))
+		if(i==1 & n.v[i]==366 & length(drp)) drp.vec <- drp else if(i>1 & n.v[i]==366) drp.vec <- c(drp.vec,drp+sum(n.v[1:(i-1)]))
 	}
 	d <- d[-drp.vec,]
 	if(mo1!=1){ d$Year <- yrs.new; yrs <- yrs.p }
@@ -41,7 +42,7 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 	na.per.mo <- tapply(na.per.mo,sapply(strsplit(names(na.per.mo)," "),"[[",1),function(z) any(z>max.na.per.month))
 	na.per.yr <- tapply(d$P_in,d$Year,function(z) length(which(is.na(z))) > max.na.per.year)
 	drop.yrs <- sort(unique(c(which(na.per.mo),which(na.per.yr))))	
-	d$clrs <- clrs.vec
+	d$clrs <- c(clrs.vec,clrs.vec[1:366])
 	yrs.n <- length(yrs)
 	clrs.list <- v.list <- tfSizeVals.list <- list()
 	tfSizeVals <- tformSize(d$P_in[d$Year>=yrs[1] & d$Year<=yrs[length(yrs)]])
