@@ -50,14 +50,14 @@ output$dl_plotDailyPrecipPDF <- downloadHandler( # render plot to pdf for downlo
 	filename = 'plotDailyPrecip.pdf',
 	content = function(file){
 		pdf(file = file, width=10, height=10*plotHeight()/1200)
-			doPlot(filename=NULL,addLogo=T)
+			doPlot(filename=NULL,addLogo=T,cex.master=1.8, cex.lab=1.8, cex.axis=1.5)
 		dev.off()
 	}
 )
 
 output$dl_plotDailyPrecipPNG <- downloadHandler( # render plot to pdf for download
 	filename = 'plotDailyPrecip.png',
-	content = function(filename){ doPlot(filename=filename, cex.master=1.8, cex.lab=1.8, cex.axis=1.5, addLogo=T) },
+	content = function(filename){ doPlot(filename=filename, cex.master=1.8, cex.lab=1.8, cex.axis=1.8, addLogo=T) },
 	contentType = 'image/png'
 )
 

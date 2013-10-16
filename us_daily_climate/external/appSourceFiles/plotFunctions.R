@@ -94,8 +94,8 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 		y <- tapply(d$P_in[d$Year %in% names(ind)], rep(1:365,length(ind)),mean,na.rm=T)
 		lo <- loess(y~x,span=loess.span)
 		clrs.margin <- gsub(paste0("NA",alpha),"#000000",paste0(pal(num.colors)[as.numeric(cut(tformColMar(y),breaks=num.colors))],alpha))
-		par(mar=c(1,10*png.adjust.cex,1,2),mgp=c(4*png.adjust.cex,1,0))
-		plot(x,y,xlim=c(1,365),ylim=c(0,max(y)),pch=21,col=col.ax.lab,bg=clrs.margin,cex=marginal.pts.cex,axes=F,ylab=expression("Historical mean"~('in')~""),col.lab=col.ax.lab,cex.lab=cex.master*png.adjust.cex)
+		par(mar=c(1,10*png.adjust.cex,1,0),mgp=c(5*png.adjust.cex,1,0))
+		plot(x,y,xlim=c(1,365),ylim=c(0,max(y)),xaxs="i",pch=21,col=col.ax.lab,bg=clrs.margin,cex=marginal.pts.cex,axes=F,ylab=expression("Historical mean"~('in')~""),col.lab=col.ax.lab,cex.lab=cex.master*png.adjust.cex)
 		axis(2,at=signif(seq(0,signif(max(y),2),length=5),3),col=col.ax.lab,cex.axis=cex.axis,...)
 		lines(predict(lo),lwd=3,col=col.ax.lab)
 	}
@@ -121,7 +121,7 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 			v.bars.list[[i]] <- v
 		}
 		clrs.all <- matrix(gsub(paste0("NA",alpha),"#000000",paste0(pal(num.colors)[as.numeric(cut(tformColBar(abs(unlist(v.bars.list))),breaks=num.colors))],alpha)),nrow=2)
-		par(mar=c(1,5*png.adjust.cex,1,2),mgp=c(3*png.adjust.cex,1,0))
+		par(mar=c(1,7*png.adjust.cex,1,2),mgp=c(4*png.adjust.cex,1,0))
 		if(marginal & !bar.means){ # if bars==TRUE, must leave a blank plotting region to the right, above the bars, before proceeding, unless also plotting bar means
 			plot.new()
 		} else if(marginal) {
@@ -136,7 +136,7 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 	}
 	
 	# Plot: setup main panel graphic
-	par(mar=c(5,10*png.adjust.cex,0,2))
+	par(mar=c(5,10*png.adjust.cex,0,0))
 	plot(0, 0, xlim=c(1,365), ylim=c(1-1,yrs.n+1), type="n", axes=F, xlab=xlb, main="", xaxs="i", yaxs="i",...)
 	axis(1,at=x.at,labels=x.labels,col=col.ax.lab,cex.axis=cex.axis,...)
 	col.na <- "#FF00FF90" # hard-coded
@@ -161,7 +161,7 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 	
 	# Plot: add floating bars comparing half-year totals (optional)
 	if(bars){
-		par(mar=c(5,0,0,2))
+		par(mar=c(5,2*png.adjust.cex,0,2))
 		plot(0, 0, xlim=range(v.bars.list,na.rm=T), ylim=c(1-1,yrs.n+1), type="n", axes=F, xlab="", main="", xaxs="i", yaxs="i", ...)
 		for(i in 1:yrs.n){
 			v <- v.bars.list[[i]]
