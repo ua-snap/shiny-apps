@@ -1,7 +1,7 @@
 # Datasets, variables
 stations.sub <- reactive({
 	if(!is.null(input$state)){
-		x <- subset(stations,State==input$state)
+		x <- subset( metadata, State==input$state & startdate.yr<=input$minYrRange[1] & (enddate.yr>=input$minYrRange[2] | enddate.yr>=2013) ) # 10/6/2013 is the time of the last metadata station "enddate" download/prep
 	} else x <- NULL
 	x
 })
@@ -27,11 +27,24 @@ ID <- reactive({
 	x
 })
 
-url.string <- reactive({
+startdate <- reactive({
 	if(!is.null(ID())){
-		x <- paste0("http://","data.rcc-acis.org/StnData?sid=",ID(),"&sdate=","1950-01-01","&edate=",Sys.Date()-1,"&elems=4&output=csv") # "&elems=1,2,43,4,10,11&output=csv"
+		x <- as.Date(metadata$Start)[metadata$ID==ID()][1]
 	} else x <- NULL
-	print(x)
+	x
+})
+
+enddate <- reactive({
+	if(!is.null(ID())){
+		x <- as.Date(metadata$End)[metadata$ID==ID()][1]
+	} else x <- NULL
+	x
+})
+
+url.string <- reactive({
+	if(!is.null(startdate()) & !is.null(enddate())){
+		x <- paste0("http://","data.rcc-acis.org/StnData?sid=",ID(),"&sdate=",max(startdate(),paste0(input$minYrRange[1],"-01-01")),"&edate=",min(enddate(),Sys.Date()-1),"&elems=4&output=csv") # "&elems=1,2,43,4,10,11&output=csv"
+	} else x <- NULL
 	x
 })
 

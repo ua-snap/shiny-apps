@@ -1,14 +1,18 @@
 # Datasets, variables
+output$minYrRange <- renderUI({
+	sliderInput("minYrRange","Minimum station coverage:",yr.min,yr.max,c(yr.max-29,yr.max),step=1,format="#")
+})
+
 output$state <- renderUI({
-	selectInput("state","State:",choices=states.abb,selected=states.abb[1])
+	selectInput("state","State:",choices=state.abb,selected=state.abb[1])
 })
 
 output$station <- renderUI({
-	selectInput("station","Weather station:",choices=stations.name(),selected=stations.name()[1])
+	if(!is.null(input$state)) selectInput("station","Weather station:",choices=stations.name(),selected=stations.name()[1])
 })
 
 output$yrs <- renderUI({
-	if(!is.null(yrs())) sliderInput("yrs","",yrs()[1],tail(yrs(),1),range(yrs()),step=1,format="#")
+	if(!is.null(yrs())) sliderInput("yrs","Selected years:",yrs()[1],tail(yrs(),1),range(yrs()),step=1,format="#")
 })
 
 output$mo <- renderUI({
@@ -20,7 +24,7 @@ output$ph1 <- renderUI({
 })
 
 output$var <- renderUI({
-		selectInput("var","Variable:",choices=vars,selected=vars[1])
+	selectInput("var","Variable:",choices=vars,selected=vars[1])
 })
 
 output$ph2 <- renderUI({
@@ -35,6 +39,10 @@ output$dailyColPal <- renderUI({
 	selectInput("dailyColPal","Color theme:",palettes,palettes[1])
 })
 
-output$genPlotButton <- renderUI({
-	actionButton("genPlotButton", "Generate Plot")
-})
+#output$getDataButton <- renderUI({
+#	actionButton("getDataButton", "Import Dataset")
+#})
+
+#output$genPlotButton <- renderUI({
+#	actionButton("genPlotButton", "Generate Plot")
+#})

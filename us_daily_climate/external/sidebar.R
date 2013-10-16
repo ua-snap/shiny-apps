@@ -10,10 +10,17 @@ sidebarPanel_2(
 	),
 	wellPanel(
 		div(class="row-fluid",
-		div(class="span6", checkboxInput("showWP1",h5("Data selection"),TRUE)),
-		div(class="span6", uiOutput("genPlotButton"))
+			div(class="span6", checkboxInput("showWP1",h5("Data selection"),TRUE)),
+			div(class="span6",
+				#includeHTML("www/js/buttonDisable.js"),
+				actionButton("genPlotButton", "Generate Plot") #uiOutput("genPlotButton")
+			)
 		),
 		conditionalPanel(condition="input.showWP1",
+			div(class="row-fluid",
+				div(class="span11",uiOutput("minYrRange")),
+				div(class="span1",helpPopup('Minimum year range','<p style="text-align:justify">Set the minimum interval in which a station must have data. A wider interval reduces the list of available stations for a given state.</p>'))
+			),
 			div(class="row-fluid",
 				div(class="span11",uiOutput("state")),
 				div(class="span1",helpPopup('Choose state','<p style="text-align:justify">Selecting a state from this menu will update the weather station under the following menu.</p>'))
