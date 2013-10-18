@@ -194,7 +194,7 @@ shinyServer(function(input,output){
 		filename = 'curPlot.pdf',
 		content = function(file){
 			pdf(file = file, width=11, height=8.5, pointsize=8)
-			doPlot(margins=c(8,8,8,1),cex.ax=1.3,cex.lb=1.5,cex.mn=2,cex.lg=1.8)
+			doPlot(col=1,margins=c(8,8,8,1),cex.ax=1.3,cex.lb=1.5,cex.mn=2,cex.lg=1.8)
 			dev.off()
 		}
 	)
