@@ -23,26 +23,23 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 	# setup: colors based on values, force 365-day years in dataframe, overwrite old year info based on given year definition
 	pal <- colorRampPalette(colpalvec)
 	clrs.all <- gsub(paste0("NA",alpha),"#000000",paste0(pal(num.colors)[as.numeric(cut(tformCol(d$P_in),breaks=num.colors))],alpha))
-	clrs.vec <- c()
 	drp.vec <- n.v <- c()
 	for(i in 1:length(yrs)){
 		v <- d$P_in[d$Year==yrs[i]]
-		clrs <- clrs.all[d$Year==yrs[i]]
 		zero.ind <- which(v==0)
 		if(!length(zero.ind)) drp <- 1 else	drp <- zero.ind[which.min(abs(zero.ind-60))]
 		n.v <- c(n.v,length(v))
-		if(n.v[i]==366) { v <- v[-drp]; clrs <- clrs[-drp] }
-		clrs.vec <- c(clrs.vec,clrs)
-		if(i==1 & n.v[i]==366 & length(drp)) drp.vec <- drp else if(i>1 & n.v[i]==366) drp.vec <- c(drp.vec,drp+sum(n.v[1:(i-1)]))
+		if(i==1 & n.v[i]==366) drp.vec <- drp else if(i>1 & n.v[i]==366) drp.vec <- c(drp.vec,drp+sum(n.v[1:(i-1)]))
 	}
 	d <- d[-drp.vec,]
+	clrs.all <- clrs.all[-drp.vec]
 	if(mo1!=1){ d$Year <- yrs.new; yrs <- yrs.p }
 	if(mo1==1) mo.ind <- 1:12 else mo.ind <- c(mo1:12,1:(mo1-1))
 	na.per.mo <- tapply(d$P_in,paste(d$Year,d$Month),function(z) length(which(is.na(z))))
 	na.per.mo <- tapply(na.per.mo,sapply(strsplit(names(na.per.mo)," "),"[[",1),function(z) any(z>max.na.per.month))
 	na.per.yr <- tapply(d$P_in,d$Year,function(z) length(which(is.na(z))) > max.na.per.year)
 	drop.yrs <- sort(unique(c(which(na.per.mo),which(na.per.yr))))	
-	d$clrs <- clrs.vec
+	d$clrs <- clrs.all
 	yrs.n <- length(yrs)
 	clrs.list <- v.list <- tfSizeVals.list <- list()
 	tfSizeVals <- tformSize(d$P_in[d$Year>=yrs[1] & d$Year<=yrs[length(yrs)]])
@@ -96,7 +93,8 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 		clrs.margin <- gsub(paste0("NA",alpha),"#000000",paste0(pal(num.colors)[as.numeric(cut(tformColMar(y),breaks=num.colors))],alpha))
 		par(mar=c(1,10*png.adjust.cex,1,0),mgp=c(5*png.adjust.cex,1,0))
 		plot(x,y,xlim=c(1,365),ylim=c(0,max(y)),xaxs="i",pch=21,col=col.ax.lab,bg=clrs.margin,cex=marginal.pts.cex,axes=F,ylab=expression("Historical mean"~('in')~""),col.lab=col.ax.lab,cex.lab=cex.master*png.adjust.cex)
-		axis(2,at=signif(seq(0,signif(max(y),2),length=5),3),col=col.ax.lab,cex.axis=cex.axis,...)
+		ax.vals <- signif(round(seq(0,signif(max(y),2),length=5),3),3)
+		axis(2,at=ax.vals,labels=ax.vals,col=col.ax.lab,cex.axis=cex.axis,...)
 		lines(predict(lo),lwd=3,col=col.ax.lab)
 	}
 	
@@ -154,7 +152,7 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 		points(x, rep((1:yrs.n)[i],length(v)), col=col.ax.lab, bg=clrs.list[[i]], cex=cex.exp*(tfs-mean(tfs)-min(0,tfs)),...)
 		if(i %in% drop.yrs){
 			na.ind <- which(is.na(v))
-			text(x[na.ind], jitter(rep((1:yrs.n)[i],length(na.ind))),"NA", col=col.na, cex=3*png.adjust.cex)
+			text(x[na.ind], jitter(rep((1:yrs.n)[i],length(na.ind)),0,.2),"NA", col=col.na, cex=3*png.adjust.cex)
 		}
 	}
 	box(col=col.ax.lab)
