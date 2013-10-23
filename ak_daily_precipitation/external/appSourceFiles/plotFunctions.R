@@ -42,7 +42,7 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 	na.per.mo <- tapply(na.per.mo,sapply(strsplit(names(na.per.mo)," "),"[[",1),function(z) any(z>max.na.per.month))
 	na.per.yr <- tapply(d$P_in,d$Year,function(z) length(which(is.na(z))) > max.na.per.year)
 	drop.yrs <- sort(unique(c(which(na.per.mo),which(na.per.yr))))	
-	d$clrs <- c(clrs.vec,clrs.vec[1:366])
+	d$clrs <- clrs.vec
 	yrs.n <- length(yrs)
 	clrs.list <- v.list <- tfSizeVals.list <- list()
 	tfSizeVals <- tformSize(d$P_in[d$Year>=yrs[1] & d$Year<=yrs[length(yrs)]])
