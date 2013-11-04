@@ -19,7 +19,7 @@ function(){
 			'|',
 			a('Blog', href="http://blog.snap.uaf.edu/", target="_blank"),
 			'|',
-			a('LinkedIn', href="http://www.linkedin.com/profile/view?id=301586440&trk=nav_responsive_tab_profile", target="_blank")	
+			a('LinkedIn', href="http://www.linkedin.com/pub/matthew-leonawicz/85/1/234", target="_blank")	
 		),
 		br(),
 		
