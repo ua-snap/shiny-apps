@@ -16,7 +16,9 @@ function(){
 			'Statistician | useR',br(),
 			a('Scenarios Network for Alaska and Arctic Planning', href="http://www.snap.uaf.edu/", target="_blank"),
 			'|',
-			a('Blog', href="http://blog.snap.uaf.edu/", target="_blank")
+			a('Blog', href="http://blog.snap.uaf.edu/", target="_blank"),
+			'|',
+			a('LinkedIn', href="http://www.linkedin.com/profile/view?id=301586440&trk=nav_responsive_tab_profile", target="_blank")	
 		),
 		br(),
 		
