@@ -4,7 +4,8 @@ plotFun <- function(m,file=NULL, colpal){
 	zlm <- range(brks)
 	yrs <- as.numeric(rownames(m))
 	x.scale <- (yrs-min(yrs))/(length(yrs)-1)
-	lab <- seq(yrs[1],tail(yrs,1), by=10)
+	lab <- seq(yrs[1],tail(yrs,1), by=10); lab <- lab + which(yrs%%10==0)[1] - 1
+	if(length(lab)<5) { lab <- seq(yrs[1],tail(yrs,1), by=5); lab <- lab + which(yrs%%5==0)[1] - 1 }
 	ind <- match(lab, yrs)
 	binwidth <- diff(brks)[1]
 	x <- seq(zlm[1]+binwidth/2, zlm[2]-binwidth/2, by=binwidth)
