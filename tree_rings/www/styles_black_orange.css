@@ -2040,7 +2040,7 @@ table .span24 {
   line-height: 14px;
   vertical-align: text-top;
   *background-image: url("../img/glyphicons-halflings.png");
-  background-image: url("../img/glyphicons-halflings-white.png");
+  background-image: url("./img/glyphicons-halflings-white.png");
   background-position: 14px 14px;
   background-repeat: no-repeat;
 }
@@ -2054,7 +2054,7 @@ table .span24 {
 .dropdown-menu > li > a:hover > [class*=" icon-"],
 .dropdown-menu > .active > a > [class^="icon-"],
 .dropdown-menu > .active > a > [class*=" icon-"] {
-  background-image: url("../img/glyphicons-halflings-white.png");
+  background-image: url("./img/glyphicons-halflings-white.png");
 }
 
 .icon-glass {
@@ -2707,7 +2707,7 @@ table .span24 {
   color: #ffffff;
   text-decoration: none;
   background-color: #ff4500;
-  background-color: #0081c2;
+  *background-color: #0081c2;
   background-image: -moz-linear-gradient(top, #ff4500, #0077b3);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ff4500), to(#0077b3));
   background-image: -webkit-linear-gradient(top, #ff4500, #0077b3);
@@ -2722,7 +2722,7 @@ table .span24 {
   color: #ffffff;
   text-decoration: none;
   background-color: #ff4500;
-  background-color: #0081c2;
+  *background-color: #0081c2;
   background-image: linear-gradient(to bottom, #ff4500, #0077b3);
   background-image: -moz-linear-gradient(top, #ff4500, #0077b3);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ff4500), to(#0077b3));
@@ -4934,9 +4934,9 @@ input[type="submit"].btn.btn-mini {
   left: 0;
   z-index: 1010;
   display: none;
-  width: 236px;
+  width: 500px;
   padding: 1px;
-  background-color: #ffffff;
+  background-color: #1a1a1a;
   border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
   -webkit-border-radius: 6px;
@@ -4972,8 +4972,10 @@ input[type="submit"].btn.btn-mini {
   font-size: 14px;
   font-weight: normal;
   line-height: 18px;
-  background-color: #f7f7f7;
+  color: #000000;
+  background-color: #ff4500;
   border-bottom: 1px solid #ebebeb;
+  border: 1px solid #ebebeb;
   -webkit-border-radius: 5px 5px 0 0;
      -moz-border-radius: 5px 5px 0 0;
           border-radius: 5px 5px 0 0;
@@ -4981,6 +4983,7 @@ input[type="submit"].btn.btn-mini {
 
 .popover-content {
   padding: 9px 14px;
+  border: 1px solid #ebebeb;
 }
 
 .popover-content p,

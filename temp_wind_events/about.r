@@ -39,6 +39,8 @@ function(){
 			'|',
 			a('Blog', href="http://blog.snap.uaf.edu/", target="_blank"),
 			'|',
+			a('Twitter', href="https://twitter.com/leonawicz/", target="_blank"),
+			'|',
 			a('LinkedIn', href="http://www.linkedin.com/in/leonawicz/", target="_blank")	
 		),
 		br(),
