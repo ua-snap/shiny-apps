@@ -32,7 +32,6 @@ function(){
 					HTML('<li>'),a("Alaska and western Canada communities and climate", href="http://shiny.snap.uaf.edu/akcan_climate/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Alaska  communities historical daily precipitation", href="http://shiny.snap.uaf.edu/ak_daily_precipitation/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Gradient boosting example", href="http://shiny.snap.uaf.edu/gbm_example/", target="_blank"),HTML('</li>'),
-					HTML('<li>'),a("Random forest example", href="http://shiny.snap.uaf.edu/random_forest_example/", target="_blank"),HTML('</li>'),
 				HTML('</ul>')),
 				strong('Code'),
 				p('Source code available at',
@@ -52,8 +51,7 @@ function(){
 					HTML('<li>'),a("Alaska and western Canada communities and climate", href="http://blog.snap.uaf.edu/2013/07/16/r-shiny-app-alaskawestern-canada-communities-and-climate/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Alaska  communities historical daily precipitation", href="http://blog.snap.uaf.edu/2013/09/17/customizable-charts-with-r-base-graphics-and-shiny/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Gradient boosting example", href="http://blog.snap.uaf.edu/2013/06/20/r-shiny-app-stochastic-gradient-boosting-with-gbm/", target="_blank"),HTML('</li>'),
-					HTML('<li>'),"Random forest example [Blog post N/A]",HTML('</li>'),
-					HTML('<li>'),"This app: Tree rings [Blog post N/A]",HTML('</li>'),
+					HTML('<li>'),a("Basic example app with image() plots", href="http://shiny.snap.uaf.edu/tree_rings/", target="_blank"),HTML('</li>'),
 				HTML('</ul>')),
 				br()
 			),
@@ -64,7 +62,6 @@ function(){
 					HTML('<li>'),a('Built with the Shiny package', href="http://www.rstudio.com/shiny/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),"Additional supporting R packages",HTML('</li>'),
 					HTML('<ul>'),
-						#HTML('<li>'),a('Hmisc', href="http://cran.r-project.org/web/packages/Hmisc/index.html", target="_blank"),HTML('</li>'),
 						HTML('<li>'),"[None]",HTML('</li>'),
 					HTML('<ul>'),
 				HTML('</ul>'))
