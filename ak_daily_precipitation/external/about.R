@@ -1,13 +1,5 @@
 function(){
 	tabPanel("About",
-		p(style="text-align:justify",'This web application displays daily precipitation data for locations around Alaska.
-		The main panel in the graphic shows a time series for each year, where circles indicate daily precipitation frequency and circle size and color indicate relative intensity.
-		To the right, opposing bars indicate six-month total precipitation prior to and following the first of the month on which the precipitation years are centered.
-		Aggregate summaries appear above both of these panel graphics, where the top left scatterplot and loess smoothing curve represent the average of daily obserrvations across the selected years.
-		To the right, the two bars also represent averages of the selected years. In both cases, the averages exclude data from the first and/or last year if either year is incomplete.'),
-		p(style="text-align:justify",'I plan to add more geographic locations, and possibly more variables, to this app when time permits.'),
-		p(style="text-align:justify",'Data were provided by Kevin Galloway at the',a("Alaska Climate Research Center", href="http://akclimate.org/", target="_blank"),'.'),
-		p(style="text-align:justify","Inspiration for the plot format came from Stephen Von Worley's",a("Is California heading into a drought?", href="http://www.datapointed.net/2012/02/san-francisco-rain-year-before-after-valentines-day/", target="_blank"),'graphic.'),
 		br(),
 
 		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),
