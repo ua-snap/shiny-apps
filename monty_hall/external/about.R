@@ -6,7 +6,7 @@ function(){
 			After all, if you have not chosen the correct door, and  the car is behind one of the other two,
 			what point is there in Monty showing you the car? That would end the game.
 			After he shows you a goat, he gives you a simple choice. Do you want to stick to your guns and open the door you originally chose
-			or do you want to switch the other unopened door? Does it makae a difference in your chances of winning? It certainly does.'),
+			or do you want to switch the other unopened door? Does it make a difference in your chances of winning? It certainly does.'),
 		p(style="text-align:justify",'This web application displays plots of probabilities of winning the car in more general versions of the Monty Hall game.
 			There can be three or more doors. The Monty Hall function I wrote in R will allow any combination of numbers of doors selected (but unopened) by the player,
 			and subsequently a mutually exclusive set of doors opened to reveal goats by Monty Hall,
