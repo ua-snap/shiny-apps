@@ -13,7 +13,7 @@ shinyUI(pageWithSidebar(
 			</a>
 			</div>'
 		),
-		"Modeled Polar Sea Ice Coverage"
+		"Modeled Arctic Sea Ice Coverage"
 	),
 	sidebarPanel(
 		wellPanel(
@@ -58,7 +58,7 @@ shinyUI(pageWithSidebar(
 		tabsetPanel(
 			tabPanel(
 				"Extent Totals",
-				h4("Sea Ice Extent Totals"),
+				h4("RCP 8.5 Sea Ice Extent Totals"),
 				plotOutput("plot",height="auto"),
 				conditionalPanel("input.reglnslm1==true",
 					p(strong("Linear Model")),
@@ -73,7 +73,7 @@ shinyUI(pageWithSidebar(
 					verbatimTextOutput("lo_summary")
 				),
 			value="ts"),
-			tabPanel("Concentration Map",h4("Sea Ice Concentration"),plotOutput("plot2",height="auto"),value="map"),
+			tabPanel("Concentration Map",h4("RCP 8.5 Sea Ice Concentration"),plotOutput("plot2",height="auto"),value="map"),
 			tabPanelAbout(),
 			id="tsp"
 		)
