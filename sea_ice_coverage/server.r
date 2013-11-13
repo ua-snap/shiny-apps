@@ -17,7 +17,7 @@ for(i in 1:length(files)) assign(paste("b",tolower(substr(files[i],1,2)),sep="."
 shinyServer(function(input,output){
 	# Siderbar elements: dataset(s), years, month/season, decade, time series points, lines, and transparency
 	output$Dataset <- renderUI({
-		selectInput("dataset","Choose model:",choices=modnames,selected=modnames[1],multiple=T)
+		selectInput("dataset","Choose RCP 8.5 sea ice model:",choices=modnames,selected=modnames[1],multiple=T)
 	})
 	
 	output$tsSlider <- renderUI({
@@ -356,7 +356,7 @@ shinyServer(function(input,output){
 			p <- levelplot(b, par.settings=list(strip.background=list(col=c("tan"))), at=brk,
 							col.regions=c("tan",colorRampPalette(c("blue","white"))(20)),
 							colorkey=list(at=brk,c("tan",colorRampPalette(c("blue","white"))(20))),scales=list(draw=F),
-			main=paste(input$decade,mo2.vec(),"Decadal Average Percent Sea Ice Concentration by Model"),
+			main=paste(input$decade,mo2.vec(),"RCP 8.5 Decadal Average Percent Sea Ice Concentration by Model"),
 			par.strip.text=list(cex=1,lines=2),
 				panel = function(...){
 						grid.rect(gp=gpar(col=NA,fill="black"))

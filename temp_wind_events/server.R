@@ -32,7 +32,7 @@ shinyServer(function(input,output){
 	})
 	
 	output$CutT <- renderUI({
-		selectInput("cut.t","Temp. threshold (C):",choices=temp.cut,selected=temp.cut[1],multiple=T)
+		selectInput("cut.t","Temp. threshold (C):",choices=temp.cut,selected=temp.cut[6],multiple=T)
 	})
 	
 	windMagCheck <- reactive({ input$var[1]=="Wind" | (any(input$var=="Wind") & (input$cond=="Threshold" | input$cond=="Variable")) })
@@ -40,9 +40,9 @@ shinyServer(function(input,output){
 	output$CutW <- renderUI({
 		if(length(input$var)){
 			if(windMagCheck()){
-				selectInput("cut.w","Wind threshold (m/s):",choices=wind.cut[wind.cut>0],selected=wind.cut[wind.cut>0][1],multiple=T)
+				selectInput("cut.w","Wind threshold (m/s):",choices=wind.cut[wind.cut>0],selected=wind.cut[wind.cut>0][2],multiple=T)
 			} else {
-				selectInput("cut.w","Wind threshold (m/s):",choices=wind.cut,selected=wind.cut[1],multiple=T)
+				selectInput("cut.w","Wind threshold (m/s):",choices=wind.cut,selected=wind.cut[4],multiple=T)
 			}
 		}
 	})

@@ -1,7 +1,7 @@
 function(){
 	tabPanel("About",value="ts",
 		p(style="text-align:justify",'This web application shows sea ice coverage over the Arctic from 1860 and projected through 2099.
-		The first tab includes a time series plot of total sea ice extent by global climate model (GCM), including a five-model averaged composite.
+		The first tab includes a time series plot of total sea ice extent by global climate model (GCM), including a five-model averaged composite. All GCMs are RCP 8.5.
 		Linear, quadratic, and locally weighted LOESS fitted trends are available for overlay.
 		Fitted trend model output is displayed below the plot for each climate model and regression model.'),
 		p(style="text-align:justify",'The second tab shows a panel graphic of spatially explicit sea ice concentration values for each model including the composite.',
@@ -9,8 +9,7 @@ function(){
 		Pixels from the original raster datasets, aggregated to a coarser scale (for app efficiency),
 		are not intended to line up perfectly with the overlain landmass outlines, which are provided only for convenient reference and visual orientation for the user.
 		The sea ice concentration map tab is included in the app as an', em('extra feature,'),'primarily in the interest of general idea and code sharing with the broader R and Shiny user communities.
-		For users of the app who are specifically interested in it for its sea ice content, it is recommended that you focus on the extent totals tab.
-		The map tab is there more to say something about current coding limitations of the author and the software (hopefully just the author), than about sea ice.'),
+		For users of the app who are specifically interested in it for its sea ice content, it is recommended that you focus on the extent totals tab.'),
 		p(style="text-align:justify",'The purpose of the app is to provide a relatively simple and convenient way of interactively exploring a subset of aggregated (across time and space) GCM sea ice outputs.
 		The goal is not to develop the perfect web tool, but rather to showcase some of the data.
 		As such, there are no plans for continued development or refinement of this particular app. However, future apps for other projects will be able to build upon what has been done here.'),
