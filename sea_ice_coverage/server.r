@@ -356,7 +356,7 @@ shinyServer(function(input,output){
 			p <- levelplot(b, par.settings=list(strip.background=list(col=c("tan"))), at=brk,
 							col.regions=c("tan",colorRampPalette(c("blue","white"))(20)),
 							colorkey=list(at=brk,c("tan",colorRampPalette(c("blue","white"))(20))),scales=list(draw=F),
-			main=paste(input$decade,mo2.vec(),"RCP 8.5 Decadal Average Percent Sea Ice Concentration by Model"),
+			main=paste("RCP 8.5",input$decade,mo2.vec(),"Decadal Average Percent Sea Ice Concentration by Model"),
 			par.strip.text=list(cex=1,lines=2),
 				panel = function(...){
 						grid.rect(gp=gpar(col=NA,fill="black"))
@@ -378,7 +378,7 @@ shinyServer(function(input,output){
 		filename = 'curPlotTS.pdf',
 		content = function(file){
 			pdf(file = file, width=11, height=8.5)
-			doPlotTS(margins=c(6,6,5,2),main="Sea Ice Extent Totals",cex.lb=0.9,cex.ax=0.8,cex.leg=0.9)
+			doPlotTS(margins=c(6,6,5,2),main="RCP 8.5 Sea Ice Extent Totals",cex.lb=0.9,cex.ax=0.8,cex.leg=0.9)
 			dev.off()
 		}
 	)
