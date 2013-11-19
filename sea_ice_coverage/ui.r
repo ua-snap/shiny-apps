@@ -52,7 +52,8 @@ shinyUI(pageWithSidebar(
 				condition="input.tsp=='map'",
 				downloadButton("dlCurPlotMap", "Download Graphic")
 			)
-		)
+		),
+		h5(textOutput("pageviews"))
 	),
 	mainPanel(
 		tabsetPanel(

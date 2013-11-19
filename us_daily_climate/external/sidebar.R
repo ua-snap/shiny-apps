@@ -99,7 +99,7 @@ sidebarPanel_2(
 			)
 		)
 	),
-		wellPanel(
+	wellPanel(
 		checkboxInput("showWP4",h5("Allowable missing values"),FALSE),
 		conditionalPanel(condition="input.showWP4",
 			div(class="row-fluid",
@@ -110,5 +110,6 @@ sidebarPanel_2(
 				div(class="span11",uiOutput("maxNAperYr"))
 			)
 		)
-	)
+	),
+	h5(textOutput("pageviews"))
 )

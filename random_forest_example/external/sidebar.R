@@ -27,5 +27,6 @@ sidebarPanel_2(
 			uiOutput("ntrees"),
 			uiOutput("goButton")
 		)
-	)
+	),
+	h5(textOutput("pageviews"))
 )

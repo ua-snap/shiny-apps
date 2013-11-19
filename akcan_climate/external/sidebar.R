@@ -41,5 +41,6 @@ sidebarPanel(
 			p(style="text-align:justify",em("Additional specific display options are available below the plot.")),
 			actionButton("updateButton", "Update / Reformat Plot")
 		)
-	)
+	),
+	h5(textOutput("pageviews"))
 )

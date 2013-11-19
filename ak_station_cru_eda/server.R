@@ -481,6 +481,13 @@ shinyServer(function(input,output){
 			</div>',sep="",collapse=""))
 	})
 	
+	output$pageviews <-	renderText({
+		if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
+		pageviews <- pageviews + 1
+		save(pageviews,file="pageviews.Rdata")
+		paste("Visits:",pageviews)
+	})
+
 	output$datname <- renderPrint({ # this is used for lazy debugging by printing specific information to the headerPanel
 		x <- "cru31"
 		#x<-length(input$city) & length(input$yrs) & length(input$regbymo)

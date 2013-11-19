@@ -20,5 +20,6 @@ sidebarPanel_2(
 				div(class="span6", downloadButton("dl_macorplotPNG","Download PNG"))
 			)
 		)
-	)
+	),
+	h5(textOutput("pageviews"))
 )

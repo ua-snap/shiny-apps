@@ -153,4 +153,11 @@ output$plot.best.iter <- renderPlot({ doPlot.best.iter() }, height=600, width=10
 
 output$plot.ri <- renderPlot({ doPlot.ri() }, height=400, width=1000)
 
+output$pageviews <-	renderText({
+	if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
+	pageviews <- pageviews + 1
+	save(pageviews,file="pageviews.Rdata")
+	paste("Visits:",pageviews)
+})
+
 output$show.gbm1.object.names.if.created.successfully <- renderPrint({ if(!is.null(gbm1())) names(gbm1()) })

@@ -26,5 +26,6 @@ sidebarPanel(
 		tags$style(type="text/css", '#bag.fraction {width: 150px}'),
 		tags$style(type="text/css", '#cv.folds {width: 150px}'),
 		tags$style(type="text/css", '#n.minobsinnode {width: 150px}')
-	)
+	),
+	h5(textOutput("pageviews"))
 )

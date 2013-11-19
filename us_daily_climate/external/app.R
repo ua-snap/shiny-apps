@@ -61,5 +61,12 @@ output$dl_plotDailyPrecipPNG <- downloadHandler( # render plot to pdf for downlo
 	contentType = 'image/png'
 )
 
+output$pageviews <-	renderText({
+	if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
+	pageviews <- pageviews + 1
+	save(pageviews,file="pageviews.Rdata")
+	paste("Visits:",pageviews)
+})
+
 # Temporary debugging 
 output$debugging <- renderPrint({ "Tab not yet available." })

@@ -48,5 +48,6 @@ sidebarPanel_2(
 				div(class="span1",helpPopup('Choose an area','For any sea, you may focus on wind events and sea ice concentrations averaed over the entire sea or over a coastal segment of the sea only.'))
 			)
 		#)
-	)
+	),
+	h5(textOutput("pageviews"))
 )

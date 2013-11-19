@@ -26,7 +26,8 @@ shinyUI(pageWithSidebar(
 			uiOutput("BW"),
 			downloadButton("dlCurPlot", "Download Graphic"),
 			downloadButton('dldat', 'Download Sample')
-		)
+		),
+		h5(textOutput("pageviews"))
 	),
 	mainPanel(
 		tabsetPanel(

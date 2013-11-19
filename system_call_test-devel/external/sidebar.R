@@ -18,5 +18,6 @@ sidebarPanel(
 			),
 			uiOutput("goButton")
 		)
-	)
+	),
+	h5(textOutput("pageviews"))
 )

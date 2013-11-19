@@ -32,5 +32,12 @@ output$dl_mhplotPNG <- downloadHandler( # render plot to pdf for download
 	contentType = 'image/png'
 )
 
+output$pageviews <-	renderText({
+	if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
+	pageviews <- pageviews + 1
+	save(pageviews,file="pageviews.Rdata")
+	paste("Visits:",pageviews)
+})
+
 # Temporary debugging 
 output$debugging <- renderPrint({ yrs() }) #"Tab not yet available." })

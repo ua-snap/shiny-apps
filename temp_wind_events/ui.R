@@ -58,7 +58,8 @@ shinyUI(pageWithSidebar(
 		),
 		wellPanel(div(class="row-fluid", div(class="span6", uiOutput("showMap")), div(class="span6", downloadButton("dlCurPlot", "Download Graphic"))),
 		tags$style(type="text/css", '#showMap {width: 150px}'),
-		tags$style(type="text/css", '#dlCurPlot {width: 120px}'))
+		tags$style(type="text/css", '#dlCurPlot {width: 120px}')),
+		h5(textOutput("pageviews"))
 	),
 	mainPanel(
 		tabsetPanel(

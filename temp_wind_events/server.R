@@ -198,4 +198,12 @@ shinyServer(function(input,output){
 			dev.off()
 		}
 	)
+	
+	output$pageviews <-	renderText({
+		if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
+		pageviews <- pageviews + 1
+		save(pageviews,file="pageviews.Rdata")
+		paste("Visits:",pageviews)
+	})
+
 })

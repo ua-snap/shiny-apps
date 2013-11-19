@@ -47,7 +47,8 @@ shinyUI(pageWithSidebar(
 			uiOutput("regablines"),
 			uiOutput("regGGPLOTse"),
 			uiOutput("regGGPLOT")
-		)
+		),
+		h5(textOutput("pageviews"))
 	),
 	mainPanel(
 		tabsetPanel(
