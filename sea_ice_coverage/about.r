@@ -13,8 +13,8 @@ function(){
 		p(style="text-align:justify",'The purpose of the app is to provide a relatively simple and convenient way of interactively exploring a subset of aggregated (across time and space) GCM sea ice outputs.
 		The goal is not to develop the perfect web tool, but rather to showcase some of the data.
 		As such, there are no plans for continued development or refinement of this particular app. However, future apps for other projects will be able to build upon what has been done here.'),
-		p(style="text-align:justify",'This project is funded by the Alaska Ocean Observing System through its cooperative agreement ##NA11NOS0120020 with the National Oceanic and Atmospheric Administration (NOAA).
-		Work was performed by the Alaska Center for Climate Assessment and Policy(ACCAP) at the University of Alaska Fairbanks (UAF) in partnership with the Scenarios Network for Alaska and Arctic Planning (SNAP, UAF).'),
+		p(style="text-align:justify",em('This project is funded by the Alaska Ocean Observing System through its cooperative agreement ##NA11NOS0120020 with the National Oceanic and Atmospheric Administration (NOAA).
+		Work was performed by the Alaska Center for Climate Assessment and Policy(ACCAP) at the University of Alaska Fairbanks (UAF) in partnership with the Scenarios Network for Alaska and Arctic Planning (SNAP, UAF).')),
 		br(),
 
 		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),
