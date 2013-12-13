@@ -29,6 +29,8 @@ function(){
 		Lastly, there is no appreciable performance hit for selecting several variables, models, RCPs, or thresholds.
 		However, in the case of conditioning on locations, each location added to the plot will result in roughly a linear increase in plotting time required.
 		This should not be an issue since more than approximately four locations compared at one time will be too visually cluttered anyhow.'),
+		p(style="text-align:justify",'This project is funded by the Alaska Ocean Observing System through its cooperative agreement ##NA11NOS0120020 with the National Oceanic and Atmospheric Administration (NOAA).
+		Work was performed by the Alaska Center for Climate Assessment and Policy(ACCAP) at the University of Alaska Fairbanks (UAF) in partnership with the Scenarios Network for Alaska and Arctic Planning (SNAP, UAF).'),
 		br(),
 
 		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),
