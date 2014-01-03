@@ -12,7 +12,7 @@ output$explanatory <- renderUI({
 		if(input$selectDeselect %% 2 == 0){
 			selectInput("explanatory","Explanatory variables:",explanatoryvars(),selected=explanatoryvars(),multiple=T)
 		} else {
-			selectInput("explanatory","Explanatory variables:",explanatoryvars(),selected=NULL)
+			selectInput("explanatory","Explanatory variables:",explanatoryvars(),selected=NULL,multiple=T)
 		}
 	}
 })
