@@ -10,9 +10,9 @@ output$response <- renderUI({
 output$explanatory <- renderUI({
 	if(!is.null(input$selectDeselect)){
 		if(input$selectDeselect %% 2 == 0){
-			checkboxGroupInput("explanatory","Explanatory variables:",explanatoryvars(),selected=explanatoryvars())
+			selectInput("explanatory","Explanatory variables:",explanatoryvars(),selected=explanatoryvars(),multiple=T)
 		} else {
-			checkboxGroupInput("explanatory","Explanatory variables:",explanatoryvars(),selected=NULL)
+			selectInput("explanatory","Explanatory variables:",explanatoryvars(),selected=NULL)
 		}
 	}
 })

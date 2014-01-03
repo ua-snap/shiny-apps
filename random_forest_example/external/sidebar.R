@@ -7,7 +7,7 @@ sidebarPanel_2(
 		tags$style(type='text/css', ".well { max-width: 300px; }")
 	),
 	wellPanel(
-		checkboxInput("showDataPanel1",h5("Data Selection"),FALSE),
+		checkboxInput("showDataPanel1",h5("Data Selection"),TRUE),
 		conditionalPanel(condition="input.showDataPanel1",
 			#uiOutput("dat.name"),
 			div(class="row-fluid",
@@ -22,7 +22,7 @@ sidebarPanel_2(
 		)
 	),
 	wellPanel(
-		checkboxInput("showRFPanel1",h5("Random Forest"),FALSE),
+		checkboxInput("showRFPanel1",h5("Random Forest"),TRUE),
 		conditionalPanel(condition="input.showRFPanel1",
 			uiOutput("ntrees"),
 			uiOutput("goButton")
