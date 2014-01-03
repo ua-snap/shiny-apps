@@ -61,7 +61,7 @@ gbm1 <- reactive({
 					train.fraction=input$train.fraction,
 					n.minobsinnode=input$n.minobsinnode,
 					cv.folds=input$cv.folds,
-					n.cores=1
+					n.cores=min(input$cv.folds,4)
 				)
 			)
 		} else gbm1 <- NULL
@@ -159,5 +159,3 @@ output$pageviews <-	renderText({
 	save(pageviews,file="pageviews.Rdata")
 	paste("Visits:",pageviews)
 })
-
-output$show.gbm1.object.names.if.created.successfully <- renderPrint({ if(!is.null(gbm1())) names(gbm1()) })
