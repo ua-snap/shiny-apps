@@ -12,7 +12,7 @@ dat <- reactive({
 })
 
 output$vars <- renderUI({
-	if(!is.null(dat()))	checkboxGroupInput("vars","Explanatory variables:",names(dat()[-1]),selected=names(dat()[2]))
+	if(!is.null(dat()))	checkboxGroupInput("vars","Explanatory variables:",names(dat()[-1]),selected=names(dat())[-1])
 })
 
 output$n.trees <- renderUI({
