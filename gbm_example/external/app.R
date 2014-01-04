@@ -85,7 +85,9 @@ best.iter <- reactive({
 			d1 <- unlist(d[1,])
 			d <- rbind(d, gbm1()$train.error[d1], gbm1()$valid.error[d1])
 			if(input$cv.folds>1) d <- rbind(d,gbm1()$cv.error[d1])
-			rownames(d) <- rnames
+			hold.names <- names(d)
+			d <- data.frame(rnames,d)
+			names(d) <- c("Measures",hold.names)
 			return(d)
 		} else return()
 	)
@@ -111,13 +113,15 @@ ri <- reactive({
 	)
 })
 
-output$best.iter.table <- renderTable({ if(!is.null(best.iter())) best.iter() })
+output$best.iter.table <- renderDataTable({ if(!is.null(best.iter())) best.iter() })
 
-output$ri.table.oob <- renderTable({ if(!is.null(ri())) ri()[ri()$Method=="OOB",] })
+output$ri.table <- renderDataTable({ if(!is.null(ri())) ri() })
 
-output$ri.table.test <- renderTable({ if(!is.null(ri())) ri()[ri()$Method=="Test",] })
+output$ri.table.oob <- renderDataTable({ if(!is.null(ri())) ri()[ri()$Method=="OOB",] })
 
-output$ri.table.cv <- renderTable({ if(!is.null(ri())) if("CV" %in% ri()$Method) ri()[ri()$Method=="CV",] })
+output$ri.table.test <- renderDataTable({ if(!is.null(ri())) ri()[ri()$Method=="Test",] })
+
+output$ri.table.cv <- renderDataTable({ if(!is.null(ri())) if("CV" %in% ri()$Method) ri()[ri()$Method=="CV",] })
 
 doPlot.best.iter <- function(...){
 	if(input$goButton==0) plot(0,0,type="n",axes=F,xlab="",ylab="")
