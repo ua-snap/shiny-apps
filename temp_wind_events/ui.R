@@ -44,7 +44,7 @@ shinyUI(pageWithSidebar(
 			div(class="row-fluid", div(class="span6", uiOutput("Direction")), div(class="span6", uiOutput("Cond"))),
 			p("Positve values for directional wind components indicate West to East and South to North, like an X-Y graph.")
 		),
-		wellPanel(div(class="row-fluid", div(class="span6", uiOutput("showMap")), div(class="span6", downloadButton("dlCurPlot", "Download Graphic"))),
+		wellPanel(div(class="row-fluid", div(class="span6", uiOutput("showMap")), div(class="span6", downloadButton("dlCurPlot", "Download Graphic")))),
 		h5(textOutput("pageviews"))
 	),
 	mainPanel(
