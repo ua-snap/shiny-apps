@@ -6,14 +6,14 @@ shinyUI(pageWithSidebar(
 			'<div id="stats_header">
 			Distributions of Random Variables
 			<a href="http://snap.uaf.edu" target="_blank">
-			<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/snap_sidebyside.png" />
+			<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" />
 			</a>
 			</div>'
 		),
 		"Distributions of Random Variables"
 	),
 	sidebarPanel(
-		wellPanel( radioButtons("dist.type","Distribution type:",list("Discrete","Continuous"),selected="Discrete") ),
+		wellPanel( radioButtons("disttype","Distribution type:",list("Discrete","Continuous"),selected="Discrete") ),
 		wellPanel(	uiOutput("distName") ),
 		wellPanel(
 			numericInput("n","Sample size:",10000),

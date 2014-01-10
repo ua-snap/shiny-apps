@@ -41,7 +41,7 @@ shinyServer(function(input,output){
 		})
 	
 	output$cityNames <- renderUI({
-		selectInput("city","Choose a city:",choices=city.names(),multiple=T)
+		selectInput("city","Choose a city:",choices=city.names(),selected=city.names()[1],multiple=T)
 	})
 
 	DATASET <- reactive({
@@ -476,7 +476,7 @@ shinyServer(function(input,output){
 		}
 		txt <- HTML(paste('<div id="stats_header">',txt,
 			'<a href="http://snap.uaf.edu" target="_blank">
-			<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/snap_sidebyside.png" />
+			<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" />
 			</a>
 			</div>',sep="",collapse=""))
 	})

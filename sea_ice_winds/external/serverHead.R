@@ -5,7 +5,7 @@ if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
 library(Hmisc)
 load("external/wind_ice.RData",envir=.GlobalEnv)
 cuts <- rev(unique(w.beaufort.GFDL$Cut))
-varlevels <- unique(w.beaufort.GFDL$Var)
+varlevels <- as.character(unique(w.beaufort.GFDL$Var))
 years <- unique(w.beaufort.GFDL$Year)
 decades <- years[years%%10==0]
 dec.lab <- paste0(decades,"s")

@@ -4,7 +4,7 @@ mainPanel_2(
 		tabPanel("Daily Precipitation",
 			#uiOutput("debugging"),
 			div(class="row-fluid",
-				div(class="span8", uiOutput("tp.dailyTitle")),
+				div(class="span8", uiOutput("TpDailyTitle")),
 				conditionalPanel(condition="input.genPlotButton>0",
 					div(class="span2", downloadButton("dl_plotDailyPrecipPNG","Download PNG")),
 					div(class="span2", downloadButton("dl_plotDailyPrecipPDF","Download PDF"))

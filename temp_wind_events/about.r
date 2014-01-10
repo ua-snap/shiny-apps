@@ -31,7 +31,17 @@ function(){
 		This should not be an issue since more than approximately four locations compared at one time will be too visually cluttered anyhow.'),
 		p(style="text-align:justify",em('This project is funded by the Alaska Ocean Observing System through its cooperative agreement ##NA11NOS0120020 with the National Oceanic and Atmospheric Administration (NOAA).
 		Work was performed by the Alaska Center for Climate Assessment and Policy(ACCAP) at the University of Alaska Fairbanks (UAF) in partnership with the Scenarios Network for Alaska and Arctic Planning (SNAP, UAF).')),
+		strong('Download source data'),
 		br(),
+		a('Quantile-mapped historical daily temperature', href="http://www.snap.uaf.edu/data.php#dataset=Historical_Daily_Mean_Quantile_Mapped_Temperatures", target="_blank"),
+		br(),
+		a('Quantile-mapped projected daily temperature', href="http://www.snap.uaf.edu/data.php#dataset=Projected_Daily_Mean_Quantile_Mapped_Temperatures", target="_blank"),
+		br(),
+		a('Quantile-mapped historical daily wind velocity', href="http://www.snap.uaf.edu/data.php#dataset=Historical_Daily_Quantile_Mapped_Near_Surface_Wind_Velocity", target="_blank"),
+		br(),
+		a('Quantile-mapped projected daily wind velocity', href="http://www.snap.uaf.edu/data.php#dataset=Projected_Daily_Quantile_Mapped_Near_Surface_Wind_Velocity", target="_blank"),
+		br(),
+		p(),
 
 		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),
 		strong('Author'),

@@ -8,11 +8,11 @@ load("samplingApp.RData", envir=.GlobalEnv)
 shinyServer(function(input,output){
 
 	output$distName <- renderUI({
-		if(input$dist.type=="Discrete"){
+		if(input$disttype=="Discrete"){
 			radioButtons("dist","Distribution:",selected="Bernoulli",
 				list("Bernoulli"="bern","Binomial"="bin","Discrete Uniform"="dunif","Geometric"="geom","Hypergeometric"="hgeom","Negative Binomial"="nbin","Poisson"="poi") # discrete
 			)
-		} else if(input$dist.type=="Continuous"){
+		} else if(input$disttype=="Continuous"){
 			radioButtons("dist","Distribution:",selected="Beta",
 				list("Beta"="beta","Cauchy"="cauchy","Chi-squared"="chisq","Exponential"="exp","F"="F","Gamma"="gam","Laplace (Double Exponential)"="lap", # continuous
 					"Logistic"="logi","Log-Normal"="lognorm","Normal"="norm","Pareto"="pareto","t"="t","Uniform"="unif","Weibull"="weib")
@@ -104,7 +104,7 @@ shinyServer(function(input,output){
 	})
 	
 	output$sampDens <- renderUI({
-		if(input$dist.type=="Continuous") checkboxInput("density","Sample density curve",FALSE)
+		if(input$disttype=="Continuous") checkboxInput("density","Sample density curve",FALSE)
 	})
 	
 	output$BW <- renderUI({
@@ -120,10 +120,10 @@ shinyServer(function(input,output){
 			n <- input$n
 			expr <- get(paste("expr",dist,sep="."))
 			par(mar=margins)
-			if(input$dist.type=="Discrete"){
+			if(input$disttype=="Discrete"){
 				barplot(as.numeric(table(d))/input$n,names.arg=names(table(d)),main=expr,xlab="Observations",ylab="Density",col="orange",cex.main=1.5,cex.axis=1.3,cex.lab=1.3)
 			}
-			if(input$dist.type=="Continuous"){
+			if(input$disttype=="Continuous"){
 				hist(d,main=expr,xlab="Observations",ylab="Density",col="orange",cex.main=1.5,cex.axis=1.3,cex.lab=1.3,prob=T)
 				if(length(input$density)) if(input$density & length(input$bw)) lines(density(d,adjust=input$bw),lwd=2)
 			}

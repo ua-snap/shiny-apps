@@ -121,6 +121,7 @@ function(){
 				HTML('<li>'),'topleft: colour in the top-left corner (moving right to decide tie-breaks)',HTML('</li>'),
 				HTML('<li>'),'botright: colour in the bottom-left corner (moving left to decide tie-breaks)',HTML('</li>'),
 			HTML('</ol>'),
-		HTML('</ul>')
+		HTML('</ul>'),
+		value="about"
 	)
 }

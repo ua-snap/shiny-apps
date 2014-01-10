@@ -15,7 +15,11 @@ function(){
 		As such, there are no plans for continued development or refinement of this particular app. However, future apps for other projects will be able to build upon what has been done here.'),
 		p(style="text-align:justify",em('This project is funded by the Alaska Ocean Observing System through its cooperative agreement ##NA11NOS0120020 with the National Oceanic and Atmospheric Administration (NOAA).
 		Work was performed by the Alaska Center for Climate Assessment and Policy(ACCAP) at the University of Alaska Fairbanks (UAF) in partnership with the Scenarios Network for Alaska and Arctic Planning (SNAP, UAF).')),
+		strong('Download source data'),
 		br(),
+		a('Historical and projected sea ice concentration', href="http://www.snap.uaf.edu/data.php#dataset=Historical_Estimates_and_Projections_of_Sea_Ice_Concentration", target="_blank"),
+		br(),
+		p(),
 
 		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),
 		strong('Author'),
