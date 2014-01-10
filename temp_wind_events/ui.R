@@ -22,12 +22,10 @@ shinyUI(pageWithSidebar(
 	),
 	sidebarPanel(
 		tags$head(
-			tags$style(type="text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }"),
-			tags$style(type="text/css", "select { max-width: 150px; }"),
-			tags$style(type="text/css", "textarea { max-width: 150px; }"),
-			tags$style(type="text/css", ".jslider { max-width: 500px; }"),
-			tags$style(type='text/css', ".well { max-width: 500px; }"),
-			tags$style(type='text/css', ".span4 { max-width: 500px; }")
+			tags$style(type="text/css", "select { max-width: 500px; width: 100%; }"),
+			tags$style(type="text/css", "textarea { max-width: 500px; width: 100%; }"),
+			tags$style(type="text/css", ".jslider { max-width: 500px; width: 100%; }"),
+			tags$style(type="text/css", ".well { max-width: 500px; }")
 		  ),
 		uiOutput("showMapPlot"),
 		wellPanel(
