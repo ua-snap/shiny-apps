@@ -31,32 +31,20 @@ shinyUI(pageWithSidebar(
 		wellPanel(
 			h5("Time"),
 			sliderInput("yrs","",1958,2100,c(1981,2010),step=1,format="#"),
-			div(class="row-fluid", div(class="span6", uiOutput("Mo")), div(class="span6", uiOutput("MoHi"))),
-			tags$style(type="text/css", '#Mo {width: 150px}'),
-			tags$style(type="text/css", '#MoHi {width: 150px}')
+			div(class="row-fluid", div(class="span6", uiOutput("Mo")), div(class="span6", uiOutput("MoHi")))
 		),
 		wellPanel(
 			h5("Climate and Geography"),
 			div(class="row-fluid", div(class="span6", uiOutput("Var")), div(class="span6", uiOutput("Loc"))),
-			div(class="row-fluid", div(class="span6", uiOutput("Mod")),	div(class="span6", uiOutput("RCP"))),
-			tags$style(type="text/css", '#Var {width: 150px}'),
-			tags$style(type="text/css", '#Loc {width: 150px}'),
-			tags$style(type="text/css", '#Mod {width: 150px}'),
-			tags$style(type="text/css", '#RCP {width: 150px}')
+			div(class="row-fluid", div(class="span6", uiOutput("Mod")),	div(class="span6", uiOutput("RCP")))
 		),
 		wellPanel(
 			h5("Thresholds and Conditionals"),
 			div(class="row-fluid", div(class="span6", uiOutput("CutT")), div(class="span6", uiOutput("CutW"))),
 			div(class="row-fluid", div(class="span6", uiOutput("Direction")), div(class="span6", uiOutput("Cond"))),
-			tags$style(type="text/css", '#CutT {width: 150px}'),
-			tags$style(type="text/css", '#CutW {width: 150px}'),
-			tags$style(type="text/css", '#Direction {width: 150px}'),
-			tags$style(type="text/css", '#Cond {width: 150px}'),
 			p("Positve values for directional wind components indicate West to East and South to North, like an X-Y graph.")
 		),
 		wellPanel(div(class="row-fluid", div(class="span6", uiOutput("showMap")), div(class="span6", downloadButton("dlCurPlot", "Download Graphic"))),
-		tags$style(type="text/css", '#showMap {width: 150px}'),
-		tags$style(type="text/css", '#dlCurPlot {width: 120px}')),
 		h5(textOutput("pageviews"))
 	),
 	mainPanel(

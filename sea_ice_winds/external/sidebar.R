@@ -3,7 +3,7 @@ sidebarPanel_2(
 	tags$head(
 		#tags$link(rel="stylesheet", type="text/css", href="styles_black_orange.css"),
 		#tags$link(rel="stylesheet", type="text/css", href="jquery.slider.min.css"),
-		tags$style(type="text/css", "select { max-width: 500px; width: 100%; }"),
+		tags$style(type="text/css", "select { max-width: 400px; width: 100%; }"),
 		tags$style(type="text/css", "textarea { max-width: 500px; width: 100%; }"),
 		tags$style(type="text/css", ".jslider { max-width: 500px; width: 100%; }"),
 		tags$style(type="text/css", ".well { max-width: 500px; }")
