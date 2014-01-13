@@ -1,6 +1,9 @@
 # Datasets, variables
 output$minYrRange <- renderUI({
-	sliderInput("minYrRange","Minimum station coverage:",yr.min,yr.max,c(yr.max-29,yr.max),step=1,format="#")
+	div(
+		sliderInput("minYrRange","Minimum station coverage:",yr.min,yr.max,c(yr.max-29,yr.max),step=1,format="#"),
+		tags$head(tags$link(rel="stylesheet", type="text/css", href="jquery.slider.min.css"))
+	)
 })
 
 output$state <- renderUI({
@@ -12,7 +15,12 @@ output$station <- renderUI({
 })
 
 output$yrs <- renderUI({
-	if(!is.null(yrs())) sliderInput("yrs","Selected years:",yrs()[1],tail(yrs(),1),range(yrs()),step=1,format="#")
+	if(!is.null(yrs())){
+		div(
+			sliderInput("yrs","Selected years:",yrs()[1],tail(yrs(),1),range(yrs()),step=1,format="#"),
+			tags$head(tags$link(rel="stylesheet", type="text/css", href="jquery.slider.min.css"))
+		)
+	}
 })
 
 output$mo <- renderUI({
