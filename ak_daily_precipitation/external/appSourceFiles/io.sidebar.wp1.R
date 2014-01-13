@@ -4,7 +4,12 @@ output$Loc <- renderUI({
 })
 
 output$Yrs <- renderUI({
-	if(!is.null(yrs())) sliderInput("yrs","",yrs()[1],tail(yrs(),1),range(yrs()),step=1,format="#")
+	if(!is.null(yrs())){
+		div(
+			sliderInput("yrs","",yrs()[1],tail(yrs(),1),range(yrs()),step=1,format="#"),
+			tags$head(tags$link(rel="stylesheet", type="text/css", href="jquery.slider.min.css"))
+		)
+	}
 })
 
 output$Mo <- renderUI({
