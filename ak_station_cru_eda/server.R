@@ -400,10 +400,11 @@ shinyServer(function(input,output){
 		x <- reg.dat()[[1]][[input$regX]]
 		n <- length(x)
 		xr <- range(x)
-		if(input$regX=="Year") x <- seq(xr[1],xr[2],len=n)
+		if(input$regX=="Year") { x <- seq(xr[1],xr[2]+1,len=n+1); x <- x[-c(n+1)] }
+		print(x)
 		y <- reg.dat()[[1]][[input$regY]]
 		yr <- range(y)
-		if(input$regY=="Year") y <- seq(yr[1],yr[2],len=n)
+		if(input$regY=="Year") { y <- seq(yr[1],yr[2]+1,len=n+1); y <- y[-c(n+1)] }
 		if(!input$reg.ggplot){
 		plot(0,0,type="n",xlim=range(x),ylim=ylm,xlab=input$regX,ylab=input$regY,main=form()[1],cex.main=1.3,cex.axis=1.3,cex.lab=1.3)
 		for(i in 1:length(input$city)){
