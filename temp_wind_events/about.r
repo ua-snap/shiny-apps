@@ -1,5 +1,6 @@
 function(){
 	tabPanel("About",
+		HTML('<div style="float: right; margin: 0 5px 5px 10px;"><iframe width="560" height="315" src="//www.youtube.com/embed/sxVPatuy0X0" frameborder="0" allowfullscreen></iframe></div>'),
 		p(style="text-align:justify",'This web application shows the frequency (days per month) of extreme daily temperature and wind events from 1958 and projected through 2100 using global climate model (GCM) values, 
 		which have been quantile mapped using the European Reanalysis (ERA-40) observation-based dataset as a historical baseline.
 		Frequencies of events are displayed using a time series barplot. A bar can be drawn for each of any subset of months per year.
