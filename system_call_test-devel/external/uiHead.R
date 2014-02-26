@@ -1,5 +1,3 @@
-library(shinyIncubator)
-
 helpPopup <- function(title, content,
                       placement=c('right', 'top', 'left', 'bottom'),
                       trigger=c('focus', 'hover', 'click', 'manual')) {

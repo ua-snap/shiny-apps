@@ -1,10 +1,12 @@
 mainPanel(
-	conditionalPanel(condition='input.goButton > 0', # change to zero
 	tabsetPanel(
-		tabPanel("System Call", 
-			textOutput("sysCall"), value="sc"),
+		tabPanel("Home", 
+			h1(textOutput("WelcomeTitle")), h3(textOutput("WelcomeSubtitle")), value="home"),
+		tabPanel("View FIF", 
+			div(verbatimTextOutput("FIF_Lines"), style="height: 650px;"), value="fif"),
 		tabPanelAbout(),
-		id="tsp"
-	)
+		id="tsp",
+		type="pills",
+		selected="home"
 	)
 )
