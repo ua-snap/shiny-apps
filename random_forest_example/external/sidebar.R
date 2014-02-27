@@ -44,7 +44,7 @@ sidebarPanel_2(
 		tabPanel("Variable Use", value="varsUsed"),
 		tabPanel("Number of Variables", value="numVar"),
 		"About the App",
-		tabPanelAbout(),
+		tabPanel("About", value="about"),
 		id="nlp",
 		widths=c(12,1)
 	),

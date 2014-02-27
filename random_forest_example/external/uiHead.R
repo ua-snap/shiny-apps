@@ -18,7 +18,7 @@ helpPopup <- function(title, content,
   )
 }
 
-tabPanelAbout <- source("external/about.R",local=T)$value
+tabPanelAbout <- source("external/about.R", local=T)$value
 
 headerPanel_2 <- function(title, h, windowTitle=title) {    
   tagList(

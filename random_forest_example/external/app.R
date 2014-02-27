@@ -1,4 +1,6 @@
 # Source reactive expressions and other code
+tabPanelAbout <- source("external/about.R", local=T)$value
+
 source("external/appSourceFiles/reactives.R",local=T) # source reactive expressions
 
 source("external/appSourceFiles/io.sidebar.wp1.R",local=T) # source input/output objects associated with sidebar wellPanel 1

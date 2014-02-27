@@ -60,18 +60,25 @@ Obs_updateFiles <- observe({
 			}
 		}
 		
+		# system calls begin here
+		# setup
+		user <- "sudo -u shiny"
 		server <- "atlas.snap.uaf.edu"
-		mainDir <- "~/mfleonawicz"
-		outDir <- paste0("~/mfleonawicz/Runs_Noatak/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
-		system(paste("ssh", server, "mkdir", outDir))
-		system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco_Noatak.slurm"), file.path(outDir,"RunAlfresco_Noatak.slurm")))
-		system(paste("ssh", server, "cp", file.path(mainDir,"CompileData_Noatak.slurm"), file.path(outDir,"CompileData_Noatak.slurm")))
-		system(paste0("sudo -u shiny scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
+		mainDir <- "~/shiny/mfleonawicz"
+		outDir <- paste0(mainDir,"/Runs_Noatak/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
+		
+		# Create Alfresco run-specific output directory and give my user read/write permissions
+		system(paste(user, "ssh", server, "mkdir", outDir))
+		system(paste(user, "ssh", server, "chmod 2775", outDir))
+		
+		system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco_Noatak.slurm"), file.path(outDir,"RunAlfresco_Noatak.slurm"),"/"))
+		system(paste("ssh", server, "cp", file.path(mainDir,"CompileData_Noatak.slurm"), file.path(outDir,"CompileData_Noatak.slurm"),"/"))
+		system(paste0("sudo -u shiny scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files),"/"))
 		
 		exec <- "sbatch"
-		file <- "~/RunAlfresco_Noatak.slurm"
-		args <- "~/script.R 2 n=100 mean=10 sd=2"
-		system(paste("ssh",server,exec,file))#,args))
+		file <- "RunAlfresco_Noatak.slurm"
+		#args <- "~/script.R 2 n=100 mean=10 sd=2"
+		system(paste(user,"ssh",server,exec,file.path(outDir,file)))#,args))
 	}
 },
 suspended=T)
