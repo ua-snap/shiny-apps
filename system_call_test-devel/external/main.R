@@ -6,7 +6,7 @@ mainPanel(
 			div(verbatimTextOutput("FIF_Lines"), style="height: 650px;"), value="fif"),
 		tabPanelAbout(),
 		id="tsp",
-		type="pills",
+		#type="pills",
 		selected="home"
 	)
 )
