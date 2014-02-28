@@ -14,3 +14,5 @@ output$fif_IgnitionFactor <- renderUI({
 #output$goButton_fif <- renderUI({ actionButton("goButton_fif","Save .fif / run Alfresco") })
 
 output$FIF_Lines <- renderUI({ fif_lines() })
+
+output$Obs_UpdateFiles <- renderUI({ Obs_updateFiles() })
