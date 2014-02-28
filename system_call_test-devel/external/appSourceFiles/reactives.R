@@ -71,7 +71,7 @@ Obs_updateFiles <- reactive({
 			outDir <- paste0(mainDir,"/Runs_Noatak/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
 			
 			# Create Alfresco run-specific output directory and give my user read/write permissions
-			#system(paste(user, "ssh", server, "mkdir", outDir))
+			system(paste(user, "ssh", server, "mkdir", outDir))
 			#system(paste(user, "ssh", server, "chmod 2775", outDir))
 			
 			#system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco_Noatak.slurm"), file.path(outDir,"RunAlfresco_Noatak.slurm"),"/"))
