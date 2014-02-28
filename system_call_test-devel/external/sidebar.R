@@ -41,7 +41,7 @@ sidebarPanel(
 				div(class="span11",uiOutput("Update_fif_Defaults")),
 				div(class="span1",helpPopup('Update .fif defaults',"..."))
 			),
-			uiOutput("goButton_fif")
+			actionButton("goButton_fif","Save .fif / run Alfresco") #uiOutput("goButton_fif")
 		)
 	),
 	h5(textOutput("pageviews"))

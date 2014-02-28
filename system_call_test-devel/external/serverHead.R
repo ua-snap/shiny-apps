@@ -7,3 +7,9 @@ datasets <- c("iris","cars")
 defaults_file <- "external/appSourceFiles/alfresco_fif_defaults.txt"
 source(defaults_file, local=T)
 fif_files <- list.files(pattern=".fif$")
+
+user <- "sudo -u shiny"
+server <- "atlas.snap.uaf.edu"
+mainDir <- "~/shiny/mfleonawicz"
+exec <- "sbatch"
+slurmfile <- "RunAlfresco_Noatak.slurm"

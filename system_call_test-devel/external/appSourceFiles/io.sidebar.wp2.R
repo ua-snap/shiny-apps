@@ -11,6 +11,6 @@ output$fif_IgnitionFactor <- renderUI({
 	numericInput("IgnitionFactor", "Fire Ignition Factor", value=default_Fire.IgnitionFactor, min=0.00001, max=0.1)
 })
 
-output$goButton_fif <- renderUI({ actionButton("goButton_fif","Save .fif / run Alfresco") })
+#output$goButton_fif <- renderUI({ actionButton("goButton_fif","Save .fif / run Alfresco") })
 
 output$FIF_Lines <- renderUI({ fif_lines() })

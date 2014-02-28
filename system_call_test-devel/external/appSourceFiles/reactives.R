@@ -35,6 +35,7 @@ fif_lines <- reactive({
 	x <- gsub( "\\s+;.*.", ";", x)
 	x.title.lines <- which(substr(x,1,1)==";")
 	x[-x.title.lines] <- gsub( ";.*.", ";", x[-x.title.lines])
+	browser()
 	return(x)
 })
 
@@ -63,9 +64,9 @@ Obs_updateFiles <- observe({
 			
 			# system calls begin here
 			# setup
-			user <- "sudo -u shiny"
-			server <- "atlas.snap.uaf.edu"
-			mainDir <- "~/shiny/mfleonawicz"
+			#user <- "sudo -u shiny"
+			#server <- "atlas.snap.uaf.edu"
+			#mainDir <- "~/shiny/mfleonawicz"
 			outDir <- paste0(mainDir,"/Runs_Noatak/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
 			
 			# Create Alfresco run-specific output directory and give my user read/write permissions
@@ -75,7 +76,7 @@ Obs_updateFiles <- observe({
 			system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco_Noatak.slurm"), file.path(outDir,"RunAlfresco_Noatak.slurm"),"/"))
 			system(paste("ssh", server, "cp", file.path(mainDir,"CompileData_Noatak.slurm"), file.path(outDir,"CompileData_Noatak.slurm"),"/"))
 			system(paste0("sudo -u shiny scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files),"/"))
-			
+			#browser()
 			#exec <- "sbatch"
 			#file <- "RunAlfresco_Noatak.slurm"
 			####args <- "~/script.R 2 n=100 mean=10 sd=2"
@@ -88,26 +89,25 @@ Obs_updateFiles <- observe({
 #Obs_updateFiles_resume <- observe({ if(!is.null(input$goButton_fif)) if(input$goButton_fif == 0) Obs_updateFiles$resume() })
 
 runAlf <- reactive({
-	if(!is.null(input$goButton_fif)){
-		if(input$goButton_fif > 0){
-			isolate({
-				fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
-				ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
-				if(!is.na(fire.sensitivity.sub) & !is.na(ignition.factor.sub)){
-					user <- "sudo -u shiny"
-					server <- "atlas.snap.uaf.edu"
-					mainDir <- "~/shiny/mfleonawicz"
-					outDir <- paste0(mainDir,"/Runs_Noatak/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
-					exec <- "sbatch"
-					file <- "RunAlfresco_Noatak.slurm"
-					#args <- "~/script.R 2 n=100 mean=10 sd=2"
-					system(paste(user,"ssh",server,exec,file.path(outDir,file)))#,args))
-					print(paste(user,"ssh",server,exec,file.path(outDir,file)))
-				}
-			})
+	x <- NULL
+	#browser()
+	if(input$goButton_fif == 0) return(NULL)
+	isolate({
+		fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
+		ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
+		if(!is.na(fire.sensitivity.sub) & !is.na(ignition.factor.sub)){
+			#user <- "sudo -u shiny"
+			#server <- "atlas.snap.uaf.edu"
+			#mainDir <- "~/shiny/mfleonawicz"
+			outDir <- paste0(mainDir,"/Runs_Noatak/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
+			#exec <- "sbatch"
+			#slurmfile <- "RunAlfresco_Noatak.slurm"
+			####args <- "~/script.R 2 n=100 mean=10 sd=2"
+			#system(paste(user,"ssh",server,exec,file.path(outDir,file)))#,args))
+			x <- "Hello world" #print(paste(user,"ssh",server,exec,file.path(outDir,slurmfile)))
 		}
-	}
-	return(input$goButton_fif)
+	})
+	return(x)
 })
 
 	
