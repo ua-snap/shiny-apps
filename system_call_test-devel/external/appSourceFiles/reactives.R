@@ -67,7 +67,7 @@ Obs_updateFiles <- reactive({
 			# setup
 			#user <- "sudo -u shiny"
 			#server <- "atlas.snap.uaf.edu"
-			#mainDir <- "~/shiny/mfleonawicz"
+			#mainDir <- "~shiny/mfleonawicz"
 			outDir <- paste0(mainDir,"/Runs_Noatak/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
 			
 			# Create Alfresco run-specific output directory and give my user read/write permissions
@@ -101,7 +101,7 @@ runAlf <- reactive({
 		if(!is.na(fire.sensitivity.sub) & !is.na(ignition.factor.sub)){
 			#user <- "sudo -u shiny"
 			#server <- "atlas.snap.uaf.edu"
-			#mainDir <- "~/shiny/mfleonawicz"
+			#mainDir <- "~shiny/mfleonawicz"
 			outDir <- paste0(mainDir,"/Runs_Noatak/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
 			#exec <- "sbatch"
 			#slurmfile <- "RunAlfresco_Noatak.slurm"
