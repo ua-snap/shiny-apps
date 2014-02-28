@@ -83,7 +83,7 @@ Obs_updateFiles <- reactive({
 			####args <- "~/script.R 2 n=100 mean=10 sd=2"
 			#system(paste(user,"ssh",server,exec,file.path(outDir,file)))#,args))
 		}
-		x <- paste("Can read, but can't update local files:", fif_current(), "and", input$update_fif_defaults, ".", "Can't create directory on atlas:", outDir)
+		x <- paste("Can read, but can't update local files:", fif_current(), "and", defaults_file, ".", "Can't create directory on atlas:", outDir)
 	}
 	return(x)
 }#, suspended=T
