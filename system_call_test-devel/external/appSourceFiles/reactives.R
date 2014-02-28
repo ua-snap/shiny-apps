@@ -39,7 +39,8 @@ fif_lines <- reactive({
 	return(x)
 })
 
-Obs_updateFiles <- observe({
+Obs_updateFiles <- reactive({
+	x <- NULL
 	if(!is.null(input$FireSensitivity) & !is.null(input$IgnitionFactor)){
 		fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
 		ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
@@ -82,7 +83,9 @@ Obs_updateFiles <- observe({
 			####args <- "~/script.R 2 n=100 mean=10 sd=2"
 			#system(paste(user,"ssh",server,exec,file.path(outDir,file)))#,args))
 		}
+		x <- "files updated"
 	}
+	return(x)
 }#, suspended=T
 )
 
