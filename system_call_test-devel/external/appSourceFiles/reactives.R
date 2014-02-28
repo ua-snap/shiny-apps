@@ -76,10 +76,10 @@ Obs_updateFiles <- observe({
 			system(paste("ssh", server, "cp", file.path(mainDir,"CompileData_Noatak.slurm"), file.path(outDir,"CompileData_Noatak.slurm"),"/"))
 			system(paste0("sudo -u shiny scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files),"/"))
 			
-			exec <- "sbatch"
-			file <- "RunAlfresco_Noatak.slurm"
-			#args <- "~/script.R 2 n=100 mean=10 sd=2"
-			system(paste(user,"ssh",server,exec,file.path(outDir,file)))#,args))
+			#exec <- "sbatch"
+			#file <- "RunAlfresco_Noatak.slurm"
+			####args <- "~/script.R 2 n=100 mean=10 sd=2"
+			#system(paste(user,"ssh",server,exec,file.path(outDir,file)))#,args))
 		}
 	}
 }#, suspended=T
@@ -102,6 +102,7 @@ runAlf <- reactive({
 					file <- "RunAlfresco_Noatak.slurm"
 					#args <- "~/script.R 2 n=100 mean=10 sd=2"
 					system(paste(user,"ssh",server,exec,file.path(outDir,file)))#,args))
+					print(paste(user,"ssh",server,exec,file.path(outDir,file)))
 				}
 			})
 		}
