@@ -83,7 +83,7 @@ Obs_updateFiles <- reactive({
 			####args <- "~/script.R 2 n=100 mean=10 sd=2"
 			#system(paste(user,"ssh",server,exec,file.path(outDir,file)))#,args))
 		}
-		x <- "files updated"
+		x <- "files updated, attempted to create directory on atlas"
 	}
 	return(x)
 }#, suspended=T
