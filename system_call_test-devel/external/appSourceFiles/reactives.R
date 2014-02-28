@@ -83,4 +83,4 @@ Obs_updateFiles <- observe({
 },
 suspended=T)
 
-
+Obs_updateFiles_resume <- observe({ if(!is.null(input$goButton_fif)) if(input$goButton_fif == 0) Obs_updateFiles$resume() })
