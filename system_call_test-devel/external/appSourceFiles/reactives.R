@@ -68,16 +68,19 @@ Obs_updateFiles <- reactive({
 			}
 			
 			outDir <- paste0(mainDir,"/Runs_Noatak/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
+			resultsDir <- paste0("/big_scratch/shiny/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
 			
 			# system calls begin here
-			# Create Alfresco run-specific output directory and give shiny group write permissions
+			# Create Alfresco run-specific output directories and give shiny group write permissions
 			system(paste(user, "ssh", server, "mkdir", outDir))
 			system(paste(user, "ssh", server, "chmod 2775", outDir))
+			system(paste(user, "ssh", server, "mkdir", resultsDir))
+			system(paste(user, "ssh", server, "chmod 2775", resultsDir))
 			
 			system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco_Noatak.slurm"), file.path(outDir,"RunAlfresco_Noatak.slurm")))
 			system(paste("ssh", server, "cp", file.path(mainDir,"CompileData_Noatak.slurm"), file.path(outDir,"CompileData_Noatak.slurm")))
 			system(paste0("scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
-			slurm_arguments <- paste("-D", outDir)
+			slurm_arguments <- paste("-D", resultsDir)
 			arguments <- outDir
 			system(paste(user,"ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments))
 		}
