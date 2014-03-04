@@ -56,14 +56,14 @@ Obs_updateFiles <- reactive({
 				x <- readLines(i)
 				x <- gsub( "^Fire\\.Sensitivity\\s+=\\s+\\{\\d*\\.?\\d*\\}\\s+;", fire.sensitivity.sub.fif, x)
 				x <- gsub( "^Fire\\.IgnitionFactor\\s+=\\s+\\{\\d*\\.?\\d*\\}\\s+;", ignition.factor.sub.fif, x)
-				#cat(x, file=i, sep="\n")
+				cat(x, file=i, sep="\n")
 			}
 			if(input$update_fif_defaults){
 				for(i in defaults_file){
 					x <- readLines(i)
 					x <- gsub( "^default_Fire\\.Sensitivity=\\d*\\.?\\d*", paste0("default_Fire.Sensitivity=",as.numeric(input$FireSensitivity)), x)
 					x <- gsub( "^default_Fire\\.IgnitionFactor=\\d*\\.?\\d*", paste0("default_Fire.IgnitionFactor=",as.numeric(input$IgnitionFactor)), x)
-					#cat(x, file=i, sep="\n")
+					cat(x, file=i, sep="\n")
 				}
 			}
 			
