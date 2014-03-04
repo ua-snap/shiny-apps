@@ -39,7 +39,7 @@ fif_lines <- reactive({
 	return(x)
 })
 
-Obs_updateFiles <- reactive({
+Obs_updateFiles <- observe({
 	x <- NULL
 	if(!is.null(input$FireSensitivity) & !is.null(input$IgnitionFactor)){
 		fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
