@@ -79,11 +79,11 @@ Obs_updateFiles <- observe({
 		}
 		x <- paste("Can read, but can't update local files:", fif_current(), "and", defaults_file, ".", "Can't create directory on atlas:", outDir)
 	}
-	return(x)
+	#return(x)
 }, suspended=T
 )
 
-Obs_updateFiles_resume <- observe({ if(!is.null(input$goButton_fif)) if(input$goButton_fif == 0) Obs_updateFiles$resume() })
+Obs_updateFiles_resume <- observe({ if(!is.null(input$goButton_fif)) if(input$goButton_fif > 0) Obs_updateFiles$resume() })
 
 runAlf <- reactive({
 	x <- NULL
