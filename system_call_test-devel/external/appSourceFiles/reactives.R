@@ -47,8 +47,8 @@ Obs_updateFiles <- reactive({
 		fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
 		ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
 		if(!is.na(fire.sensitivity.sub) & !is.na(ignition.factor.sub)){
-			if(length(strsplit(fire.sensitivity.sub,"\\."))[[1]]==1) fire.sensitivity.sub <- gsub("\\.\\.", "\\.", paste0(fire.sensitivity.sub,"."))
-			if(length(strsplit(ignition.factor.sub,"\\."))[[1]]==1) ignition.factor.sub <- gsub("\\.\\.", "\\.", paste0(ignition.factor.sub,"."))
+			if(length(strsplit(fire.sensitivity.sub,"\\.")[[1]])==1) fire.sensitivity.sub <- gsub("\\.\\.", "\\.", paste0(fire.sensitivity.sub,"."))
+			if(length(strsplit(ignition.factor.sub,"\\.")[[1]])==1) ignition.factor.sub <- gsub("\\.\\.", "\\.", paste0(ignition.factor.sub,"."))
 			#white spaces below are just to make the file prettier on visual inspection in an editor
 			fire.sensitivity.sub.fif <- paste0("Fire.Sensitivity                         = {", fire.sensitivity.sub, "}                                         ;")
 			ignition.factor.sub.fif <- paste0("Fire.IgnitionFactor                      = {",ignition.factor.sub,"}                                          ;")
@@ -95,8 +95,8 @@ Obs_updateFiles <- reactive({
 #		fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
 #		ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
 #		if(!is.na(fire.sensitivity.sub) & !is.na(ignition.factor.sub)){
-#			if(length(strsplit(fire.sensitivity.sub,"\\."))[[1]]==1) fire.sensitivity.sub <- gsub("\\.\\.", "\\.", paste0(fire.sensitivity.sub,"."))
-#			if(length(strsplit(ignition.factor.sub,"\\."))[[1]]==1) ignition.factor.sub <- gsub("\\.\\.", "\\.", paste0(ignition.factor.sub,"."))
+#			if(length(strsplit(fire.sensitivity.sub,"\\.")[[1]])==1) fire.sensitivity.sub <- gsub("\\.\\.", "\\.", paste0(fire.sensitivity.sub,"."))
+#			if(length(strsplit(ignition.factor.sub,"\\.")[[1]])==1) ignition.factor.sub <- gsub("\\.\\.", "\\.", paste0(ignition.factor.sub,"."))
 #			outDir <- paste0(mainDir,"/Runs_Noatak/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
 #			#system(paste(user,"ssh",server,exec,file.path(outDir,slurmfile)))
 #			x <- "Hello world" #print(paste(user,"ssh",server,exec,file.path(outDir,slurmfile)))
