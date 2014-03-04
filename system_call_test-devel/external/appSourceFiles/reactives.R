@@ -74,7 +74,7 @@ Obs_updateFiles <- reactive({
 			
 			system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco_Noatak.slurm"), file.path(outDir,"RunAlfresco_Noatak.slurm")))
 			system(paste("ssh", server, "cp", file.path(mainDir,"CompileData_Noatak.slurm"), file.path(outDir,"CompileData_Noatak.slurm")))
-			system(paste0("sudo -u shiny scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
+			system(paste0("scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
 			#system(paste(user,"ssh",server,exec,file.path(outDir,slurmfile)))
 		}
 		x <- paste("Can read, but can't update local files:", fif_current(), "and", defaults_file, ".", "Can't create directory on atlas:", outDir)
