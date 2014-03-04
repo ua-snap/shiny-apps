@@ -39,8 +39,10 @@ fif_lines <- reactive({
 	return(x)
 })
 
-Obs_updateFiles <- observe({
+Obs_updateFiles <- reactive({
 	x <- NULL
+	if(is.null(input$goButton_fif) || input$goButton_fif == 0) return(NULL)
+	isolate(
 	if(!is.null(input$FireSensitivity) & !is.null(input$IgnitionFactor)){
 		fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
 		ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
@@ -54,14 +56,14 @@ Obs_updateFiles <- observe({
 				x <- readLines(i)
 				x <- gsub( "^Fire\\.Sensitivity\\s+=\\s+\\{\\d*\\.?\\d*\\}\\s+;", fire.sensitivity.sub.fif, x)
 				x <- gsub( "^Fire\\.IgnitionFactor\\s+=\\s+\\{\\d*\\.?\\d*\\}\\s+;", ignition.factor.sub.fif, x)
-				cat(x, file=i, sep="\n")
+				#cat(x, file=i, sep="\n")
 			}
 			if(input$update_fif_defaults){
 				for(i in defaults_file){
 					x <- readLines(i)
 					x <- gsub( "^default_Fire\\.Sensitivity=\\d*\\.?\\d*", paste0("default_Fire.Sensitivity=",as.numeric(input$FireSensitivity)), x)
 					x <- gsub( "^default_Fire\\.IgnitionFactor=\\d*\\.?\\d*", paste0("default_Fire.IgnitionFactor=",as.numeric(input$IgnitionFactor)), x)
-					cat(x, file=i, sep="\n")
+					#cat(x, file=i, sep="\n")
 				}
 			}
 			
@@ -77,13 +79,14 @@ Obs_updateFiles <- observe({
 			system(paste0("scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
 			#system(paste(user,"ssh",server,exec,file.path(outDir,slurmfile)))
 		}
-		x <- paste("Can read, but can't update local files:", fif_current(), "and", defaults_file, ".", "Can't create directory on atlas:", outDir)
+		x <- "Attempted system calls" #paste("Can read, but can't update local files:", fif_current(), "and", defaults_file, ".", "Can't create directory on atlas:", outDir)
 	}
-	#return(x)
-}, suspended=T
+	)
+	return(x)
+}#, suspended=T
 )
 
-Obs_updateFiles_resume <- observe({ if(!is.null(input$goButton_fif)) if(input$goButton_fif > 0) Obs_updateFiles$resume() })
+#Obs_updateFiles_resume <- observe({ if(!is.null(input$goButton_fif)) if(input$goButton_fif == 0) Obs_updateFiles$resume() })
 
 runAlf <- reactive({
 	x <- NULL
@@ -95,7 +98,7 @@ runAlf <- reactive({
 			if(length(strsplit(fire.sensitivity.sub,"\\."))==1) fire.sensitivity.sub <- gsub("\\.\\.", "\\.", paste0(fire.sensitivity.sub,"."))
 			if(length(strsplit(ignition.factor.sub,"\\."))==1) ignition.factor.sub <- gsub("\\.\\.", "\\.", paste0(ignition.factor.sub,"."))
 			outDir <- paste0(mainDir,"/Runs_Noatak/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
-			system(paste(user,"ssh",server,exec,file.path(outDir,slurmfile)))
+			#system(paste(user,"ssh",server,exec,file.path(outDir,slurmfile)))
 			x <- "Hello world" #print(paste(user,"ssh",server,exec,file.path(outDir,slurmfile)))
 		}
 	})
