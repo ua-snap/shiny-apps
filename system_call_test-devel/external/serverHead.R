@@ -10,6 +10,6 @@ fif_files <- list.files(pattern=".fif$")
 
 user <- ""
 server <- "atlas.snap.uaf.edu"
-mainDir <- "~shiny/mfleonawicz"
+mainDir <- "/big_scratch/shiny"
 exec <- "sbatch"
 slurmfile <- "RunAlfresco_Noatak.slurm"
