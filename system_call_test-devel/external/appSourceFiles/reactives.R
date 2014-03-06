@@ -39,9 +39,30 @@ fif_lines <- reactive({
 	return(x)
 })
 
+user_email_address <- reactive({
+	e <- input$useremail
+	if(is.null(e) || !length(e)) return("")
+	if(length(e)){
+		keep <- which(is_email_address(e))
+		if(length(keep)) e <- e[keep[1]] else e <- "" # only accept one [1] email address to identify user
+	} else { e <- "" }
+	e
+})
+
+all_email_addresses <- reactive({
+	e <- unique(c(input$useremail, input$addemail))
+	if(is.null(e) || !length(e)) return("")
+	if(length(e)){
+		keep <- which(is_email_address(e))
+		if(length(keep)) e <- e[keep] else e <- ""
+	} else { e <- "" }
+	e
+})
+			
+			
 Obs_updateFiles <- reactive({
 	x <- NULL
-	if(is.null(input$goButton_fif) || input$goButton_fif == 0) return(NULL)
+	if(is.null(input$goButton_fif) || is.null(user_email_address()) || is.null(all_email_addresses()) || input$goButton_fif == 0 | all_email_adresses() == "" | user_email_address() == "") return(NULL)
 	isolate(
 	if(!is.null(input$FireSensitivity) & !is.null(input$IgnitionFactor)){
 		fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
@@ -67,15 +88,17 @@ Obs_updateFiles <- reactive({
 				}
 			}
 			
-			outDir <- paste0(mainDir,"/Runs_Noatak/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
+
+			domainDir <- "Runs_Noatak"
+			userDir <- gsub("@", "_at_", user_email_address())
+			
+			outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
 			#resultsDir <- paste0("/big_scratch/shiny/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
 			
 			# system calls begin here
 			# Create Alfresco run-specific output directories and give shiny group write permissions
-			system(paste(user, "ssh", server, "mkdir", outDir))
+			system(paste(user, "ssh", server, "mkdir -p", outDir))
 			system(paste(user, "ssh", server, "chmod 2775", outDir))
-			#system(paste(user, "ssh", server, "mkdir", resultsDir))
-			#system(paste(user, "ssh", server, "chmod 2775", resultsDir))
 			
 			system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco_Noatak.slurm"), file.path(outDir,"RunAlfresco_Noatak.slurm")))
 			system(paste("ssh", server, "cp", file.path(mainDir,"CompileData_Noatak.slurm"), file.path(outDir,"CompileData_Noatak.slurm")))

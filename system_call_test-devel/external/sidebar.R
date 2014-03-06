@@ -12,16 +12,16 @@ sidebarPanel(
 		checkboxInput("showWP1",h5("WP1"),TRUE),
 		conditionalPanel(condition="input.showWP1",
 			div(class="row-fluid",
-				div(class="span11",uiOutput("email")),
-				div(class="span1",helpPopup('Enter email address','...'))
+				div(class="span11",uiOutput("UserEmail")),
+				div(class="span1",helpPopup('Enter your email address','Results from the Alfresco run will be emailed to you.'))
 			),
 			div(class="row-fluid",
-				div(class="span11",uiOutput("dataset")),
-				div(class="span1",helpPopup('Choose dataset',"..."))
+				div(class="span11",uiOutput("AddEmail")),
+				div(class="span1",helpPopup('Enter additional email addresses','Results from the Alfresco run will be emailed to each address. For the time being, you must separate each email address with a comma and/or space.'))
 			),
 			div(class="row-fluid",
 				div(class="span11",uiOutput("FIF_Files")),
-				div(class="span1",helpPopup('Choose .fif(s)',"..."))
+				div(class="span1",helpPopup('Choose .fif','Select a FIF from the list to use in your Alfresco run.'))
 			),
 			uiOutput("goButton")
 		)
@@ -31,15 +31,16 @@ sidebarPanel(
 		conditionalPanel(condition="input.showWP2",
 			div(class="row-fluid",
 				div(class="span11",uiOutput("fif_FireSensitivity")),
-				div(class="span1",helpPopup('Fire Sensitivity','...'))
+				div(class="span1",helpPopup('Fire Sensitivity','Set the fire sensitivity parameter in the FIF.'))
 			),
 			div(class="row-fluid",
 				div(class="span11",uiOutput("fif_IgnitionFactor")),
-				div(class="span1",helpPopup('Ignition Factor',"..."))
+				div(class="span1",helpPopup('Ignition Factor','Set the fire ignition factor parameter in the FIF.'))
 			),
 			div(class="row-fluid",
 				div(class="span11",uiOutput("Update_fif_Defaults")),
-				div(class="span1",helpPopup('Update .fif defaults',"..."))
+				div(class="span1",helpPopup('Update .fif defaults','Check this box if you want to modify the FIF defaults file with your current parameter specifications when you submit your Alfresco run.
+					If checked, next time the app is launched, it will populate the parameter fields with your previous specifications.'))
 			),
 			actionButton("goButton_fif","Save .fif / run Alfresco") #uiOutput("goButton_fif")
 		)
