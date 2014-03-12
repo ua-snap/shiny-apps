@@ -62,7 +62,7 @@ all_email_addresses <- reactive({
 			
 Obs_updateFiles <- reactive({
 	x <- NULL
-	if(is.null(input$goButton_fif) || is.null(user_email_address()) || is.null(all_email_addresses()) || input$goButton_fif == 0 | all_email_adresses() == "" | user_email_address() == "") return(NULL)
+	if(is.null(input$goButton_fif) || is.null(user_email_address()) || is.null(all_email_addresses()) || input$goButton_fif == 0 || all_email_adresses() == "" || user_email_address() == "") return(NULL)
 	isolate(
 	if(!is.null(input$FireSensitivity) & !is.null(input$IgnitionFactor)){
 		fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
