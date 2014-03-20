@@ -43,14 +43,26 @@ user_email_address <- reactive({
 	e <- input$useremail
 	if(is.null(e) || !length(e)) return("")
 	if(length(e)){
+		e <- gsub(" ", "", strsplit(e, ",")[[1]]) # split email string on comma, remove any spaces
 		keep <- which(is_email_address(e))
-		if(length(keep)) e <- e[keep[1]] else e <- "" # only accept one [1] email address to identify user
+		if(length(keep)) e <- e[keep[1]] else e <- "" # only accept the first [1] email address to identify user if multiple given
+	} else { e <- "" }
+	e
+})
+
+add_emails <- reactive({
+	e <- input$addemail
+	if(is.null(e) || !length(e)) return("")
+	if(length(e)){
+		e <- gsub(" ", "", strsplit(e, ",")[[1]]) # split email string on comma, remove any spaces
+		keep <- which(is_email_address(e))
+		if(length(keep)) e <- e[keep] else e <- ""
 	} else { e <- "" }
 	e
 })
 
 all_email_addresses <- reactive({
-	e <- unique(c(input$useremail, input$addemail))
+	e <- unique(c(user_email_address(), add_emails()))
 	if(is.null(e) || !length(e)) return("")
 	if(length(e)){
 		keep <- which(is_email_address(e))
@@ -100,6 +112,7 @@ Obs_updateFiles <- reactive({
 			system(paste(user, "ssh", server, "mkdir -p", outDir))
 			system(paste(user, "ssh", server, "chmod 2775", outDir))
 			
+			system(paste("ssh", server, "Rscript", "/big_scratch/mfleonawicz/Alf_Files_20121129/make_sensitivity_ignition_maps_noatak.R", input$IgnitionFactor, input$FireSensitivity))
 			system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco_Noatak.slurm"), file.path(outDir,"RunAlfresco_Noatak.slurm")))
 			system(paste("ssh", server, "cp", file.path(mainDir,"CompileData_Noatak.slurm"), file.path(outDir,"CompileData_Noatak.slurm")))
 			system(paste0("scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
