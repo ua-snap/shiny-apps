@@ -1,7 +1,13 @@
 library(shiny)
 tabPanelAbout <- source("about.r")$value
+headerPanel_2 <- function(title, h, windowTitle=title) {    
+  tagList(
+    tags$head(tags$title(windowTitle)),
+      h(title)
+    )
+}
 shinyUI(pageWithSidebar(
-	headerPanel(
+	headerPanel_2(
 		HTML(
 			'<div id="stats_header">
 			Modeled Arctic Sea Ice Coverage
@@ -12,8 +18,7 @@ shinyUI(pageWithSidebar(
 			<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" />
 			</a>
 			</div>'
-		),
-		"Modeled Arctic Sea Ice Coverage"
+		), h3, "Modeled Arctic Sea Ice Coverage"
 	),
 	sidebarPanel(
 		wellPanel(
