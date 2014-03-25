@@ -1,8 +1,8 @@
 mainPanel(
 	tabsetPanel(
 		tabPanel("Time series plots",
-			fluidRow(column(12, plotOutput("plotByYear",height="auto"))),
-			fluidRow(column(12, plotOutput("plotByDecade",height="auto"))),
+			plotOutput("plotByYear",height="auto"),
+			plotOutput("plotByDecade",height="auto"),
 			fluidRow(
 				column(3, uiOutput("tp.annstyle")),
 				column(3, uiOutput("tp.decstyle")),
