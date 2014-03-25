@@ -6,7 +6,7 @@ sidebarPanel(
 			column(5, offset=1, uiOutput("var")),
 			column(1,
 				helpPopup('Choose a wind variable','You may select wind magnitude (directionless) or direction wind components.
-					WE winds blow west to east and NS winds blow south to north, like axes on an X-Y graph.'),
+					WE winds blow west to east and NS winds blow south to north, like axes on an X-Y graph.')
 			)
 		),
 		fluidRow(
@@ -15,7 +15,7 @@ sidebarPanel(
 			column(1,
 				helpPopup('Choose an RCP and model','You may select a single GCM for wind outputs.
 					Unlike sea ice, composite models are not used for extreme wind events because averaging the models masks extreme events unless they happen to occur on the same day in all three models.
-					You may select a single RCP. Only two RCPs are available for the wind data. Sea ice data are strictly RCP 8.5.'),
+					You may select a single RCP. Only two RCPs are available for the wind data. Sea ice data are strictly RCP 8.5.')
 			)
 		),
 		fluidRow(
@@ -23,7 +23,7 @@ sidebarPanel(
 			column(5, offset=1, uiOutput("direction")),
 			column(1,
 				helpPopup('Set threshold','You may select from among 6 different thresholds when viewing directional wind compoents. For wind magnitude, the negative sign is ignored.
-					When looking for extreme events using one of the direction wind compoents, it is pertinent to select above and below for positively and negatively valued threshold velocities, respectively.'),
+					When looking for extreme events using one of the direction wind compoents, it is pertinent to select above and below for positively and negatively valued threshold velocities, respectively.')
 			)
 		),
 		fluidRow(
