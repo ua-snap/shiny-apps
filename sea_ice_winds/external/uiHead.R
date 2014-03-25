@@ -26,17 +26,3 @@ headerPanel_2 <- function(title, h, windowTitle=title) {
       h(title)
     )
 }
-
-sidebarPanel_2 <- function(span,...) {
-  div(class=span,
-    tags$form(class="well",
-      ...
-    )
-  )
-}
-
-mainPanel_2 <- function(span,...) {
-  div(class=span,
-    ...
-  )
-}
