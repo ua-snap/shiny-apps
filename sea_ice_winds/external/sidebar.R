@@ -4,8 +4,8 @@ sidebarPanel(
 		#tags$link(rel="stylesheet", type="text/css", href="jquery.slider.min.css"),
 	),
 	wellPanel(
-		rowFluid(column(11, uiOutput("yrs")), column(1, helpPopup('Choose years','Years are chosen in groups by decade.'))),
-		rowFluid(
+		fluidRow(column(11, uiOutput("yrs")), column(1, helpPopup('Choose years','Years are chosen in groups by decade.'))),
+		fluidRow(
 			column(5, uiOutput("mo"), uiOutput("rcp"), uiOutput("cut"), uiOutput("sea")),
 			column(5, offset=1, uiOutput("var"), uiOutput("mod"), uiOutput("direction"), uiOutput("coast")),
 			column(1,
