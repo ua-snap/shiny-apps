@@ -9,7 +9,7 @@ function(){
 		Currently, I have restricted the choices of response variables to categorical variables, until I have a chance to generalize the app to include regression. As of now it is geared only toward classification.
 		The other sidebar inputs are for random forest meta-parameters (arguments passed to randomForest in R). Right now I have limited this to the number of trees.'),
 		p(style="text-align:justify",'The main panel has tabs for each of a number of summary plots, which show and update only after a random forest model has been built.
-		I used ggplot2 to create most but not all of these graphics. Each tab has a button for downloading the currently displayed plot as a pdf.
+		I used ggplot2 to create the graphical outputs. Each tab has a button for downloading the currently displayed plot as a pdf.
 		Formatting of the downloaded file will not be identical to that shown in the browser.'),
 		p(style="text-align:justify",strong('Notes:'),
 		'Use the "# of Variables" tab with caution! Due to the use of cross-validation, which is additionally both nested and replicated, the data for this plot can take a while to generate,
