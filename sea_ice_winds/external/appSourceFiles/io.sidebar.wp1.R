@@ -1,6 +1,6 @@
 # Datasets, variables
 output$yrs <- renderUI({
-	selectInput("yrs","Decades:",choices=dec.lab,selected=dec.lab,multiple=T)
+	selectInput("yrs","Decades:",choices=dec.lab,selected=dec.lab,multiple=T,selectize=F)
 })
 
 output$mo <- renderUI({
