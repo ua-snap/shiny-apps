@@ -76,52 +76,53 @@ Obs_updateFiles <- reactive({
 	x <- NULL
 	if(is.null(input$goButton_fif) || input$goButton_fif == 0) return(NULL)
 	isolate(
-	if(is.null(user_email_address()) || is.null(all_email_addresses() || user_email_address() == "" || all_email_addresses() == "")) return(NULL)
-	if(!is.null(input$FireSensitivity) & !is.null(input$IgnitionFactor)){
-		fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
-		ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
-		if(!is.na(fire.sensitivity.sub) & !is.na(ignition.factor.sub)){
-			if(length(strsplit(fire.sensitivity.sub,"\\.")[[1]])==1) fire.sensitivity.sub <- gsub("\\.\\.", "\\.", paste0(fire.sensitivity.sub,"."))
-			if(length(strsplit(ignition.factor.sub,"\\.")[[1]])==1) ignition.factor.sub <- gsub("\\.\\.", "\\.", paste0(ignition.factor.sub,"."))
-			#white spaces below are just to make the file prettier on visual inspection in an editor
-			fire.sensitivity.sub.fif <- paste0("Fire.Sensitivity                         = {", fire.sensitivity.sub, "}                                         ;")
-			ignition.factor.sub.fif <- paste0("Fire.IgnitionFactor                      = {",ignition.factor.sub,"}                                          ;")
-			for(i in fif_current()){
-				x <- readLines(i)
-				x <- gsub( "^Fire\\.Sensitivity\\s+=\\s+\\{\\d*\\.?\\d*\\}\\s+;", fire.sensitivity.sub.fif, x)
-				x <- gsub( "^Fire\\.IgnitionFactor\\s+=\\s+\\{\\d*\\.?\\d*\\}\\s+;", ignition.factor.sub.fif, x)
-				cat(x, file=i, sep="\n")
-			}
-			if(input$update_fif_defaults){
-				for(i in defaults_file){
+	if( !(is.null(user_email_address()) || is.null(all_email_addresses() || user_email_address() == "" || all_email_addresses() == "")) ){
+		if(!is.null(input$FireSensitivity) & !is.null(input$IgnitionFactor)){
+			fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
+			ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
+			if(!is.na(fire.sensitivity.sub) & !is.na(ignition.factor.sub)){
+				if(length(strsplit(fire.sensitivity.sub,"\\.")[[1]])==1) fire.sensitivity.sub <- gsub("\\.\\.", "\\.", paste0(fire.sensitivity.sub,"."))
+				if(length(strsplit(ignition.factor.sub,"\\.")[[1]])==1) ignition.factor.sub <- gsub("\\.\\.", "\\.", paste0(ignition.factor.sub,"."))
+				#white spaces below are just to make the file prettier on visual inspection in an editor
+				fire.sensitivity.sub.fif <- paste0("Fire.Sensitivity                         = {", fire.sensitivity.sub, "}                                         ;")
+				ignition.factor.sub.fif <- paste0("Fire.IgnitionFactor                      = {",ignition.factor.sub,"}                                          ;")
+				for(i in fif_current()){
 					x <- readLines(i)
-					x <- gsub( "^default_Fire\\.Sensitivity=\\d*\\.?\\d*", paste0("default_Fire.Sensitivity=",as.numeric(input$FireSensitivity)), x)
-					x <- gsub( "^default_Fire\\.IgnitionFactor=\\d*\\.?\\d*", paste0("default_Fire.IgnitionFactor=",as.numeric(input$IgnitionFactor)), x)
+					x <- gsub( "^Fire\\.Sensitivity\\s+=\\s+\\{\\d*\\.?\\d*\\}\\s+;", fire.sensitivity.sub.fif, x)
+					x <- gsub( "^Fire\\.IgnitionFactor\\s+=\\s+\\{\\d*\\.?\\d*\\}\\s+;", ignition.factor.sub.fif, x)
 					cat(x, file=i, sep="\n")
 				}
-			}
-			
+				if(input$update_fif_defaults){
+					for(i in defaults_file){
+						x <- readLines(i)
+						x <- gsub( "^default_Fire\\.Sensitivity=\\d*\\.?\\d*", paste0("default_Fire.Sensitivity=",as.numeric(input$FireSensitivity)), x)
+						x <- gsub( "^default_Fire\\.IgnitionFactor=\\d*\\.?\\d*", paste0("default_Fire.IgnitionFactor=",as.numeric(input$IgnitionFactor)), x)
+						cat(x, file=i, sep="\n")
+					}
+				}
+				
 
-			domainDir <- "Runs_Noatak"
-			userDir <- gsub("@", "_at_", user_email_address())
-			
-			outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
-			#resultsDir <- paste0("/big_scratch/shiny/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
-			
-			# system calls begin here
-			# Create Alfresco run-specific output directories and give shiny group write permissions
-			system(paste(user, "ssh", server, "mkdir -p", outDir))
-			system(paste(user, "ssh", server, "chmod 2775", outDir))
-			
-			system(paste("ssh", server, "Rscript", "/big_scratch/mfleonawicz/Alf_Files_20121129/make_sensitivity_ignition_maps_noatak.R", input$IgnitionFactor, input$FireSensitivity))
-			system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco_Noatak.slurm"), file.path(outDir,"RunAlfresco_Noatak.slurm")))
-			system(paste("ssh", server, "cp", file.path(mainDir,"CompileData_Noatak.slurm"), file.path(outDir,"CompileData_Noatak.slurm")))
-			system(paste0("scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
-			slurm_arguments <- paste("-D", outDir)
-			arguments <- paste(c(outDir, all_email_addresses()), collapse=" ")
-			system(paste(user,"ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments))
+				domainDir <- "Runs_Noatak"
+				userDir <- gsub("@", "_at_", user_email_address())
+				
+				outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
+				#resultsDir <- paste0("/big_scratch/shiny/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
+				
+				# system calls begin here
+				# Create Alfresco run-specific output directories and give shiny group write permissions
+				system(paste(user, "ssh", server, "mkdir -p", outDir))
+				system(paste(user, "ssh", server, "chmod 2775", outDir))
+				
+				system(paste("ssh", server, "Rscript", "/big_scratch/mfleonawicz/Alf_Files_20121129/make_sensitivity_ignition_maps_noatak.R", input$IgnitionFactor, input$FireSensitivity))
+				system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco_Noatak.slurm"), file.path(outDir,"RunAlfresco_Noatak.slurm")))
+				system(paste("ssh", server, "cp", file.path(mainDir,"CompileData_Noatak.slurm"), file.path(outDir,"CompileData_Noatak.slurm")))
+				system(paste0("scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
+				slurm_arguments <- paste("-D", outDir)
+				arguments <- paste(c(outDir, all_email_addresses()), collapse=" ")
+				system(paste(user,"ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments))
+			}
+			x <- "Alfresco job started on Atlas"
 		}
-		x <- "Alfresco job started on Atlas"
 	}
 	)
 	return(x)
