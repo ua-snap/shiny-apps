@@ -74,8 +74,9 @@ all_email_addresses <- reactive({
 			
 Obs_updateFiles <- reactive({
 	x <- NULL
-	if(is.null(input$goButton_fif) || is.null(user_email_address()) || is.null(all_email_addresses()) || input$goButton_fif == 0 || all_email_addresses() == "" || user_email_address() == "") return(NULL)
+	if(is.null(input$goButton_fif) || input$goButton_fif == 0) return(NULL)
 	isolate(
+	if(is.null(user_email_address()) || is.null(all_email_addresses() || user_email_address() == "" || all_email_addresses() == "")) return(NULL)
 	if(!is.null(input$FireSensitivity) & !is.null(input$IgnitionFactor)){
 		fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
 		ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
@@ -120,30 +121,10 @@ Obs_updateFiles <- reactive({
 			arguments <- paste(c(outDir, all_email_addresses()), collapse=" ")
 			system(paste(user,"ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments))
 		}
-		x <- "Alfresco job started on Atlas" #paste("Can read, but can't update local files:", fif_current(), "and", defaults_file, ".", "Can't create directory on atlas:", outDir)
+		x <- "Alfresco job started on Atlas"
 	}
 	)
 	return(x)
-}#, suspended=T
+}
 )
-
-#Obs_updateFiles_resume <- observe({ if(!is.null(input$goButton_fif)) if(input$goButton_fif == 0) Obs_updateFiles$resume() })
-
-#runAlf <- reactive({
-#	x <- NULL
-#	if(input$goButton_fif == 0) return(NULL)
-#	isolate({
-#		fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
-#		ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
-#		if(!is.na(fire.sensitivity.sub) & !is.na(ignition.factor.sub)){
-#			if(length(strsplit(fire.sensitivity.sub,"\\.")[[1]])==1) fire.sensitivity.sub <- gsub("\\.\\.", "\\.", paste0(fire.sensitivity.sub,"."))
-#			if(length(strsplit(ignition.factor.sub,"\\.")[[1]])==1) ignition.factor.sub <- gsub("\\.\\.", "\\.", paste0(ignition.factor.sub,"."))
-#			outDir <- paste0(mainDir,"/Runs_Noatak/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
-#			#system(paste(user,"ssh",server,exec,file.path(outDir,slurmfile)))
-#			x <- "Hello world" #print(paste(user,"ssh",server,exec,file.path(outDir,slurmfile)))
-#		}
-#	})
-#	return(x)
-#})
-
 	
