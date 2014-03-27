@@ -76,7 +76,7 @@ Obs_updateFiles <- reactive({
 	x <- NULL
 	if(is.null(input$goButton_fif) || input$goButton_fif == 0) return(NULL)
 	isolate(
-	if( !(is.null(user_email_address()) || is.null(all_email_addresses() || user_email_address() == "" || all_email_addresses() == "")) ){
+	if( !(is.null(user_email_address()) || is.null(all_email_addresses()) || user_email_address() == "" || all_email_addresses() == "") ){
 		if(!is.null(input$FireSensitivity) & !is.null(input$IgnitionFactor)){
 			fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
 			ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
