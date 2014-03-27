@@ -118,7 +118,7 @@ Obs_updateFiles <- reactive({
 				system(paste("ssh", server, "cp", file.path(mainDir,"CompileData_Noatak.slurm"), file.path(outDir,"CompileData_Noatak.slurm")))
 				system(paste0("scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
 				slurm_arguments <- paste("-D", outDir)
-				arguments <- paste(c(outDir, all_email_addresses()), collapse=" ")
+				arguments <- paste(c(outDir, all_email_addresses()), collapse=",")
 				system(paste(user,"ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments))
 			}
 			x <- "Alfresco job started on Atlas"
