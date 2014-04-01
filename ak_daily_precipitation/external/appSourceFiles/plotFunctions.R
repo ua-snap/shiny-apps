@@ -92,7 +92,8 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 		lo <- loess(y~x,span=loess.span)
 		clrs.margin <- gsub(paste0("NA",alpha),"#000000",paste0(pal(num.colors)[as.numeric(cut(tformColMar(y),breaks=num.colors))],alpha))
 		par(mar=c(1,10*png.adjust.cex,1,2),mgp=c(4*png.adjust.cex,1,0))
-		plot(x,y,xlim=c(1,365),ylim=c(0,max(y)),pch=21,col=col.ax.lab,bg=clrs.margin,cex=marginal.pts.cex,axes=F,ylab=expression("Historical mean"~('in')~""),col.lab=col.ax.lab,cex.lab=cex.master*png.adjust.cex)
+		plot(x, y, xlim=c(1,365), ylim=c(0,max(y)), xaxs="i", pch=21, col=col.ax.lab, bg=clrs.margin, cex=marginal.pts.cex,
+			axes=F, ylab=expression("Historical mean"~('in')~""), col.lab=col.ax.lab, cex.lab=cex.master*png.adjust.cex)
 		ax.vals <- signif(round(seq(0,signif(max(y),2),length=5),3),3)
 		axis(2,at=ax.vals,labels=ax.vals,col=col.ax.lab,cex.axis=cex.axis,...)
 		lines(predict(lo),lwd=3,col=col.ax.lab)
@@ -137,7 +138,7 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 	par(mar=c(5,10*png.adjust.cex,0,2))
 	plot(0, 0, xlim=c(1,365), ylim=c(1-1,yrs.n+1), type="n", axes=F, xlab=xlb, main="", xaxs="i", yaxs="i",...)
 	axis(1,at=x.at,labels=x.labels,col=col.ax.lab,cex.axis=cex.axis,...)
-	col.na <- "#FF00FF90" # hard-coded
+	col.na <- "#FF00FF" # hard-coded color for NA values
 	axis(2,at=1:yrs.n,labels=gsub("-"," - ",as.character(yrs)),col=col.ax.lab,cex.axis=cex.axis,...)
 	abline(h=1:yrs.n,lty=1,col="gray")
 	abline(v=x.at,lty=2,col="gray")
@@ -152,7 +153,8 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 		points(x, rep((1:yrs.n)[i],length(v)), col=col.ax.lab, bg=clrs.list[[i]], cex=cex.exp*(tfs-mean(tfs)-min(0,tfs)),...)
 		if(i %in% drop.yrs){
 			na.ind <- which(is.na(v))
-			text(x[na.ind], jitter(rep((1:yrs.n)[i],length(na.ind)),0,.2),"NA", col=col.na, cex=3*png.adjust.cex)
+			#text(x[na.ind], jitter(rep((1:yrs.n)[i],length(na.ind)),0,.2),"NA", col=col.na, cex=3*png.adjust.cex) # this line jitters "NA" text in y-direction
+			points(x[na.ind], rep((1:yrs.n)[i],length(na.ind)),pch=19, col=col.na, cex=2*png.adjust.cex) # this lines adds points for NAs, downward triangle
 		}
 	}
 	box(col=col.ax.lab)

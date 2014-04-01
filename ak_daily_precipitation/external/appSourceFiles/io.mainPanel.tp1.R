@@ -2,6 +2,6 @@
 output$TpDailyTitle <- renderUI({
 	input$genPlotButton
 	isolate({
-		if(is.null(d())) h4("New plots may take several seconds to generate") else h4(paste(input$loc,"daily precipitation"))
+		if(is.null(input$genPlotButton) || input$genPlotButton==0) h4("Select location. Generate plot. Data download/plot may take several seconds.") else h4(paste(input$loc,"daily precipitation"))
 	})
 })

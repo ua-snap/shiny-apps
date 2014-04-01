@@ -16,23 +16,26 @@ sidebarPanel_2(
 		conditionalPanel(condition="input.showWP1",
 			div(class="row-fluid",
 				div(class="span11",uiOutput("Loc")),
-				div(class="span1",helpPopup('Choose location','<p style="text-align:justify">Currently only Fairbanks, AK is available.</p>'))
+				div(class="span1",helpPopup('Choose location','There are 20 stations available. When blank, the text field is type-searchable.'))
 			),
 			div(class="row-fluid",
 				div(class="span11",uiOutput("Yrs")),
-				div(class="span1",helpPopup('Choose consecutive years','<p style="text-align:justify">This is an initial subsetting of the data. Years refer to calendar years.</p>'))
+				div(class="span1",helpPopup('Choose consecutive years','Subset the data. Years refer to calendar years.
+												A max range of January 1, 1950 up through yesterday are downloaded form the ACIS API.
+												Upon changing stations, a new dataset is downloaded from the API and the slider will refresh.
+												The slider can be used to subset this data to a shorter period.'))
 			),
 			div(class="row-fluid",
 				div(class="span11",uiOutput("Mo")),
-				div(class="span1",helpPopup('Choose center month of precipitation year','<p style="text-align:justify">The annual precipitation cycle is defined as the 1st day of the selected month. The graphic is centered on this month.</p>'))
+				div(class="span1",helpPopup('Choose center month of precipitation year','The annual precipitation cycle is defined by the 1st day of the selected month. The graphic is centered on this month.'))
 			),
 			div(class="row-fluid",
 				div(class="span11",uiOutput("Var")),
-				div(class="span1",helpPopup('Choose a variable','<p style="text-align:justify">Currently, only precipitation is available.</p>'))
+				div(class="span1",helpPopup('Choose a variable','Currently, only precipitation is available. Other climate variables may be added later. The menu remains as a placeholder for future options.'))
 			),
 			div(class="row-fluid",
 				div(class="span11",uiOutput("DailyColPal")),
-				div(class="span1",helpPopup('Choose a color palette','<p style="text-align:justify">Currently two options. I would like to add the ability for people to design their own.</p>'))
+				div(class="span1",helpPopup('Choose a color palette','Currently six options.'))
 			)
 		)
 	),

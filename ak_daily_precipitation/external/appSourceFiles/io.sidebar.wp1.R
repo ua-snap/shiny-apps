@@ -1,12 +1,12 @@
 # Datasets, variables
 output$Loc <- renderUI({
-	selectInput("loc","Location:",choices=paste0(loc.names,", AK"),selected=paste0(loc.names[1],", AK"))
+	selectInput("loc","Location:",choices=c("", paste0(loc.names,", AK")),selected="")
 })
 
 output$Yrs <- renderUI({
 	if(!is.null(yrs())){
 		div(
-			sliderInput("yrs","",yrs()[1],tail(yrs(),1),range(yrs()),step=1,format="#"),
+			sliderInput("yrs","Data download on location change. Please wait when grayed.",yrs()[1],tail(yrs(),1),range(yrs()),step=1,format="#"),
 			tags$head(tags$link(rel="stylesheet", type="text/css", href="jquery.slider.min.css"))
 		)
 	}
@@ -17,7 +17,7 @@ output$Mo <- renderUI({
 })
 
 output$Var <- renderUI({
-		selectInput("var","Variable:",choices=vars,selected=vars[1])
+	selectInput("var","Variable:",choices=vars,selected=vars[1])
 })
 
 output$DailyColPal <- renderUI({
@@ -25,5 +25,5 @@ output$DailyColPal <- renderUI({
 })
 
 output$GenPlotButton <- renderUI({
-	actionButton("genPlotButton", "Generate Plot")
+	if(!is.null(input$loc) && input$loc!="") actionButton("genPlotButton", "Generate Plot")
 })
