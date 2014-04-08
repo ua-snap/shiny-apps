@@ -106,6 +106,7 @@ Obs_updateFiles <- reactive({
 				userDir <- gsub("@", "_at_", user_email_address())
 				
 				outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
+				relDir <- paste0(domainDir,"/",userDir,"/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
 				#resultsDir <- paste0("/big_scratch/shiny/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
 				
 				# system calls begin here
@@ -118,7 +119,7 @@ Obs_updateFiles <- reactive({
 				system(paste("ssh", server, "cp", file.path(mainDir,"CompileData_Noatak.slurm"), file.path(outDir,"CompileData_Noatak.slurm")))
 				system(paste0("scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
 				slurm_arguments <- paste("-D", outDir)
-				arguments <- paste(c(outDir, all_email_addresses()), collapse=",")
+				arguments <- paste(c(mainDir, outDir, relDir, all_email_addresses()), collapse=",")
 				system(paste(user,"ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments))
 			}
 			x <- "Alfresco job started on Atlas"
