@@ -1,21 +1,21 @@
 # Datasets, scenarios, decades
 dat <- reactive({
 	if(!is.null(input$dat.name)){
-		if(input$dat.name=="CMIP3 Projected") dat <- AR4_CMIP3_projected_data else if(input$dat.name=="CMIP3 Historical") dat <- AR4_CMIP3_historical_data
+		if(input$dat.name=="CMIP3 Projected") dat <- AR4_CMIP3_projected_data else if(input$dat.name=="CMIP3 Historical") dat <- AR4_CMIP3_historical_data else dat <- NULL
 	} else dat <- NULL
 	dat
 })
 
 scennames <- reactive({
 	if(!is.null(input$dat.name)){
-		if(input$dat.name=="CMIP3 Projected") scennames <- scennames.list[[2]] else if(input$dat.name=="CMIP3 Historical") scennames <- scennames.list[[1]]
+		if(input$dat.name=="CMIP3 Projected") scennames <- scennames.list[[2]] else if(input$dat.name=="CMIP3 Historical") scennames <- scennames.list[[1]] else scennames <- NULL
 	} else scennames <- NULL
 	scennames
 })
 
 decades <- reactive({
 	if(!is.null(input$dat.name)){
-		if(input$dat.name=="CMIP3 Projected") decades <- decades.list[[2]] else if(input$dat.name=="CMIP3 Historical") decades <- decades.list[[1]]
+		if(input$dat.name=="CMIP3 Projected") decades <- decades.list[[2]] else if(input$dat.name=="CMIP3 Historical") decades <- decades.list[[1]] else decades <- NULL
 	} else decades <- NULL
 	decades
 })
@@ -68,7 +68,7 @@ pooled.var <- reactive({
 
 # Data subsetting
 dat.sub <- reactive({
-	if(input$goButton==0) return()
+	if(is.null(input$goButton) || input$goButton==0) return()
 	isolate(
 		if(!is.null(dat())){
 			d <- subset(dat(), Community==strsplit(input$locationSelect,", ")[[1]][1] & Model %in% input$models & Scenario %in% input$scens & Variable %in% input$vars & Month %in% input$mos & Decade %in% substr(input$decs,1,4))
@@ -94,4 +94,16 @@ dat.sub.collapsePooled <- reactive({
 		if(!is.null(pooled.var())) for(k in 1:length(pooled.var())) d[pooled.var()[k]] <- rep("Average",nrow(dat.sub()))
 		d
 	} else return()
+})
+
+# Plotting/staging
+permitPlot <- reactive({
+	if(!(is.null(input$mos) | is.null(input$locationSelect) | is.null(decades()) | is.null(input$vars) | is.null(input$units) | is.null(input$decs) | is.null(input$scens) | is.null(scennames()) | is.null(input$models) | is.null(input$dat.name))){
+		if(!(input$mos[1]=="" | input$locationSelect=="" | input$vars=="" | input$units=="" | input$decs[1]=="" | input$scens[1]=="" | input$models[1]=="" | input$dat.name=="" | nrow(dat())==0)){
+			x <- TRUE
+		} else {
+			x <- FALSE
+		}
+	} else x <- FALSE
+	x
 })

@@ -1,10 +1,10 @@
 # Datasets, variables, units, models, scenarios, months, decades
 output$dat.name <- renderUI({
-	selectInput("dat.name","Data:",choices=c("CMIP3 Historical","CMIP3 Projected"),selected="CMIP3 Projected")
+	selectInput("dat.name","Data:",choices=c("","CMIP3 Historical","CMIP3 Projected"),selected="")
 })
 
 output$vars <- renderUI({
-	if(!is.null(dat()))	selectInput("vars","Climate variable:",varnames,selected=NULL)
+	if(!is.null(dat()))	selectInput("vars","Climate variable:",c("",varnames),selected="")
 })
 
 output$units <- renderUI({
@@ -16,17 +16,22 @@ output$units <- renderUI({
 })
 
 output$models <- renderUI({
-	if(!is.null(dat()))	selectInput("models","Climate models:",choices=modnames,selected=modnames,multiple=T)
+	if(!is.null(dat()))	selectInput("models","Climate models:",choices=c("",modnames),selected="",multiple=T)
 })
 
 output$scens <- renderUI({
-	if(!is.null(dat()))	selectInput("scens","Emissions scenarios:",choices=scennames(),selected=scennames(),multiple=T)
+	if(!is.null(dat()) & !is.null(scennames()))	selectInput("scens","Emissions scenarios:",choices=c("",scennames()),selected="",multiple=T)
 })
 
 output$mos <- renderUI({
-	if(!is.null(dat()))	selectInput("mos","Months:",choices=mos,selected=mos,multiple=T)
+	if(!is.null(dat()))	selectInput("mos","Months:",choices=c("",mos),selected="",multiple=T)
 })
 
 output$decs <- renderUI({
-	if(!is.null(dat()))	selectInput("decs","Decades:",choices=decades(),selected=decades(),multiple=T)
+	if(!is.null(dat()) & !is.null(decades()))	selectInput("decs","Decades:",choices=c("",decades()),selected="",multiple=T)
+})
+
+# Data button
+output$GoButton <- renderUI({
+	if(permitPlot()) actionButton("goButton", "Subset Data")
 })

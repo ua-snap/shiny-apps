@@ -1,4 +1,5 @@
 output$colorpalettes <- renderUI({
+	if(is.null(input$plotButton) || input$plotButton==0) return()
 	if(!is.null(input$colorseq)){
 		if(input$colorseq=="Nominal" & is.null(input$group)){
 			pal <- c("Accent","Dark2","Pastel1","Pastel2","Paired","Set1","Set2","Set3")
@@ -22,6 +23,7 @@ output$colorpalettes <- renderUI({
 })
 
 output$colorseq <- renderUI({
+	if(is.null(input$plotButton) || input$plotButton==0) return()
 	if(!is.null(dat.sub()) & !is.null(input$group)){
 		if(n.groups()>9){
 			selectInput("colorseq","Color levels",c("Evenly spaced"),selected="Evenly spaced")
@@ -34,14 +36,17 @@ output$colorseq <- renderUI({
 })
 
 output$legendPos1 <- renderUI({
-		if(!is.null(dat.sub())) selectInput("legendPos1","Legend position",c("Top","Right","Bottom","Left"),selected="Top")
+	if(is.null(input$plotButton) || input$plotButton==0) return()
+	if(!is.null(dat.sub())) selectInput("legendPos1","Legend position",c("Top","Right","Bottom","Left"),selected="Top")
 })
 
 output$plotFontSize <- renderUI({
-		if(!is.null(dat.sub())) selectInput("plotFontSize","Font size",seq(12,24,by=2),selected=16)
+	if(is.null(input$plotButton) || input$plotButton==0) return()
+	if(!is.null(dat.sub())) selectInput("plotFontSize","Font size",seq(12,24,by=2),selected=16)
 })
 
 output$bartype <- renderUI({
+	if(is.null(input$plotButton) || input$plotButton==0) return()
 	if(!is.null(dat.sub())){
 		styles <- c("Dodge (Grouped)","Stack (Totals)","Fill (Proportions)")
 		if(!is.null(input$altplot)) if(input$altplot & dat.sub()$Variable[1]=="Precipitation") selectInput("bartype","Barplot style",styles,selected=styles[1])
@@ -49,10 +54,14 @@ output$bartype <- renderUI({
 })
 
 output$bardirection <- renderUI({
+	if(is.null(input$plotButton) || input$plotButton==0) return()
 	if(!is.null(dat.sub())){
 		directions <- c("Vertical bars","Horizontal bars")
 		if(!is.null(input$altplot)) if(input$altplot & dat.sub()$Variable[1]=="Precipitation") selectInput("bardirection","Barplot orientation",directions,selected=directions[1])
 	}
 })
 
-output$subset.table <- renderTable({ if(!is.null(dat.sub())) dat.sub()[1,1:6] })
+output$subset.table <- renderTable({
+	if(is.null(input$plotButton) || input$plotButton==0) return()
+	if(!is.null(dat.sub())) dat.sub()[1,1:6]
+})
