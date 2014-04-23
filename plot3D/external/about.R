@@ -1,7 +1,17 @@
 function(){
 	tabPanel("About",
-		p(style="text-align:justify",'This Shiny app displays plots made using the plot3D, rgl, and shinyRGL packages. Two datasets are currently available.
-		The classic volcano dataset is provided in base R and the hypsometry data are loaded from the plot3D package. The latter is a larger dataset and will take longer to draw, especially 3D renderings.'),
+		HTML(
+		'<p style="text-align:justify">This Shiny app displays plots made using the <em>plot3D</em>, <em>rgl</em>, and <em>shinyRGL</em> packages. Four datasets are currently available.
+		The classic volcano dataset is provided in base <strong><span style="color:#3366ff;">R</span></strong> and the hypsometry data are loaded from the <em>plot3D</em> package.
+		The latter is a larger dataset and will take longer to draw, especially 3D renderings.
+		The other two datasets include a sinc function (sampling function, or cardinal sine function) and a Lorenz attractor.
+		The Lorenz attractor dataset is only available for plotting in 3D with RGL. Other plotting options will not appear in the plot type menu when this dataset is selected.</p>
+		
+		<p style="text-align:justify">The app also features some custom CSS, a pdf download button for any of the static (non-RGL) graphics,
+		and a tab for viewing the <strong><span style="color:#3366ff;">R</span></strong> code on which the app is based.
+		The code has ACE syntax highlighting via the <em>shinyAce</em> package. The user can control the highlighting theme and font size.
+		The plots have a dark theme to blend with the overall CSS. However, plot background color can be set to standard white. This is useful is you plan to print a plot.</p>'
+		),
 		br(),
 
 		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),
@@ -37,9 +47,6 @@ function(){
 					HTML('<li>'),a("Basic example app with image() plots", href="http://shiny.snap.uaf.edu/tree_rings/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Monty Hall gone wild", href="http://shiny.snap.uaf.edu/monty_hall/", target="_blank"),HTML('</li>'),
 				HTML('</ul>')),
-				strong('Code'),
-				p('Source code available at',
-				a('GitHub', href="https://github.com/ua-snap/shiny-apps/tree/master/monty_hall/", target="_blank")),
 				br()
 			),
 			div(class="span4", strong('Related blog posts'),
@@ -70,7 +77,9 @@ function(){
 					HTML('<li>'),a('plot3D', href="http://cran.r-project.org/web/packages/plot3D/index.html", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a('rgl', href="http://cran.r-project.org/web/packages/rgl/index.html", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a('shinyRGL', href="http://cran.r-project.org/web/packages/shinyRGL/index.html", target="_blank"),HTML('</li>'),
-					HTML('<ul>'),
+					HTML('<li>'),a('shinyAce', href="http://cran.r-project.org/web/packages/shinyAce/index.html", target="_blank"),HTML('</li>'),
+					HTML('</ul>'),
+					HTML('<li>Source code on <a href="https://github.com/ua-snap/shiny-apps/tree/master/plot3D/" target="_blank">GitHub</a></li>'),
 				HTML('</ul>'))
 			)
 		),

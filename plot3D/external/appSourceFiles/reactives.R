@@ -300,40 +300,11 @@ doPlot <- reactive({
 })
 
 # Reactive expression for code tab in main panel
-codeTab <- reactive({
-	if(is.null(input$nlp)) return()
-	x <- NULL
-	id <- input$nlp
-	if(id=="nlp_global") {
-		x <- tabPanel("Global", show_global)
-	} else if(id=="nlp_ui") {
-		x <- tabPanel("UI", show_ui)
-	} else if(id=="nlp_server") {
-		x <- tabPanel("Server", show_server)
-	} else if(id=="nlp_app") {
-		x <- tabPanel("App", show_app)
-	} else if(id=="nlp_header") {
-		x <- tabPanel("Header", show_header)
-	} else if(id=="nlp_sidebar") {
-		x <- tabPanel("Sidebar", show_sidebar)
-	} else if(id=="nlp_main") {
-		x <- tabPanel("Main Panel", show_main)
-	} else if(id=="nlp_about") {
-		x <- tabPanel("About Tab", show_about)
-	} else if(id=="nlp_wp1") {
-		x <- tabPanel("Well Panel 1", show_wp1)
-	} else if(id=="nlp_wp2") {
-		x <- tabPanel("Well Panel 2", show_wp2)
-	} else if(id=="nlp_wp3") {
-		x <- tabPanel("Well Panel 3", show_wp3)
-	} else if(id=="nlp_wp4") {
-		x <- tabPanel("Well Panel 4", show_wp4)
-	} else if(id=="nlp_wp5") {
-		x <- tabPanel("Well Panel 5", show_wp5)
-	} else if(id=="nlp_wp6") {
-		x <- tabPanel("Well Panel 6", show_wp6)
-	} else if(id=="nlp_reactives") {
-		x <- tabPanel("Reactive Expressions", show_reactives)
-	}
-	x
-})
+# Ideal, but cannot do this on the server side due to a bug in the shinyAce package.
+#codeTab <- reactive({
+#	if(is.null(input$nlp)) return()
+#	id <- gsub("nlp_", "show_", input$nlp)
+#	show_list <- ls(pattern="^show_.*.R$", envir=.GlobalEnv)
+#	if(id %in% show_list) x <- tabPanel(paste0("tp_",id), get(id)) else x <- NULL
+#	x
+#})

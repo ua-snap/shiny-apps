@@ -9,7 +9,16 @@ source("external/appSourceFiles/io.sidebar.wp6.R",local=T)
 
 output$codeTab <- renderUI({ codeTab() })
 
-#output$HighlightTheme <- renderUI({	selectInput("highlighttheme", "Syntax highlighting", getAceThemes()) })
+output$HLTheme <- renderUI({	selectInput("hltheme", "Code highlighting theme:", getAceThemes(), selected="clouds_midnight") })
+output$HLFontSize <- renderUI({ selectInput("hlfontsize", "Font size:", seq(8,24,by=2), selected=12) })
+
+observe({
+	input$tsp
+	input$nlp
+	input$hltheme
+	for(i in 1:length(R_files)) eval(parse(text=sprintf("input$%s", gsub("\\.", "", basename(R_files[i])))))
+	for(i in 1:length(R_files)) updateAceEditor(session, gsub("\\.", "", basename(R_files[i])), theme=input$hltheme, fontSize=input$hlfontsize)
+})
 
 output$CodeDescription <- renderUI({
 	h6(HTML(

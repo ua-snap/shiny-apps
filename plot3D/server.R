@@ -3,6 +3,7 @@ pkgs <- c("plot3D","rgl","shinyRGL")
 pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
 if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
 library(rgl); library(plot3D); library(shinyRGL)
+
 load("external/data.RData",envir=.GlobalEnv)
 dataset.names <- c("Volcano (Maunga Whau)","Sinc","Lorenz Attractor","Hypsometry data")
 getFun <- function(type){
