@@ -80,7 +80,7 @@ Obs_updateFiles <- reactive({
 		if(!is.null(input$FireSensitivity) & !is.null(input$IgnitionFactor)){
 			fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
 			ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
-			if(!is.na(fire.sensitivity.sub) & !is.na(ignition.factor.sub) & !any(is.na(as.numeric(input$frp_buffers)))){
+			if(!is.na(fire.sensitivity.sub) & !is.na(ignition.factor.sub) & !any(is.na(as.numeric(unlist(strsplit(input$frp_buffers,",")))))){
 				if(length(strsplit(fire.sensitivity.sub,"\\.")[[1]])==1) fire.sensitivity.sub <- gsub("\\.\\.", "\\.", paste0(fire.sensitivity.sub,"."))
 				if(length(strsplit(ignition.factor.sub,"\\.")[[1]])==1) ignition.factor.sub <- gsub("\\.\\.", "\\.", paste0(ignition.factor.sub,"."))
 				#white spaces below are just to make the file prettier on visual inspection in an editor
