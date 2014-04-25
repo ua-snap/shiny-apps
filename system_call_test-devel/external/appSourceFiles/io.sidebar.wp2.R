@@ -1,6 +1,6 @@
 # Alfresco .fif parameters
 output$Update_fif_Defaults <- renderUI({
-	checkboxInput("update_fif_defaults", "Save settings as new defaults", FALSE)
+	checkboxInput("update_fif_defaults", "Save Sen/Ign as new defaults", FALSE)
 })
 
 output$SkipAlf <- renderUI({
@@ -17,7 +17,7 @@ output$fif_IgnitionFactor <- renderUI({
 
 # Fire return period inputs
 output$FRP_pts <- renderUI({
-	selectInput("frp_pts", "Fire Return Period locations", c("", list.files(pts, pattern=".csv$")))
+	selectInput("frp_pts", "Fire Return Period locations", c("", list.files("pts", pattern=".csv$")))
 })
 
 output$FRP_buffers <- renderUI({
