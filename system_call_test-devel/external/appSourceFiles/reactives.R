@@ -76,11 +76,11 @@ Obs_updateFiles <- reactive({
 	x <- NULL
 	if(is.null(input$goButton_fif) || input$goButton_fif == 0) return(NULL)
 	isolate(
-	if( !(is.null(user_email_address()) || is.null(all_email_addresses()) || user_email_address() == "" || all_email_addresses() == "") ){
+	if( !(is.null(user_email_address()) || is.null(all_email_addresses()) || user_email_address() == "" || all_email_addresses() == "" || is.null(input$frp_pts)) ){
 		if(!is.null(input$FireSensitivity) & !is.null(input$IgnitionFactor)){
 			fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
 			ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
-			if(!is.na(fire.sensitivity.sub) & !is.na(ignition.factor.sub)){
+			if(!is.na(fire.sensitivity.sub) & !is.na(ignition.factor.sub) & !any(is.na(as.numeric(input$frp_buffers)))){
 				if(length(strsplit(fire.sensitivity.sub,"\\.")[[1]])==1) fire.sensitivity.sub <- gsub("\\.\\.", "\\.", paste0(fire.sensitivity.sub,"."))
 				if(length(strsplit(ignition.factor.sub,"\\.")[[1]])==1) ignition.factor.sub <- gsub("\\.\\.", "\\.", paste0(ignition.factor.sub,"."))
 				#white spaces below are just to make the file prettier on visual inspection in an editor
@@ -118,8 +118,12 @@ Obs_updateFiles <- reactive({
 				system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco.slurm"), file.path(outDir,"RunAlfresco.slurm")))
 				system(paste("ssh", server, "cp", file.path(mainDir,"CompileData.slurm"), file.path(outDir,"CompileData.slurm")))
 				system(paste0("scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
+				system(paste0("scp ", input$frp_pts, " ", server, ":", file.path(outDir,input$fif_files)))
 				slurm_arguments <- paste("-D", outDir)
-				arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$fif_files), collapse=" ")
+				buffers <- paste0("c(",1000*input$frp_buffers,")",collapse="")
+				frp_arguments <- paste0("'pts=", input$frp_pts, " ", "buffers=", buffers, "'", collapse="")
+				if(input$skipAlf) postprocOnly <- 0 else postprocOnly <- 1
+				arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$fif_files, frp_arguments, postprocOnly), collapse=" ")
 				print(arguments)
 				system(paste(user,"ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments))
 			}

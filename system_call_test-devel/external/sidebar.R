@@ -38,9 +38,14 @@ sidebarPanel(
 				div(class="span1",helpPopup('Ignition Factor','Set the fire ignition factor parameter in the FIF.'))
 			),
 			div(class="row-fluid",
-				div(class="span11",uiOutput("Update_fif_Defaults")),
-				div(class="span1",helpPopup('Update .fif defaults','Check this box if you want to modify the FIF defaults file with your current parameter specifications when you submit your Alfresco run.
-					If checked, next time the app is launched, it will populate the parameter fields with your previous specifications.'))
+				div(class="span6",uiOutput("FRP_pts")),
+				div(class="span6",uiOutput("FRP_buffers"))
+			),
+			div(class="row-fluid",
+				div(class="span6",uiOutput("Update_fif_Defaults")),
+				div(class="span6",uiOutput("SkipAlf"))#,
+				#div(class="span1",helpPopup('Update .fif defaults','Check this box if you want to modify the FIF defaults file with your current parameter specifications when you submit your Alfresco run.
+				#	If checked, next time the app is launched, it will populate the parameter fields with your previous specifications.'))
 			),
 			actionButton("goButton_fif","Save .fif / run Alfresco") #uiOutput("goButton_fif")
 		)
