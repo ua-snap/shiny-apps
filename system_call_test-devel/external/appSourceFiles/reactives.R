@@ -70,7 +70,7 @@ all_email_addresses <- reactive({
 	} else { e <- "" }
 	e
 })
-			
+			0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150
 			
 Obs_updateFiles <- reactive({
 	x <- NULL
@@ -119,8 +119,10 @@ Obs_updateFiles <- reactive({
 				system(paste("ssh", server, "cp", file.path(mainDir,"CompileData.slurm"), file.path(outDir,"CompileData.slurm")))
 				system(paste0("scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
 				system(paste0("scp ", input$frp_pts, " ", server, ":", file.path(outDir,input$fif_files)))
+				
 				slurm_arguments <- paste("-D", outDir)
-				buffers <- paste0("c(",1000*input$frp_buffers,")",collapse="")
+				buffers <- paste(1000*unlist(strsplit(input$frp_buffers,",")), collapse=",")
+				buffers <- paste0("c(", buffers, ")", collapse="")
 				frp_arguments <- paste0("'pts=", input$frp_pts, " ", "buffers=", buffers, "'", collapse="")
 				if(input$skipAlf) postprocOnly <- 0 else postprocOnly <- 1
 				arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$fif_files, frp_arguments, postprocOnly), collapse=" ")
