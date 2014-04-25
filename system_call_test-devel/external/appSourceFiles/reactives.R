@@ -120,8 +120,10 @@ Obs_updateFiles <- reactive({
 				system(paste0("scp ", input$frp_pts, " ", server, ":", file.path(outDir,input$fif_files)))
 				
 				slurm_arguments <- paste("-D", outDir)
-				buffers <- paste(1000*unlist(strsplit(input$frp_buffers,",")), collapse=",")
+				buffers <- paste(1000*as.numeric(unlist(strsplit(input$frp_buffers,","))), collapse=",")
+				print(buffers)
 				buffers <- paste0("c(", buffers, ")", collapse="")
+				print(buffers)
 				frp_arguments <- paste0("'pts=", input$frp_pts, " ", "buffers=", buffers, "'", collapse="")
 				if(input$skipAlf) postprocOnly <- 0 else postprocOnly <- 1
 				arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$fif_files, frp_arguments, postprocOnly), collapse=" ")
