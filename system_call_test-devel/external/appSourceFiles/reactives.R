@@ -117,7 +117,7 @@ Obs_updateFiles <- reactive({
 				system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco.slurm"), file.path(outDir,"RunAlfresco.slurm")))
 				system(paste("ssh", server, "cp", file.path(mainDir,"CompileData.slurm"), file.path(outDir,"CompileData.slurm")))
 				system(paste0("scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
-				system(paste0("scp ", input$frp_pts, " ", server, ":", file.path(outDir,input$frp_pts)))
+				system(paste0("scp ", file.path("pts",input$frp_pts), " ", server, ":", file.path(outDir,input$frp_pts)))
 				
 				slurm_arguments <- paste("-D", outDir)
 				buffers <- paste(1000*as.numeric(unlist(strsplit(input$frp_buffers,","))), collapse=",")
