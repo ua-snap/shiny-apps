@@ -72,7 +72,7 @@ all_email_addresses <- reactive({
 })
 
 Obs_updateFiles <- reactive({
-	x <- NULL
+	x <- "No Alfresco job started yet"
 	if(is.null(input$goButton_fif) || input$goButton_fif == 0) return(NULL)
 	isolate(
 	if( !(is.null(user_email_address()) || is.null(all_email_addresses()) || user_email_address() == "" || all_email_addresses() == "" || is.null(input$frp_pts)) ){
@@ -117,20 +117,19 @@ Obs_updateFiles <- reactive({
 				system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco.slurm"), file.path(outDir,"RunAlfresco.slurm")))
 				system(paste("ssh", server, "cp", file.path(mainDir,"CompileData.slurm"), file.path(outDir,"CompileData.slurm")))
 				system(paste0("scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
-				system(paste0("scp ", input$frp_pts, " ", server, ":", file.path(outDir,input$fif_files)))
+				system(paste0("scp ", input$frp_pts, " ", server, ":", file.path(outDir,input$frp_pts)))
 				
 				slurm_arguments <- paste("-D", outDir)
 				buffers <- paste(1000*as.numeric(unlist(strsplit(input$frp_buffers,","))), collapse=",")
-				print(buffers)
 				buffers <- paste0("c(", buffers, ")", collapse="")
-				print(buffers)
 				frp_arguments <- paste0("'pts=", input$frp_pts, " ", "buffers=", buffers, "'", collapse="")
 				if(input$skipAlf) postprocOnly <- 0 else postprocOnly <- 1
 				arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$fif_files, frp_arguments, postprocOnly), collapse=" ")
 				print(arguments)
 				system(paste(user,"ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments))
+				x <- "Alfresco job started on Atlas"
 			}
-			x <- "Alfresco job started on Atlas"
+			if(x!="Alfresco job started on Atlas") x <- "Alfresco job did not launch"
 		}
 	}
 	)
