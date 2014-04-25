@@ -101,8 +101,8 @@ Obs_updateFiles <- reactive({
 					}
 				}
 				
-
-				domainDir <- "Runs_Noatak"
+				alf.domain <- substr(input$fif_files, 1, nchar(input$fif_files)-4)
+				domainDir <- paste0("Runs_", alf.domain)
 				userDir <- gsub("@", "_at_", user_email_address())
 				
 				outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
@@ -114,12 +114,12 @@ Obs_updateFiles <- reactive({
 				system(paste(user, "ssh", server, "mkdir -p", outDir))
 				system(paste(user, "ssh", server, "chmod 2775", outDir))
 				
-				system(paste("ssh", server, "Rscript", "/big_scratch/mfleonawicz/Alf_Files_20121129/make_sensitivity_ignition_maps_noatak.R", input$IgnitionFactor, input$FireSensitivity))
-				system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco_Noatak.slurm"), file.path(outDir,"RunAlfresco_Noatak.slurm")))
-				system(paste("ssh", server, "cp", file.path(mainDir,"CompileData_Noatak.slurm"), file.path(outDir,"CompileData_Noatak.slurm")))
+				system(paste("ssh", server, "Rscript", "/big_scratch/mfleonawicz/Alf_Files_20121129/make_sensitivity_ignition_maps.R", input$IgnitionFactor, input$FireSensitivity))
+				system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco.slurm"), file.path(outDir,"RunAlfresco.slurm")))
+				system(paste("ssh", server, "cp", file.path(mainDir,"CompileData.slurm"), file.path(outDir,"CompileData.slurm")))
 				system(paste0("scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
 				slurm_arguments <- paste("-D", outDir)
-				arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=",")), collapse=" ")
+				arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$fif_files), collapse=" ")
 				print(arguments)
 				system(paste(user,"ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments))
 			}

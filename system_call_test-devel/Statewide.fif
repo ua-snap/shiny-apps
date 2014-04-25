@@ -1,0 +1,351 @@
+
+;FIF INPUT FILE FOR FRESCO
+
+; BASE PATHS (any file path parameter can either be a child of these base paths or a separate full directory path if needed)
+ClientFifPath                     = ""	         ; Base directory for clients where input files can be found and map output will be saved.
+ClientInputBasePath               = "/big_scratch/apbennett/AK_CAN_Inputs"	         ; 
+ClientOutputBasePath              = ""	         ; 
+ServerOutputBasePath              = "";mpirun -np 15 ~apbennett/bin/frescocli_mpi --fif /workspace/Shared/anna_springsteen/Alfresco/testStatewide.fif
+
+
+; LANDSCAPE INPUT
+SiteInputFile                            = "/big_scratch/mfleonawicz/Alf_Files_20121129/centaksite.tif"                   ; The site input file
+TreeDensityInputFile                     = "/big_scratch/mfleonawicz/Alf_Files_20121129/centaktreedensity.tif"            ; The initial tree density input file
+TopoInputFile                            = "/big_scratch/mfleonawicz/Alf_Files_20121129/centakslope.tif"					 ; Elevation/akcanada_prism_slopeComplexity_1km.tifThe topography input file.  0=flat, 1=complex
+BurnSeverityInputFile                    = "/big_scratch/mfleonawicz/Alf_Files_20121129/Spinup300Year_32Reps/BurnSeverityHistory.tif"           ; The initial burn severity input file. 0=No Burn, 1=Low, 2=Moderate, 3=High w/ Low Surface Severity, 4=High w/ High Surface Severity
+AgeInputFile                             = "/big_scratch/mfleonawicz/Alf_Files_20121129/Spinup300Year_32Reps/Age.tif"                    ; The initial age input file - years before present so positive values
+VegInputFile                             = "/big_scratch/mfleonawicz/Alf_Files_20121129/Spinup300Year_32Reps/Veg.tif"                    ; The vegetation input file
+VegTransitionFile                        = "Input/Initialization/VegTransitions.tif"         ; Base filename for forced vegetation transitions.  Year is appended as  _YR
+IsForcedVegTransitions                   = FALSE                                             ; TRUE: Succession trajectories are read from files as well as simulated.  FALSE: Succession is simulated only.
+UseUniqueVegAndAgePerRep                 = TRUE                                              ; Use unique input files for veg and age.  This can be used to prevent a bias due to all reps starting from the same input data.
+UseUniqueBurnSeverityPerRep              = TRUE                                              ; Use unique input files for burn severity per rep.  This prevents a bias due to all reps starting from the same input data.
+YearOfUniqueInputPerRep                  = 1900                                              ; The year to be appended to the base filename when using unique veg, age andor burn severity files per rep.  File format: filename_REP#_YEAR#.txt
+
+; SIMULATION
+RandSeed = 1234799211; A manually set number used to seed the random number generator.  If not set  the current time is used to seed the random number generator.
+Output.DetailLevel = "MAXIMUM"; MINIMAL: Show only run progress.  MODERATE: Show some interim calculations along with run detail.  MAXIMUM: Show maximum detail along with run detail.
+FirstYear = 1110;
+LastYear = 2012; 2009
+MaxReps = 30;100 The number of replicates to run the model (i.e. x replicates total).
+
+
+; RASTER SETTINGS
+XULCorner = -656204.44; a.k.a, "x origin", "top left corner". Usually in meters.  Noatak = -453578.273188
+YULCorner = 2390439.786000; a.k.a, "y origin", "top left corner". Usually in meters.  Noatak = 2117431.76584
+XOffset = 0; number of pixels from the left to start counting columns  Default is 0
+YOffset = 0; number of pixels from the top to start counting rows   Default is 0
+XSize = 1374; landscape's width in pixels.
+YSize = 1450; landscape's height in pixels.
+CellSize = 1000; The size of each cell. The current size is in meters
+RequireAAEACProjectedInputRasters        = FALSE       ; (optional -- defaults to TRUE) if TRUE, each input raster file will be checked for the Alaska Albers projection.
+ApplyAAEACProjectionToOutputRasters      = TRUE       ; (optional -- defaults to TRUE) if TRUE, each output raster file will include metadata for the Alaska Albers projection.
+
+
+; MAP OUTPUT FLAGS
+; 0x000001 	On switch. Output is given only if this flag is specified.
+;Formatting
+; 0x000010	Output the data in a map (row,col) format rather than the default one column with fieldname.
+; 0x000020	Add number of yearsreps to header of output file for reference purposes
+; 0x000040	Add ARCgis info to header of output file to facilitate import into ARCgis
+;Frame Specific
+; 0x000100   Decid: species trajectory
+; 0x000200   Tundra: basal area
+; 0x000400	Not in use
+; 0x000800	Not in use
+;Data Type
+; 0x001000	Vegetation type
+; 0x002000	Stand age
+; 0x004000	Site variables
+; 0x008000	Subcanopy
+; 0x010000	Fire age (time since the cell last burned)
+; 0x020000	Temperature
+; 0x040000	Precipitation
+; 0x080000	The ID of each fire scar [If ignition cell, '-'][LastBurnYear].[FireID]
+; 0x100000	Burn severity for burns occuring in the given year
+; 0x200000	Burn severity for for the last known burn of each cell
+
+; MAP OUTPUT PARAMETERS
+MapFiles                                 = {"Maps/BurnSeverityHistory.tif", "Maps/BurnSeverity.tif", "Maps/Veg.tif", "Maps/Fire.tif", "Maps/Age.tif", "Maps/FireScar.tif"}          ; The base names for the output maps.
+MapCodes                                 = {"FSevHist", "FSev", "Veg", "Fire", "Age", "FScar"}              ; The code to output so the user knows  this map has been written.
+MapFlags                                 = {0x200051, 0x100051, 0x001051, 0x010051, 0x002051, 0x080051}   ; The output codes for the map in question.
+MapRepStart                              = {0, 0, 0, 0, 0, 0}                                      ; The first replication that outputs maps.
+MapRepFreq                               = {1, 0, 1, 0, 1, 1}                                      ; The year frequency to output maps.
+MapYearStart                             = {2009, 0, 1901, 0, 1901, 1110}                             ; The first year that outputs maps.
+MapYearFreq                              = {1, 0, 1, 0, 1, 1}                                      ; The year frequency to output maps.
+
+
+; STAT OUTPUT FLAGS
+;0x000  Nothing is output.
+;0x001  Output the data averaged by year.
+;0x002  Output the data averaged by replicate.
+;0x004  Show row titles in output.  IE "Year", "Mean", "Min", "Max", etc.
+;0x010  Output the number of samples.
+;0x020  Output the mean of the data.
+;0x040  Output the standard deviation of the samples.
+;0x080  Output the minimum of the samples.
+;0x100  Output the maximum of the samples.
+;0x200  Output a histogram of samples.
+;0x400  Output the sample data for the statistic.  Note that sample data may already be an average or sum of event data.  For example, FireSize sample data is the sum of all fires in a given rep and year.
+;0x800  Output the event data for the statistic.  Event data is a record of individual events rather than an average or sum.
+; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,  A,  B,  C,  D,  E,  F
+
+; STAT OUTPUT PARAMETERS
+Stat.Summary.File                        = "StatOut.txt"                                     ; The name of the statistical data output file (will be created in the output directory specified under the General settings).
+Stat.FireNum.Flags                       = 0x421                                             ; Output flags for the fire num stats.
+Stat.FireSize.Flags                      = 0xc21                                             ; Output flags for the fire size stats.
+Stat.VegDist.Flags                       = 0x431                                             ; Output flags for the vegetation stats.
+Stat.VegResidence.Flags                  = 0x231                                             ; Output flags for the vegetation residence times.
+Stat.FireSpecies.Flags                   = 0x431                                             ; Output flags for the fire by species stats.
+Stat.FireInterval.Flags                  = 0x831                                             ; Output flags for the fire interval stats.
+Stat.BurnsBySupp.Flags                   = 0x431                                             ; Output flags for the burn partitions by suppression zone stats.
+Stat.Habitat.Flags                       = 0x421                                             ; Output flags for the burn partitions by suppression zone stats.
+; STAT COLLECTION PARAMETERS
+Stat.Habitat.Types                       = {}   ; The ID's for a habitat statistic.  For each ID, provide Stat.Habitat.<ID>.VegTypes and Stat.Habitat.<ID>.AgeRange.  For each ID, Stat.Habitat.Flags will be used to dictate the output.
+; EXAMPLE: Stat.Habitat.Example.VegTypes = {1,3,4}                                           ; The vegetation type criteria for a given habitat statistic.
+; EXAMPLE: Stat.Habitat.Example.AgeRange = {5,101}                                           ; The non-inclusive lower and upper bounds for the frame age criteria of a given habitat statistic.
+
+; CLIMATE
+Climate.IsMonthly                        = TRUE                                              ; If true, Climate.TempMonths and PrecipMonths must be provided and the new fire equation based on monthly climate will be used.  Monthly data does not work with SPATIAL or CONSTANT climate.value.types.
+Climate.NumHistory                       = 1                                                ; The number of years to remember climate history  including the current year.
+Climate.TransitionYears                  = {1110}                                               ; The years in which fire type transitions occur.
+Climate.Values.Type                      = {"EXPLICIT"}                                      ; CONSTANT: Single temp and precip value used for every cell over all years and reps.  SPATIAL: Read in spatially unique temp and precip values from a file once and reuse it each year and rep.  EXPLICIT: Read in spatially unique temp and precip values from a different file each year.  Year is appended as _YR
+Climate.Values.Temp.Constant             = {0.}                                              ; Constant temperature value for entire simulation on all land cells.
+Climate.Values.Precip.Constant           = {0.}                                              ; Constant precipitation value for entire simulation on all land cells.
+Climate.Values.Temp.File                 = {"Climate/cru_TS31/historical/tas/tas_mean_C_alf_cru_TS31.tif"}                   ; Base filename for temperature maps.
+Climate.Values.Precip.File               = {"Climate/cru_TS31/historical/pr/pr_total_mm_alf_cru_TS31.tif"}                   ; Base filename for precipitation maps.
+Climate.Values.RandExplicit.MinYear      = {0}                                               ; For use with RANDEXPLICIT climate type: Minimum simulation year for the random selection of climate temperature and precipitation maps.
+Climate.Values.RandExplicit.MaxYear      = {101}                                               ; For use with RANDEXPLICIT climate type: Maximum simulation year for the random selection of climate temperature and precipitation maps.
+Climate.Values.RandExplicit.Replicate    = {FALSE}                                           ; If true  the RANDOMEXPLICIT climate type will apply the same random sequence of climate files every rep.  Otherwise a different sequence is genereated per rep.
+Climate.Flammability.File		 		 = "/big_scratch/mfleonawicz/Alf_Files_20121129/gbmFlamMaps_cru_TS31_historical/basic_121013/copy_1950_2009_to_1830_2009/gbm.flamm.tif" ;basic_111313/gbm.flamm.tif"  ;Climate Flammibility Map path
+Climate.Offsets.Type                     = {"NONE"}                                          ; NONE: No offsets applied.  CONSTANT: Single temp and precip offset used for all cells on all years and reps. FILE: Offsets are read in from a file.  RANDOM: Offsets are generated stochastically.
+Climate.Offsets.File                     = {"na"}                                            ; The file to use as inputoutput when using the FILE offset type.
+Climate.Offsets.Constant.Temp            = {0.}                                              ; The temperature offset used when for CONSTANT offset type scenarios.
+Climate.Offsets.Constant.Precip          = {0.}                                              ; The precipitation offset used when for CONSTANT offset type scenarios.
+Climate.Offsets.Random.Temp.Mean         = {0.}                                              ; The mean of the offset from climate temperatures.  Mean is of course expected to be 0 as the mean difference from the mean for that cell should be 0.
+Climate.Offsets.Random.Temp.StdDev       = {0.}                                              ; The standard deviation of the offset from mean climate temperatures.
+Climate.Offsets.Random.Precip.Mean       = {0.}                                              ; The mean of the offset from mean climate precipitation.
+Climate.Offsets.Random.Precip.StdDev     = {0.}                                              ; The standard deviation of the offset from mean climate precipitation.
+Climate.Offsets.Random.Replicate         = {FALSE}                                           ; If true  RANDOM offset type will apply the same stochastic offset sequence every rep.  Otherwise a different sequence is genereated per rep.
+Climate.StepsAndRampsEnabled             = FALSE                                             ; If true  Ramps and Steps will be applied to the temporal offsets
+Climate.Offsets.TempStepYear             = {}                                                ; The year that temperature steps occur.  Must be a multiple of TempStep to occur.
+Climate.Offsets.TempStep                 = {}                                                ; The amount of the step that occurs in the specified year.
+Climate.Offsets.TempRampYear             = {}                                                ; The year that temperature ramps change  i.e. the new ramp is applied if the year is >  the specified year.
+Climate.Offsets.TempRamp                 = {}                                                ; The ramp (amount per year) that starts in the specified year.
+Climate.Offsets.PrecipStepYear           = {}                                                ; The year that precipitation steps occur.  Must be a multiple of TempStep to occur.
+Climate.Offsets.PrecipStep               = {}                                                ; The amount of the step that occurs in the specified year.
+Climate.Offsets.PrecipRampYear           = {}                                                ; The year that precipitation ramps change  i.e. the new ramp is applied if the year is >  the specified year.
+Climate.Offsets.PrecipRamp               = {}                                                ; The ramp (amount per year) that starts in the specified year.
+
+; SUCCESSION
+CropNeighbors                            = FALSE                                             ; Should the neighbours algorithm crop calls to cells outside the circular boundary defined by size or should it include all the cells withing the square boundary defined by size.
+
+
+; FIRE BEHAVIOR
+Fire.Types                               = {"SPATIAL"}                                         ; FIXED: Single ignition and sensitivity factor used. SPATIAL: Read ignition and sensitivity factors from files.  HISTORICAL: Burns are scheduled across the landscape.
+Fire.TypeTransitionYears                 = {1110}                                               ; The years in which fire type transitions occur.
+Fire.Enabled                             = TRUE                                              ; Enable the fire model - usually set to true.
+Fire.SpreadRadius                        = 1000                                              ; The maximum distance fire can spread (meters) - if CropNeighbours is set to false and this is less than CellSize  it will check the adjacent cells only
+Fire.SpreadParms                         = {0., 500.}                                        ; The mean and stddev of the fire spread weighting function.  Mean should always remain 0.
+Fire.Climate                             = {7.5, 0.125, -0.08, 0.37, 0.70, -0.012, -0.002, 0.005}                     ; {6.775, 0.1, -0.08, 0.17, 0.35, -0.01275, 0.002, 0.005}Relationship between fire probability and climate.  Results of a regression analysis.
+Fire.IgnoreFirstInterval                 = TRUE                                              ; Ignore the first fire interval for a cell when calculating statistics - used to help eliminate startup bias in statistical calculations.
+Fire.IgnitionFactor                      = {0.002}                                          ; Fire ignition multiplier - used to tweak fire ignition rates
+Fire.Sensitivity                         = {66000.}                                         ; General fire sensitivity parameter - used to tweak over fire sizenumber for a region
+Fire.MaxEmpiricalFireSizeEvent           = 500                                              ;4000 Maximum fire size event as observed in empirical data.
+Fire.MaxEmpiricalFireSizeEventWeight     = 1.0                                               ;.7 Weight to be applied to fire spread probability when fire size exceeds the maximum.
+Fire.Historical                          = {""}                                              ; Base filename for historical fire maps.
+Fire.HumanIgnition.Basename              = "Fire/HumanIgnitions/HIg_Default_0.txt"      ; Base filename for human igntion fire maps.   Map Legend: 0 No human ignition  1 Possible human ignition (dependent on Human Ignition Prob).
+Fire.Spatial.IgnitionFactor              = {"/big_scratch/mfleonawicz/Alf_Files_20121129/ignition.tif"} ;{"Fire/Spatial/I2_ER_017_012_032_135.tif"}    ;ORIG: I_ER_017_012_032_115.txt*was075 Filename for spatially explicit ignition map.
+Fire.Spatial.Sensitivity                 = {"/big_scratch/mfleonawicz/Alf_Files_20121129/sensitivity.tif"} ;{"Fire/Spatial/S2_ER_305_325_235_305.tif"}    ;ORIG: S_ER_325_325_235_305.txt*Filename for spatially explicit sensitivity map.
+Fire.Suppression.On                      = FALSE                                              ; Apply suppression maps to fire spread caclulations?
+Fire.Suppression.Basename                = "Fire/Suppression/old_mngt.txt"          ; Base filename for suppression maps. Map Legend: 1-5 where 1 Most Suppression and 5 Least.
+Fire.Suppression.Tran.Years              = {0,34,56}                                           ; Year of suppression transitions (## '0' redundant here, but would make it easier to keep track of multiplier arrays below ##)
+Fire.Suppression.Tran.HasNewMap          = {TRUE,TRUE,TRUE}                                 ; FALSE = do not input new map, TRUE = input new map (must be supplied w corresponding <base>_tran.year.txt)
+Fire.Suppression.Tran.Class1             = {1.0, 0.05, 0.05}                                   ; Highest suppression level.  Used as a multiplier in the fire spread function.
+Fire.Suppression.Tran.Class2             = {1.0, 0.15, 0.15}                                   ; Used as a multiplier in the fire spread function.
+Fire.Suppression.Tran.Class3             = {1.0, 0.6, 0.6}                                   ; Used as a mult iplier in the fire spread function.
+Fire.Suppression.Tran.Class4             = {1.0, 1.0, 1.0}                                   ; Used as a multiplier in the fire spread function.
+Fire.Suppression.Tran.Class5             = {1.0, 1.0, 1.0}                                   ; Lowest suppression level. Usually 1 to give no suppression. Used as a multiplier in the fire spread function.
+Fire.Suppression.Tran.Threshold.FireSize = {28461, 28461, 28461}                                        ; The cutting point where suppressions stop being applied  because the sum of the year's fire sizes exceeds the capability of available suppression resources.
+Fire.Suppression.Tran.Threshold.Ignitions = {500, 500, 500}                                          ; The cutting point where suppressions stop being applied  because the amount of ignitions for the year exceeds the capability of available suppression resources.
+
+BurnSeverity.FxnOfFireSize = {-3, 0.00333}	; The intercept and slope for logistic regression fxn returning probability of High Severity (level 3 or 4) 
+BurnSeverity.LSS-vs-HSS.wt = .5 		; (0,1); Probability that a burn that is assigned High Severity has HSS.  Low value is more likely to be LSS (level 3), high value is more likely to be HSS (level 4). 
+BurnSeverity.Low-vs-Moderate.wt = .5		; (0,1); Probability that a burn not assigned High Severity has Moderate Severity. Low value is more likely to give Low Severity (level 1), high value is more likely give Moderate (level 2)
+BurnSeverity.FlatTopo.wt = .5			; (0,1); Prob that Topo spatial correlation overrides initial Severity assignment; eg takes on Severity of ‘Spreader cell’ 
+BurnSeverity.ComplexTopo.wt = .2 		; (0,1); Prob that Topo spatial correlation overrides initial Severity assignment 
+
+
+
+
+
+; NO VEG
+NoVeg                                    = 0                                                 ; The species number for the default frame type - should be 0 if possible
+
+
+; TUNDRA
+Tundra                                   = 1                                                 ; The species number for this species
+Tundra.StartAge                          = {40., 1.}                                         ; Parameters for the starting age function.  If one parameter is specified assume a constant distribution.  Otherwise  parameters are the lifetime and shape parameters for a Weibull distribution.
+Tundra.FireProb.IsAgeDependent		= TRUE						     ;If TRUE: Tundra.FirePorb requires an array of three parameters {k,a,b} in that order for a logistic function k(1+exp(a-b*x)) used to translate age to fire factor. If FALSE: Tundra.FireProb requires a single constant value (no array).
+Tundra.FireProb                          = {0.3,4.0,0.04} ;{0.44,4.0,0.04}                                 		;0.77,0.73 Probablity of this species type burning.
+Tundra.HumanFireProb                     = 2.432667E-05                                      ; Probability of human causes will cause this species type  to burn.
+Tundra.Spruce.EstBA                      = 23.5                                              ; Estimate of the basal area of mature forest - used to calculate seed dispersal for the initial BA assignment routine.
+Tundra.SeedRange                         = 1000                                              ; Distance to the maximum seed source in meters.
+Tundra.SeedSource                        = {35., 0.95}                                       ; The mean travel distance(meters) and fraction of thin tail (1-fraction fat tail) in the distribution kernel.
+Tundra.Seed.BasalArea                    = 70000                                             ; The number of seedsHa produced per unit basal area (m2/Ha).
+Tundra.Seedling                          = 5000                                              ; Seed to seedling ratio including viability factor.
+Tundra.SeedlingBA                        = 7.854E-05                                         ; Initial basal area of a seedling (m2) - based on a 5mm diameter
+Tundra.History                           = 20                                                ; The number of years of climate that a deciduous frame uses to make decisions.  Includes the current year.
+Tundra.SeedEstParms                      = {7.5, 0.085}                                      ; Seedling establishment parameters -  cuttoff temp  avg degree daysyear cutoff
+Tundra.MeanGrowth                        = 0.00044                                           ; Mean spruce growth (m) - this discounts the known trend in growth through time.
+Tundra.ClimGrowth                        = {0., 0., 0.}                                      ; Three coefficients (Int  Temp  Precip) for the relative growth factor - from a regression against climate.
+Tundra.CalFactor                         = {0., 0.}                                          ; Calibration factors to move from cohort growth model to exponential growth model -  growth  seed set
+Tundra->Spruce.BasalArea                 = 10                                                ; Basal area at which tundra transitions to spruce (m2Ha).  A mature spruce stand is assumed to be about double this.
+Tundra.IgnitionDepressor 		 = 0.5  					     ; [optional]  Value should be between 0 and 1.  Decreases the likelihood of ignitions for any cell of this species.
+
+; BLACK SPRUCE
+BSpruce                                  = 2                                                 ; The species number for this species
+BSpruce.StartAge                         = {3.59, 0.87}                                      ; A constant distribution is used if only one parameter is specified.   Otherwise two parameters should be specified: the lifetime and the shape parameters for a Weibull distribution.
+BSpruce.FireParms                        = {0.05,4.0,0.08} ;{0.7, 4.0, 0.08}                               ;0.95,0.97,0.90, 0.92,0.97Parameters for the fire age function : k   Max Fire Factor  a   Age Coefficient (Age   ab)  b   Slope Coefficient
+BSpruce.HumanFireProb                    = 0.00119969                                        ; Probability of human causes will cause this species type  to burn.
+
+
+; SPRUCE
+WSpruce                                  = 3                                                 ; The species number for this species
+WSpruce.StartAge                         = {11.3, 2.36}                                      ; A constant distribution is used if only one parameter is specified.   Otherwise two parameters should be specified: the lifetime and the shape parameters for a Weibull distribution.
+WSpruce.FireParms                        = {0.05,8.0,0.08} ;{0.6, 8., 0.08}                               ; 0.87Parameters for the fire age function : k   Max Fire Factor  a   Age Coefficient (Age   ab)  b   Slope Coefficient
+WSpruce.HumanFireProb                    = 0.002184466                                       ; Probability of human causes will cause this species type  to burn.
+
+
+
+; DECIDUOUS
+Decid                                    = 4                                                 ; The species number for this species
+Decid.StartAge.WSpruce                   = {9.}                                              ; A constant distribution is used if only one parameter is specified.   Otherwise two parameters should be specified: the lifetime and the shape parameters for a Weibull distribution.
+Decid.StartAge.BSpruce                   = {4.}                                              ; A constant distribution is used if only one parameter is specified.   Otherwise two parameters should be specified: the lifetime and the shape parameters for a Weibull distribution.
+Decid.FireProb.IsAgeDependent		= FALSE						;If TRUE: Decid.FirePorb requires an array of three parameters {k,a,b} in that order for a logistic function k(1+exp(a-b*x)) used to translate age to fire factor. If FALSE: Decid.FireProb requires a single constant value (no array).
+Decid.FireProb                           = 0.01 ;0.1                                               ;0.15,0.125(.125),(.03).25 Probability of this species type burning.
+Decid.HumanFireProb                      = 0.003060109                                       ; Probability of human causes will cause this species type  to burn.
+Decid.History                            = 20                                                ; The number of years of climate that a deciduous frame uses to make decisions.  Includes the current year.
+Decid->Tundra.Parms                      = {4., 19.32}                                       ; Degree-years are integrated from base A (i.e. temp < A).  A transition occurs if the integrand exceeds B*(The maximum number of steps i.e. HistoryTimeStep).
+
+; The following 8 fields are sets of two coefficients, {A, B}, used depending on the trajectory and last burn severity of the given decid cell.
+; The chosen values are used in a linear function relating age to the probability of transitioning to white or black spruce: A*Age + B.
+Decid->WSpruce.BurnSeverity[1] = {0.001428571, -0.07142857}    ;(***50:120***){0.001428571, -0.07142857}current: 40:90, 1 = Low Severity 20:40 years
+Decid->WSpruce.BurnSeverity[2] = {0.001000000, -0.07500000}    ;(***75:150***)(***75:150***)current: 40:90, 2 = Moderate Severity 40:60 years
+Decid->WSpruce.BurnSeverity[3] = {0.001000000, -0.09000000}   ;(***90:170)current: 90:170, 3 = High Severity + Low Surface Severity 60:90 years
+Decid->WSpruce.BurnSeverity[4] = {0.001000000, -0.09000000}   ;(***90:170)current: 90:170, 4 = High Severity + High Surface Severity 90:130 years
+
+Decid->BSpruce.BurnSeverity[1] = {0.001818182, -0.06363636}   ;(**NEW 35:90***)  {0.001666667, -0.03333333}(***20:75***)current: 40:90, 1 = Low Severity 5:15 years
+Decid->BSpruce.BurnSeverity[2] = {0.001428571, -0.07142857}    ;(***50:120***) {0.001666667, -0.03333333}(***20:75***)({0.001818182, -0.06363636}***35:90***)current: 40:90, 2 = Moderate Severity 15:30 years
+Decid->BSpruce.BurnSeverity[3] = {0.001000000, -0.07500000}    ;(***75:150***)  {0.001818182, -0.06363636}(***35:90***)(was***50:120)current: 75:150, 3 = High Severity + Low Surface Severity 30:50 years
+Decid->BSpruce.BurnSeverity[4] = {0.001000000, -0.07500000}    ;(***75:150***)  {0.001818182, -0.06363636}(***35:90***)(was***50:120)current: 75:150, 4 = High Severity + High Surface Severity 50:90 years {0.002857143, -0.1428571}
+
+;##### Calibration VII (prior to Precip fix)
+;Decid->WSpruce.BurnSeverity[1] = {0.001428571, -0.07142857}    ;(***50:120***){0.001428571, -0.07142857}current: 40:90, 1 = Low Severity 20:40 years
+;Decid->WSpruce.BurnSeverity[2] = {0.001428571, -0.07142857}    ;(NEW*50:120***)(***75:150***)current: 40:90, 2 = Moderate Severity 40:60 years
+;Decid->WSpruce.BurnSeverity[3] = {0.001000000, -0.09000000}   ;(***90:170)current: 90:170, 3 = High Severity + Low Surface Severity 60:90 years
+;Decid->WSpruce.BurnSeverity[4] = {0.001000000, -0.09000000}   ;(***90:170)current: 90:170, 4 = High Severity + High Surface Severity 90:130 years
+
+;Decid->BSpruce.BurnSeverity[1] = {0.001818182, -0.06363636}   ;(**NEW 35:90***)  {0.001666667, -0.03333333}(***20:75***)current: 40:90, 1 = Low Severity 5:15 years
+;Decid->BSpruce.BurnSeverity[2] = {0.001818182, -0.06363636}   ; (**NEW 35:90***) {0.001666667, -0.03333333}(***20:75***)({0.001818182, -0.06363636}***35:90***)current: 40:90, 2 = Moderate Severity 15:30 years
+;Decid->BSpruce.BurnSeverity[3] = {0.001428571, -0.07142857}    ;(NEW*50:120***)  {0.001818182, -0.06363636}(***35:90***)(was***50:120)current: 75:150, 3 = High Severity + Low Surface Severity 30:50 years
+;Decid->BSpruce.BurnSeverity[4] = {0.001428571, -0.07142857}    ;(NEW*50:120***)  {0.001818182, -0.06363636}(***35:90***)(was***50:120)current: 75:150, 4 = High Severity + High Surface Severity 50:90 years {0.002857143, -0.1428571}
+
+;#####FBX, SummReport Success Parms
+;Decid->WSpruce.BurnSeverity[1] = {0.001428571, -0.07142857}    ;(***50:120***)current: 40:90, 1 = Low Severity 20:40 years
+;Decid->WSpruce.BurnSeverity[2] = {0.001000000, -0.07500000}   ;(***75:150***)current: 40:90, 2 = Moderate Severity 40:60 years
+;Decid->WSpruce.BurnSeverity[3] = {0.001000000, -0.07500000}   ;(***75:150***)current: 90:170, 3 = High Severity + Low Surface Severity 60:90 years
+;Decid->WSpruce.BurnSeverity[4] = {0.001000000, -0.07500000}   ;(***75:150***), 4 = High Severity + High Surface Severity 90:130 years
+
+;Decid->BSpruce.BurnSeverity[1] = {0.001428571, -0.07142857}    ;(***50:120***)current: 40:90, 1 = Low Severity 5:15 years
+;Decid->BSpruce.BurnSeverity[2] = {0.001000000, -0.07500000}   ;(***75:150***)current: 40:90, 2 = Moderate Severity 15:30 years
+;Decid->BSpruce.BurnSeverity[3] = {0.001000000, -0.07500000}   ;(***75:150***)current: 75:150, 3 = High Severity + Low Surface Severity 30:50 years
+;Decid->BSpruce.BurnSeverity[4] = {0.001000000, -0.07500000}   ;(***75:150***)current: 75:150, 4 = High Severity + High Surface Severity 50:90 years {0.002857143, -0.1428571}
+
+;Decid->WSpruce.BurnSeverity[1] = {0.003333333, -0.3000000}     ;1 = Low Severity 20:40 years
+;Decid->WSpruce.BurnSeverity[2] = {0.003333333, -0.3000000}     ;2 = Moderate Severity 40:60 years
+;Decid->WSpruce.BurnSeverity[3] = {0.003333333, -0.3000000}     ;3 = High Severity + Low Surface Severity 60:90 years
+;Decid->WSpruce.BurnSeverity[4] = {0.003333333, -0.3000000}     ;4 = High Severity + High Surface Severity 90:130 years
+
+;Decid->BSpruce.BurnSeverity[1] = {0.001428571, -0.07142857}     ;(***50:120)1 = Low Severity 5:15 years
+;Decid->BSpruce.BurnSeverity[2] = {0.001428571, -0.07142857}     ;2 = Moderate Severity 15:30 years
+;Decid->BSpruce.BurnSeverity[3] = {0.001428571, -0.07142857}     ;3 = High Severity + Low Surface Severity 30:50 years
+;Decid->BSpruce.BurnSeverity[4] = {0.001428571, -0.07142857}     ;4 = High Severity + High Surface Severity 50:90 years
+
+; GRASSLAND
+;Grassland                      = 5                                                 ; The species number for this species
+;Grassland.StartAge             = {11.3, 2.36}                                      ; A constant distribution is used if only one parameter is specified.   Otherwise two parameters should be specified: the lifetime and the shape parameters for a Weibull distribution.
+;Grassland.FireParms            = {0.22623, 8., 0.08}                               ; Parameters for the fire age function : k   Max Fire Factor  a   Age Coefficient (Age   ab)  b   Slope Coefficient
+;Grassland.HumanFireProb        = 0.002184466                                       ; Probability of human causes will cause this species type  to burn.
+;Decid->Grassland.History            = 3;
+;Decid->Grassland.TempMonths         = {3,4,5,6}                                 ; Months, in numeric form, to read temperature raster file input to be used for Decid to Grassland succession.
+;Decid->Grassland.PrecipMonths       = {6,7}                                     ; Months, in numeric form, to read precipitation raster file input to be used for Decid to Grassland succession.
+;Decid->Grassland.ClimateWeight      = {.1, 1.0,  .03,.04,.05,.06,  .006,0.007} ; A variable length array of regression function parameters. {Intercept, IfFlatInterceptAdjustment, [a temp multiplier per month in Grassland.TempMonths], [a precip multiplier per month in Grassland.PrecipMonths]}
+;Decid->Grassland.ClimateThreshholds = {2, 2.5, 1, 1, 3, 3.2}                 ; Array of 6 thresholds, one per burn severity level, that must be exceeded by the the accumulated results of the regression equation. {Low, Moderate, High_LSS, High_HSS, Low_WasGrassland, Moderate_WasGrassland}
+
+; ShrubTundra 
+ShrubTundra                                    = 5                                                 ; The species number for this species
+ShrubTundra.StartAge                          = {40., 1.}                                         ; Parameters for the starting age function.  If one parameter is specified assume a constant distribution.  Otherwise  parameters are the lifetime and shape parameters for a Weibull distribution.
+ShrubTundra.FireProb.IsAgeDependent		= TRUE						     ;If TRUE: Tundra.FirePorb requires an array of three parameters {k,a,b} in that order for a logistic function k/(1+exp(a-b*x)) used to translate age to fire factor. If FALSE: Tundra.FireProb requires a single constant value (no array).
+ShrubTundra.FireProb                          = {0.8,1.0,1.0} ;3.0,6.0,0.1                                		;0.77,0.73 Probablity of this species type burning.
+ShrubTundra.HumanFireProb                     = 2.432667E-05                                      ; Probability of human causes will cause this species type  to burn.
+ShrubTundra.Spruce.EstBA                      = 23.5                                              ; Estimate of the basal area of mature forest - used to calculate seed dispersal for the initial BA assignment routine.
+ShrubTundra.SeedRange                         = 1000                                              ; Distance to the maximum seed source in meters.
+ShrubTundra.SeedSource                        = {35., 0.95}                                       ; The mean travel distance(meters) and fraction of thin tail (1-fraction fat tail) in the distribution kernel.
+ShrubTundra.Seed.BasalArea                    = 70000                                             ; The number of seeds/Ha produced per unit basal area (m2/Ha).
+ShrubTundra.Seedling                          = 5000                                              ; Seed to seedling ratio including viability factor.
+ShrubTundra.SeedlingBA                        = 7.854E-05                                         ; Initial basal area of a seedling (m2) - based on a 5mm diameter
+ShrubTundra.History                           = 20                                                ; The number of years of climate that a deciduous frame uses to make decisions.  Includes the current year.
+ShrubTundra.SeedEstParms                      = {7.5, 0.085}                                      ; Seedling establishment parameters -  cuttoff temp  avg degree days/year cutoff
+ShrubTundra.MeanGrowth                        = 0.00044                                           ; Mean spruce growth (m) - this discounts the known trend in growth through time.
+ShrubTundra.ClimGrowth                        = {0., 0., 0.}                                      ; Three coefficients (Int  Temp  Precip) for the relative growth factor - from a regression against climate.
+ShrubTundra.CalFactor                         = {0., 0.}                                          ; Calibration factors to move from cohort growth model to exponential growth model -  growth  seed set
+ShrubTundra->Spruce.BasalArea                 = 10                                                ; Basal area at which tundra transitions to spruce (m2/Ha).  A mature spruce stand is assumed to be about double this.
+ShrubTundra.IgnitionDepressor 		 = 0.99  					     ; [optional]  Value should be between 0 and 1.  Decreases the likelihood of ignitions for any cell of this species.
+ShrubTundra.SpruceTransitionYear=2100;
+ShrubTundra.TundraTransitionYear=2100;
+ShrubTundra.Transitions=FALSE;
+
+; GraminoidTundra 
+GraminoidTundra                                    = 6                                                 ; The species number for this species
+GraminoidTundra.StartAge                          = {40., 1.}                                         ; Parameters for the starting age function.  If one parameter is specified assume a constant distribution.  Otherwise  parameters are the lifetime and shape parameters for a Weibull distribution.
+GraminoidTundra.FireProb.IsAgeDependent		= TRUE						     ;If TRUE: Tundra.FirePorb requires an array of three parameters {k,a,b} in that order for a logistic function k/(1+exp(a-b*x)) used to translate age to fire factor. If FALSE: Tundra.FireProb requires a single constant value (no array).
+GraminoidTundra.FireProb                          = {0.35,1.0,1.0} ;{1.50,6.0,0.1}                                 		;0.77,0.73 Probablity of this species type burning.
+GraminoidTundra.HumanFireProb                     = 2.432667E-05                                      ; Probability of human causes will cause this species type  to burn.
+GraminoidTundra.Spruce.EstBA                      = 23.5                                              ; Estimate of the basal area of mature forest - used to calculate seed dispersal for the initial BA assignment routine.
+GraminoidTundra.SeedRange                         = 1000                                              ; Distance to the maximum seed source in meters.
+GraminoidTundra.SeedSource                        = {35., 0.95}                                       ; The mean travel distance(meters) and fraction of thin tail (1-fraction fat tail) in the distribution kernel.
+GraminoidTundra.Seed.BasalArea                    = 70000                                             ; The number of seeds/Ha produced per unit basal area (m2/Ha).
+GraminoidTundra.Seedling                          = 5000                                              ; Seed to seedling ratio including viability factor.
+GraminoidTundra.SeedlingBA                        = 7.854E-05                                         ; Initial basal area of a seedling (m2) - based on a 5mm diameter
+GraminoidTundra.History                           = 20                                                ; The number of years of climate that a deciduous frame uses to make decisions.  Includes the current year.
+GraminoidTundra.SeedEstParms                      = {7.5, 0.085}                                      ; Seedling establishment parameters -  cuttoff temp  avg degree days/year cutoff
+GraminoidTundra.MeanGrowth                        = 0.00044                                           ; Mean spruce growth (m) - this discounts the known trend in growth through time.
+GraminoidTundra.ClimGrowth                        = {0., 0., 0.}                                      ; Three coefficients (Int  Temp  Precip) for the relative growth factor - from a regression against climate.
+GraminoidTundra.CalFactor                         = {0., 0.}                                          ; Calibration factors to move from cohort growth model to exponential growth model -  growth  seed set
+GraminoidTundra->Spruce.BasalArea                 = 10                                                ; Basal area at which tundra transitions to spruce (m2/Ha).  A mature spruce stand is assumed to be about double this.
+GraminoidTundra.IgnitionDepressor 		 = 0.99  					     ; [optional]  Value should be between 0 and 1.  Decreases the likelihood of ignitions for any cell of this species.
+GraminoidTundra.SpruceTransitionYear=2100;
+GraminoidTundra.TundraTransitionYear=2100;
+GraminoidTundra.Transitions=FALSE;
+GraminoidTundra.SummerWarmthIndex=27;
+
+; WetlandTundra
+WetlandTundra                                   = 7                                                 ; The species number for this species
+WetlandTundra.StartAge                          = {40., 1.}                                         ; Parameters for the starting age function.  If one parameter is specified assume a constant distribution.  Otherwise  parameters are the lifetime and shape parameters for a Weibull distribution.
+WetlandTundra.FireProb.IsAgeDependent		= TRUE						     ;If TRUE: Tundra.FirePorb requires an array of three parameters {k,a,b} in that order for a logistic function k/(1+exp(a-b*x)) used to translate age to fire factor. If FALSE: Tundra.FireProb requires a single constant value (no array).
+WetlandTundra.FireProb                          = {1.00,1.0,1.0} ;{.10,6.0,0.1}                                 		;0.77,0.73 Probablity of this species type burning.
+WetlandTundra.HumanFireProb                     = 2.432667E-05                                      ; Probability of human causes will cause this species type  to burn.
+WetlandTundra.Spruce.EstBA                      = 23.5                                              ; Estimate of the basal area of mature forest - used to calculate seed dispersal for the initial BA assignment routine.
+WetlandTundra.SeedRange                         = 1000                                              ; Distance to the maximum seed source in meters.
+WetlandTundra.SeedSource                        = {35., 0.95}                                       ; The mean travel distance(meters) and fraction of thin tail (1-fraction fat tail) in the distribution kernel.
+WetlandTundra.Seed.BasalArea                    = 70000                                             ; The number of seeds/Ha produced per unit basal area (m2/Ha).
+WetlandTundra.Seedling                          = 5000                                              ; Seed to seedling ratio including viability factor.
+WetlandTundra.SeedlingBA                        = 7.854E-05                                         ; Initial basal area of a seedling (m2) - based on a 5mm diameter
+WetlandTundra.History                           = 20                                                ; The number of years of climate that a deciduous frame uses to make decisions.  Includes the current year.
+WetlandTundra.SeedEstParms                      = {7.5, 0.085}                                      ; Seedling establishment parameters -  cuttoff temp  avg degree days/year cutoff
+WetlandTundra.MeanGrowth                        = 0.00044                                           ; Mean spruce growth (m) - this discounts the known trend in growth through time.
+WetlandTundra.ClimGrowth                        = {0., 0., 0.}                                      ; Three coefficients (Int  Temp  Precip) for the relative growth factor - from a regression against climate.
+WetlandTundra.CalFactor                         = {0., 0.}                                          ; Calibration factors to move from cohort growth model to exponential growth model -  growth  seed set
+WetlandTundra->Spruce.BasalArea                 = 10                                                ; Basal area at which tundra transitions to spruce (m2/Ha).  A mature spruce stand is assumed to be about double this.
+WetlandTundra.IgnitionDepressor 		 = 0.99  					     ; [optional]  Value should be between 0 and 1.  Decreases the likelihood of ignitions for any cell of this species.
