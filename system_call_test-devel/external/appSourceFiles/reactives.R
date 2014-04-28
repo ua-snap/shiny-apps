@@ -122,7 +122,7 @@ Obs_updateFiles <- reactive({
 				
 				slurm_arguments <- paste("-D", outDir)
 				buffers <- paste(1000*as.numeric(unlist(strsplit(input$frp_buffers,","))), collapse=",")
-				buffers <- paste0("c(", buffers, ")", collapse="")
+				buffers <- paste0("c\(", buffers, "\)", collapse="")
 				frp_arguments <- c(paste0("pts=", input$frp_pts), paste0("'buffers=", buffers, "'"))
 				if(input$skipAlf) postprocOnly <- 0 else postprocOnly <- 1
 				arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$fif_files, postprocOnly, frp_arguments[1], frp_arguments[2]), collapse=" ")
