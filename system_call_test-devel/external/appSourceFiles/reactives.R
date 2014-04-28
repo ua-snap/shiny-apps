@@ -128,7 +128,7 @@ Obs_updateFiles <- reactive({
 				sbatch_string <- paste(user,"ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments)
 				print(sbatch_string)
 				system(sbatch_string)
-				x <- paste("Alfresco job started on Atlas:",sbatch_string)
+				x <- paste("Alfresco job started on Atlas:\n",gsub(" ", " \n", sbatch_string))
 			}
 			if(substr(x,1,8)!="Alfresco") x <- "Alfresco job did not launch"
 		}
