@@ -75,7 +75,7 @@ Obs_updateFiles <- reactive({
 	x <- "No Alfresco job started yet"
 	if(is.null(input$goButton_fif) || input$goButton_fif == 0) return(NULL)
 	isolate(
-	if( !(is.null(user_email_address()) || is.null(all_email_addresses()) || user_email_address() == "" || all_email_addresses() == "" || is.null(input$frp_pts)) ){
+	if( !(is.null(user_email_address()) || is.null(all_email_addresses()) || user_email_address() == "" || all_email_addresses() == "" || !length(input$frp_pts)) ){
 		if(!is.null(input$FireSensitivity) & !is.null(input$IgnitionFactor)){
 			fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
 			ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
@@ -123,7 +123,7 @@ Obs_updateFiles <- reactive({
 				slurm_arguments <- paste("-D", outDir)
 				buffers <- paste(1000*as.numeric(unlist(strsplit(input$frp_buffers,","))), collapse=",")
 				buffers <- paste0("c(", buffers, ")", collapse="")
-				frp_arguments <- paste0("pts=", input$frp_pts, collapse="")
+				frp_arguments <- paste0("pts=", input$frp_pts, " ", "'buffers=", buffers, "'", collapse="")
 				if(input$skipAlf) postprocOnly <- 0 else postprocOnly <- 1
 				arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$fif_files, postprocOnly, frp_arguments), collapse=" ")
 				sbatch_string <- paste(user,"ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments)
