@@ -122,7 +122,7 @@ Obs_updateFiles <- reactive({
 				slurm_arguments <- paste("-D", outDir)
 				buffers <- paste(1000*as.numeric(unlist(strsplit(input$frp_buffers,","))), collapse=",")
 				buffers <- paste0("c(", buffers, ")", collapse="")
-				frp_arguments <- paste0(input$frp_pts, " ", buffers, collapse="")
+				frp_arguments <- paste0("'pts=", input$frp_pts, "'", " ", "'buffers=", buffers, "'", collapse="")
 				if(input$skipAlf) postprocOnly <- 0 else postprocOnly <- 1
 				arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$fif_files, postprocOnly, frp_arguments), collapse=" ")
 				sbatch_string <- paste(user,"ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments)
