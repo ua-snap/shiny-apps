@@ -24,7 +24,7 @@ YearOfUniqueInputPerRep                  = 1900                                 
 ; SIMULATION
 RandSeed = 1234799211; A manually set number used to seed the random number generator.  If not set  the current time is used to seed the random number generator.
 Output.DetailLevel = "MAXIMUM"; MINIMAL: Show only run progress.  MODERATE: Show some interim calculations along with run detail.  MAXIMUM: Show maximum detail along with run detail.
-FirstYear = 1110;
+FirstYear = 1901;
 LastYear = 2012; 2009
 MaxReps = 30;100 The number of replicates to run the model (i.e. x replicates total).
 
@@ -70,7 +70,7 @@ MapCodes                                 = {"FSevHist", "FSev", "Veg", "Fire", "
 MapFlags                                 = {0x200051, 0x100051, 0x001051, 0x010051, 0x002051, 0x080051}   ; The output codes for the map in question.
 MapRepStart                              = {0, 0, 0, 0, 0, 0}                                      ; The first replication that outputs maps.
 MapRepFreq                               = {1, 0, 1, 0, 1, 1}                                      ; The year frequency to output maps.
-MapYearStart                             = {2009, 0, 1901, 0, 1901, 1110}                             ; The first year that outputs maps.
+MapYearStart                             = {2009, 0, 1901, 0, 1901, 1901}                             ; The first year that outputs maps.
 MapYearFreq                              = {1, 0, 1, 0, 1, 1}                                      ; The year frequency to output maps.
 
 
@@ -108,7 +108,7 @@ Stat.Habitat.Types                       = {}   ; The ID's for a habitat statist
 ; CLIMATE
 Climate.IsMonthly                        = TRUE                                              ; If true, Climate.TempMonths and PrecipMonths must be provided and the new fire equation based on monthly climate will be used.  Monthly data does not work with SPATIAL or CONSTANT climate.value.types.
 Climate.NumHistory                       = 1                                                ; The number of years to remember climate history  including the current year.
-Climate.TransitionYears                  = {1110}                                               ; The years in which fire type transitions occur.
+Climate.TransitionYears                  = {1901}                                               ; The years in which fire type transitions occur.
 Climate.Values.Type                      = {"EXPLICIT"}                                      ; CONSTANT: Single temp and precip value used for every cell over all years and reps.  SPATIAL: Read in spatially unique temp and precip values from a file once and reuse it each year and rep.  EXPLICIT: Read in spatially unique temp and precip values from a different file each year.  Year is appended as _YR
 Climate.Values.Temp.Constant             = {0.}                                              ; Constant temperature value for entire simulation on all land cells.
 Climate.Values.Precip.Constant           = {0.}                                              ; Constant precipitation value for entire simulation on all land cells.
@@ -143,7 +143,7 @@ CropNeighbors                            = FALSE                                
 
 ; FIRE BEHAVIOR
 Fire.Types                               = {"SPATIAL"}                                         ; FIXED: Single ignition and sensitivity factor used. SPATIAL: Read ignition and sensitivity factors from files.  HISTORICAL: Burns are scheduled across the landscape.
-Fire.TypeTransitionYears                 = {1110}                                               ; The years in which fire type transitions occur.
+Fire.TypeTransitionYears                 = {1901}                                               ; The years in which fire type transitions occur.
 Fire.Enabled                             = TRUE                                              ; Enable the fire model - usually set to true.
 Fire.SpreadRadius                        = 1000                                              ; The maximum distance fire can spread (meters) - if CropNeighbours is set to false and this is less than CellSize  it will check the adjacent cells only
 Fire.SpreadParms                         = {0., 500.}                                        ; The mean and stddev of the fire spread weighting function.  Mean should always remain 0.
