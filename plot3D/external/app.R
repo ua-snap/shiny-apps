@@ -7,7 +7,9 @@ source("external/appSourceFiles/io.sidebar.wp4.R",local=T)
 source("external/appSourceFiles/io.sidebar.wp5.R",local=T)
 source("external/appSourceFiles/io.sidebar.wp6.R",local=T)
 
-output$codeTab <- renderUI({ codeTab() })
+# Reactive expression (see reactives.R) for code tab in main panel
+# Ideal, but cannot do this on the server side due to a bug in the shinyAce package.
+#output$codeTab <- renderUI({ codeTab() })
 
 output$HLTheme <- renderUI({	selectInput("hltheme", "Code highlighting theme:", getAceThemes(), selected="clouds_midnight") })
 output$HLFontSize <- renderUI({ selectInput("hlfontsize", "Font size:", seq(8,24,by=2), selected=12) })
