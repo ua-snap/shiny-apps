@@ -26,16 +26,16 @@ RandSeed = 1234799211; A manually set number used to seed the random number gene
 Output.DetailLevel = "MAXIMUM"; MINIMAL: Show only run progress.  MODERATE: Show some interim calculations along with run detail.  MAXIMUM: Show maximum detail along with run detail.
 FirstYear = 1901;
 LastYear = 2012; 2009
-MaxReps = 30;100 The number of replicates to run the model (i.e. x replicates total).
+MaxReps = 32;100 The number of replicates to run the model (i.e. x replicates total).
 
 
 ; RASTER SETTINGS
 XULCorner = -656204.44; a.k.a, "x origin", "top left corner". Usually in meters.  Noatak = -453578.273188
 YULCorner = 2390439.786000; a.k.a, "y origin", "top left corner". Usually in meters.  Noatak = 2117431.76584
-XOffset = 204; number of pixels from the left to start counting columns  Default is 0
-YOffset = 273; number of pixels from the top to start counting rows   Default is 0
-XSize = 456; landscape's width in pixels.
-YSize = 236; landscape's height in pixels.
+XOffset = 320;204; number of pixels from the left to start counting columns  Default is 0
+YOffset = 320;273; number of pixels from the top to start counting rows   Default is 0
+XSize = 250;456; landscape's width in pixels.
+YSize = 125;236; landscape's height in pixels.
 CellSize = 1000; The size of each cell. The current size is in meters
 RequireAAEACProjectedInputRasters        = FALSE       ; (optional -- defaults to TRUE) if TRUE, each input raster file will be checked for the Alaska Albers projection.
 ApplyAAEACProjectionToOutputRasters      = TRUE       ; (optional -- defaults to TRUE) if TRUE, each output raster file will include metadata for the Alaska Albers projection.
