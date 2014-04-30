@@ -9,7 +9,7 @@ R_files <- paste0(c(
 showCode <- function(file, ht="600px"){
 	list(
 		h4(HTML(basename(file))),
-		aceEditor(gsub("\\.", "", basename(file)), value=paste(readLines(file), collapse="\n\n"), mode="r", height=ht, readOnly=TRUE)
+		aceEditor(gsub("\\.", "", basename(file)), value=paste(readLines(file), collapse="\\r"), mode="r", height=ht, readOnly=TRUE)
 	)
 }
 
