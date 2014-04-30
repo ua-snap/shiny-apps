@@ -1,1 +1,3 @@
+*.Rhistory
+restart.txt
 *pageviews.Rdata
