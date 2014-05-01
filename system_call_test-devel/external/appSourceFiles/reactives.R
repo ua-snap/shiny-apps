@@ -1,21 +1,4 @@
 # Datasets, variables
-sysCall <- reactive({
-	x <- "Did not attempt to run system call"
-	if(!is.null(input$goButton)){
-		if(input$goButton==0) return(x)
-		isolate({
-			server <- "atlas.snap.uaf.edu"
-			exec <- "sbatch"
-			file <- "~/shell.txt"
-			args <- "~/script.R 2 n=100 mean=10 sd=2"
-			system(paste("ssh",server,exec,file,args))
-			#tmpDir <- if(dirname(getwd())=="/home/uafsnap/shinyApps") "../tmpAppFiles" else if(dirname(getwd())=="/var/www/shiny-server/shiny-apps") "../tmpAppFiles"
-			#system(paste0(tmpDir,"/shell.txt ",tmpDir,"/script.R"))
-		})
-		x <- paste("Attempted to run system call. wd:",paste0(getwd(),"/shell.txt ",getwd(),"/script.R"))
-	}
-	return(x)
-})
 
 fif_mtime <- reactive({
 	x <- NULL
@@ -35,7 +18,6 @@ fif_lines <- reactive({
 	x <- gsub( "\\s+;.*.", ";", x)
 	x.title.lines <- which(substr(x,1,1)==";")
 	x[-x.title.lines] <- gsub( ";.*.", ";", x[-x.title.lines])
-	browser()
 	return(x)
 })
 
@@ -110,8 +92,8 @@ Obs_updateFiles <- reactive({
 				
 				# system calls begin here
 				# Create Alfresco run-specific output directories and give shiny group write permissions
-				system(paste(user, "ssh", server, "mkdir -p", outDir))
-				system(paste(user, "ssh", server, "chmod 2775", outDir))
+				system(paste("ssh", server, "mkdir -p", outDir))
+				system(paste("ssh", server, "chmod 2775", outDir))
 				
 				system(paste("ssh", server, "Rscript", "/big_scratch/mfleonawicz/Alf_Files_20121129/make_sensitivity_ignition_maps.R", input$IgnitionFactor, input$FireSensitivity))
 				system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco.slurm"), file.path(outDir,"RunAlfresco.slurm")))
@@ -126,7 +108,7 @@ Obs_updateFiles <- reactive({
 				frp_arguments <- paste0("pts=", input$frp_pts, " ", "'buffers=", buffers, "'", collapse=" ")
 				if(input$skipAlf) postprocOnly <- 0 else postprocOnly <- 1
 				arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$fif_files, postprocOnly, frp_arguments), collapse=" ")
-				sbatch_string <- paste(user,"ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments)
+				sbatch_string <- paste("ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments)
 				system(sbatch_string)
 				x <- paste("Alfresco job started on Atlas:\n",gsub(" ", " \n", sbatch_string))
 			}
@@ -137,4 +119,13 @@ Obs_updateFiles <- reactive({
 	return(x)
 }
 )
-	
+
+# Reactive expression for code tab in main panel
+# Ideal, but cannot do this on the server side due to a bug in the shinyAce package.
+#codeTab <- reactive({
+#	if(is.null(input$nlp)) return()
+#	id <- gsub("nlp_", "show_", input$nlp)
+#	show_list <- ls(pattern="^show_.*.R$", envir=.GlobalEnv)
+#	if(id %in% show_list) x <- tabPanel(paste0("tp_",id), get(id)) else x <- NULL
+#	x
+#})
