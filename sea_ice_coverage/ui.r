@@ -20,7 +20,7 @@ shinyUI(pageWithSidebar(
 			<div id="stats_header">
 			Modeled Arctic Sea Ice Coverage
 			<a href="http://accap.uaf.edu" target="_blank">
-			<img id="stats_logo" align="right" alt="ACCAP Logo" src="./img/ACCAP_acronym_100px.png" />
+			<img id="stats_logo" align="right" style="margin-left: 15px;" alt="ACCAP Logo" src="./img/ACCAP_acronym_100px.png" />
 			</a>
 			<a href="http://snap.uaf.edu" target="_blank">
 			<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" />
