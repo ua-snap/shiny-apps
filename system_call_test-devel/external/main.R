@@ -5,8 +5,8 @@ mainPanel(
 		tabPanel("View FIF", 
 			div(verbatimTextOutput("FIF_Lines"), style="height: 650px;"), value="fif"),
 		tabPanelAbout(),
-		id="tsp"#,
-		#type="pills",
-		#selected="home"
+		id="tsp",
+		type="pills",
+		selected="home"
 	)
 )

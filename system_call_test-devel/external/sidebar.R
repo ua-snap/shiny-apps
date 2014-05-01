@@ -50,6 +50,6 @@ sidebarPanel(
 			actionButton("goButton_fif","Save .fif / run Alfresco") #uiOutput("goButton_fif")
 		)
 	),
-	h5(textOutput("pageviews"))
-#)
+	conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
 )
+#)

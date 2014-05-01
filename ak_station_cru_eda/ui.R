@@ -48,7 +48,7 @@ shinyUI(pageWithSidebar(
 			uiOutput("regGGPLOTse"),
 			uiOutput("regGGPLOT")
 		),
-		h5(textOutput("pageviews"))
+		conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
 	),
 	mainPanel(
 		tabsetPanel(

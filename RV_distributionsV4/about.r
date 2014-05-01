@@ -57,6 +57,7 @@ function(){
 					HTML('<li>'),a('VGAM', href="http://cran.r-project.org/web/packages/VGAM/index.html", target="_blank"),HTML('</li>'),
 				HTML('</ul>'))
 			)
-		)
+		),
+		value="about"
 	)
 }

@@ -17,5 +17,5 @@ sidebarPanel(
 		div(class="row-fluid", div(class="span6", uiOutput("train.fraction")), div(class="span6", uiOutput("bag.fraction"))),
 		div(class="row-fluid", div(class="span6", uiOutput("cv.folds")), div(class="span6", uiOutput("n.minobsinnode")))
 	),
-	h5(textOutput("pageviews"))
+	conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
 )

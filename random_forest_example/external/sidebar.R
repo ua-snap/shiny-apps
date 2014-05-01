@@ -48,5 +48,5 @@ sidebarPanel_2(
 		id="nlp",
 		widths=c(12,1)
 	),
-	h5(textOutput("pageviews"))
+	conditionalPanel(condition="input.nlp==='about'", h5(textOutput("pageviews")))
 )

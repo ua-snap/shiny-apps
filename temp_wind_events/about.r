@@ -89,6 +89,7 @@ function(){
 					HTML('<ul>'),
 				HTML('</ul>'))
 			)
-		)
+		),
+		value="about"
 	)
 }

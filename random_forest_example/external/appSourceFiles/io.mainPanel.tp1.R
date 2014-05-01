@@ -114,6 +114,5 @@ mpContent <- reactive({
 				plotOutput("numVarPlot",height="auto"), value="numVar")
 		} else if(id=="about")  x <- tabPanelAbout()
 	}
-	print(input$nlp)
 	x
 })

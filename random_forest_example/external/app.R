@@ -203,6 +203,3 @@ output$pageviews <-	renderText({
 	save(pageviews,file="pageviews.Rdata")
 	paste("Visits:",pageviews)
 })
-
-# Temporary debugging 
-output$debugging <- renderPrint({ "This tab and others not yet available." }) # levels(dat.sub()$Month) }) # 
