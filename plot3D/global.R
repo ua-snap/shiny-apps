@@ -8,8 +8,8 @@ R_files <- paste0(c(
 
 showCode <- function(file, ht="600px"){
 	list(
-		h4(HTML(basename(file))), # the second gsub command in the aceEditor call is to ensure proper number or forward slashes display in browser with shinyAce
-		aceEditor(gsub('\\.', '', basename(file)), value=paste(gsub("\\\\", "\\\\\\\\", readLines(file)), collapse='\n'), mode='r', height=ht, readOnly=TRUE)
+		h4(HTML(basename(file))),
+		aceEditor(gsub('\\.', '', basename(file)), value=paste(readLines(file), collapse='\n'), mode='r', height=ht, readOnly=TRUE)
 	)
 }
 
