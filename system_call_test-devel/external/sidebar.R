@@ -19,7 +19,12 @@ sidebarPanel(
 					#div(class="span1",helpPopup('Enter additional email addresses','Results from the Alfresco run will be emailed to each address. For the time being, you must separate each email address with a comma and/or space.'))
 				),
 				div(class="row-fluid",
-					div(class="span12",uiOutput("FIF_Files"))#,
+					div(class="span6",uiOutput("JSON_Files"))#,
+					#div(class="span1",helpPopup('Choose .fif','Select a FIF from the list to use in your Alfresco run.'))
+				),
+				div(class="row-fluid",
+					div(class="span6",uiOutput("Year_Start")),
+					div(class="span6",uiOutput("Year_End"))
 					#div(class="span1",helpPopup('Choose .fif','Select a FIF from the list to use in your Alfresco run.'))
 				)#,
 				#uiOutput("goButton")
@@ -29,20 +34,20 @@ sidebarPanel(
 			checkboxInput("showWP2",h5("WP2"),TRUE),
 			conditionalPanel(condition="input.showWP2",
 				div(class="row-fluid",
-					div(class="span6",uiOutput("fif_FireSensitivity")),
-					div(class="span6",uiOutput("fif_IgnitionFactor"))
+					div(class="span6",uiOutput("JSON_FireSensitivity")),
+					div(class="span6",uiOutput("JSON_IgnitionFactor"))
 				),
 				div(class="row-fluid",
 					div(class="span6",uiOutput("FRP_pts")),
 					div(class="span6",uiOutput("FRP_buffers"))
 				),
 				div(class="row-fluid",
-					div(class="span6",uiOutput("Update_fif_Defaults")),
+					div(class="span6",uiOutput("Update_JSON_Defaults")),
 					div(class="span6",uiOutput("SkipAlf"))#,
 					#div(class="span1",helpPopup('Update .fif defaults','Check this box if you want to modify the FIF defaults file with your current parameter specifications when you submit your Alfresco run.
 					#	If checked, next time the app is launched, it will populate the parameter fields with your previous specifications.'))
 				),
-				actionButton("goButton_fif","Save .fif / run Alfresco") #uiOutput("goButton_fif")
+				actionButton("goButton_JSON","Save .JSON / run Alfresco") #uiOutput("goButton_fif")
 			)
 		)
 	),

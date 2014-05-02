@@ -3,9 +3,9 @@ pkgs <- c("assertive")
 pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
 if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
 library(assertive)
-defaults_file <- "external/appSourceFiles/alfresco_fif_defaults.txt"
+defaults_file <- "external/appSourceFiles/alfresco_json_defaults.txt"
 source(defaults_file, local=T)
-fif_files <- list.files(pattern=".fif$")
+JSON_files <- list.files(pattern=".JSON$")
 
 server <- "atlas.snap.uaf.edu"
 mainDir <- "/big_scratch/shiny"

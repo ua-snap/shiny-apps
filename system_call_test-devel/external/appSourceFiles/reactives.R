@@ -7,9 +7,21 @@ fif_mtime <- reactive({
 	x
 })
 
+JSON_mtime <- reactive({
+	x <- NULL
+	input$goButton_JSON
+	if(!is.null(input$json_files)) x <- file.info(input$json_files)$mtime
+	x
+})
+
 fif_current <- reactive({
 	fif_mtime()
 	input$fif_files
+})
+
+JSON_current <- reactive({
+	JSON_mtime()
+	input$json_files
 })
 
 fif_lines <- reactive({
@@ -18,7 +30,13 @@ fif_lines <- reactive({
 	x <- gsub( "\\s+;.*.", ";", x)
 	x.title.lines <- which(substr(x,1,1)==";")
 	x[-x.title.lines] <- gsub( ";.*.", ";", x[-x.title.lines])
-	return(x)
+	x
+})
+
+JSON_lines <- reactive({
+	JSON_mtime()
+	x <- readLines(JSON_current())
+	x
 })
 
 user_email_address <- reactive({
@@ -55,66 +73,99 @@ all_email_addresses <- reactive({
 
 Obs_updateFiles <- reactive({
 	x <- "No Alfresco job started yet"
-	if(is.null(input$goButton_fif) || input$goButton_fif == 0) return(NULL)
+	if(is.null(input$goButton_JSON) || input$goButton_JSON == 0) return(NULL)
 	isolate(
-	if( !(is.null(user_email_address()) || is.null(all_email_addresses()) || user_email_address() == "" || all_email_addresses() == "" || !length(input$frp_pts)) ){
-		if(!is.null(input$FireSensitivity) & !is.null(input$IgnitionFactor)){
-			fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
-			ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
-			if(!is.na(fire.sensitivity.sub) & !is.na(ignition.factor.sub) & !any(is.na(as.numeric(unlist(strsplit(input$frp_buffers,",")))))){
-				if(length(strsplit(fire.sensitivity.sub,"\\.")[[1]])==1) fire.sensitivity.sub <- gsub("\\.\\.", "\\.", paste0(fire.sensitivity.sub,"."))
-				if(length(strsplit(ignition.factor.sub,"\\.")[[1]])==1) ignition.factor.sub <- gsub("\\.\\.", "\\.", paste0(ignition.factor.sub,"."))
-				#white spaces below are just to make the file prettier on visual inspection in an editor
-				fire.sensitivity.sub.fif <- paste0("Fire.Sensitivity                         = {", fire.sensitivity.sub, "}                                         ;")
-				ignition.factor.sub.fif <- paste0("Fire.IgnitionFactor                      = {",ignition.factor.sub,"}                                          ;")
-				for(i in fif_current()){
-					x <- readLines(i)
-					x <- gsub( "^Fire\\.Sensitivity\\s+=\\s+\\{\\d*\\.?\\d*\\}\\s+;", fire.sensitivity.sub.fif, x)
-					x <- gsub( "^Fire\\.IgnitionFactor\\s+=\\s+\\{\\d*\\.?\\d*\\}\\s+;", ignition.factor.sub.fif, x)
-					cat(x, file=i, sep="\n")
-				}
-				if(input$update_fif_defaults){
-					for(i in defaults_file){
-						x <- readLines(i)
-						x <- gsub( "^default_Fire\\.Sensitivity=\\d*\\.?\\d*", paste0("default_Fire.Sensitivity=",as.numeric(input$FireSensitivity)), x)
-						x <- gsub( "^default_Fire\\.IgnitionFactor=\\d*\\.?\\d*", paste0("default_Fire.IgnitionFactor=",as.numeric(input$IgnitionFactor)), x)
-						cat(x, file=i, sep="\n")
-					}
-				}
+	if( !(is.null(user_email_address()) || is.null(all_email_addresses()) || user_email_address() == "" || all_email_addresses() == "" || 
+		!length(input$frp_pts)) || is.null(input$FireSensitivity) || is.null(input$IgnitionFactor) ){
+		
+		#fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
+		#ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
+		alf_fs <- as.numeric(input$FireSensitivity)
+		alf_ig <- as.numeric(input$IgnitionFactor)
+		alf_yr1 <- as.integer(input$year_start)
+		alf_yr2 <- as.integer(input$year_end)
+		c1 <- is.na(alf_fs)
+		c2 <- is.na(alf_ig)
+		c3 <- is.na(alf_yr1)
+		c4 <- is.na(alf_yr2)
+		c5 <- is.na(as.numeric(unlist(strsplit(input$frp_buffers,","))))
+		if(!(any(c(c1, c2, c3, c4, c5)))){
+			#if(length(strsplit(fire.sensitivity.sub,"\\.")[[1]])==1) fire.sensitivity.sub <- gsub("\\.\\.", "\\.", paste0(fire.sensitivity.sub,"."))
+			#if(length(strsplit(ignition.factor.sub,"\\.")[[1]])==1) ignition.factor.sub <- gsub("\\.\\.", "\\.", paste0(ignition.factor.sub,"."))
+			#white spaces below are just to make the file prettier on visual inspection in an editor
+			#fire.sensitivity.sub.fif <- paste0("Fire.Sensitivity                         = {", fire.sensitivity.sub, "}                                         ;")
+			#ignition.factor.sub.fif <- paste0("Fire.IgnitionFactor                      = {",ignition.factor.sub,"}                                          ;")
+			#for(i in fif_current()){
+			#	x <- readLines(i)
+			#	x <- gsub( "^Fire\\.Sensitivity\\s+=\\s+\\{\\d*\\.?\\d*\\}\\s+;", fire.sensitivity.sub.fif, x)
+			#	x <- gsub( "^Fire\\.IgnitionFactor\\s+=\\s+\\{\\d*\\.?\\d*\\}\\s+;", ignition.factor.sub.fif, x)
+			#	cat(x, file=i, sep="\n")
+			#}
+			#if(input$update_fif_defaults){
+			#	for(i in defaults_file){
+			#		x <- readLines(i)
+			#		x <- gsub( "^default_Fire\\.Sensitivity=\\d*\\.?\\d*", paste0("default_Fire.Sensitivity=",as.numeric(input$FireSensitivity)), x)
+			#		x <- gsub( "^default_Fire\\.IgnitionFactor=\\d*\\.?\\d*", paste0("default_Fire.IgnitionFactor=",as.numeric(input$IgnitionFactor)), x)
+			#		cat(x, file=i, sep="\n")
+			#	}
+			#}
+			
+			for(i in JSON_current()){
+				alfJSON <- fromJSON(i)
+				alfJSON$Simulation$FirstYear <- alf_yr1
+				alfJSON$Simulation$LastYear <- alf_yr2
+				alfJSON$Fire$Sensitivity <- alf_fs
+				alfJSON$Fire$IgnitionFactor <- alf_ig
 				
-				alf.domain <- substr(input$fif_files, 1, nchar(input$fif_files)-4)
-				domainDir <- paste0("Runs_", alf.domain)
-				userDir <- gsub("@", "_at_", user_email_address())
+				alfJSON$Fire$TypeTransitionYears <- alf_yr1
+				alfJSON$Climate$TransitionYears <- alf_yr1
+				alfJSON$MapOutput$MapYearStart[6] <- alf_yr1
 				
-				#outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
-				outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/",format(Sys.time(), "%Y-%m-%d-%H-%M-%S"))
-				relDir <- outDir #paste0(domainDir,"/",userDir,"/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
-				#resultsDir <- paste0("/big_scratch/shiny/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
-				
-				# system calls begin here
-				# Create Alfresco run-specific output directories and give shiny group write permissions
-				system(paste("ssh", server, "mkdir -p", outDir))
-				system(paste("ssh", server, "chmod 2775", outDir))
-				
-				system(paste("ssh", server, "Rscript", "/big_scratch/mfleonawicz/Alf_Files_20121129/make_sensitivity_ignition_maps.R", input$IgnitionFactor, input$FireSensitivity))
-				system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco.slurm"), file.path(outDir,"RunAlfresco.slurm")))
-				system(paste("ssh", server, "cp", file.path(mainDir,"CompileData.slurm"), file.path(outDir,"CompileData.slurm")))
-				#system(paste("ssh", server, "cp", file.path(mainDir,"mailPNGs.sh"), file.path(outDir,"mailPNGs.sh")))
-				system(paste0("scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
-				system(paste0("scp ", file.path("pts",input$frp_pts), " ", server, ":", file.path(outDir,input$frp_pts)))
-				
-				slurm_arguments <- paste("-D", outDir)
-				buffers <- paste(1000*as.numeric(unlist(strsplit(input$frp_buffers,","))), collapse=",")
-				buffers <- paste0("c\\(", buffers, "\\)", collapse="")
-				frp_arguments <- paste0("pts=", input$frp_pts, " ", "'buffers=", buffers, "'", collapse=" ")
-				if(input$skipAlf) postprocOnly <- 0 else postprocOnly <- 1
-				arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$fif_files, postprocOnly, frp_arguments), collapse=" ")
-				sbatch_string <- paste("ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments)
-				system(sbatch_string)
-				x <- paste("Alfresco job started on Atlas:\n",gsub(" ", " \n", sbatch_string))
+				alfJSON <- toJSON(alfJSON, pretty=T)
+				cat(alfJSON, file=i, sep="\n")
 			}
-			if(substr(x,1,8)!="Alfresco") x <- "Alfresco job did not launch"
+			if(input$update_json_defaults){
+				for(i in defaults_file){
+					y <- readLines(i)
+					y <- gsub( "^default_Fire\\.Sensitivity=\\d*\\.?\\d*", paste0("default_Fire.Sensitivity=", alf_fs), y)
+					y <- gsub( "^default_Fire\\.IgnitionFactor=\\d*\\.?\\d*", paste0("default_Fire.IgnitionFactor=", alf_ig), y)
+					cat(y, file=i, sep="\n")
+				}
+			}
+			
+			alf.domain <- substr(input$json_files, 1, nchar(input$json_files)-4)
+			domainDir <- paste0("Runs_", alf.domain)
+			userDir <- gsub("@", "_at_", user_email_address())
+			
+			#outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
+			outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/",format(Sys.time(), "%Y-%m-%d-%H-%M-%S"))
+			relDir <- outDir #paste0(domainDir,"/",userDir,"/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
+			#resultsDir <- paste0("/big_scratch/shiny/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
+			
+			# system calls begin here
+			# Create Alfresco run-specific output directories and give shiny group write permissions
+			system(paste("ssh", server, "mkdir -p", outDir))
+			system(paste("ssh", server, "chmod 2775", outDir))
+			
+			system(paste("ssh", server, "Rscript", "/big_scratch/mfleonawicz/Alf_Files_20121129/make_sensitivity_ignition_maps.R", alf_ig, alf_fs))
+			system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco.slurm"), file.path(outDir,"RunAlfresco.slurm")))
+			system(paste("ssh", server, "cp", file.path(mainDir,"CompileData.slurm"), file.path(outDir,"CompileData.slurm")))
+			#system(paste("ssh", server, "cp", file.path(mainDir,"mailPNGs.sh"), file.path(outDir,"mailPNGs.sh")))
+			system(paste0("scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
+			system(paste0("scp ", file.path("pts",input$frp_pts), " ", server, ":", file.path(outDir,input$frp_pts)))
+			
+			slurm_arguments <- paste("-D", outDir)
+			buffers <- paste(1000*as.numeric(unlist(strsplit(input$frp_buffers,","))), collapse=",")
+			buffers <- paste0("c\\(", buffers, "\\)", collapse="")
+			frp_arguments <- paste0("pts=", input$frp_pts, " ", "'buffers=", buffers, "'", collapse=" ")
+			if(input$skipAlf) postprocOnly <- 0 else postprocOnly <- 1
+			arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$fif_files, postprocOnly, frp_arguments), collapse=" ")
+			sbatch_string <- paste("ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments)
+			system(sbatch_string)
+			x <- paste("Alfresco job started on Atlas:\n",gsub(" ", " \n", sbatch_string))
 		}
+		if(substr(x,1,8)!="Alfresco") x <- "Alfresco job did not launch"
+		
 	}
 	)
 	return(x)
