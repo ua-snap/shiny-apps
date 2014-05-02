@@ -133,7 +133,7 @@ Obs_updateFiles <- reactive({
 				}
 			}
 			
-			alf.domain <- substr(input$json_files, 1, nchar(input$json_files)-4)
+			alf.domain <- substr(input$json_files, 1, nchar(input$json_files)-5)
 			domainDir <- paste0("Runs_", alf.domain)
 			userDir <- gsub("@", "_at_", user_email_address())
 			
@@ -151,7 +151,7 @@ Obs_updateFiles <- reactive({
 			system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco.slurm"), file.path(outDir,"RunAlfresco.slurm")))
 			system(paste("ssh", server, "cp", file.path(mainDir,"CompileData.slurm"), file.path(outDir,"CompileData.slurm")))
 			#system(paste("ssh", server, "cp", file.path(mainDir,"mailPNGs.sh"), file.path(outDir,"mailPNGs.sh")))
-			system(paste0("scp ", input$fif_files, " ", server, ":", file.path(outDir,input$fif_files)))
+			system(paste0("scp ", input$json_files, " ", server, ":", file.path(outDir,input$json_files)))
 			system(paste0("scp ", file.path("pts",input$frp_pts), " ", server, ":", file.path(outDir,input$frp_pts)))
 			
 			slurm_arguments <- paste("-D", outDir)
@@ -159,7 +159,7 @@ Obs_updateFiles <- reactive({
 			buffers <- paste0("c\\(", buffers, "\\)", collapse="")
 			frp_arguments <- paste0("pts=", input$frp_pts, " ", "'buffers=", buffers, "'", collapse=" ")
 			if(input$skipAlf) postprocOnly <- 0 else postprocOnly <- 1
-			arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$fif_files, postprocOnly, frp_arguments), collapse=" ")
+			arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$json_files, postprocOnly, frp_arguments), collapse=" ")
 			sbatch_string <- paste("ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments)
 			system(sbatch_string)
 			x <- paste("Alfresco job started on Atlas:\n",gsub(" ", " \n", sbatch_string))
