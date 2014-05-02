@@ -86,7 +86,8 @@ Obs_updateFiles <- reactive({
 				domainDir <- paste0("Runs_", alf.domain)
 				userDir <- gsub("@", "_at_", user_email_address())
 				
-				outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
+				#outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
+				outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/",format(Sys.time(), "%Y-%m-%d-%H-%M-%S"))
 				relDir <- outDir #paste0(domainDir,"/",userDir,"/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
 				#resultsDir <- paste0("/big_scratch/shiny/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
 				
