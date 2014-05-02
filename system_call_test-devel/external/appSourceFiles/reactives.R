@@ -111,15 +111,15 @@ Obs_updateFiles <- reactive({
 			#}
 			
 			for(i in JSON_current()){
-				alfJSON <- fromJSON(i)
+				alfJSON <- fromJSON(i, simplify=F)
 				alfJSON$Simulation$FirstYear <- alf_yr1
 				alfJSON$Simulation$LastYear <- alf_yr2
-				alfJSON$Fire$Sensitivity <- alf_fs
-				alfJSON$Fire$IgnitionFactor <- alf_ig
+				alfJSON$Fire$Sensitivity[[1]] <- alf_fs
+				alfJSON$Fire$IgnitionFactor[[1]] <- alf_ig
 				
-				alfJSON$Fire$TypeTransitionYears <- alf_yr1
-				alfJSON$Climate$TransitionYears <- alf_yr1
-				alfJSON$MapOutput$MapYearStart[6] <- alf_yr1
+				alfJSON$Fire$TypeTransitionYears[[1]] <- alf_yr1
+				alfJSON$Climate$TransitionYears[[1]] <- alf_yr1
+				alfJSON$MapOutput$MapYearStart[[6]] <- alf_yr1
 				
 				alfJSON <- toJSON(alfJSON, pretty=T)
 				cat(alfJSON, file=i, sep="\n")
