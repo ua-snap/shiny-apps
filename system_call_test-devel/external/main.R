@@ -17,7 +17,7 @@ mainPanel(
 			conditionalPanel(condition="input.nlp==='nlp_io.sidebar.wp2R'", show_io.sidebar.wp2R),
 			#conditionalPanel(condition="input.nlp==='nlp_mainR'", show_mainR),
 			#conditionalPanel(condition="input.nlp==='nlp_reactivesR'", show_reactivesR),
-			conditionalPanel(condition="input.nlp==='nlp_serverR'", show_serverR),
+			#conditionalPanel(condition="input.nlp==='nlp_serverR'", show_serverR),
 			#conditionalPanel(condition="input.nlp==='nlp_sidebarR'", show_sidebarR),
 			conditionalPanel(condition="input.nlp==='nlp_uiR'", show_uiR),
 			value="rcode"),
