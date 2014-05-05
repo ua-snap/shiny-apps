@@ -1,8 +1,8 @@
 mainPanel(
 	tabsetPanel(
-		tabPanel("Home", 
+		#tabPanel("Home", 
 			#h1(textOutput("WelcomeTitle")), h3(textOutput("WelcomeSubtitle")), div(verbatimTextOutput("Obs_UpdateFiles"), style="height: 400px;"), 
-			value="home"),
+		#	value="home"),
 		#tabPanel("View JSON", 
 			#div(verbatimTextOutput("JSON_Lines"), style="height: 800px;"), value="viewjson"),
 		#tabPanelAbout(),
@@ -22,8 +22,8 @@ mainPanel(
 			#conditionalPanel(condition="input.nlp==='nlp_sidebarR'", show_sidebarR),
 			conditionalPanel(condition="input.nlp==='nlp_uiR'", show_uiR),
 			value="rcode"),
-		id="tsp",
-		type="pills",
-		selected="home"
+		id="tsp"#,
+		#type="pills",
+		#selected="home"
 	)
 )
