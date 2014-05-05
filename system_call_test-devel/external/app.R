@@ -1,7 +1,7 @@
 # Source reactive expressions and other code
 source("external/appSourceFiles/reactives.R",local=T) # source reactive expressions
-source("external/appSourceFiles/io.sidebar.wp1.R",local=T) # source input/output objects associated with sidebar wellPanel 1
-source("external/appSourceFiles/io.sidebar.wp2.R",local=T) # source input/output objects associated with sidebar wellPanel 2
+source("external/appSourceFiles/iosidebarwp1.R",local=T) # source input/output objects associated with sidebar wellPanel 1
+source("external/appSourceFiles/iosidebarwp2.R",local=T) # source input/output objects associated with sidebar wellPanel 2
 
 #### The is doesn't really do anything but issue system calls to another server,
 #### Hence the lack of central code typically found here.

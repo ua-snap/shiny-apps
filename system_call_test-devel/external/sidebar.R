@@ -60,8 +60,8 @@ sidebarPanel(
 			tabPanel("Main", value="nlp_mainR"),
 			tabPanel("About", value="nlp_aboutR"),
 			"Bottom-level Code",
-			tabPanel("Well Panel 1", value="nlp_io.sidebar.wp1R"),
-			tabPanel("Well Panel 2", value="nlp_io.sidebar.wp2R"),
+			tabPanel("Well Panel 1", value="nlp_iosidebarwp1R"),
+			tabPanel("Well Panel 2", value="nlp_iosidebarwp2R"),
 			tabPanel("Reactives", value="nlp_reactivesR"),
 			id="nlp",
 			widths=c(12,1)
