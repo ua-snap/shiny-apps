@@ -1,4 +1,3 @@
-# Datasets, variables
 output$UserEmail <- renderUI({
 	textInput("useremail","Your email:")
 })
@@ -6,10 +5,6 @@ output$UserEmail <- renderUI({
 output$AddEmail <- renderUI({
 	textInput("addemail","Also send results to:",value="mfleonawicz@alaska.edu")
 })
-
-#output$FIF_Files <- renderUI({
-#	selectInput("fif_files", "Select FIF:", fif_files, fif_files[1])
-#})
 
 output$JSON_Files <- renderUI({
 	selectInput("json_files", "Select JSON:", c("", JSON_files), "")

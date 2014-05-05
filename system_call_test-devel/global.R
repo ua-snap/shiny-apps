@@ -2,7 +2,7 @@ library(shinyAce)
 
 R_files <- paste0(c(
 	"global", "ui", "server",
-	file.path("external", c("app", "sidebar", "main", "about")), # cannot include "header" if it contains Google Analytics tracking code
+	file.path("external", c("app", "header", "sidebar", "main", "about")), # cannot include "header" if it contains Google Analytics tracking code
 	file.path("external/appSourceFiles", c(paste0("io.sidebar.wp", 1:2), "reactives"))
 	), ".R")
 

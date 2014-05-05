@@ -1,4 +1,3 @@
-#test
 fif_mtime <- reactive({
 	x <- NULL
 	input$goButton_fif
@@ -87,8 +86,6 @@ Obs_updateFiles <- reactive({
 	if( !(is.null(user_email_address()) || is.null(all_email_addresses()) || user_email_address() == "" || all_email_addresses() == "" || 
 		!length(input$frp_pts)) || is.null(input$FireSensitivity) || is.null(input$IgnitionFactor) ){
 		
-		#fire.sensitivity.sub <- as.character(as.numeric(input$FireSensitivity))
-		#ignition.factor.sub <- as.character(as.numeric(input$IgnitionFactor))
 		alf_fs <- as.numeric(input$FireSensitivity)
 		alf_ig <- as.numeric(input$IgnitionFactor)
 		alf_yr1 <- as.integer(input$year_start)

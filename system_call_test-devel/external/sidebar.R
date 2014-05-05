@@ -55,7 +55,7 @@ sidebarPanel(
 			tabPanel("Server", value="nlp_serverR"),
 			"Mid-level Code",
 			tabPanel("App", value="nlp_appR"),
-			#tabPanel("Header", value="nlp_headerR"), # cannot include "header" if it contains Google Analytics tracking code
+			tabPanel("Header", value="nlp_headerR"), # cannot include "header" if it contains Google Analytics tracking code
 			tabPanel("Sidebar", value="nlp_sidebarR"),
 			tabPanel("Main", value="nlp_mainR"),
 			tabPanel("About", value="nlp_aboutR"),
