@@ -74,4 +74,4 @@ sidebarPanel(
 	),
 	conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
 )
-#) # testing
+#) 
