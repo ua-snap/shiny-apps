@@ -17,7 +17,7 @@ mainPanel(
 			conditionalPanel(condition="input.nlp==='nlp_appR'", show_appR),
 			conditionalPanel(condition="input.nlp==='nlp_globalR'", show_globalR),
 			# cannot include "header" if it contains Google Analytics tracking code
-			conditionalPanel(condition="input.nlp==='nlp_headerR'", show_headerR),
+			#conditionalPanel(condition="input.nlp==='nlp_headerR'", show_headerR),
 			conditionalPanel(condition="input.nlp==='nlp_io.sidebar.wp1R'", show_io.sidebar.wp1R),
 			conditionalPanel(condition="input.nlp==='nlp_io.sidebar.wp2R'", show_io.sidebar.wp2R),
 			conditionalPanel(condition="input.nlp==='nlp_io.sidebar.wp3R'", show_io.sidebar.wp3R),
