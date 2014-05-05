@@ -1,4 +1,4 @@
-library(shinyAce)
+library(shinyAce) # testing
 
 R_files <- paste0(c(
 	"global", "ui", "server",
