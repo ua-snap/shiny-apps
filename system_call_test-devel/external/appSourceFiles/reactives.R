@@ -1,5 +1,3 @@
-# Datasets, variables
-
 fif_mtime <- reactive({
 	x <- NULL
 	input$goButton_fif
@@ -71,6 +69,16 @@ all_email_addresses <- reactive({
 	e
 })
 
+# Reactive expression for code tab in main panel
+# Ideal, but cannot do this on the server side due to a bug in the shinyAce package.
+#codeTab <- reactive({
+#	if(is.null(input$nlp)) return()
+#	id <- gsub("nlp_", "show_", input$nlp)
+#	show_list <- ls(pattern="^show_.*.R$", envir=.GlobalEnv)
+#	if(id %in% show_list) x <- tabPanel(paste0("tp_",id), get(id)) else x <- NULL
+#	x
+#})
+
 Obs_updateFiles <- reactive({
 	x <- "No Alfresco job started yet"
 	if(is.null(input$goButton_JSON) || input$goButton_JSON == 0) return(NULL)
@@ -90,25 +98,6 @@ Obs_updateFiles <- reactive({
 		c4 <- is.na(alf_yr2)
 		c5 <- is.na(as.numeric(unlist(strsplit(input$frp_buffers,","))))
 		if(!(any(c(c1, c2, c3, c4, c5)))){
-			#if(length(strsplit(fire.sensitivity.sub,"\\.")[[1]])==1) fire.sensitivity.sub <- gsub("\\.\\.", "\\.", paste0(fire.sensitivity.sub,"."))
-			#if(length(strsplit(ignition.factor.sub,"\\.")[[1]])==1) ignition.factor.sub <- gsub("\\.\\.", "\\.", paste0(ignition.factor.sub,"."))
-			#white spaces below are just to make the file prettier on visual inspection in an editor
-			#fire.sensitivity.sub.fif <- paste0("Fire.Sensitivity                         = {", fire.sensitivity.sub, "}                                         ;")
-			#ignition.factor.sub.fif <- paste0("Fire.IgnitionFactor                      = {",ignition.factor.sub,"}                                          ;")
-			#for(i in fif_current()){
-			#	x <- readLines(i)
-			#	x <- gsub( "^Fire\\.Sensitivity\\s+=\\s+\\{\\d*\\.?\\d*\\}\\s+;", fire.sensitivity.sub.fif, x)
-			#	x <- gsub( "^Fire\\.IgnitionFactor\\s+=\\s+\\{\\d*\\.?\\d*\\}\\s+;", ignition.factor.sub.fif, x)
-			#	cat(x, file=i, sep="\n")
-			#}
-			#if(input$update_fif_defaults){
-			#	for(i in defaults_file){
-			#		x <- readLines(i)
-			#		x <- gsub( "^default_Fire\\.Sensitivity=\\d*\\.?\\d*", paste0("default_Fire.Sensitivity=",as.numeric(input$FireSensitivity)), x)
-			#		x <- gsub( "^default_Fire\\.IgnitionFactor=\\d*\\.?\\d*", paste0("default_Fire.IgnitionFactor=",as.numeric(input$IgnitionFactor)), x)
-			#		cat(x, file=i, sep="\n")
-			#	}
-			#}
 			
 			for(i in JSON_current()){
 				alfJSON <- fromJSON(i, simplify=F)
@@ -171,13 +160,3 @@ Obs_updateFiles <- reactive({
 	return(x)
 }
 )
-
-# Reactive expression for code tab in main panel
-# Ideal, but cannot do this on the server side due to a bug in the shinyAce package.
-#codeTab <- reactive({
-#	if(is.null(input$nlp)) return()
-#	id <- gsub("nlp_", "show_", input$nlp)
-#	show_list <- ls(pattern="^show_.*.R$", envir=.GlobalEnv)
-#	if(id %in% show_list) x <- tabPanel(paste0("tp_",id), get(id)) else x <- NULL
-#	x
-#})
