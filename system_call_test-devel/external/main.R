@@ -1,10 +1,11 @@
 mainPanel(
 	tabsetPanel(
 		tabPanel("Home", 
-			h1(textOutput("WelcomeTitle")), h3(textOutput("WelcomeSubtitle")), div(verbatimTextOutput("Obs_UpdateFiles"), style="height: 400px;"), value="home"),
-		tabPanel("View JSON", 
-			div(verbatimTextOutput("JSON_Lines"), style="height: 800px;"), value="viewjson"),
-		tabPanelAbout(),
+			#h1(textOutput("WelcomeTitle")), h3(textOutput("WelcomeSubtitle")), div(verbatimTextOutput("Obs_UpdateFiles"), style="height: 400px;"), 
+			value="home"),
+		#tabPanel("View JSON", 
+			#div(verbatimTextOutput("JSON_Lines"), style="height: 800px;"), value="viewjson"),
+		#tabPanelAbout(),
 		tabPanel("R Code",
 			#uiOutput("codeTab"), # This single line preferable to the below lines
 			# Cannot use the above style due to known bug in shinyAce package
