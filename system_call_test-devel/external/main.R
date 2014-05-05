@@ -10,11 +10,11 @@ mainPanel( # testing
 			# Cannot use the above style due to known bug in shinyAce package
 			#conditionalPanel(condition="input.nlp==='nlp_aboutR'", show_aboutR),
 			#conditionalPanel(condition="input.nlp==='nlp_appR'", show_appR),
-			#conditionalPanel(condition="input.nlp==='nlp_globalR'", show_globalR),
+			conditionalPanel(condition="input.nlp==='nlp_globalR'", show_globalR),
 			# cannot include "header" if it contains Google Analytics tracking code
 			#conditionalPanel(condition="input.nlp==='nlp_headerR'", show_headerR),
 			#conditionalPanel(condition="input.nlp==='nlp_iosidebarwp1R'", show_iosidebarwp1R),
-			conditionalPanel(condition="input.nlp==='nlp_iosidebarwp2R'", show_iosidebarwp2R),
+			#conditionalPanel(condition="input.nlp==='nlp_iosidebarwp2R'", show_iosidebarwp2R),
 			conditionalPanel(condition="input.nlp==='nlp_mainR'", show_mainR),
 			conditionalPanel(condition="input.nlp==='nlp_reactivesR'", show_reactivesR),
 			conditionalPanel(condition="input.nlp==='nlp_serverR'", show_serverR),
