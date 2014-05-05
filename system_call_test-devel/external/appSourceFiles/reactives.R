@@ -1,4 +1,4 @@
-fif_mtime <- reactive({
+fif_mtime <- reactive({ # testing
 	x <- NULL
 	input$goButton_fif
 	if(!is.null(input$fif_files)) x <- file.info(input$fif_files)$mtime
