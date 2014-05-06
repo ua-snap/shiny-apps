@@ -1,3 +1,7 @@
 *.Rhistory
 restart.txt
 *pageviews.Rdata
+run_alfresco/*.JSON
+run_alfresco/external/appSourceFiles/alfresco_json_defaults.txt
+alfresco/
+tmpAppFiles/
