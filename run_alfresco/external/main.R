@@ -1,7 +1,7 @@
-mainPanel( # testing
+column(8,
 	tabsetPanel(
 		tabPanel("Home", 
-			h1(textOutput("WelcomeTitle")), h3(textOutput("WelcomeSubtitle")), div(verbatimTextOutput("Obs_UpdateFiles"), style="height: 400px;"), value="home"),
+			h1("Welcome to the Alfresco web GUI"), h3("Powered by R and Shiny"), div(verbatimTextOutput("Obs_UpdateFiles"), style="height: 400px;"), value="home"),
 		tabPanel("View JSON", 
 			div(verbatimTextOutput("JSON_Lines"), style="height: 800px;"), value="viewjson"),
 		tabPanelAbout(),

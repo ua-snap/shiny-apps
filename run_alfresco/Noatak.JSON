@@ -158,7 +158,7 @@
 		"BSpruce": {
 			"id": 2,
 			"StartAge": [3.59, 0.87],
-			"FireParms": [0.5, 4., 0.08],
+			"FireParms": [0.05, 4., 0.08],
 			"HumanFireProb": 0.00119969
 		},
 		"WSpruce": {
