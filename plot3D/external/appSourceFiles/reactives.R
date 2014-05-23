@@ -1,8 +1,6 @@
 # Reactive expressions
 
 # General
-datasets <- reactive({ dataset.names })
-
 d <- reactive({
 	if(!is.null(input$dataset)){
 		if(input$dataset=="Volcano (Maunga Whau)") x <- volcano

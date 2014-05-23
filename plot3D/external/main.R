@@ -1,14 +1,11 @@
-mainPanel(
+column(8,
 	tabsetPanel(
-		tabPanel("R plot3D examples",
-			conditionalPanel(condition="input.plottype!='3D - interactive (rgl)'",
-				plotOutput("plot1",height="auto")
-			),
-			br(),
-			conditionalPanel(condition="input.plottype=='3D - interactive (rgl)'",
-				webGLOutput("plot2",height="auto")
-			),
-			value="plots"),
+		tabPanel("2D Contour", conPan_LA, plotOutput("plot_2D_contour",height="auto"), value="p2Dcontour"),
+		tabPanel("2D Image", conPan_LA,	plotOutput("plot_2D_image",height="auto"), value="p2Dimage"),
+		tabPanel("3D Perspective", conPan_LA, plotOutput("plot_3D_persp",height="auto"), value="p3Dpersp"),
+		tabPanel("3D Ribbon", conPan_LA, plotOutput("plot_3D_ribbon",height="auto"), value="p3Dribbon"),
+		tabPanel("3D Histogram", conPan_LA, plotOutput("plot_3D_hist",height="auto"), value="p3Dhist"),
+		tabPanel("3D Interactive", webGLOutput("plot_3D_rgl",height="auto"), value="p3Drgl"),
 		tabPanelAbout(),
 		tabPanel("R Code",
 			#uiOutput("codeTab"), # This single line preferable to the below lines
@@ -18,12 +15,6 @@ mainPanel(
 			conditionalPanel(condition="input.nlp==='nlp_globalR'", show_globalR),
 			# cannot include "header" if it contains Google Analytics tracking code
 			#conditionalPanel(condition="input.nlp==='nlp_headerR'", show_headerR),
-			conditionalPanel(condition="input.nlp==='nlp_io.sidebar.wp1R'", show_io.sidebar.wp1R),
-			conditionalPanel(condition="input.nlp==='nlp_io.sidebar.wp2R'", show_io.sidebar.wp2R),
-			conditionalPanel(condition="input.nlp==='nlp_io.sidebar.wp3R'", show_io.sidebar.wp3R),
-			conditionalPanel(condition="input.nlp==='nlp_io.sidebar.wp4R'", show_io.sidebar.wp4R),
-			conditionalPanel(condition="input.nlp==='nlp_io.sidebar.wp5R'", show_io.sidebar.wp5R),
-			conditionalPanel(condition="input.nlp==='nlp_io.sidebar.wp6R'", show_io.sidebar.wp6R),
 			conditionalPanel(condition="input.nlp==='nlp_mainR'", show_mainR),
 			conditionalPanel(condition="input.nlp==='nlp_reactivesR'", show_reactivesR),
 			conditionalPanel(condition="input.nlp==='nlp_serverR'", show_serverR),
