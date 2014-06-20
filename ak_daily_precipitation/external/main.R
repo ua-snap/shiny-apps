@@ -1,5 +1,4 @@
-mainPanel_2(
-	span="span9",
+column(9,
 	tabsetPanel(
 		tabPanel("Daily Precipitation",
 			div(class="row-fluid",
