@@ -1,4 +1,10 @@
+pkgs <- c("Hmisc")
+pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
+if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
+library(Hmisc)
+
 load("external/wind_ice.RData",envir=.GlobalEnv)
+
 cuts <- rev(unique(w.beaufort.GFDL$Cut))
 varlevels <- as.character(unique(w.beaufort.GFDL$Var))
 years <- unique(w.beaufort.GFDL$Year)

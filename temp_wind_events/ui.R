@@ -7,7 +7,7 @@ headerPanel_2 <- function(title, h, windowTitle=title) {
     )
 }
 
-shinyUI(pageWithSidebar(
+shinyUI(fluidPage(
 	headerPanel_2(
 		HTML(
 			'<script>
@@ -29,7 +29,7 @@ shinyUI(pageWithSidebar(
 			</div>'
 		), h3, "CMIP5 Quantile-mapped GCM Daily Data"
 	),
-	sidebarPanel(
+	fluidRow(column(4,
 		uiOutput("showMapPlot"),
 		wellPanel(
 			h5("Time"),
@@ -60,11 +60,11 @@ shinyUI(pageWithSidebar(
 		wellPanel(div(class="row-fluid", div(class="span6", checkboxInput("showmap","Show location grid",F)), div(class="span6", downloadButton("dlCurPlot", "Download Graphic")))),
 		conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
 	),
-	mainPanel(
+	column(8,
 		tabsetPanel(
 			tabPanel("Conditional Barplots",plotOutput("plot",height="auto"),value="barplots"),
 			tabPanelAbout(),
 			id="tsp"
 		)
-	)
+	))
 ))

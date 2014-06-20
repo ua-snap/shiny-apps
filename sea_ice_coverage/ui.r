@@ -10,7 +10,7 @@ headerPanel_2 <- function(title, h, windowTitle=title) {
 mos <- c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
 modnames <- c("ACCESS-1.0","CESM1-CAM5","CMCC-CM","HADGEM2-AO","MIROC-5","Composite model")
 
-shinyUI(pageWithSidebar(
+shinyUI(fluidPage(
 	headerPanel_2(
 		HTML(
 			'<script>
@@ -32,7 +32,7 @@ shinyUI(pageWithSidebar(
 			</div>'
 		), h3, "Modeled Arctic Sea Ice Coverage"
 	),
-	sidebarPanel(
+	fluidRow(column(4,
 		wellPanel(
 			conditionalPanel( # Tab 1 only, part 1
 				condition="input.tsp=='ts'",
@@ -72,7 +72,7 @@ shinyUI(pageWithSidebar(
 		),
 		conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
 	),
-	mainPanel(
+	column(8,
 		tabsetPanel(
 			tabPanel(
 				"Extent Totals",
@@ -95,5 +95,5 @@ shinyUI(pageWithSidebar(
 			tabPanelAbout(),
 			id="tsp"
 		)
-	)
+	))
 ))
