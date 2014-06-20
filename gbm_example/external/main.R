@@ -1,4 +1,4 @@
-mainPanel(
+column(8,
 	tabsetPanel(
 		tabPanel("Relative Influence", plotOutput("plot.ri",height="auto"), 
 				dataTableOutput("ri.table"),

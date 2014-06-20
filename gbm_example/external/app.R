@@ -1,7 +1,3 @@
-output$dat.name <- renderUI({
-	selectInput("dat.name","Data:",choices="Simulated data",selected="Simulated data")
-})
-
 dat <- reactive({
 	if(!is.null(input$dat.name)){
 		if(input$dat.name=="Simulated data"){
@@ -16,31 +12,31 @@ output$vars <- renderUI({
 })
 
 output$n.trees <- renderUI({
-	if(!is.null(dat()))	sliderInput("n.trees","Number of trees:",100,10000,100,step=100)
+	if(!is.null(dat()))	sliderInput("n.trees", "Number of trees:", 100, 10000, 100, step=100, width="100%")
 })
 
 output$bag.fraction <- renderUI({
-	if(!is.null(dat()))	sliderInput("bag.fraction","Bag fraction:",0.1,1,0.5,step=0.05)
+	if(!is.null(dat()))	sliderInput("bag.fraction", "Bag fraction:", 0.1, 1, 0.5, step=0.05, width="100%")
 })
 
 output$train.fraction <- renderUI({
-	if(!is.null(dat()))	sliderInput("train.fraction","Training fraction:",0.1,1,0.5,step=0.05)
+	if(!is.null(dat()))	sliderInput("train.fraction", "Training fraction:", 0.1, 1, 0.5, step=0.05, width="100%")
 })
 
 output$n.minobsinnode <- renderUI({
-	if(!is.null(dat()))	sliderInput("n.minobsinnode","Min. obs. in terminal nodes:",1,10,5,step=1)
+	if(!is.null(dat()))	sliderInput("n.minobsinnode", "Min. obs. in terminal nodes:", 1, 10, 5, step=1, width="100%")
 })
 
 output$cv.folds <- renderUI({
-	if(!is.null(dat()))	sliderInput("cv.folds","Cross-validation folds:",1,10,1,step=1)
+	if(!is.null(dat()))	sliderInput("cv.folds", "Cross-validation folds:", 1, 10, 1, step=1, width="100%")
 })
 
 output$shrinkage <- renderUI({
-	if(!is.null(dat()))	selectInput("shrinkage","Shrinkage rate:",choices=c(0.001,0.005,0.01,0.05,0.1),selected=0.05)
+	if(!is.null(dat()))	selectInput("shrinkage", "Shrinkage rate:", choices=c(0.001,0.005,0.01,0.05,0.1), selected=0.05, width="100%")
 })
 
 output$interaction.depth <- renderUI({
-	if(!is.null(dat()))	selectInput("interaction.depth","Interaction depth:",choices=1:length(input$vars),selected=1)
+	if(!is.null(dat()))	selectInput("interaction.depth", "Interaction depth:", choices=1:length(input$vars), selected=1, width="100%")
 })
 
 gbm1 <- reactive({
