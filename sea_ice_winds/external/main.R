@@ -1,4 +1,4 @@
-mainPanel(
+column(8,
 	tabsetPanel(
 		tabPanel("Time series plots",
 			plotOutput("plotByYear",height="auto"),

@@ -6,6 +6,10 @@ headerPanel_2 <- function(title, h, windowTitle=title) {
       h(title)
     )
 }
+
+mos <- c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
+modnames <- c("ACCESS-1.0","CESM1-CAM5","CMCC-CM","HADGEM2-AO","MIROC-5","Composite model")
+
 shinyUI(pageWithSidebar(
 	headerPanel_2(
 		HTML(
@@ -32,14 +36,14 @@ shinyUI(pageWithSidebar(
 		wellPanel(
 			conditionalPanel( # Tab 1 only, part 1
 				condition="input.tsp=='ts'",
-				uiOutput("Dataset"),
-				uiOutput("tsSlider"),
-				uiOutput("Mo")
+				selectInput("dataset", "Choose RCP 8.5 sea ice model:", choices=modnames, selected=modnames[1], multiple=T, width="100%"),
+				sliderInput("yrs", "Year range:", 1860,2099, c(1979,2011), step=1, format="#", width="100%"),
+				selectInput("mo", "Seasonal period:", choices=c(mos,"Dec-Mar Avg","Jun-Sep Avg","Annual Avg"), selected="Jan")
 			),
 			conditionalPanel( # Tab 2 only, part 1
 				condition="input.tsp=='map'",
-				uiOutput("Decade"),
-				uiOutput("Mo2")
+				selectInput("decade", "Decade:", choices=paste(seq(1860,2090,by=10),"s",sep=""), selected="2010s"),
+				selectInput("mo2", "Month:", choices=mos, selected="Jan")
 			)
 		),
 		conditionalPanel( # Tab 1 only,  part 2
@@ -51,9 +55,9 @@ shinyUI(pageWithSidebar(
 				uiOutput("reglineslm2"),
 				uiOutput("reglineslo"),
 				uiOutput("loSpan"),
-				uiOutput("fixXY"),
+				checkboxInput("fix.xy", "Full fixed (x,y) limits", value=F),
 				uiOutput("semiTrans"),
-				uiOutput("showObs")
+				checkboxInput("showObs", "Show Observations (1979 - 2011)", FALSE)
 			)
 		),
 		wellPanel(

@@ -2,37 +2,12 @@ library(shiny)
 pkgs <- c("reshape2","raster","maps","maptools")
 pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
 if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
-load("qm.RData", envir=.GlobalEnv)
 library(reshape2); library(raster); library(maps); library(maptools)
 
 shinyServer(function(input,output){
-
-	output$showMap <- renderUI({
-		checkboxInput("showmap","Show location grid",F)
-	})
 	
 	output$showMapPlot <- renderUI({
 		if(length(input$showmap)) if(input$showmap) { list(plotOutput("mapPlot",height="100%"), br()) }
-	})
-
-	output$Mod <- renderUI({
-		selectInput("mod","Climate model:",choices=mod.nam,selected=mod.nam[1])
-	})
-	
-	output$RCP <- renderUI({
-		selectInput("rcp","RCP:",choices=rcp.nam,selected=rcp.nam[1])
-	})
-	
-	output$Var <- renderUI({
-		selectInput("var","Climate variable:",choices=var.nam,selected=var.nam[1],multiple=T)
-	})
-	
-	output$Loc <- renderUI({
-		selectInput("loc","Geographic location:",choices=sort(loc.nam),selected=sort(loc.nam)[3],multiple=T)
-	})
-	
-	output$CutT <- renderUI({
-		selectInput("cut.t","Temp. threshold (C):",choices=temp.cut,selected=temp.cut[6],multiple=T)
 	})
 	
 	windMagCheck <- reactive({ input$var[1]=="Wind" | (any(input$var=="Wind") & (input$cond=="Threshold" | input$cond=="Variable")) })
@@ -40,15 +15,11 @@ shinyServer(function(input,output){
 	output$CutW <- renderUI({
 		if(length(input$var)){
 			if(windMagCheck()){
-				selectInput("cut.w","Wind threshold (m/s):",choices=wind.cut[wind.cut>0],selected=wind.cut[wind.cut>0][1],multiple=T)
+				selectInput("cut.w", "Wind threshold (m/s):", choices=wind.cut[wind.cut>0], selected=wind.cut[wind.cut>0][1], multiple=T, width="100%")
 			} else {
-				selectInput("cut.w","Wind threshold (m/s):",choices=wind.cut,selected=wind.cut[4],multiple=T)
+				selectInput("cut.w", "Wind threshold (m/s):", choices=wind.cut,selected=wind.cut[4], multiple=T, width="100%")
 			}
 		}
-	})
-	
-	output$Cond <- renderUI({
-		selectInput("cond","Conditional variable:",choices=c("Model","RCP","Location","Threshold","Variable"),selected="Model")
 	})
 	
 	thresh <- reactive({
@@ -58,14 +29,6 @@ shinyServer(function(input,output){
 			thresh <- NULL
 		}
 		thresh
-	})
-	
-	output$Direction <- renderUI({
-		selectInput("direct","Days per month:",choices=c("Above threshold","Below threshold"),selected="Above threshold")
-	})
-	
-	output$Mo <- renderUI({
-		selectInput("mo","Show months:",choices=c("All",mos),selected="Jan",multiple=T)
 	})
 	
 	mo.vec <- reactive({
@@ -78,7 +41,7 @@ shinyServer(function(input,output){
 	})
 	
 	output$MoHi <- renderUI({
-		if(length(mo.vec())) selectInput("mohi","Highlight months:",choices=c("None",mo.vec()),selected="None",multiple=T)
+		if(length(mo.vec())) selectInput("mohi", "Highlight months:", choices=c("None",mo.vec()), selected="None", multiple=T, width="100%")
 	})
 	
 	mos.lines.vec <- reactive({
