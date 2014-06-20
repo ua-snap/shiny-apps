@@ -1,10 +1,10 @@
-sidebarPanel(
+column(4,
 	wellPanel(
 		checkboxInput("showDataPanel1",h5("Data Selection Panel"),TRUE),
 		conditionalPanel(condition="input.showDataPanel1",
 			div(class="row-fluid",
-				div(class="span6", uiOutput("dat.name")),
-				div(class="span6", selectInput(inputId = "locationSelect", label = "Select a community:", choices = c("",communities), selected=""))
+				div(class="span6", selectInput("dat.name", "Data:", choices=c("","CMIP3 Historical","CMIP3 Projected"), selected="", width="100%")),
+				div(class="span6", selectInput(inputId = "locationSelect", label = "Select a community:", choices = c("",communities), selected="", width="100%"))
 			),
 			div(class="row-fluid", div(class="span6", uiOutput("vars")), div(class="span6", uiOutput("units"))),
 			div(class="row-fluid", div(class="span6", uiOutput("models")), div(class="span6", uiOutput("scens"))),

@@ -1,4 +1,4 @@
-mainPanel(
+column(8,
 	tabsetPanel(
 		tabPanel("Communities",
 		plotOutput("plot1",height="auto"),

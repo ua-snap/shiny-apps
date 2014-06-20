@@ -1,14 +1,14 @@
 # x-axis variable, grouping variable, faceting variable
 output$xtime <- renderUI({
-	selectInput("xtime",paste(input$vars,"by:"),choices=c("Month","Decade"),selected="Month")
+	selectInput("xtime", paste(input$vars,"by:"), choices=c("Month","Decade"), selected="Month", width="100%")
 })
 
 output$group <- renderUI({
-	if(!is.null(group.choices())) selectInput("group","Group/color by:",choices=group.choices(),selected=group.choices()[1])
+	if(!is.null(group.choices())) selectInput("group", "Group/color by:", choices=group.choices(), selected=group.choices()[1], width="100%")
 })
 
 output$facet <- renderUI({
-	if(!is.null(facet.choices())) selectInput("facet","Facet/panel by:",choices=facet.choices(),selected=facet.choices()[1])
+	if(!is.null(facet.choices())) selectInput("facet", "Facet/panel by:", choices=facet.choices(), selected=facet.choices()[1], width="100%")
 })
 
 # Options for jittering, faceting, and pooling
