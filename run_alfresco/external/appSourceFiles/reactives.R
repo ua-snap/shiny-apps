@@ -151,7 +151,7 @@ Obs_updateFiles <- reactive({
 				group.name <- "none"
 				run.name <- "run1"
 			}
-			frp_arguments <- paste0("pts=", input$frp_pts, " ", "'buffers=", buffers, "' group.name=", group.name, " run.name=", run.name, collapse=" ")
+			frp_arguments <- paste0("pts=", input$frp_pts, " ", "'buffers=", buffers, "' group.name=", group.name, " run.name=", run.name, " emp.fire.cause=", input$fire_cause, collapse=" ")
 			if(input$skipAlf) postprocOnly <- 0 else postprocOnly <- 1
 			arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$json_files, postprocOnly, frp_arguments), collapse=" ")
 			sbatch_string <- paste("ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments)

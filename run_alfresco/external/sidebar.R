@@ -13,7 +13,7 @@ column(4,
 				#div(class="span1",helpPopup('Enter additional email addresses','Results from the Alfresco run will be emailed to each address. For the time being, you must separate each email address with a comma and/or space.'))
 			),
 			div(class="row-fluid",
-				div(class="span12",selectInput("json_files", "Select JSON:", c("", JSON_files), ""))#,
+				div(class="span12",selectInput("json_files", "Select JSON:", c("", JSON_files), "", width="100%"))#,
 				#div(class="span1",helpPopup('Choose .fif','Select a FIF from the list to use in your Alfresco run.'))
 			),
 			div(class="row-fluid",
@@ -29,8 +29,12 @@ column(4,
 				div(class="span6",numericInput("IgnitionFactor", "Fire Ignition Factor", value=default_Fire.IgnitionFactor, min=0.00001, max=0.1))
 			),
 			div(class="row-fluid",
-				div(class="span6",selectInput("frp_pts", "Fire Return Period locations", c("", list.files("pts", pattern=".csv$")))),
+				div(class="span6",selectInput("frp_pts", "Fire Return Period locations", c("", list.files("pts", pattern=".csv$")), width="100%")),
 				div(class="span6",textInput("frp_buffers", "Fire Return Period buffers", value="0,10,25,50,100"))
+			),
+			div(class="row-fluid",
+				div(class="span6",selectInput("fire_cause", "Empirical fire sources:", choices=c("Lightning", "All"), selected="Lightning", width="100%"))#,
+				#div(class="span6",textInput("run_name", "Unique run name:", value="run1"))
 			),
 			div(class="row-fluid",
 				div(class="span6",checkboxInput("update_json_defaults", "Save Sen/Ign as new defaults", FALSE)),
@@ -69,8 +73,8 @@ column(4,
 			widths=c(12,1)
 		),
 		div(class="row-fluid",
-			div(class="span6", uiOutput("HLTheme")),
-			div(class="span6", uiOutput("HLFontSize"))
+			div(class="span6", selectInput("hltheme", "Code highlighting theme:", getAceThemes(), selected="clouds_midnight", width="100%")),
+			div(class="span6", selectInput("hlfontsize", "Font size:", seq(8,24,by=2), selected=12, width="100%"))
 		),
 		uiOutput("CodeDescription")
 	),

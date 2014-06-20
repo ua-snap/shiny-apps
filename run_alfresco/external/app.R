@@ -10,9 +10,6 @@ source("external/appSourceFiles/iosidebarwp2.R",local=T) # source input/output o
 # Ideal, but cannot do this on the server side due to a bug in the shinyAce package.
 #output$codeTab <- renderUI({ codeTab() })
 
-output$HLTheme <- renderUI({ selectInput("hltheme", "Code highlighting theme:", getAceThemes(), selected="clouds_midnight") })
-output$HLFontSize <- renderUI({ selectInput("hlfontsize", "Font size:", seq(8,24,by=2), selected=12) })
-
 observe({
 	input$tsp
 	input$nlp
