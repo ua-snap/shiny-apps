@@ -1,10 +1,10 @@
 library(shiny)
-pkgs <- c("raster","maps","mapproj","rasterVis")
+pkgs <- c("raster","maps","mapproj","grid", "rasterVis")
 pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
 if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
 
 load("Totals.RData", envir=.GlobalEnv)
-library(raster); library(maps); library(mapproj); library(rasterVis)
+library(raster); library(maps); library(mapproj); library(grid); library(rasterVis)
 
 mm <- map("world", proj="stereographic", xlim=c(-180,180), ylim=c(47,90), interior=FALSE, lwd=1,plot=F)
 clrs <- c("#8B2500","#000080","#FF8C00","#1E90FF","#FF1493","#000000") #"#CD9B1D"
