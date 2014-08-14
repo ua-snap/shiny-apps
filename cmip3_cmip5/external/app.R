@@ -1,7 +1,7 @@
 # Source reactive expressions and other code
 source("external/appSourceFiles/reactives.R",local=T) # source reactive expressions
 source("external/appSourceFiles/reactives_leaflet.R",local=T) # source reactive expressions for leaflet
-source("external/appSourceFiles/io.sidebar.wp1.R",local=T) # source input/output objects associated with sidebar wellPanel 1
+#source("external/appSourceFiles/io.sidebar.wp1.R",local=T) # source input/output objects associated with sidebar wellPanel 1
 source("external/appSourceFiles/io.sidebar.wp2.R",local=T) # source input/output objects associated with sidebar wellPanel 2
 source("external/appSourceFiles/io.mainPanel.tp1.R",local=T) # source input/output objects associated with mainPanel tabPanel 1
 
@@ -16,7 +16,7 @@ doPlot_ts <- function(...){
 			tsPlot(d=dat(), x=input$xtime, y="Val", d.grp=datCollapseGroups(), d.pool=datCollapsePooled(), grp=input$group, n.grp=n.groups(), ingroup.subjects=subjectSelected(),
 				panels=facet.panels(), facet.by=input$facet, vert.facet=input$vert.facet,
 				fontsize=input$plotFontSize, colpal=input$colorpalettes, colseq=input$colorseq, mos=Months(),
-				altplot=input$altplot, bartype=input$bartype, bardirection=input$bardirection, show.points=input$showpts, overlay=CRU(), jit=input$jitterXY,
+				altplot=input$altplot, pts.alpha=input$alpha1, bartype=input$bartype, bardirection=input$bardirection, show.points=input$showpts, show.overlay=input$showCRU, overlay=CRU(), jit=input$jitterXY,
 				plot.title=plot_ts_title(), plot.subtitle=plot_ts_subtitle(), lgd.pos=input$legendPos1,
 				units=currentUnits(), yrange=input$yrange, clbootbar=input$clbootbar, clbootsmooth=input$clbootsmooth,
 				pooled.var=pooled.var(), logo.mat=logo.mat, ...)
@@ -30,9 +30,8 @@ doPlot_scatter <- function(...){
 			scatterPlot(d=dat2(), x="Temperature", y="Precipitation", form.string=input$xy, grp=input$group2, n.grp=n.groups2(),
 				panels=facet.panels2(), facet.by=input$facet2, vert.facet=input$vert.facet2,
 				fontsize=input$plotFontSize2, colpal=input$colorpalettes2, colseq=input$colorseq2, mos=Months(),
-				contourlines=input$conplot, hexbin=input$hexbin, jit=input$jitterXY, lgd.pos=input$legendPos2,
-				units=currentUnits(),
-				pooled.var=pooled.var2(), logo.mat=logo.mat, ...)
+				contourlines=input$conplot, hexbin=input$hexbin, pts.alpha=input$alpha2, show.overlay=input$showCRU, overlay=CRU2(), jit=input$jitterXY, plot.title=plot_sp_title(), plot.subtitle=plot_sp_subtitle(),
+				lgd.pos=input$legendPos2, units=currentUnits(),	pooled.var=pooled.var2(), logo.mat=logo.mat, ...)
 		} else NULL
 	} else NULL
 }
@@ -43,7 +42,8 @@ doPlot_var <- function(...){
 			varPlot(d=dat(), x=input$xvar, y="Val", stat=stat(), around.mean=input$variability, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(), grp=input$group3, n.grp=n.groups3(), ingroup.subjects=subjectSelected3(),
 				panels=facet.panels3(), facet.by=input$facet3, vert.facet=input$vert.facet3,
 				fontsize=input$plotFontSize3, colpal=input$colorpalettes3, colseq=input$colorseq3, mos=Months(),
-				altplot=input$altplot, boxplots=input$boxplots, bartype=input$bartype3, bardirection=input$bardirection3, show.points=F, jit=input$jitterXY, lgd.pos=input$legendPos3,
+				altplot=input$altplot, boxplots=input$boxplots, pts.alpha=input$alpha3, bartype=input$bartype3, bardirection=input$bardirection3, show.points=input$showpts, show.overlay=input$showCRU, overlay=CRU(),
+				jit=input$jitterXY, plot.title=plot_var_title(), plot.subtitle=plot_var_subtitle(), lgd.pos=input$legendPos3,
 				units=currentUnits(), yrange=input$yrange, clbootbar=input$clbootbar, clbootsmooth=input$clbootsmooth,
 				logo.mat=logo.mat, ...)
 		} else NULL
@@ -55,6 +55,7 @@ doPlot_var <- function(...){
 output$plot1 <- renderPlot({
 	if(is.null(input$plotButton) || input$plotButton==0) return()
 	input$colorpalettes
+	input$alpha1
 	#input$altplot
 	input$bartype
 	input$bardirection
@@ -86,6 +87,7 @@ plot2ht <- function(){
 output$plot2 <- renderPlot({ # render plot from doPlot1 for mainPanel tabsetPanel tabPanel 1
 	if(is.null(input$plotButton) || input$plotButton==0) return()
 	input$colorpalettes2
+	input$alpha2
 	#input$conplot
 	input$legendPos2
 	input$plotFontSize2
@@ -105,6 +107,7 @@ output$dlCurTable2 <- downloadHandler(
 output$plot3 <- renderPlot({ # render plot from doPlot1 for mainPanel tabsetPanel tabPanel 1
 	if(is.null(input$plotButton) || input$plotButton==0) return()
 	input$colorpalettes3
+	input$alpha3
 	#input$altplot
 	input$bartype3
 	input$bardirection3

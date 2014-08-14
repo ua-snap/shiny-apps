@@ -147,8 +147,6 @@ CRU_master <- reactive({
 	isolate(
 		if(is.null(Months()) | is.null(currentYears()) | is.null(Decades()) | is.null(input$vars) | is.null(input$units) | is.null(scenarios()) | is.null(models_original()) | locSelected()==FALSE){
 			x <- NULL
-		} else if(is.null(input$showCRU) || input$showCRU==FALSE) {
-			x <- NULL
 		} else {
 			if(length(input$cities) && input$cities[1]!="") {
 				x <- subset(d.cities.cru31, Month %in% month.abb[match(Months(), month.abb)] & 
@@ -160,6 +158,7 @@ CRU_master <- reactive({
 				x <- subset(d.cru31, Month %in% month.abb[match(Months(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & Domain %in% input$doms)
 			}
+			if(nrow(x)==0) return()
 			#print(input$map_shape_click$id)
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
 			# Otherwise compositing prohibited.
@@ -188,7 +187,7 @@ CRU <- reactive({
 CRU2 <- reactive({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	isolate(
-		if(!is.null(CRU_master()) && length(input$vars)>1) dcast(CRU_master(), Domain + Month + Year + Decade ~ Var, value.var="Val") else NULL
+		if(!is.null(CRU_master()) && length(input$vars)>1) dcast(CRU_master(), Phase + Model + Scenario + Domain + Month + Year + Decade ~ Var, value.var="Val") else NULL
 	)
 })
 
@@ -378,6 +377,8 @@ subjectChoices3 <- reactive({ getSubjectChoices(inx=input$xvar, ingrp=input$grou
 subjectSelected3 <- reactive({
 	if(!is.null(input$subjects3)) strsplit(input$subjects3, "-")[[1]] else NULL
 })
+
+Variability <- reactive({ if(!is.null(input$variability)) !input$variability else NULL })
 
 # Data aggregation
 datCollapseGroups <- reactive({

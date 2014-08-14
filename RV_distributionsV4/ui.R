@@ -34,8 +34,8 @@ shinyUI(pageWithSidebar(
 			uiOutput("BW"),
 			downloadButton("dlCurPlot", "Download Graphic"),
 			downloadButton('dldat', 'Download Sample')
-		),
-		conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
+		)#,
+		#conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
 	),
 	mainPanel(
 		tabsetPanel(

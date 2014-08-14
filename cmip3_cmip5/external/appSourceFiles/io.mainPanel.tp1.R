@@ -37,6 +37,11 @@ output$Colorpalettes <- renderUI({
 		fill.vs.border=input$altplot, fill.vs.border2=dat()$Var[1]=="Precipitation")
 })
 
+output$Alpha1 <- renderUI({
+	if(is.null(input$plotButton) || input$plotButton==0) return()
+	if(!is.null(dat())) selectInput("alpha1", "Transparency", seq(0.1, 1, by=0.1), selected=0.5, width="100%")
+})
+
 output$LegendPos1 <- renderUI({
 	if(is.null(input$plotButton) || input$plotButton==0) return()
 	if(is.null(input$group) || input$group=="None/Force Pool") return()
@@ -72,8 +77,8 @@ output$ButtonsAndTable <- renderUI({
 	input$plotButton
 	isolate(
 		btnTable(permit=permitPlot(), btn=input$plotButton, tbl="SubsetTable",
-			out=c("Colorseq", "Colorpalettes", "LegendPos1", "PlotFontSize", "Bartype", "Bardirection"),
-			out.n=6, dl=c("dlCurPlot1", "dlCurTable1"))
+			out=c("Colorseq", "Colorpalettes", "Alpha1", "LegendPos1", "PlotFontSize", "Bartype", "Bardirection"),
+			out.n=7, dl=c("dlCurPlot1", "dlCurTable1"))
 	)
 })
 
@@ -83,6 +88,11 @@ output$Colorseq2 <- renderUI({
 
 output$Colorpalettes2 <- renderUI({
 	getColorPalettes(id="colorpalettes2", colseq=input$colorseq2, grp=input$group2, n.grp=n.groups2(), btn=input$plotButton)
+})
+
+output$Alpha2 <- renderUI({
+	if(is.null(input$plotButton) || input$plotButton==0) return()
+	if(!is.null(dat2())) selectInput("alpha2", "Transparency", seq(0.1, 1, by=0.1), selected=0.5, width="100%")
 })
 
 output$LegendPos2 <- renderUI({
@@ -103,18 +113,22 @@ output$ButtonsAndTable2 <- renderUI({
 	input$plotButton
 	isolate(
 		btnTable(permit=permitPlot(), btn=input$plotButton, tbl="SubsetTable2",
-			out=c("Colorseq2", "Colorpalettes2", "LegendPos2", "PlotFontSize2"),
-			out.n=4, dl=c("dlCurPlot2", "dlCurTable2"))
+			out=c("Colorseq2", "Colorpalettes2", "Alpha2", "LegendPos2", "PlotFontSize2"),
+			out.n=5, dl=c("dlCurPlot2", "dlCurTable2"))
 	)
 })
 
 output$Colorseq3 <- renderUI({
-	getColorSeq(id="colorseq3", d=dat(), grp=input$group3, n.grp=n.groups3(), btn=input$plotButton)
+	getColorSeq(id="colorseq3", d=dat(), grp=input$group3, n.grp=n.groups3(), btn=input$plotButton, overlay=input$showCRU)
 })
 
-Variability <- reactive({ if(!is.null(input$variability)) !input$variability else NULL })
 output$Colorpalettes3 <- renderUI({
-	getColorPalettes(id="colorpalettes3", colseq=input$colorseq3, grp=input$group3, n.grp=n.groups3(), btn=input$plotButton, fill.vs.border=Variability())
+	getColorPalettes(id="colorpalettes3", colseq=input$colorseq3, grp=input$group3, n.grp=n.groups3(), btn=input$plotButton, fill.vs.border=Variability(), overlay=input$showCRU)
+})
+
+output$Alpha3 <- renderUI({
+	if(is.null(input$plotButton) || input$plotButton==0) return()
+	if(!is.null(dat())) selectInput("alpha3", "Transparency", seq(0.1, 1, by=0.1), selected=0.5, width="100%")
 })
 
 output$LegendPos3 <- renderUI({
@@ -156,7 +170,7 @@ output$ButtonsAndTable3 <- renderUI({
 	input$plotButton
 	isolate(
 		btnTable(permit=permitPlot(), btn=input$plotButton, tbl="SubsetTable3",
-			out=c("Colorseq3", "Colorpalettes3", "LegendPos3", "PlotFontSize3", "Bartype3", "Bardirection3"),
-			out.n=6, dl=c("dlCurPlot3", "dlCurTable3"))
+			out=c("Colorseq3", "Colorpalettes3", "Alpha3", "LegendPos3", "PlotFontSize3", "Bartype3", "Bardirection3"),
+			out.n=7, dl=c("dlCurPlot3", "dlCurTable3"))
 	)
 })

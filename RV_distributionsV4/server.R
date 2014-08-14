@@ -63,44 +63,53 @@ shinyServer(function(input,output){
 	})
 
 	output$dist1 <- renderUI({
-	if(length(input$dist)){
-		lab <- switch(input$dist,
-			bern="Probability:", bin="Size:", dunif="Discrete sequence minimum:", geom="Probability:", hgeom="M:", nbin="Number of successes:",	poi="Mean and Variance:", # discrete
-			beta="Alpha:", cauchy="Location:", chisq="Degrees of freedom:", exp="Rate:", F="Numerator degrees of freedom:", gam="Shape:", lap="Location:",
-			logi="Location:", lognorm="Mean(log):", norm="Mean:", pareto="Location:",	t="Degrees of freedom:", unif="Minimum:", weib="Shape:"
-			)
-		ini <- switch(input$dist,
-			bern=0.5, bin=10, dunif=0, geom=0.5, hgeom=10, nbin=10, poi=10,	# discrete
-			beta=2, cauchy=0, chisq=1, exp=1, F=1, gam=1, lap=0, logi=0, lognorm=0, norm=0, pareto=1,	t=15, unif=0, weib=1 # continuous
-			)
-		numericInput(dat()[[2]][1],lab,ini)
-	}
+		input$dist
+		isolate({
+			if(length(input$dist)){
+				lab <- switch(input$dist,
+					bern="Probability:", bin="Size:", dunif="Discrete sequence minimum:", geom="Probability:", hgeom="M:", nbin="Number of successes:",	poi="Mean and Variance:", # discrete
+					beta="Alpha:", cauchy="Location:", chisq="Degrees of freedom:", exp="Rate:", F="Numerator degrees of freedom:", gam="Shape:", lap="Location:",
+					logi="Location:", lognorm="Mean(log):", norm="Mean:", pareto="Location:",	t="Degrees of freedom:", unif="Minimum:", weib="Shape:"
+					)
+				ini <- switch(input$dist,
+					bern=0.5, bin=10, dunif=0, geom=0.5, hgeom=10, nbin=10, poi=10,	# discrete
+					beta=2, cauchy=0, chisq=1, exp=1, F=1, gam=1, lap=0, logi=0, lognorm=0, norm=0, pareto=1,	t=15, unif=0, weib=1 # continuous
+					)
+				numericInput(dat()[[2]][1],lab,ini)
+			}
+		})
 	})
 	
 	output$dist2 <- renderUI({
-	if(length(input$dist)){
-		lab <- switch(input$dist,
-			bin="Probability:",	dunif="Discrete sequence maximum:",	hgeom="N:",	nbin="Probability:", # discrete
-			beta="Beta:", cauchy="Scale:", F="Denominator degrees of freedom:", gam="Rate:", lap="Scale:", # continuous
-			logi="Scale:", lognorm="Standard deviation(log)", norm="Standard deviation:", pareto="Shape:", unif="Maximum:", weib="Scale:"
-			)
-		ini <- switch(input$dist,
-			bin=0.5, dunif=100, hgeom=20, nbin=0.5,
-			beta=2, cauchy=1, F=15, gam=1, lap=1, logi=1, lognorm=1, norm=1, pareto=3, unif=1, weib=1
-			)
-		if(any(input$dist==c("bin","dunif","hgeom","nbin","cauchy","lap","logi","pareto","weib",
-							"beta","F","gam","lognorm","norm","unif"))) numericInput(dat()[[2]][2],lab,ini)
-	}
+		input$dist
+		isolate({
+			if(length(input$dist)){
+				lab <- switch(input$dist,
+					bin="Probability:",	dunif="Discrete sequence maximum:",	hgeom="N:",	nbin="Probability:", # discrete
+					beta="Beta:", cauchy="Scale:", F="Denominator degrees of freedom:", gam="Rate:", lap="Scale:", # continuous
+					logi="Scale:", lognorm="Standard deviation(log)", norm="Standard deviation:", pareto="Shape:", unif="Maximum:", weib="Scale:"
+					)
+				ini <- switch(input$dist,
+					bin=0.5, dunif=100, hgeom=20, nbin=0.5,
+					beta=2, cauchy=1, F=15, gam=1, lap=1, logi=1, lognorm=1, norm=1, pareto=3, unif=1, weib=1
+					)
+				if(any(input$dist==c("bin","dunif","hgeom","nbin","cauchy","lap","logi","pareto","weib",
+									"beta","F","gam","lognorm","norm","unif"))) numericInput(dat()[[2]][2],lab,ini)
+			}
+		})
 	})
 	
 	output$dist3 <- renderUI({
-	if(length(input$dist)){
-		lab <- switch(input$dist,
-			dunif="Step size:",	hgeom="K:")
-		ini <- switch(input$dist,
-			dunif=1, hgeom=5)
-		if(any(input$dist==c("dunif","hgeom"))) numericInput(dat()[[2]][3],lab,ini)
-	}
+		input$dist
+		isolate({
+			if(length(input$dist)){
+				lab <- switch(input$dist,
+					dunif="Step size:",	hgeom="K:")
+				ini <- switch(input$dist,
+					dunif=1, hgeom=5)
+				if(any(input$dist==c("dunif","hgeom"))) numericInput(dat()[[2]][3],lab,ini)
+			}
+		})
 	})
 	
 	output$sampDens <- renderUI({

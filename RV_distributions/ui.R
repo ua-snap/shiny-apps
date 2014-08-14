@@ -30,8 +30,8 @@ shinyUI(pageWithSidebar(
 			condition="input.density==true",
 			numericInput("bw","bandwidth:",1)
 		),
-		downloadButton('dldat', 'Download Sample'),
-		h5(textOutput("pageviews"))
+		downloadButton('dldat', 'Download Sample')#,
+		#h5(textOutput("pageviews"))
 	),
 	mainPanel(
 		tabsetPanel(

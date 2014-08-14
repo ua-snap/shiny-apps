@@ -24,20 +24,26 @@ shinyServer(function(input,output){
 	})
 
 	output$dist1 <- renderUI({
-		lab <- switch(input$dist,
-			norm="Mean:", unif="Minimum:", t="Degrees of freedom:", F="Numerator degrees of freedom:", gam="Shape:", exp="Rate:",
-			chisq="Degrees of freedom:", lnorm="Mean(log):", beta="Alpha:")
-		ini <- switch(input$dist,
-			norm=0, unif=0, t=15, F=1, gam=1, exp=1, chisq=1, lnorm=0, beta=2)
-		numericInput(dat()[[2]][1],lab,ini)
+		input$dist
+		isolate({
+			lab <- switch(input$dist,
+				norm="Mean:", unif="Minimum:", t="Degrees of freedom:", F="Numerator degrees of freedom:", gam="Shape:", exp="Rate:",
+				chisq="Degrees of freedom:", lnorm="Mean(log):", beta="Alpha:")
+			ini <- switch(input$dist,
+				norm=0, unif=0, t=15, F=1, gam=1, exp=1, chisq=1, lnorm=0, beta=2)
+			numericInput(dat()[[2]][1],lab,ini)
+		})
 	})
 	
 	output$dist2 <- renderUI({
-		lab <- switch(input$dist,
-			norm="Standard deviation:", unif="Maximum:", F="Denominator degrees of freedom:", gam="Rate:", lnorm="Standard deviation(log)", beta="Beta:")
-		ini <- switch(input$dist,
-			norm=1, unif=1, F=15, gam=1, lnorm=1, beta=2)
-		if(any(input$dist==c("norm","unif","F","gam","lnorm","beta"))) numericInput(dat()[[2]][2],lab,ini)
+		input$dist
+		isolate({
+			lab <- switch(input$dist,
+				norm="Standard deviation:", unif="Maximum:", F="Denominator degrees of freedom:", gam="Rate:", lnorm="Standard deviation(log)", beta="Beta:")
+			ini <- switch(input$dist,
+				norm=1, unif=1, F=15, gam=1, lnorm=1, beta=2)
+			if(any(input$dist==c("norm","unif","F","gam","lnorm","beta"))) numericInput(dat()[[2]][2],lab,ini)
+		})
 	})
 	
 	output$dldat <- downloadHandler(

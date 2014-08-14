@@ -1,6 +1,6 @@
 column(4,
 	wellPanel(
-		fluidRow(column(9, checkboxInput("showDataPanel1", h5("Data Selection Panel"), TRUE)), column(3, br(), uiOutput("GoButton"))),
+		fluidRow(column(9, checkboxInput("showDataPanel1", h5("Data Selection Panel"), TRUE)), column(3, br(), actionButton("goButton", "Subset Data"))),
 		conditionalPanel(condition="input.showDataPanel1",
 			fluidRow(
 				column(6, selectInput("vars","Climate variable:",c("", varnames),selected="", multiple=T, width="100%")),
@@ -14,10 +14,9 @@ column(4,
 				column(6, selectInput("cmip3models","CMIP3 climate models:",choices=c("", modnames[[1]]),selected="",multiple=T, width="100%")),
 				column(6, selectInput("cmip5models","CMIP5 climate models:",choices=c("", modnames[[2]]),selected="",multiple=T, width="100%"))
 			),
-			#fluidRow(
-				#column(6, checkboxInput("compositeModel","Make composite(s) of selected models", FALSE)),
-				#column(6, checkboxInput("showCRU","Overlay CRU data", FALSE))
-			#),
+			fluidRow(
+				column(12, checkboxInput("compositeModel","Make composite(s) of selected models", FALSE))
+			),
 			sliderInput("yrs","Years:", min=min(years), max=max(years), value=range(years), step=1, format="####", width="100%"),
 			fluidRow(
 				column(6, selectInput("mos","Months:",choices=c("", month.abb),selected="",multiple=T, width="100%")),
@@ -65,6 +64,8 @@ column(4,
 					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("VertFacet")),
 					conditionalPanel(condition="input.tsp == 'plot2'", uiOutput("VertFacet2")),
 					conditionalPanel(condition="input.tsp == 'plot3'", uiOutput("VertFacet3")))),
+			fluidRow(
+				column(6, checkboxInput("showCRU","Include CRU data", FALSE))),
 			fluidRow(
 				column(6, conditionalPanel(condition="input.tsp == 'plot3'", uiOutput("Boxplots")), h5(uiOutput("SummarizeByXtitle"))),
 				column(6,

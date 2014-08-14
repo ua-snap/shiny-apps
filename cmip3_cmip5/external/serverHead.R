@@ -30,7 +30,7 @@ bindEvent <- function(eventExpr, callback, env=parent.frame(), quoted=FALSE) {
 ##############################
 
 colorsHCL <- function(n) hcl(h=seq(0,(n-1)/(n),length=n)*360,c=100,l=65,fixup=TRUE) # evenly spaced HCL colors when too many levels present
-cbpalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7") # colorblind-friendly palette option
+cbpalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999") # colorblind-friendly palette option
 
 logo <- readPNG("www/img/SNAP_acronym_100px.png")
 logo.alpha <- 1
@@ -80,7 +80,7 @@ getPooledVars <- function(inx, ingrp, infct, grp.choices, fct.choices, choices, 
 }
 
 getPlotSubTitle <- function(pooled, yrs, mos, mod, scen, phase=c("CMIP3", "CMIP5"), dom){
-	yrs.lab <- ifelse("Year" %in% pooled, paste("Years: ", paste(yrs[1], "-", yrs[2]), "\n", collapse=""), "")
+	yrs.lab <- ifelse("Year" %in% pooled, paste("Years: ", paste(yrs[1], "-", tail(yrs,1)), "\n", collapse=""), "")
 	mos.lab <- ifelse("Month" %in% pooled, paste("Months: ", paste(mos, collapse=", "), "\n", collapse=""), "")
 	mod.lab <- ifelse("Model" %in% pooled, paste("GCMs: ", paste(mod, collapse=", "), "\n", collapse=""), "")
 	scen.lab <- ifelse("Scenario" %in% pooled, paste("Scenarios: ", paste(scen, collapse=", "), "\n", collapse=""), "")
@@ -93,7 +93,7 @@ getPlotSubTitle <- function(pooled, yrs, mos, mod, scen, phase=c("CMIP3", "CMIP5
 
 getPlotTitle <- function(grp, facet, pooled, yrs, mos, mod, scen, phase=c("CMIP3", "CMIP5"), dom){
 	gfp <- c(grp, facet, pooled)
-	yrs.lab <- ifelse("Year" %in% gfp, "", paste(yrs[1], "-", yrs[2]))
+	yrs.lab <- ifelse("Year" %in% gfp, "", paste(yrs[1], "-", tail(yrs,1)))
 	mos.lab <- ifelse("Month" %in% gfp, "", paste(mos, collapse=", "))
 	mod.lab <- ifelse("Model" %in% gfp, "", paste(mod, collapse=", "))
 	scen.lab <- ifelse("Scenario" %in% gfp, "", paste(scen, collapse=", "))
@@ -193,26 +193,28 @@ pooledVarsCaption <- function(pv, permit, ingrp){
 	}
 }
 
-getColorSeq <- function(id, d, grp, n.grp, btn){
+getColorSeq <- function(id, d, grp, n.grp, btn, overlay=FALSE){
 	if(is.null(btn) || btn==0) return()
 	if(is.null(grp) || grp=="None/Force Pool") return()
+	if(overlay) n.grp <- n.grp + 1
 	x <- "Nominal"
 	if(!is.null(grp)){
-		if(n.grp>9) x <- "Evenly spaced" else if(grp!="Model") x <- c("Nominal","Increasing","Centered")
+		if(n.grp>9) x <- "Evenly spaced" else if(n.grp>8) x <- c("Increasing","Centered") else if(grp!="Model") x <- c("Nominal","Increasing","Centered")
 	}
 	if(!is.null(d)) selectInput(id, "Color levels", x, selected=x[1]) else NULL
 }
 
-getColorPalettes <- function(id, colseq, grp, n.grp, btn, fill.vs.border=NULL, fill.vs.border2=TRUE){
+getColorPalettes <- function(id, colseq, grp, n.grp, btn, fill.vs.border=NULL, fill.vs.border2=TRUE, overlay=FALSE){
 	if(is.null(btn) || btn==0) return()
 	if(is.null(grp) || grp=="None/Force Pool") return()
+	if(overlay) n.grp <- n.grp + 1
 	if(!is.null(colseq)){
 		if(colseq=="Nominal"){
 			pal <- c("Accent","Dark2","Pastel1","Pastel2","Paired","Set1","Set2","Set3")
-			if(n.grp<=7) pal <- c("CB-friendly",pal)
+			if(n.grp<=8) pal <- c("CB-friendly",pal)
 			if(!is.null(fill.vs.border)) if(fill.vs.border & fill.vs.border2) pal <- paste(rep(pal,each=2),c("fill","border")) 
 		} else if(colseq=="Evenly spaced"){
-			if(n.grp()>9) pal <- "HCL: 9+ levels"
+			if(n.grp>9) pal <- "HCL: 9+ levels"
 			if(!is.null(fill.vs.border)) if(fill.vs.border & fill.vs.border2) pal <- paste(rep(pal,each=2),c("fill","border")) 
 		} else if(colseq=="Increasing"){
 			pal <- c("Blues","BuGn","BuPu","GnBu","Greens","Greys","Oranges","OrRd","PuBu","PuBuGn","PuRd","Purples","RdPu","Reds","YlGn","YlGnBu","YlOrBr","YlOrRd")
@@ -223,14 +225,14 @@ getColorPalettes <- function(id, colseq, grp, n.grp, btn, fill.vs.border=NULL, f
 	}
 }
 
-btnTable <- function(permit, btn, tbl, out, out.n, dl){
+btnTable <- function(permit, btn, tbl, out, out.n, dl){ # A very hardcoded function
 	x <- NULL
 	if(permit){
 		if(is.null(btn) || btn==0){
 			x <- fluidRow(column(12, dataTableOutput(tbl)))
 		} else {
-			if(out.n==4) out.row <- fluidRow(uiOutput(out[1]), uiOutput(out[2]), uiOutput(out[3]), uiOutput(out[4]))
-			if(out.n==6) out.row <- fluidRow(uiOutput(out[1]), uiOutput(out[2]), uiOutput(out[3]), uiOutput(out[4]), uiOutput(out[5]), uiOutput(out[6]))
+			if(out.n==5) out.row <- fluidRow(uiOutput(out[1]), uiOutput(out[2]), uiOutput(out[3]), uiOutput(out[4]), uiOutput(out[5]))
+			if(out.n==7) out.row <- fluidRow(uiOutput(out[1]), uiOutput(out[2]), uiOutput(out[3]), uiOutput(out[4]), uiOutput(out[5]), uiOutput(out[6]), uiOutput(out[7]))
 			x <- fluidRow(
 				column(2,
 					out.row,
