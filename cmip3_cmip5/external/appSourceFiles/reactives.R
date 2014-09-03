@@ -100,7 +100,7 @@ dat_master <- reactive({
 			} else {
 				region.ind <- which(region.names %in% input$doms)
 				for(i in 1:length(region.ind)) {
-					load(region.gcm.files[region.ind[i]], envir=environment())
+					load(region.gcm.files[region.ind[i]])
 					if(i==1) region.dat.final <- region.dat else region.dat.final <- rbind(region.dat.final, region.dat)
 				}
 				x <- subset(region.dat, Month %in% month.abb[match(Months(), month.abb)] & 
