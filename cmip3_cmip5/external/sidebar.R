@@ -3,29 +3,30 @@ column(4,
 		fluidRow(column(9, checkboxInput("showDataPanel1", h5("Data Selection Panel"), TRUE)), column(3, br(), actionButton("goButton", "Subset Data"))),
 		conditionalPanel(condition="input.showDataPanel1",
 			fluidRow(
-				column(6, selectInput("vars","Climate variable:",c("", varnames),selected="", multiple=T, width="100%")),
-				column(6, selectInput("units","Units:",c("","C, mm","F, in"),selected="", width="100%"))
+				column(6, selectInput("vars", "Climate variable:", c("", varnames), selected="", multiple=T, width="100%")),
+				column(6, selectInput("units", "Units:", c("","C, mm","F, in"), selected="", width="100%"))
 			),
 			fluidRow(
-				column(6, selectInput("cmip3scens","CMIP3 emissions scenarios:",choices=c("", scennames[[1]]),selected="",multiple=T, width="100%")),
-				column(6, selectInput("cmip5scens","CMIP5 emissions scenarios:",choices=c("", scennames[[2]]),selected="",multiple=T, width="100%"))
+				column(6, selectInput("cmip3scens", "CMIP3 emissions scenarios:", choices=c("", scennames[[1]]), selected="", multiple=T, width="100%")),
+				column(6, selectInput("cmip5scens", "CMIP5 emissions scenarios:", choices=c("", scennames[[2]]), selected="", multiple=T, width="100%"))
 			),
 			fluidRow(
-				column(6, selectInput("cmip3models","CMIP3 climate models:",choices=c("", modnames[[1]]),selected="",multiple=T, width="100%")),
-				column(6, selectInput("cmip5models","CMIP5 climate models:",choices=c("", modnames[[2]]),selected="",multiple=T, width="100%"))
+				column(6, selectInput("cmip3models", "CMIP3 climate models:", choices=c("", modnames[[1]]), selected="", multiple=T, width="100%")),
+				column(6, selectInput("cmip5models", "CMIP5 climate models:", choices=c("", modnames[[2]]), selected="", multiple=T, width="100%"))
 			),
 			fluidRow(
-				column(12, checkboxInput("compositeModel","Make composite(s) of selected models", FALSE))
+				column(12, checkboxInput("compositeModel", "Make composite(s) of selected models", FALSE))
 			),
 			sliderInput("yrs","Years:", min=min(years), max=max(years), value=range(years), step=1, format="####", width="100%"),
 			fluidRow(
-				column(6, selectInput("mos","Months:",choices=c("", month.abb),selected="",multiple=T, width="100%")),
+				column(6, selectInput("mos", "Months:", choices=c("", month.abb), selected="", multiple=T, width="100%")),
 				column(6,  selectInput("decs", "Decades:", choices=c("", paste0(decades,"s")), selected="", multiple=T, width="100%"))
 			),
 			fluidRow(
-				column(6, selectInput("doms","Spatial domain:",c("", domnames),selected="", multiple=T, width="100%")),
-				#column(6, selectInput("cities","City:",c("", cities.meta$Domain),selected="", multiple=F, width="100%")) # multiple=FALSE temporarily
-				column(6, selectInput("cities","City:",c("", city.names),selected="", multiple=F, width="100%")) # multiple=FALSE temporarily
+				#column(6, selectInput("doms", "Region:", c("", domnames), selected="", multiple=T, width="100%")),
+				column(6, selectInput("doms", "Region:", c("", region.names), selected="", multiple=T, width="100%")),
+				#column(6, selectInput("cities", "City:", c("", cities.meta$Domain), selected="", multiple=F, width="100%")) # multiple=FALSE temporarily
+				column(6, selectInput("cities", "City:", c("", city.names), selected="", multiple=F, width="100%")) # multiple=FALSE temporarily
 			)
 		)
 	),

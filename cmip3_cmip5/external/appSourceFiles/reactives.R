@@ -98,7 +98,12 @@ dat_master <- reactive({
 					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Domain %in% input$map_shape_click$id)
 			} else {
-				x <- subset(d, Month %in% month.abb[match(Months(), month.abb)] & 
+				region.ind <- which(region.names %in% input$doms)
+				for(i in 1:length(region.ind)) {
+					load(region.gcm.files[region.ind[i]], envir=environment())
+					if(i==1) region.dat.final <- region.dat else region.dat.final <- rbind(region.dat.final, region.dat)
+				}
+				x <- subset(region.dat, Month %in% month.abb[match(Months(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Domain %in% input$doms)
 			}
