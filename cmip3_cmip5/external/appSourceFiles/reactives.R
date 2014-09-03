@@ -100,10 +100,10 @@ dat_master <- reactive({
 			} else {
 				region.ind <- which(region.names %in% input$doms)
 				for(i in 1:length(region.ind)) {
-					load(region.gcm.files[region.ind[i]])
+					load(region.gcm.files[region.ind[i]], envir=environment())
 					if(i==1) region.dat.final <- region.dat else region.dat.final <- rbind(region.dat.final, region.dat)
 				}
-				x <- subset(region.dat, Month %in% month.abb[match(Months(), month.abb)] & 
+				x <- subset(region.dat.final, Month %in% month.abb[match(Months(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Domain %in% input$doms)
 			}
