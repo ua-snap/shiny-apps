@@ -68,6 +68,16 @@ regionSelected <- reactive({ length(input$doms) > 0 })
 citySelected <- reactive({ length(input$cities) > 0 })
 locSelected <- reactive({ regionSelected() | citySelected() })
 
+#loadData <- reactive({
+#	if(length(input$loc)){
+#		if(length(input$loc)>=1 & input$cond=="Location"){
+#			for(i in 1:length(input$loc)) if(!exists(input$loc[i], envir=.GlobalEnv)) load(paste("data/",input$loc[i],".RData",sep=""), envir=.GlobalEnv)
+#		} else {
+#			if(!exists(input$loc[1], envir=.GlobalEnv)) load(paste("data/",input$loc[1],".RData",sep=""), envir=.GlobalEnv)
+#		}
+#	}
+#})
+	
 # Initially retain all climate variables regardless of user's selection
 dat_master <- reactive({
 	if(is.null(input$goButton) || input$goButton==0) return()
@@ -76,11 +86,15 @@ dat_master <- reactive({
 			x <- NULL
 		} else {
 			if(length(input$cities) && input$cities[1]!="") {
-				x <- subset(d.cities, Month %in% month.abb[match(Months(), month.abb)] & 
+				city.ind <- which(city.names==input$cities)
+				load(city.gcm.files[city.ind], envir=environment())
+				x <- subset(city.dat, Month %in% month.abb[match(Months(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Domain %in% input$cities)
 			} else if(is.character(input$map_shape_click$id) && input$map_shape_click$id[1]!="") {
-				x <- subset(d.cities, Month %in% month.abb[match(Months(), month.abb)] & 
+				city.ind <- which(city.names==input$map_shape_click$id)
+				load(city.gcm.files[city.ind], envir=environment())
+				x <- subset(city.dat, Month %in% month.abb[match(Months(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Domain %in% input$map_shape_click$id)
 			} else {
