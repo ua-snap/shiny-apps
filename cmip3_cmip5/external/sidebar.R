@@ -24,7 +24,8 @@ column(4,
 			),
 			fluidRow(
 				column(6, selectInput("doms","Spatial domain:",c("", domnames),selected="", multiple=T, width="100%")),
-				column(6, selectInput("cities","City:",c("", cities.meta$Domain),selected="", multiple=F, width="100%")) # multiple=FALSE temporarily
+				#column(6, selectInput("cities","City:",c("", cities.meta$Domain),selected="", multiple=F, width="100%")) # multiple=FALSE temporarily
+				column(6, selectInput("cities","City:",c("", city.names),selected="", multiple=F, width="100%")) # multiple=FALSE temporarily
 			)
 		)
 	),
