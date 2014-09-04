@@ -1,4 +1,5 @@
 *.Rhistory
+.RData
 restart.txt
 *pageviews.Rdata
 run_alfresco/*.JSON
