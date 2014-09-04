@@ -27,7 +27,7 @@ doPlot_ts <- function(...){
 doPlot_scatter <- function(...){
 	if(permitPlot() & !is.null(input$group2)){
 		if(!(input$group2!="None/Force Pool" & !length(input$colorpalettes2))){
-			scatterPlot(d=dat2(), x="Temperature", y="Precipitation", form.string=input$xy, grp=input$group2, n.grp=n.groups2(),
+			scatterPlot(d=dat2(), form.string=input$xy, grp=input$group2, n.grp=n.groups2(),
 				panels=facet.panels2(), facet.by=input$facet2, vert.facet=input$vert.facet2,
 				fontsize=input$plotFontSize2, colpal=input$colorpalettes2, colseq=input$colorseq2, mos=Months(),
 				contourlines=input$conplot, hexbin=input$hexbin, pts.alpha=input$alpha2, show.overlay=input$showCRU, overlay=CRU2(), jit=input$jitterXY, plot.title=plot_sp_title(), plot.subtitle=plot_sp_subtitle(),
