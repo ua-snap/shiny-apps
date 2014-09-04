@@ -61,7 +61,12 @@ output$plot1 <- renderPlot({
 	input$bardirection
 	input$legendPos1
 	input$plotFontSize
-	isolate( doPlot_ts(show.logo=F) )
+	isolate({
+		progress <- Progress$new(session, min=1, max=10)
+		on.exit(progress$close())
+		progress$set(message="Plotting, please wait", detail="Generating plot...")
+		doPlot_ts(show.logo=F)
+	})
 }, height=700, width=1200)
 
 output$dlCurPlot1 <- downloadHandler(
@@ -75,7 +80,7 @@ output$dlCurTable1 <- downloadHandler(
 
 # Scatterplot
 plot2ht <- function(){
-	ht <- 1200
+	ht <- 1000
 	if(!is.null(facet.panels2())){
 		cols <- ceiling(sqrt(facet.panels2()))
 		rows <- ceiling(facet.panels2()/cols)
@@ -91,8 +96,13 @@ output$plot2 <- renderPlot({ # render plot from doPlot1 for mainPanel tabsetPane
 	#input$conplot
 	input$legendPos2
 	input$plotFontSize2
-	isolate( doPlot_scatter(show.logo=F) )
-}, height=plot2ht, width=1200)
+	isolate({
+		progress <- Progress$new(session, min=1, max=10)
+		on.exit(progress$close())
+		progress$set(message="Plotting, please wait", detail="Generating plot...")
+		doPlot_scatter(show.logo=F)
+		})
+}, height=plot2ht, width=1000)
 
 output$dlCurPlot2 <- downloadHandler(
 	filename='scatterplot.pdf',
@@ -113,7 +123,12 @@ output$plot3 <- renderPlot({ # render plot from doPlot1 for mainPanel tabsetPane
 	input$bardirection3
 	input$legendPos3
 	input$plotFontSize3
-	isolate( doPlot_var(show.logo=F) )
+	isolate({
+		progress <- Progress$new(session, min=1, max=10)
+		on.exit(progress$close())
+		progress$set(message="Plotting, please wait", detail="Generating plot...")
+		doPlot_var(show.logo=F)
+		})
 }, height=700, width=1200)
 
 output$dlCurPlot3 <- downloadHandler(
