@@ -1,6 +1,14 @@
 column(4,
 	wellPanel(
-		fluidRow(column(9, checkboxInput("showDataPanel1", h5("Data Selection Panel"), TRUE)), column(3, br(), actionButton("goButton", "Subset Data"))),
+		fluidRow(
+			column(4, checkboxInput("showDataPanel1", h5("Data Selection"), TRUE)),
+			column(4, actionButton("goButton", "Subset Data")),
+			column(4,
+				conditionalPanel(condition="input.tsp == 'plot1' && input.goButton > 0", downloadButton("dlCurTable1", "Download Data")),
+				conditionalPanel(condition="input.tsp == 'plot2' && input.goButton > 0", downloadButton("dlCurTable2", "Download Data")),
+				conditionalPanel(condition="input.tsp == 'plot3' && input.goButton > 0", downloadButton("dlCurTable3", "Download Data"))
+			)
+		),
 		conditionalPanel(condition="input.showDataPanel1",
 			fluidRow(
 				column(6, selectInput("vars", "Climate variable:", c("", varnames), selected="", multiple=T, width="100%")),
@@ -31,7 +39,15 @@ column(4,
 		)
 	),
 	wellPanel(
-		checkboxInput("showDisplayPanel1", h5("Plot Options Panel"), TRUE),
+		fluidRow(
+			column(4, checkboxInput("showDisplayPanel1", h5("Plot Options"), TRUE)),
+			column(4, uiOutput("PlotButton")),
+			column(4,
+				conditionalPanel(condition="input.tsp == 'plot1' && input.goButton > 0", downloadButton("dlCurPlot1", "Download Plot")),
+				conditionalPanel(condition="input.tsp == 'plot2' && input.goButton > 0", downloadButton("dlCurPlot2", "Download Plot")),
+				conditionalPanel(condition="input.tsp == 'plot3' && input.goButton > 0", downloadButton("dlCurPlot3", "Download Plot"))
+			)
+		),
 		conditionalPanel(condition="input.showDisplayPanel1",
 			fluidRow(
 				column(6,
@@ -84,7 +100,18 @@ column(4,
 					#conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("CLbootbar"))),
 				column(4,
 					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("CLbootsmooth")))),
-			fluidRow( column(6, p(style="text-align:justify", em("Additional display options available below plot."))), column(6, uiOutput("PlotButton")) )
+			fluidRow( column(6, p(style="text-align:justify", em("Additional display options available below plot."))), column(6, "") ),
+			fluidRow(
+				column(6,
+					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("Colorseq"), uiOutput("Alpha1"), uiOutput("Bartype"), uiOutput("LegendPos1")),
+					conditionalPanel(condition="input.tsp == 'plot2'", uiOutput("Colorseq2"), uiOutput("Alpha2"), uiOutput("LegendPos2")),
+					conditionalPanel(condition="input.tsp == 'plot3'", uiOutput("Colorseq3"), uiOutput("Alpha3"), uiOutput("Bartype3"), uiOutput("LegendPos3"))),
+				column(6,
+					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("Colorpalettes"), uiOutput("PlotFontSize"), uiOutput("Bardirection")),
+					conditionalPanel(condition="input.tsp == 'plot2'", uiOutput("Colorpalettes2"), uiOutput("PlotFontSize2")),
+					conditionalPanel(condition="input.tsp == 'plot3'", uiOutput("Colorpalettes3"), uiOutput("PlotFontSize3"), uiOutput("Bardirection3"))
+				)
+			)
 		)
 	),
 	conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
