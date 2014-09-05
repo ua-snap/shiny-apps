@@ -54,13 +54,13 @@ doPlot_var <- function(...){
 # Time series plot
 output$plot1 <- renderPlot({
 	if(is.null(input$plotButton) || input$plotButton==0) return()
-	input$colorpalettes
-	input$alpha1
-	#input$altplot
-	input$bartype
-	input$bardirection
-	input$legendPos1
-	input$plotFontSize
+	#input$colorpalettes
+	#input$alpha1
+	####input$altplot
+	#input$bartype
+	#input$bardirection
+	#input$legendPos1
+	#input$plotFontSize
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
@@ -91,11 +91,11 @@ plot2ht <- function(){
 
 output$plot2 <- renderPlot({ # render plot from doPlot1 for mainPanel tabsetPanel tabPanel 1
 	if(is.null(input$plotButton) || input$plotButton==0) return()
-	input$colorpalettes2
-	input$alpha2
-	#input$conplot
-	input$legendPos2
-	input$plotFontSize2
+	#input$colorpalettes2
+	#input$alpha2
+	####input$conplot
+	#input$legendPos2
+	#input$plotFontSize2
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
@@ -116,13 +116,13 @@ output$dlCurTable2 <- downloadHandler(
 # Variability plot
 output$plot3 <- renderPlot({ # render plot from doPlot1 for mainPanel tabsetPanel tabPanel 1
 	if(is.null(input$plotButton) || input$plotButton==0) return()
-	input$colorpalettes3
-	input$alpha3
-	#input$altplot
-	input$bartype3
-	input$bardirection3
-	input$legendPos3
-	input$plotFontSize3
+	#input$colorpalettes3
+	#input$alpha3
+	####input$altplot
+	#input$bartype3
+	#input$bardirection3
+	#input$legendPos3
+	#input$plotFontSize3
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())

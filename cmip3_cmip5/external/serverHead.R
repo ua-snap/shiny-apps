@@ -193,8 +193,7 @@ pooledVarsCaption <- function(pv, permit, ingrp){
 	}
 }
 
-getColorSeq <- function(id, d, grp, n.grp, btn, overlay=FALSE){
-	if(is.null(btn) || btn==0) return()
+getColorSeq <- function(id, d, grp, n.grp, overlay=FALSE){
 	if(is.null(grp) || grp=="None/Force Pool") return()
 	if(overlay) n.grp <- n.grp + 1
 	x <- "Nominal"
@@ -204,8 +203,7 @@ getColorSeq <- function(id, d, grp, n.grp, btn, overlay=FALSE){
 	if(!is.null(d)) selectInput(id, "Color levels", x, selected=x[1]) else NULL
 }
 
-getColorPalettes <- function(id, colseq, grp, n.grp, btn, fill.vs.border=NULL, fill.vs.border2=TRUE, overlay=FALSE){
-	if(is.null(btn) || btn==0) return()
+getColorPalettes <- function(id, colseq, grp, n.grp, fill.vs.border=NULL, fill.vs.border2=TRUE, overlay=FALSE){
 	if(is.null(grp) || grp=="None/Force Pool") return()
 	if(overlay) n.grp <- n.grp + 1
 	if(!is.null(colseq)){
@@ -225,23 +223,23 @@ getColorPalettes <- function(id, colseq, grp, n.grp, btn, fill.vs.border=NULL, f
 	}
 }
 
-btnTable <- function(permit, btn, tbl, out, out.n, dl){ # A very hardcoded function
-	x <- NULL
-	if(permit){
-		if(is.null(btn) || btn==0){
-			x <- fluidRow(column(12, dataTableOutput(tbl)))
-		} else {
-			if(out.n==5) out.row <- fluidRow(uiOutput(out[1]), uiOutput(out[2]), uiOutput(out[3]), uiOutput(out[4]), uiOutput(out[5]))
-			if(out.n==7) out.row <- fluidRow(uiOutput(out[1]), uiOutput(out[2]), uiOutput(out[3]), uiOutput(out[4]), uiOutput(out[5]), uiOutput(out[6]), uiOutput(out[7]))
-			x <- fluidRow(
-				column(2,
-					out.row,
-					fluidRow(downloadButton(dl[1],"Get Plot")), br(),
-					fluidRow(downloadButton(dl[2],"Get Data"))
-				),
-				column(10, dataTableOutput(tbl))
-			)
-		}
-	}
-	x
-}
+#btnTable <- function(permit, tbl){ # A very hardcoded function
+#	x <- NULL
+#	if(permit){
+		#if(is.null(btn) || btn==0){
+#			x <- fluidRow(column(12, dataTableOutput(tbl)))
+		#} else {
+		#	if(out.n==5) out.row <- fluidRow(uiOutput(out[1]), uiOutput(out[2]), uiOutput(out[3]), uiOutput(out[4]), uiOutput(out[5]))
+		#	if(out.n==7) out.row <- fluidRow(uiOutput(out[1]), uiOutput(out[2]), uiOutput(out[3]), uiOutput(out[4]), uiOutput(out[5]), uiOutput(out[6]), uiOutput(out[7]))
+		#	x <- fluidRow(
+		#		column(2,
+		#			out.row,
+		#			fluidRow(downloadButton(dl[1],"Get Plot")), br(),
+		#			fluidRow(downloadButton(dl[2],"Get Data"))
+		#		),
+		#		column(10, dataTableOutput(tbl))
+		#	)
+		#}
+#	}
+#	x
+#}
