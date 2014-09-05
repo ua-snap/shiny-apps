@@ -1,4 +1,4 @@
-function(d, x, y, form.string, panels, grp, n.grp, facet.cols=ceiling(sqrt(panels)), facet.by, vert.facet=FALSE, fontsize=16,
+function(d, form.string, panels, grp, n.grp, facet.cols=ceiling(sqrt(panels)), facet.by, vert.facet=FALSE, fontsize=16,
 	colpal, colseq, contourlines=FALSE, hexbin=FALSE, pts.alpha=0.5, show.overlay=FALSE, overlay=NULL, jit=FALSE, plot.title="", plot.subtitle="", lgd.pos="Top", units=c("C","mm"),
 	mos=12, pooled.var, show.logo=F, logo.mat=NULL){
 		if(show.overlay & !is.null(overlay)) show.overlay <- TRUE else show.overlay <- FALSE
@@ -10,6 +10,7 @@ function(d, x, y, form.string, panels, grp, n.grp, facet.cols=ceiling(sqrt(panel
 		if(is.null(pts.alpha)) pts.alpha <- 0.5
 		if(!is.null(d)){
 			lab <- sp_xlabylab(units=units, form.string=form.string)
+			if(substr(lab$xlb, 1, 1)=="P") { x <- "Precipitation"; y <- "Temperature" } else { x <- "Temperature"; y <- "Precipitation" }
 			main <- paste0("temperature and precipitation: ", plot.title)
 			if(jit) point.pos <- position_jitter(0.1,0.1) else point.pos <- "identity"
 			grp <- adjustGroup(grp=grp, n.grp=n.grp)

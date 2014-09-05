@@ -1,4 +1,5 @@
 column(8,
+	progressInit(),
 	tabsetPanel(
 		tabPanel("Time Series",
 			uiOutput("tsText"),

@@ -81,19 +81,24 @@ locSelected <- reactive({ regionSelected() | citySelected() })
 # Initially retain all climate variables regardless of user's selection
 dat_master <- reactive({
 	if(is.null(input$goButton) || input$goButton==0) return()
+	progress <- Progress$new(session, min=1, max=10)
+	on.exit(progress$close())
 	isolate(
 		if(is.null(Months()) | is.null(currentYears()) | is.null(Decades()) | is.null(input$vars) | is.null(input$units) | is.null(scenarios()) | is.null(models_original()) | locSelected()==FALSE){
 			x <- NULL
 		} else {
+			progress$set(message="Calculating, please wait", detail="Loading requested data...")
 			if(length(input$cities) && input$cities[1]!="") {
 				city.ind <- which(city.names==input$cities)
 				load(city.gcm.files[city.ind], envir=environment())
+				progress$set(message="Calculating, please wait", detail="Subsetting data...")
 				x <- subset(city.dat, Month %in% month.abb[match(Months(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Domain %in% input$cities)
 			} else if(is.character(input$map_shape_click$id) && input$map_shape_click$id[1]!="") {
 				city.ind <- which(city.names==input$map_shape_click$id)
 				load(city.gcm.files[city.ind], envir=environment())
+				progress$set(message="Calculating, please wait", detail="Subsetting data...")
 				x <- subset(city.dat, Month %in% month.abb[match(Months(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Domain %in% input$map_shape_click$id)
@@ -103,6 +108,7 @@ dat_master <- reactive({
 					load(region.gcm.files[region.ind[i]], envir=environment())
 					if(i==1) region.dat.final <- region.dat else region.dat.final <- rbind(region.dat.final, region.dat)
 				}
+				progress$set(message="Calculating, please wait", detail="Subsetting data...")
 				x <- subset(region.dat.final, Month %in% month.abb[match(Months(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Domain %in% input$doms)
@@ -111,6 +117,7 @@ dat_master <- reactive({
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
 			# Otherwise compositing prohibited.
 			if(composite()==2){ # can assume both phases have multiple models, so split always works nicely
+				progress$set(message="Calculating, please wait", detail="Averaging models...")
 				n <- length(input$cmip3models) # will match length(input$cmip5models)
 				x <- split(x, x$Phase)
 				x1 <- split(x[[1]], x[[1]]$Model)
@@ -124,6 +131,7 @@ dat_master <- reactive({
 				x$Val[x$Var=="Temperature"] <- round(x$Val[x$Var=="Temperature"],1)
 				x$Val[x$Var=="Precipitation"] <- round(x$Val[x$Var=="Precipitation"])
 			} else if(composite()==1) {
+				progress$set(message="Calculating, please wait", detail="Averaging models...")
 				if(modelScenPair1()) n <- length(input$cmip3models) else if(modelScenPair2()) n <- length(input$cmip5models)
 				x1 <- split(x, x$Model)
 				v1 <- Reduce("+", lapply( x1, "[", c("Val") ))[,1]/n
@@ -134,13 +142,14 @@ dat_master <- reactive({
 				x$Val[x$Var=="Precipitation"] <- round(x$Val[x$Var=="Precipitation"])
 			}
 			if(input$units=="F, in"){
+			progress$set(message="Calculating, please wait", detail="Unit conversion...")
 				x$Val[x$Var=="Temperature"] <- round((9/5)*x$Val[x$Var=="Temperature"] + 32,1)
 				x$Val[x$Var=="Precipitation"] <- round(x$Val[x$Var=="Precipitation"]/25.4,3)
 			}
+			progress$set(message="Calculating, please wait", detail="Complete.")
 			rownames(x) <- NULL
 		}
 	)
-	#browser()
 	x
 })
 
