@@ -16,7 +16,7 @@ doPlot_ts <- function(...){
 			tsPlot(d=dat(), x=input$xtime, y="Val", d.grp=datCollapseGroups(), d.pool=datCollapsePooled(), grp=input$group, n.grp=n.groups(), ingroup.subjects=subjectSelected(),
 				panels=facet.panels(), facet.by=input$facet, vert.facet=input$vert.facet,
 				fontsize=input$plotFontSize, colpal=input$colorpalettes, colseq=input$colorseq, mos=Months(),
-				altplot=input$altplot, pts.alpha=input$alpha1, bartype=input$bartype, bardirection=input$bardirection, show.points=input$showpts, show.overlay=input$showCRU, overlay=CRU(), jit=input$jitterXY,
+				linePlot=input$linePlot, barPlot=input$barPlot, pts.alpha=input$alpha1, bartype=input$bartype, bardirection=input$bardirection, show.points=input$showpts, show.overlay=input$showCRU, overlay=CRU(), jit=input$jitterXY,
 				plot.title=plot_ts_title(), plot.subtitle=plot_ts_subtitle(), lgd.pos=input$legendPos1,
 				units=currentUnits(), yrange=input$yrange, clbootbar=input$clbootbar, clbootsmooth=input$clbootsmooth,
 				pooled.var=pooled.var(), logo.mat=logo.mat, ...)

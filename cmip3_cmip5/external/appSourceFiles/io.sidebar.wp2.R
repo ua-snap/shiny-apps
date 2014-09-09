@@ -75,10 +75,17 @@ output$PooledVar3 <- renderUI({
 })
 
 # Switch to line plot for temperature or barplot for precipitation (TS plot), contour lines (scatter plot)
-output$Altplot <- renderUI({
+output$LinePlot <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	isolate(
-		if(!is.null(dat())) if(!("Temperature" %in% dat()$Var)) checkboxInput("altplot", "Barplot", FALSE) else checkboxInput("altplot", "Line plot", FALSE)
+		if(!is.null(dat())) checkboxInput("linePlot", "Trend Lines", FALSE)
+	)
+})
+
+output$BarPlot <- renderUI({
+	if(is.null(input$goButton) || input$goButton==0) return()
+	isolate(
+		if(!is.null(dat())) if(!("Temperature" %in% dat()$Var)) checkboxInput("barPlot", "Barplot", FALSE) else return()
 	)
 })
 
@@ -121,5 +128,5 @@ output$Hexbin <- renderUI({ checkboxInput("hexbin", "Hex bins", FALSE) })
 
 # Plot button
 output$PlotButton <- renderUI({
-	if(permitPlot() & !is.null(dat()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat())>0) actionButton("plotButton", "Generate Plot")
+	if(permitPlot() & !is.null(dat()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat())>0) actionButton("plotButton", "Generate Plot", icon="ok icon-white", styleclass="primary", block=T)
 })

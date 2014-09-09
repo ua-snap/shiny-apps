@@ -1,5 +1,5 @@
 function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
-	colpal, colseq, altplot, pts.alpha=0.5, bartype, bardirection, show.points=TRUE, show.overlay=FALSE, overlay=NULL, jit=FALSE, plot.title="", plot.subtitle="", lgd.pos="Top", units=c("C","mm"),
+	colpal, colseq, linePlot, barPlot, pts.alpha=0.5, bartype, bardirection, show.points=TRUE, show.overlay=FALSE, overlay=NULL, jit=FALSE, plot.title="", plot.subtitle="", lgd.pos="Top", units=c("C","mm"),
 	mos=12, yrange, clbootbar, clbootsmooth, pooled.var, show.logo=F, logo.mat=NULL){
 		if(show.overlay && !is.null(overlay)) show.overlay <- TRUE else show.overlay <- FALSE
 		if(show.overlay) overlay$Observed <- "CRU 3.1"
@@ -14,8 +14,8 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, face
 			#if(d$Var[1]=="Precipitation" & altplot) if(bartype=="Fill (Proportions)") ylb <- "Precipitation (proportions)"
 			main <- paste0("", tolower(d$Var[1]), ": ", plot.title)
 			if(jit) point.pos <- position_jitter(0.1,0.1) else point.pos <- "identity"
-			if(!is.null(bartype) & !is.null(altplot)){
-				if(altplot) bar.pos <- tolower(strsplit(bartype," ")[[1]])
+			if(!is.null(bartype) & !is.null(barPlot)){
+				if(barPlot) bar.pos <- tolower(strsplit(bartype," ")[[1]])
 				if(bartype=="Fill (Proportions)") ylb <- "Precipitation (proportions)"
 			}
 			wgl <- withinGroupLines(x=x, subjects=ingroup.subjects)
@@ -29,23 +29,20 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, face
 			if(!show.logo) g <- g + ggtitle(bquote(atop(.(main))))
 			if(length(colpal) & length(colseq)) g <- scaleColFillMan(g=g, default=scfm$scfm, colseq=colseq, colpal=colpal, mos=mos, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
 			if(!is.null(facet.by)) if(facet.by!="None/Force Pool") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)
-			if(!is.null(altplot)){
-				if(altplot){
-					if(d$Var[1]=="Temperature"){
-						if(wgl$subjectlines) g <- g + geom_line(position="identity", alpha=pts.alpha)
-						if(show.points) g <- g + geom_point(position=point.pos, pch=21, size=4, colour="black", alpha=pts.alpha)
-						g <- g + stat_summary(data=d, aes_string(group=grp),fun.y=mean, size=1, geom="line")
-					} else if(d$Var[1]=="Precipitation"){
+			if(!is.null(barPlot) && barPlot){#d$Var[1]=="Precipitation"){
 						if(is.null(fill)){
 							g <- g + stat_summary(data=d.pool,aes_string(group=grp), fun.y=mean, geom="bar", position=bar.pos)
 						} else g <- g + stat_summary(data=d.pool,aes_string(group=grp),fun.y=mean, geom="bar", position=bar.pos, colour="black")
-						if(wgl$subjectlines) g <- g + geom_line(position="identity", alpha=pts.alpha)
+						#if(wgl$subjectlines) g <- g + geom_line(position="identity", alpha=pts.alpha)
+						#if(show.points) g <- g + geom_point(position=point.pos, pch=21, size=4, colour="black", alpha=pts.alpha)
 						if(!is.null(bardirection)) if(bardirection=="Horizontal bars") g <- g + coord_flip()
-					}
-				} else {
-					if(wgl$subjectlines) g <- g + geom_line(position="identity", alpha=pts.alpha)
-					if(show.points) g <- g + geom_point(position=point.pos, pch=21, size=4, colour="black", alpha=pts.alpha)
-				}
+			}
+			if(!is.null(linePlot) && linePlot){
+				#if(linePlot){
+					#if(d$Var[1]=="Temperature"){
+						if(wgl$subjectlines) g <- g + geom_line(position="identity", alpha=pts.alpha)
+						if(show.points) g <- g + geom_point(position=point.pos, pch=21, size=4, colour="black", alpha=pts.alpha)
+						g <- g + stat_summary(data=d, aes_string(group=grp),fun.y=mean, size=1, geom="line")
 			} else {
 				if(wgl$subjectlines) g <- g + geom_line(position="identity", alpha=pts.alpha)
 				if(show.points) g <- g + geom_point(position=point.pos, pch=21, size=4, colour="black", alpha=pts.alpha)
@@ -70,7 +67,7 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, face
 			if(show.overlay){
 				observed.col <- if(grp==1) "red" else "black"
 				if(wgl$subjectlines) g <- g + geom_line(data=overlay, aes_string(x=x, y=y, group=wgl$subjects, colour=NULL, fill=NULL), position="identity", colour=observed.col, alpha=pts.alpha)
-				if(!is.null(altplot) && altplot){
+				if(!is.null(linePlot) && linePlot){
 					g <- g + stat_summary(data=overlay, aes_string(x=x, y=y, group=grp, colour=NULL, fill=NULL, size="Observed"), fun.y=mean, geom="line", colour=observed.col)	
 				}
 				if(show.points) g <- g + geom_point(data=overlay, aes_string(x=x, y=y, group=NULL, colour=NULL, fill=NULL), position=point.pos, pch=21, size=4, fill="black", colour="red", alpha=pts.alpha)

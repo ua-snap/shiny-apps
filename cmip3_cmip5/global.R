@@ -1,4 +1,5 @@
 library(shinyIncubator)
+library(shinysky)
 load("external/gcm_meta.RData",envir=.GlobalEnv)
 load("external/files_meta.RData",envir=.GlobalEnv)
 load("external/data_CRU31.RData", envir=.GlobalEnv)
