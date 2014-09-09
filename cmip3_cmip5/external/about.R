@@ -1,9 +1,9 @@
 function(){
 	tabPanel("About",
-		p(style="text-align:justify",'This R Shiny web app allows the user to perform stochastic gradient boosting on a simulated dataset using the R gbm package.
-		The simulated data come directly from the gbm help file. Currently, features are limited.'),
-		p(style="text-align:justify",'I would like to continue enhancing this app with many additional features and graphics, not to mention switching over from the simulated dataset to something more real and relevant.
-		Stay tuned for updates.'),
+		p(style="text-align:justify",'This R Shiny web app compares downscaled outputs from CMIP3 and CMIP5 global climate models (GCMs) in a variety of ways.
+		Downscaled observation-based historical data from the Climatological Research Unit (CRU 3.1) can be included in comparisons as well.'),
+		p(style="text-align:justify",'Currently, there are three main plot types focusing on exploratory data analysis:
+		basic time series plots (not time series analysis), scatter plots, and various plots designed to highlight variability more specifically than the first two.'),
 		br(),
 
 		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),
@@ -33,12 +33,10 @@ function(){
 					HTML('<li>'),a("Alaska weather station and CRU EDA", href="http://shiny.snap.uaf.edu/ak_station_cru_eda/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Alaska and western Canada communities and climate", href="http://shiny.snap.uaf.edu/akcan_climate/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Alaska  communities historical daily precipitation", href="http://shiny.snap.uaf.edu/ak_daily_precipitation/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Gradient boosting example", href="http://shiny.snap.uaf.edu/gbm_example/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Basic example app with image() plots", href="http://shiny.snap.uaf.edu/tree_rings/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Monty Hall gone wild", href="http://shiny.snap.uaf.edu/monty_hall/", target="_blank"),HTML('</li>'),
 				HTML('</ul>')),
-				strong('Code'),
-				p('Source code available at',
-				a('GitHub', href="https://github.com/ua-snap/shiny-apps/tree/master/gbm_example/", target="_blank")),
 				br()
 			),
 			div(class="span4", strong('Related blog posts'),
@@ -66,11 +64,16 @@ function(){
 					HTML('<li>'),a('Built with the Shiny package', href="http://www.rstudio.com/shiny/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),"Primary supporting R packages",HTML('</li>'),
 					HTML('<ul>'),
-						HTML('<li>'),a('gbm', href="http://cran.r-project.org/web/packages/gbm/index.html", target="_blank"),HTML('</li>'),
-						HTML('<li>'),a('ggplot2', href="http://ggplot2.org", target="_blank"),HTML('</li>'),
+						HTML('<li>'),a('shinyIncubator', href="https://github.com/rstudio/shiny-incubator", target="_blank"),HTML('</li>'),
+						HTML('<li>'),a('shinysky', href="https://github.com/AnalytixWare/ShinySky", target="_blank"),HTML('</li>'),
 						HTML('<li>'),a('plyr', href="http://cran.r-project.org/web/packages/plyr/index.html", target="_blank"),HTML('</li>'),
 						HTML('<li>'),a('reshape2', href="http://cran.r-project.org/web/packages/reshape2/index.html", target="_blank"),HTML('</li>'),
+						HTML('<li>'),a('ggplot2', href="http://cran.r-project.org/web/packages/ggplot2/index.html", target="_blank"),HTML('</li>'),
+						HTML('<li>'),a('gridExtra', href="http://cran.r-project.org/web/packages/gridExtra/index.html", target="_blank"),HTML('</li>'),
+						HTML('<li>'),a('png', href="http://cran.r-project.org/web/packages/png/index.html", target="_blank"),HTML('</li>'),
+						HTML('<li>'),a('Hmisc', href="http://cran.r-project.org/web/packages/Hmisc/index.html", target="_blank"),HTML('</li>'),
 					HTML('<ul>'),
+					HTML('<li>Source code on <a href="https://github.com/ua-snap/shiny-apps/tree/master/cmip3_cmip5/" target="_blank">GitHub</a></li>'),
 				HTML('</ul>'))
 			)
 		),

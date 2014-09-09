@@ -64,6 +64,8 @@ function(){
 					HTML('<li>'),a('Built with the Shiny package', href="http://www.rstudio.com/shiny/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),"Additional supporting R packages",HTML('</li>'),
 					HTML('<ul>'),
+					HTML('<li>'),a('shinyIncubator', href="https://github.com/rstudio/shiny-incubator", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a('shinysky', href="https://github.com/AnalytixWare/ShinySky", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a('raster', href="http://cran.r-project.org/web/packages/raster/index.html", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a('rasterVis', href="http://cran.r-project.org/web/packages/rasterVis/index.html", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a('png', href="http://cran.r-project.org/web/packages/png/index.html", target="_blank"),HTML('</li>'),
