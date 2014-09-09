@@ -129,12 +129,20 @@ Obs_updateFiles <- reactive({
 			relDir <- outDir #paste0(domainDir,"/",userDir,"/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
 			#resultsDir <- paste0("/big_scratch/shiny/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
 			
+			for(i in JSON_current()){
+				alfJSON <- fromJSON(i, simplify=F)
+				alfJSON$Fire$Spatial.IgnitionFactor[[1]] <- file.path(outDir, "ignition.tif")
+				alfJSON$Fire$Spatial.Sensitivity[[1]] <- file.path(outDir, "sensitivity.tif")
+				alfJSON <- toJSON(alfJSON, pretty=T)
+				cat(alfJSON, file=i, sep="\n")
+			}
+			
 			# system calls begin here
 			# Create Alfresco run-specific output directories and give shiny group write permissions
 			system(paste("ssh", server, "mkdir -p", outDir))
 			system(paste("ssh", server, "chmod 2775", outDir))
 			
-			system(paste("ssh", server, "Rscript", "/big_scratch/mfleonawicz/Alf_Files_20121129/make_sensitivity_ignition_maps.R", alf_ig, alf_fs))
+			system(paste("ssh", server, "Rscript", "/big_scratch/mfleonawicz/Alf_Files_20121129/make_sensitivity_ignition_maps.R", alf_ig, alf_fs, outDir))
 			system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco.slurm"), file.path(outDir,"RunAlfresco.slurm")))
 			system(paste("ssh", server, "cp", file.path(mainDir,"CompileData.slurm"), file.path(outDir,"CompileData.slurm")))
 			#system(paste("ssh", server, "cp", file.path(mainDir,"mailPNGs.sh"), file.path(outDir,"mailPNGs.sh")))

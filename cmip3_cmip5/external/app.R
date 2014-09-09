@@ -37,7 +37,7 @@ doPlot_scatter <- function(...){
 }
 
 doPlot_var <- function(...){
-	if(permitPlot() & !is.null(pooled.var3()) & !is.null(input$group2)){
+	if(permitPlot() & !is.null(pooled.var3()) & !is.null(input$group3)){
 		if(!(input$group3!="None/Force Pool" & !length(input$colorpalettes3))){
 			varPlot(d=dat(), x=input$xvar, y="Val", stat=stat(), around.mean=input$variability, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(), grp=input$group3, n.grp=n.groups3(), ingroup.subjects=subjectSelected3(),
 				panels=facet.panels3(), facet.by=input$facet3, vert.facet=input$vert.facet3,
@@ -54,13 +54,6 @@ doPlot_var <- function(...){
 # Time series plot
 output$plot1 <- renderPlot({
 	if(is.null(input$plotButton) || input$plotButton==0) return()
-	#input$colorpalettes
-	#input$alpha1
-	####input$altplot
-	#input$bartype
-	#input$bardirection
-	#input$legendPos1
-	#input$plotFontSize
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
@@ -80,7 +73,8 @@ output$dlCurTable1 <- downloadHandler(
 
 # Scatterplot
 plot2ht <- function(){
-	ht <- 1000
+	if(is.null(input$plotButton) || input$plotButton==0) return()
+	ht <- 700
 	if(!is.null(facet.panels2())){
 		cols <- ceiling(sqrt(facet.panels2()))
 		rows <- ceiling(facet.panels2()/cols)
@@ -89,20 +83,15 @@ plot2ht <- function(){
 	ht
 }
 
-output$plot2 <- renderPlot({ # render plot from doPlot1 for mainPanel tabsetPanel tabPanel 1
+output$plot2 <- renderPlot({
 	if(is.null(input$plotButton) || input$plotButton==0) return()
-	#input$colorpalettes2
-	#input$alpha2
-	####input$conplot
-	#input$legendPos2
-	#input$plotFontSize2
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
 		progress$set(message="Plotting, please wait", detail="Generating plot...")
 		doPlot_scatter(show.logo=F)
 		})
-}, height=plot2ht, width=1000)
+}, height=plot2ht, width=700)
 
 output$dlCurPlot2 <- downloadHandler(
 	filename='scatterplot.pdf',
@@ -114,15 +103,8 @@ output$dlCurTable2 <- downloadHandler(
 )
 
 # Variability plot
-output$plot3 <- renderPlot({ # render plot from doPlot1 for mainPanel tabsetPanel tabPanel 1
+output$plot3 <- renderPlot({
 	if(is.null(input$plotButton) || input$plotButton==0) return()
-	#input$colorpalettes3
-	#input$alpha3
-	####input$altplot
-	#input$bartype3
-	#input$bardirection3
-	#input$legendPos3
-	#input$plotFontSize3
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())

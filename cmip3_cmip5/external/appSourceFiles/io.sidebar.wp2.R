@@ -1,8 +1,5 @@
-# x-axis variable (TS plot), x/y axes variables (scatter plot), grouping variable, faceting variable
-output$Xtime <- renderUI({
-	#selectInput("xtime", paste(input$vars,"by:"), choices=c("Month", "Year", "Decade"), selected="Month")
-	selectInput("xtime", "X-axis (time)", choices=c("Month", "Year", "Decade"), selected="Month", width="100%")
-})
+# x-axis variable (TS plot, Variability plot), x/y axes variables (scatter plot), grouping variable, faceting variable
+# x and y variables have no reactive dependencies for plot tabs 1 and 2, see sidebar.R
 
 output$Group <- renderUI({
 	if(!is.null(group.choices())) selectInput("group", "Group/color by:", choices=group.choices(), selected=group.choices()[1], width="100%")
@@ -14,10 +11,6 @@ output$Facet <- renderUI({
 
 output$Subjects <- renderUI({
 	if(!is.null(subjectChoices())) selectInput("subjects", "Subject/Within-group lines:", choices=subjectChoices(), selected=subjectChoices()[1], width="100%")
-})
-
-output$XY <- renderUI({
-	selectInput("xy", "X & Y axes", choices=c("P ~ T", "T ~ P"), selected="P ~ T", width="100%")
 })
 
 output$Group2 <- renderUI({
@@ -44,7 +37,6 @@ output$Subjects3 <- renderUI({
 	x <- NULL
 	if(!is.null(subjectChoices3())){
 		x <- selectInput("subjects3", "Subject/Within-group lines:", choices=subjectChoices3(), selected=subjectChoices3()[1], width="100%")
-	#	if(!is.null(input$boxplots) && input$boxplots!="") x <- NULL
 	}
 	x
 })
@@ -74,7 +66,39 @@ output$PooledVar3 <- renderUI({
 	if(length(pooled.var3())) HTML(paste('<div>Pooled variable(s): ', paste(pooled.var3(), collapse=", "), '</div>', sep=""))
 })
 
-# Switch to line plot for temperature or barplot for precipitation (TS plot), contour lines (scatter plot)
+# Conditional inputs (tabset panel tab panel 1)
+output$Colorseq <- renderUI({
+	getColorSeq(id="colorseq", d=dat(), grp=input$group, n.grp=n.groups())
+})
+
+output$Colorpalettes <- renderUI({
+	getColorPalettes(id="colorpalettes", colseq=input$colorseq, grp=input$group, n.grp=n.groups(),
+		fill.vs.border=input$altplot, fill.vs.border2=dat()$Var[1]=="Precipitation")
+})
+
+output$Alpha1 <- renderUI({
+	if(!is.null(dat())) selectInput("alpha1", "Transparency", seq(0.1, 1, by=0.1), selected=0.5, width="100%")
+})
+
+output$PlotFontSize <- renderUI({
+	if(!is.null(dat())) selectInput("plotFontSize","Font size",seq(12,24,by=2),selected=16, width="100%")
+})
+
+output$Bartype <- renderUI({
+	if(is.null(input$group) || input$group=="None/Force Pool") return()
+	if(!is.null(dat())){
+		styles <- c("Dodge (Grouped)","Stack (Totals)","Fill (Proportions)")
+		if(!is.null(input$barPlot)) if(input$barPlot & dat()$Var[1]=="Precipitation") selectInput("bartype","Barplot style",styles,selected=styles[1], width="100%")
+	}
+})
+
+output$Bardirection <- renderUI({
+	if(!is.null(dat())){
+		directions <- c("Vertical bars","Horizontal bars")
+		if(!is.null(input$barPlot)) if(input$barPlot & dat()$Var[1]=="Precipitation") selectInput("bardirection","Barplot orientation",directions,selected=directions[1], width="100%")
+	}
+})
+
 output$LinePlot <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	isolate(
@@ -89,6 +113,23 @@ output$BarPlot <- renderUI({
 	)
 })
 
+# Conditional inputs (tabset panel tab panel 2)
+output$Colorseq2 <- renderUI({
+	getColorSeq(id="colorseq2", d=dat2(), grp=input$group2, n.grp=n.groups2())
+})
+
+output$Colorpalettes2 <- renderUI({
+	getColorPalettes(id="colorpalettes2", colseq=input$colorseq2, grp=input$group2, n.grp=n.groups2())
+})
+
+output$Alpha2 <- renderUI({
+	if(!is.null(dat2())) selectInput("alpha2", "Transparency", seq(0.1, 1, by=0.1), selected=0.5, width="100%")
+})
+
+output$PlotFontSize2 <- renderUI({
+	if(!is.null(dat2())) selectInput("plotFontSize2","Font size",seq(12,24,by=2),selected=16, width="100%")
+})
+
 output$Conplot <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	isolate(
@@ -96,26 +137,62 @@ output$Conplot <- renderUI({
 	)
 })
 
+# Conditional inputs (tabset panel tab panel 3)
+output$Colorseq3 <- renderUI({
+	getColorSeq(id="colorseq3", d=dat(), grp=input$group3, n.grp=n.groups3(), overlay=input$showCRU)
+})
+
+output$Colorpalettes3 <- renderUI({
+	getColorPalettes(id="colorpalettes3", colseq=input$colorseq3, grp=input$group3, n.grp=n.groups3(), fill.vs.border=Variability(), overlay=input$showCRU)
+})
+
+output$Alpha3 <- renderUI({
+	if(!is.null(dat())) selectInput("alpha3", "Transparency", seq(0.1, 1, by=0.1), selected=0.5, width="100%")
+})
+
+output$PlotFontSize3 <- renderUI({
+	if(!is.null(dat())) selectInput("plotFontSize3","Font size",seq(12,24,by=2),selected=16, width="100%")
+})
+
+output$Bartype3 <- renderUI({
+	if(is.null(input$group3) || input$group3=="None/Force Pool") return()
+	if(!is.null(dat()) & !is.null(input$variability)){
+		if(!input$variability){
+			styles <- c("Dodge (Grouped)","Stack (Totals)","Fill (Proportions)")
+			selectInput("bartype3","Barplot style",styles,selected=styles[1], width="100%")
+		} else return()
+	} else return()
+})
+
+output$Bardirection3 <- renderUI({
+	if(!is.null(dat()) & !is.null(input$variability)){
+		if(!input$variability){
+			directions <- c("Vertical bars","Horizontal bars")
+			selectInput("bardirection3","Barplot orientation",directions,selected=directions[1], width="100%")
+		}
+	}
+})
+
 output$Variability <- renderUI({
 	if(!is.null(dat())) checkboxInput("variability", "Center on mean", FALSE)
 })
 
-output$Boxplots <- renderUI({
-	if(!is.null(input$variability)) if(input$variability) selectInput("boxplots", "Box plots", choices=c("", "Basic", "Add points"), selected="", width="100%")
-})
+#output$Boxplots <- renderUI({
+#	if(!is.null(input$variability)) if(input$variability) checkboxInput("boxplots", "Box plots", FALSE)
+#})
 
-output$Dispersion <- renderUI({
-	if(!is.null(input$variability) && !input$variability) selectInput("dispersion", "Dispersion stat", choices=c("SD", "SE", "Full Spread"), selected="SD", width="100%")
-})
-
-output$ErrorBars <- renderUI({
-	if(!is.null(input$variability) && input$variability){
-		if(!is.null(input$boxplots) && input$boxplots=="") selectInput("errorBars", "Error bars", choices=c("", "95% CI", "SD", "SE", "Range"), selected="", width="100%")
-	}
-})
+#output$Dispersion <- renderUI({
+#	if(!is.null(input$variability) && !input$variability) selectInput("dispersion", "Dispersion stat", choices=c("SD", "SE", "Full Spread"), selected="SD", width="100%")
+#})
+#
+#output$ErrorBars <- renderUI({
+#	if(!is.null(input$variability) && input$variability){
+#		if(!is.null(input$boxplots) && input$boxplots=="") selectInput("errorBars", "Error bars", choices=c("", "95% CI", "SD", "SE", "Range"), selected="", width="100%")
+#	}
+#})
 
 # Options for summarizing data in TS plot (range markers, CIs, CBs)
-output$SummarizeByXtitle <- renderUI({ if(!is.null(input$group)) HTML(paste('<div>Summarize by ', input$xtime, '</div>', sep="", collapse="")) })
+#output$SummarizeByXtitle <- renderUI({ if(!is.null(input$group)) HTML(paste('<div>Summarize by ', input$xtime, '</div>', sep="", collapse="")) })
 
 output$Yrange <- renderUI({ if(!is.null(input$group)) checkboxInput("yrange", "Group range", FALSE) })
 

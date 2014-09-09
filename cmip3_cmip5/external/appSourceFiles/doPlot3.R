@@ -72,7 +72,7 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 			d.sum <- ddply(d, ply.vars, summarise, Mean=mean(Val), SD=sd(Val), SE=sd(Val)/sqrt(length(Val)), tval95=qt(0.975, df=length(Val)), Min=min(Val), Max=max(Val))
 					
 			if(around.mean){
-				if(is.null(boxplots) || boxplots=="") { g <- ggplot(d, aes_string(x=x,y=y,order=grp,colour=color,fill=fill)) } else { d$Year <- factor(d$Year); g <- ggplot(d, aes_string(x=x,y=y)) }
+				if(is.null(boxplots) || boxplots==FALSE) { g <- ggplot(d, aes_string(x=x,y=y,order=grp,colour=color,fill=fill)) } else { d$Year <- factor(d$Year); g <- ggplot(d, aes_string(x=x,y=y)) }
 			} else g <- ggplot(d, aes_string(x=x,y=y,group=grp,order=grp,colour=color,fill=fill))
 			g <- g + theme_bw(base_size=fontsize) + ylab(ylb) + theme(legend.position=tolower(lgd.pos))
 			if(!show.logo) g <- g + ggtitle(main)
@@ -91,8 +91,8 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 					if(grp==1) g <- g + geom_line(aes_string(group=ingroup.subjects), position="identity", alpha=pts.alpha) else g <- g + geom_line(aes_string(group=ingroup.subjects, colour=grp), position="identity", alpha=pts.alpha)
 				}
 				if(grp==1) basic.fill.clr <- NULL else basic.fill.clr <- grp
-				if(boxplots=="Basic") if(is.null(basic.fill.clr)) g <- g + geom_boxplot(aes_string(fill=basic.fill.clr), fill="#DDDDDD") else g <- g + geom_boxplot(aes_string(fill=basic.fill.clr))
-				if(boxplots=="Add points"){
+				if(boxplots & !show.points) if(is.null(basic.fill.clr)) g <- g + geom_boxplot(aes_string(fill=basic.fill.clr), fill="#DDDDDD") else g <- g + geom_boxplot(aes_string(fill=basic.fill.clr))
+				if(boxplots & show.points){
 					g <- g + geom_boxplot(aes_string(colour=basic.fill.clr), fill="white", outlier.colour=NA, position=dodge)
 					if(is.character(grp) & n.grp>1){
 						g <- g + geom_point(aes_string(x=xdodge, fill=basic.fill.clr), pch=21, size=4, colour="black", alpha=pts.alpha, position=position_jitter(width=0.9/(x.n*grp.n)))
@@ -100,7 +100,7 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 						g <- g + geom_point(aes_string(fill=basic.fill.clr), pch=21, size=4, colour="black", fill="red", alpha=pts.alpha, position=position_jitter(width=0.9/x.n))
 					}
 				}
-				if(is.null(boxplots) || boxplots==""){
+				if(is.null(boxplots) || boxplots==FALSE){
 					#if(subject.lines) g <- g + geom_line(aes_string(group=ingroup.subjects), position="identity")
 					g <- g + aes_string(group=grp)
 					if(!subject.lines) g <- g + stat_summary(fun.y=mean, geom="line", lwd=1)
