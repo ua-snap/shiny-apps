@@ -1,5 +1,4 @@
 column(4,
-	
 	conditionalPanel(condition="input.tsp!=='about'",
 		wellPanel(
 			h5("Select data"),
@@ -8,9 +7,11 @@ column(4,
 			selectInput("color_by", "Primary variable:", choices=c("Decade", "Month"), selected="Decade", width="100%"),
 			uiOutput("Compare"),
 			checkboxInput("include_annual", "Include annual edges:", FALSE),
-			fluidRow(
-				column(6, actionButton("plot_button", "Generate Plot")),
-				column(6, downloadButton("dlCurPlot1_PNG", "Download Plot"))
+			conditionalPanel(condition="input.months_abb !== null && input.decades !== null",
+				fluidRow(
+					column(6, actionButton("plot_button", "Generate Plot", icon="ok icon-white", styleclass="primary", block=T)),
+					column(6, downloadButton("dlCurPlot1_PNG", "Download Plot", class="btn-success btn-block"))
+				)
 			)
 		),
 		h6(HTML(
