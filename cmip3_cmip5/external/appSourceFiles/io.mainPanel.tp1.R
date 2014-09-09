@@ -65,11 +65,11 @@ output$Bardirection <- renderUI({
 	}
 })
 
-output$SubsetTable <- renderDataTable({ if(!is.null(dat())) dat()[-9] }, options=list(bSortClasses = TRUE, aLengthMenu=c(10, 25, 50), iDisplayLength=10))
+output$SubsetTable1 <- renderDataTable({ if(!is.null(dat())) dat()[-9] }, options=list(bSortClasses = TRUE, aLengthMenu=c(5, 10, 25, 50), iDisplayLength=5))
 
-output$ButtonsAndTable <- renderUI({
+output$Table1 <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
-	if(permitPlot()) fluidRow(column(12, dataTableOutput("SubsetTable")))
+	if(permitPlot()) fluidRow(column(12, dataTableOutput("SubsetTable1")))
 })
 
 output$Colorseq2 <- renderUI({
@@ -93,9 +93,9 @@ output$PlotFontSize2 <- renderUI({
 	if(!is.null(dat2())) selectInput("plotFontSize2","Font size",seq(12,24,by=2),selected=16, width="100%")
 })
 
-output$SubsetTable2 <- renderDataTable({ if(!is.null(dat2())) dat2()[-7] }, options=list(bSortClasses = TRUE, aLengthMenu=c(10, 25, 50), iDisplayLength=10))
+output$SubsetTable2 <- renderDataTable({ if(!is.null(dat2())) dat2()[-7] }, options=list(bSortClasses = TRUE, aLengthMenu=c(5, 10, 25, 50), iDisplayLength=5))
 
-output$ButtonsAndTable2 <- renderUI({
+output$Table2 <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	if(permitPlot()) fluidRow(column(12, dataTableOutput("SubsetTable2")))
 })
@@ -140,9 +140,9 @@ output$Bardirection3 <- renderUI({
 	}
 })
 
-output$SubsetTable3 <- renderDataTable({ if(!is.null(dat())) dat()[-9] }, options=list(bSortClasses = TRUE, aLengthMenu=c(10, 25, 50), iDisplayLength=10)) # same as table 1
+output$SubsetTable3 <- renderDataTable({ if(!is.null(dat())) dat()[-9] }, options=list(bSortClasses = TRUE, aLengthMenu=c(5, 10, 25, 50), iDisplayLength=5)) # same as table 1
 
-output$ButtonsAndTable3 <- renderUI({
+output$Table3 <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	if(permitPlot()) fluidRow(column(12, dataTableOutput("SubsetTable3")))
 })

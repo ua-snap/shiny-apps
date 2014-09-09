@@ -27,14 +27,14 @@ column(4,
 				column(6, selectInput("doms", "Region:", c("", region.names), selected="", multiple=T, width="100%")),
 				#column(6, selectInput("cities", "City:", c("", cities.meta$Domain), selected="", multiple=F, width="100%")) # multiple=FALSE temporarily
 				column(6, selectInput("cities", "City:", c("", city.names), selected="", multiple=F, width="100%")) # multiple=FALSE temporarily
-			),
-			fluidRow(
-				column(6, actionButton("goButton", "Subset Data", icon="ok icon-white", styleclass="primary", block=T)),
-				column(6,
-					conditionalPanel(condition="input.tsp == 'plot1' && input.goButton > 0", downloadButton("dlCurTable1", "Download Data", class="btn-success btn-block")),
-					conditionalPanel(condition="input.tsp == 'plot2' && input.goButton > 0", downloadButton("dlCurTable2", "Download Data", class="btn-success btn-block")),
-					conditionalPanel(condition="input.tsp == 'plot3' && input.goButton > 0", downloadButton("dlCurTable3", "Download Data", class="btn-success btn-block"))
-				)
+			)
+		),
+		fluidRow(
+			column(6, actionButton("goButton", "Subset Data", icon="ok icon-white", styleclass="primary", block=T)),
+			column(6,
+				conditionalPanel(condition="input.tsp == 'plot1' && input.goButton > 0", downloadButton("dlCurTable1", "Download Data", class="btn-success btn-block")),
+				conditionalPanel(condition="input.tsp == 'plot2' && input.goButton > 0", downloadButton("dlCurTable2", "Download Data", class="btn-success btn-block")),
+				conditionalPanel(condition="input.tsp == 'plot3' && input.goButton > 0", downloadButton("dlCurTable3", "Download Data", class="btn-success btn-block"))
 			)
 		)
 	),
@@ -92,7 +92,7 @@ column(4,
 					#conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("CLbootbar"))),
 				column(4,
 					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("CLbootsmooth")))),
-			fluidRow( column(6, p(style="text-align:justify", em("Additional display options available below plot."))), column(6, "") ),
+			#fluidRow( column(6, p(style="text-align:justify", em("Additional display options available below plot."))), column(6, "") ),
 			fluidRow(
 				column(6,
 					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("Colorseq"), uiOutput("Alpha1"), uiOutput("Bartype"), uiOutput("LegendPos1")),
@@ -103,14 +103,14 @@ column(4,
 					conditionalPanel(condition="input.tsp == 'plot2'", uiOutput("Colorpalettes2"), uiOutput("PlotFontSize2")),
 					conditionalPanel(condition="input.tsp == 'plot3'", uiOutput("Colorpalettes3"), uiOutput("PlotFontSize3"), uiOutput("Bardirection3"))
 				)
-			),
-			fluidRow(
-				column(6, uiOutput("PlotButton")),
-				column(6,
-					conditionalPanel(condition="input.tsp == 'plot1' && input.goButton > 0", downloadButton("dlCurPlot1", "Download Plot", class="btn-success btn-block")),
-					conditionalPanel(condition="input.tsp == 'plot2' && input.goButton > 0", downloadButton("dlCurPlot2", "Download Plot", class="btn-success btn-block")),
-					conditionalPanel(condition="input.tsp == 'plot3' && input.goButton > 0", downloadButton("dlCurPlot3", "Download Plot", class="btn-success btn-block"))
-				)
+			)
+		),
+		fluidRow(
+			column(6, uiOutput("PlotButton")),
+			column(6,
+				conditionalPanel(condition="input.tsp == 'plot1' && input.goButton > 0", downloadButton("dlCurPlot1", "Download Plot", class="btn-success btn-block")),
+				conditionalPanel(condition="input.tsp == 'plot2' && input.goButton > 0", downloadButton("dlCurPlot2", "Download Plot", class="btn-success btn-block")),
+				conditionalPanel(condition="input.tsp == 'plot3' && input.goButton > 0", downloadButton("dlCurPlot3", "Download Plot", class="btn-success btn-block"))
 			)
 		)
 	),
