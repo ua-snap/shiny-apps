@@ -43,8 +43,8 @@ column(4,
 		conditionalPanel(condition="input.showDisplayPanel1",
 			fluidRow(
 				column(6,
-					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("Xtime")), 
-					conditionalPanel(condition="input.tsp == 'plot2'", uiOutput("XY")),
+					conditionalPanel(condition="input.tsp == 'plot1'", selectInput("xtime", "X-axis (time)", choices=c("Month", "Year", "Decade"), selected="Year", width="100%")), 
+					conditionalPanel(condition="input.tsp == 'plot2'", selectInput("xy", "X & Y axes", choices=c("P ~ T", "T ~ P"), selected="P ~ T", width="100%")),
 					conditionalPanel(condition="input.tsp == 'plot3'", uiOutput("Xvar"))),
 				column(6,
 					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("Group")),
@@ -62,28 +62,37 @@ column(4,
 					)
 				),
 			fluidRow(
-				column(6, checkboxInput("showpts", "Show points", TRUE)),
-				column(6, checkboxInput("jitterXY", "Jitter points", FALSE))
+				conditionalPanel(condition="input.tsp == 'plot1'", p(uiOutput("PooledVar"))),
+				conditionalPanel(condition="input.tsp == 'plot2'", p(uiOutput("PooledVar2"))),
+				conditionalPanel(condition="input.tsp == 'plot3'", p(uiOutput("PooledVar3")))
 			),
 			fluidRow(
-				column(6,
-					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("LinePlot"), uiOutput("BarPlot")),
+				column(4,
+					checkboxInput("showpts", "Show points", TRUE),
+					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("LinePlot")),
 					conditionalPanel(condition="input.tsp == 'plot2'", uiOutput("Conplot")),
-					conditionalPanel(condition="input.tsp == 'plot3'", uiOutput("Variability"))),
-				column(6,
+					conditionalPanel(condition="input.tsp == 'plot3'", uiOutput("Variability"))
+				),
+				column(4,
+					checkboxInput("jitterXY", "Jitter points", FALSE),
+					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("BarPlot")),
+					conditionalPanel(condition="input.tsp == 'plot2'", ""),
+					conditionalPanel(condition="input.tsp == 'plot3' & input.variability == true", checkboxInput("boxplots", "Box plots", FALSE))
+				),
+				column(4,
+					checkboxInput("showCRU","Show CRU 3.1", FALSE),
 					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("VertFacet")),
 					conditionalPanel(condition="input.tsp == 'plot2'", uiOutput("VertFacet2")),
-					conditionalPanel(condition="input.tsp == 'plot3'", uiOutput("VertFacet3")))),
-			fluidRow(
-				column(6, checkboxInput("showCRU","Include CRU data", FALSE))),
-			fluidRow(
-				column(6, conditionalPanel(condition="input.tsp == 'plot3'", uiOutput("Boxplots")), h5(uiOutput("SummarizeByXtitle"))),
-				column(6,
-					conditionalPanel(condition="input.tsp == 'plot1'", p(uiOutput("PooledVar"))),
-					conditionalPanel(condition="input.tsp == 'plot2'", p(uiOutput("PooledVar2"))),
-					conditionalPanel(condition="input.tsp == 'plot3'",
-						conditionalPanel(condition="input.variability == true", uiOutput("ErrorBars")),
-						conditionalPanel(condition="input.variability == false", uiOutput("Dispersion")), p(uiOutput("PooledVar3"))))),
+					conditionalPanel(condition="input.tsp == 'plot3'", uiOutput("VertFacet3"))
+				)
+			),
+			conditionalPanel(condition="input.tsp == 'plot3'",
+				fluidRow(
+					column(6,
+						conditionalPanel(condition="input.variability == true && input.boxplots == ''", selectInput("errorBars", "Error bars", choices=c("", "95% CI", "SD", "SE", "Range"), selected="", width="100%")),
+						conditionalPanel(condition="input.variability == false", selectInput("dispersion", "Dispersion stat", choices=c("SD", "SE", "Full Spread"), selected="SD", width="100%"))),
+					column(6, "")# h5(uiOutput("SummarizeByXtitle"))),	
+				)),
 			fluidRow(
 				column(4,
 					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("Yrange")),
@@ -95,13 +104,19 @@ column(4,
 			#fluidRow( column(6, p(style="text-align:justify", em("Additional display options available below plot."))), column(6, "") ),
 			fluidRow(
 				column(6,
-					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("Colorseq"), uiOutput("Alpha1"), uiOutput("Bartype"), uiOutput("LegendPos1")),
-					conditionalPanel(condition="input.tsp == 'plot2'", uiOutput("Colorseq2"), uiOutput("Alpha2"), uiOutput("LegendPos2")),
-					conditionalPanel(condition="input.tsp == 'plot3'", uiOutput("Colorseq3"), uiOutput("Alpha3"), uiOutput("Bartype3"), uiOutput("LegendPos3"))),
+					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("Colorseq"), uiOutput("Alpha1"), uiOutput("Bardirection"),
+						conditionalPanel(condition="input.group !== null && input.group !== 'None/Force Pool'",
+							selectInput("legendPos1","Legend",c("Top","Right","Bottom","Left"),selected="Top", width="100%"))),
+					conditionalPanel(condition="input.tsp == 'plot2'", uiOutput("Colorseq2"), uiOutput("Alpha2"), 
+						conditionalPanel(condition="input.group2 !== null && input.group2 !== 'None/Force Pool'",
+							selectInput("legendPos2","Legend",c("Top","Right","Bottom","Left"),selected="Top", width="100%"))),
+					conditionalPanel(condition="input.tsp == 'plot3'", uiOutput("Colorseq3"), uiOutput("Alpha3"), uiOutput("Bardirection3"),
+						conditionalPanel(condition="input.group3 !== null && input.group3 !== 'None/Force Pool'",
+							selectInput("legendPos3","Legend",c("Top","Right","Bottom","Left"),selected="Top", width="100%")))),
 				column(6,
-					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("Colorpalettes"), uiOutput("PlotFontSize"), uiOutput("Bardirection")),
+					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("Colorpalettes"), uiOutput("PlotFontSize"), uiOutput("Bartype")),
 					conditionalPanel(condition="input.tsp == 'plot2'", uiOutput("Colorpalettes2"), uiOutput("PlotFontSize2")),
-					conditionalPanel(condition="input.tsp == 'plot3'", uiOutput("Colorpalettes3"), uiOutput("PlotFontSize3"), uiOutput("Bardirection3"))
+					conditionalPanel(condition="input.tsp == 'plot3'", uiOutput("Colorpalettes3"), uiOutput("PlotFontSize3"), uiOutput("Bartype3"))
 				)
 			)
 		),
