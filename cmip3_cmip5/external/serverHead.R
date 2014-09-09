@@ -200,7 +200,7 @@ getColorSeq <- function(id, d, grp, n.grp, overlay=FALSE){
 	if(!is.null(grp)){
 		if(n.grp>9) x <- "Evenly spaced" else if(n.grp>8) x <- c("Increasing","Centered") else if(grp!="Model") x <- c("Nominal","Increasing","Centered")
 	}
-	if(!is.null(d)) selectInput(id, "Color levels", x, selected=x[1]) else NULL
+	if(!is.null(d)) selectInput(id, "Color levels", x, selected=x[1], width="100%") else NULL
 }
 
 getColorPalettes <- function(id, colseq, grp, n.grp, fill.vs.border=NULL, fill.vs.border2=TRUE, overlay=FALSE){
@@ -219,27 +219,6 @@ getColorPalettes <- function(id, colseq, grp, n.grp, fill.vs.border=NULL, fill.v
 		} else if(colseq=="Centered"){
 			pal <- c("BrBG","PiYG","PRGn","PuOr","RdBu","RdGy","RdYlBu","RdYlGn","Spectral")
 		}
-		selectInput(id, "Color palette", pal, selected=pal[1])
+		selectInput(id, "Color palette", pal, selected=pal[1], width="100%")
 	}
 }
-
-#btnTable <- function(permit, tbl){ # A very hardcoded function
-#	x <- NULL
-#	if(permit){
-		#if(is.null(btn) || btn==0){
-#			x <- fluidRow(column(12, dataTableOutput(tbl)))
-		#} else {
-		#	if(out.n==5) out.row <- fluidRow(uiOutput(out[1]), uiOutput(out[2]), uiOutput(out[3]), uiOutput(out[4]), uiOutput(out[5]))
-		#	if(out.n==7) out.row <- fluidRow(uiOutput(out[1]), uiOutput(out[2]), uiOutput(out[3]), uiOutput(out[4]), uiOutput(out[5]), uiOutput(out[6]), uiOutput(out[7]))
-		#	x <- fluidRow(
-		#		column(2,
-		#			out.row,
-		#			fluidRow(downloadButton(dl[1],"Get Plot")), br(),
-		#			fluidRow(downloadButton(dl[2],"Get Data"))
-		#		),
-		#		column(10, dataTableOutput(tbl))
-		#	)
-		#}
-#	}
-#	x
-#}
