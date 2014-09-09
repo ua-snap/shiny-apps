@@ -54,14 +54,14 @@ output$Bartype <- renderUI({
 	if(is.null(input$group) || input$group=="None/Force Pool") return()
 	if(!is.null(dat())){
 		styles <- c("Dodge (Grouped)","Stack (Totals)","Fill (Proportions)")
-		if(!is.null(input$altplot)) if(input$altplot & dat()$Var[1]=="Precipitation") selectInput("bartype","Barplot style",styles,selected=styles[1], width="100%")
+		if(!is.null(input$barPlot)) if(input$barPlot & dat()$Var[1]=="Precipitation") selectInput("bartype","Barplot style",styles,selected=styles[1], width="100%")
 	}
 })
 
 output$Bardirection <- renderUI({
 	if(!is.null(dat())){
 		directions <- c("Vertical bars","Horizontal bars")
-		if(!is.null(input$altplot)) if(input$altplot & dat()$Var[1]=="Precipitation") selectInput("bardirection","Barplot orientation",directions,selected=directions[1], width="100%")
+		if(!is.null(input$barPlot)) if(input$barPlot & dat()$Var[1]=="Precipitation") selectInput("bardirection","Barplot orientation",directions,selected=directions[1], width="100%")
 	}
 })
 
