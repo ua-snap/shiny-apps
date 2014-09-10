@@ -10,7 +10,9 @@ function(){
 		<p style="text-align:justify">The app also features some custom CSS, a pdf download button for any of the static (non-RGL) graphics,
 		and a tab for viewing the <strong><span style="color:#3366ff;">R</span></strong> code on which the app is based.
 		The code has ACE syntax highlighting via the <em>shinyAce</em> package. The user can control the highlighting theme and font size.
-		The plots have a dark theme to blend with the overall CSS. However, plot background color can be set to standard white. This is useful is you plan to print a plot.</p>'
+		The plots have a dark theme to blend with the overall CSS. However, plot background color can be set to standard white. This is useful if you plan to print a plot.
+		UPDATE: Code syntax highlighting using the <em>shinyAce</em> has been removed. Although it works in Windows via <code>runApp()</code> it is extremely buggy on various servers
+		regardless of configurations or versioning. I have had to settle for using the Shiny showcase display mode, which is very elegant but ultimately provides less control.</p>'
 		),
 		br(),
 

@@ -5,6 +5,6 @@ if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
 options(rgl.useNULL=TRUE)
 library(rgl); library(plot3D)
 
-load("external/data.RData",envir=.GlobalEnv)
+load("data.RData",envir=.GlobalEnv)
 
-shinyServer(function(input, output, session) source("external/app.R", local = TRUE))
+shinyServer(function(input, output, session) source("app.R", local = TRUE))

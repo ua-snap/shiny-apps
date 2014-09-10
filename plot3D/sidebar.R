@@ -155,10 +155,10 @@ column(4,
 			id="nlp",
 			widths=c(12,1)
 		),
-		div(class="row-fluid",
-			div(class="span6", selectInput("hltheme", "Code highlighting theme:", getAceThemes(), selected="clouds_midnight", width="100%")),
-			div(class="span6", selectInput("hlfontsize", "Font size:", seq(8,24,by=2), selected=12, width="100%"))
-		),
+		#div(class="row-fluid",
+		#	div(class="span6", selectInput("hltheme", "Code highlighting theme:", getAceThemes(), selected="clouds_midnight", width="100%")),
+		#	div(class="span6", selectInput("hlfontsize", "Font size:", seq(8,24,by=2), selected=12, width="100%"))
+		#),
 		h6(HTML(
 			'<p style="text-align:justify;">I use code externalization for more complex apps to keep the
 			<strong><span style="color:#3366ff;">R</span></strong> code organized.
@@ -168,6 +168,6 @@ column(4,
 			In turn, <em>app.R</em> sources all of the reactive inputs/outputs/expressions
 			in any remaining <strong><span style="color:#3366ff;">R</span></strong> scripts.</p>'
 		))
-	),
-	conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
+	)#,
+	#conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
 )

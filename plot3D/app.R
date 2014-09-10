@@ -1,17 +1,17 @@
 # Source reactive expressions
-source("external/appSourceFiles/reactives.R",local=T)
+source("reactives.R",local=T)
 
 # Reactive expression (see reactives.R) for code tab in main panel
 # Ideal, but cannot do this on the server side due to a bug in the shinyAce package.
 #output$codeTab <- renderUI({ codeTab() })
 
-observe({
-	input$tsp
-	input$nlp
-	input$hltheme
-	for(i in 1:length(R_files)) eval(parse(text=sprintf("input$%s", gsub("\\.", "", basename(R_files[i])))))
-	for(i in 1:length(R_files)) updateAceEditor(session, gsub("\\.", "", basename(R_files[i])), theme=input$hltheme, fontSize=input$hlfontsize)
-})
+#observe({
+	#input$tsp
+	#input$nlp
+	#input$hltheme
+	#for(i in 1:length(R_files)) eval(parse(text=sprintf("input$%s", gsub("\\.", "", basename(R_files[i])))))
+#	for(i in 1:length(R_files)) updateAceEditor(session, gsub("\\.", "", basename(R_files[i])), theme=input$hltheme, fontSize=input$hlfontsize, readOnly=T)
+#})
 
 getStaticType <- function(type){
 	switch(type,
@@ -69,9 +69,9 @@ output$dl_plotStaticPDF <- downloadHandler( # render plot to pdf for download
 	}
 )
 
-output$pageviews <-	renderText({
-	if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
-	pageviews <- pageviews + 1
-	save(pageviews,file="pageviews.Rdata")
-	paste("Visits:",pageviews)
-})
+#output$pageviews <-	renderText({
+#	if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
+#	pageviews <- pageviews + 1
+#	save(pageviews,file="pageviews.Rdata")
+#	paste("Visits:",pageviews)
+#})
