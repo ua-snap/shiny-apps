@@ -1,4 +1,4 @@
-tabPanelAbout <- source("external/about.R",local=T)$value
+tabPanelAbout <- source("about.R",local=T)$value
 headerPanel_2 <- function(title, h, windowTitle=title) {    
   tagList(
     tags$head(tags$title(windowTitle)),
@@ -7,9 +7,9 @@ headerPanel_2 <- function(title, h, windowTitle=title) {
 }
 
 shinyUI(fluidPage(
-	source("external/header.R",local=T)$value,
+	source("header.R",local=T)$value,
 	fluidRow(
-		source("external/sidebar.R",local=T)$value,
-		source("external/main.R",local=T)$value
+		source("sidebar.R",local=T)$value,
+		source("main.R",local=T)$value
 	)
 ))
