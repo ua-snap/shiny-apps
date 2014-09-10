@@ -1,4 +1,4 @@
-library(shinyAce)
+#library(shinyAce)
 library(shinyRGL) # must be in global.R with shiny version 0.10.0
 dataset.names <- c("Volcano (Maunga Whau)","Sinc","Lorenz Attractor","Hypsometry data")
 anyPlot <- "input.tsp==='p2Dcontour' || input.tsp==='p2Dimage' || input.tsp==='p3Dpersp' ||
