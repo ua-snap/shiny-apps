@@ -12,13 +12,13 @@ any3DStatic <- "input.tsp==='p3Dpersp' || input.tsp==='p3Dribbon' || input.tsp==
 LorenzText <- "The Lorenz Attractor data has been prepared only for interactive 3D (RGL) display."
 conPan_LA <- conditionalPanel(condition="input.dataset==='Lorenz Attractor'", h5(LorenzText))
 
-R_files <- paste0(c("global", "ui", "server", "app", "sidebar", "main", "about", "reactives"), ".R")
+#R_files <- paste0(c("global", "ui", "server", "app", "sidebar", "main", "about", "reactives"), ".R")
 
-showCode <- function(file, ht="600px"){
-	list(
-		h4(HTML(basename(file))),
-		aceEditor(gsub('\\.', '', basename(file)), value=paste(readLines(file), collapse='\n'), mode='r', height=ht, readOnly=TRUE)
-	)
-}
+#showCode <- function(file, ht="600px"){
+#	list(
+#		h4(HTML(basename(file))),
+#		aceEditor(gsub('\\.', '', basename(file)), value=paste(readLines(file), collapse='\n'), mode='r', height=ht, readOnly=TRUE)
+#	)
+#}
 
-for(i in 1:length(R_files)) assign(paste0("show_", gsub("\\.R", "R", basename(R_files[i]))), showCode(R_files[i]))
+#for(i in 1:length(R_files)) assign(paste0("show_", gsub("\\.R", "R", basename(R_files[i]))), showCode(R_files[i]))
