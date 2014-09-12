@@ -36,7 +36,20 @@ logo <- readPNG("www/img/SNAP_acronym_100px.png")
 logo.alpha <- 1
 logo.mat <- matrix(rgb(logo[,,1],logo[,,2],logo[,,3],logo[,,4]*logo.alpha), nrow=dim(logo)[1])
 
-# These functions are written with the structure of the app in mind. They are simply intended to avoid code duplication for plots across multiple app tabset panel tabs.
+# These functions are written with the structure of the app in mind. They are intended to avoid code duplication.
+
+nGroups <- function(grp, scenarios, models, mos, decs){
+	if(is.null(grp) || grp=="None/Force Pool") return(1)
+	if(grp=="Phase") return(2)
+	if(grp=="Model") return(length(models))
+	if(grp=="Scenario") return(length(scenarios))
+	if(grp=="Month"){ x <- length(mos); if(x==0) x <- 12; return(x) }
+	if(grp=="Decade"){ x <- length(decs); if(x==0) x <- 23; return(x) }
+	long <- c("Domain")#"Month","Decade",)
+	short <- c("doms")#"mos","decs",)
+	return(eval(parse(text=sprintf("length(input$%s)",short[which(long==grp)]))))
+}
+	
 getFacetChoices <- function(inx, ingrp, grp.choices){
 	if(!is.null(ingrp)){
 		if(length(grp.choices)>=2){ # greater than (or equal to, since group not required) 1, plus 1 to account for the "None/Force Pool" group option
@@ -197,9 +210,8 @@ getColorSeq <- function(id, d, grp, n.grp, overlay=FALSE){
 	if(is.null(grp) || grp=="None/Force Pool") return()
 	if(overlay) n.grp <- n.grp + 1
 	x <- "Nominal"
-	if(!is.null(grp)){
-		if(n.grp>9) x <- "Evenly spaced" else if(n.grp>8) x <- c("Increasing","Centered") else if(grp!="Model") x <- c("Nominal","Increasing","Centered")
-	}
+	print(n.grp)
+	if(n.grp>9) x <- "Evenly spaced" else if(n.grp>8) x <- c("Increasing","Centered") else if(grp!="Model") x <- c("Nominal","Increasing","Centered")
 	if(!is.null(d)) selectInput(id, "Color levels", x, selected=x[1], width="100%") else NULL
 }
 
@@ -221,4 +233,27 @@ getColorPalettes <- function(id, colseq, grp, n.grp, fill.vs.border=NULL, fill.v
 		}
 		selectInput(id, "Color palette", pal, selected=pal[1], width="100%")
 	}
+}
+
+annotatePlot <- function(g, data, x, y, y.fixed=NULL, text, bp=NULL, bp.position=NULL, n.groups=1){
+	if(is.null(y.fixed)) y.coord <- max(data[[y]]) else y.coord <- y.fixed
+	if(!is.null(bp) && bp) if(bp.position=="fill") y.coord <- 1 else if(bp.position=="stack") y.coord <- n.groups*y.coord
+	x.coord <- if(is.factor(data[[x]])) 0.525 else min(data[[x]])
+	g <- g + annotate("text", y=y.coord, x=x.coord, label=bquote(.(text)), hjust=0, vjust=1, fontface=3)
+	g
+}
+
+addLogo <- function(g, show.logo=FALSE, logo=NULL, show.title=FALSE, main="", fontsize=16){
+	if(show.logo){
+		if(!show.title) main <- ""
+		grid.bot <- arrangeGrob(textGrob(""), g, textGrob(""), ncol=3, widths=c(1/40,19/20,1/40))
+		grid.top <- arrangeGrob(
+			textGrob(""),
+			textGrob(main, x=unit(0.075,"npc"), y=unit(0.5,"npc"), gp=gpar(fontsize=fontsize), just=c("left")),
+			rasterGrob(logo, x=unit(0.85,"npc"), y=unit(0.5,"npc"), just=c("right")), # logo source?
+			textGrob(""),
+			widths=c(1/40,0.8,0.2,1/40), ncol=4)
+		g <- grid.arrange(textGrob(""), grid.top, grid.bot, textGrob(""), heights=c(1/40,1/20,18/20,1/40), ncol=1)
+	}
+	g
 }

@@ -4,7 +4,7 @@ column(4,
 		conditionalPanel(condition="input.showDataPanel1",
 			fluidRow(
 				column(6, selectInput("vars", "Climate variable:", c("", varnames), selected="", multiple=T, width="100%")),
-				column(6, selectInput("units", "Units:", c("","C, mm","F, in"), selected="", width="100%"))
+				column(6, selectInput("units", "Units:", c("C, mm","F, in"), selected="C, mm", width="100%"))
 			),
 			fluidRow(
 				column(6, selectInput("cmip3scens", "CMIP3 emissions scenarios:", choices=c("", scennames[[1]]), selected="", multiple=T, width="100%")),
@@ -23,14 +23,15 @@ column(4,
 				column(6,  selectInput("decs", "Decades:", choices=c("", paste0(decades,"s")), selected="", multiple=T, width="100%"))
 			),
 			fluidRow(
-				#column(6, selectInput("doms", "Region:", c("", domnames), selected="", multiple=T, width="100%")),
 				column(6, selectInput("doms", "Region:", c("", region.names), selected="", multiple=T, width="100%")),
-				#column(6, selectInput("cities", "City:", c("", cities.meta$Domain), selected="", multiple=F, width="100%")) # multiple=FALSE temporarily
 				column(6, selectInput("cities", "City:", c("", city.names), selected="", multiple=F, width="100%")) # multiple=FALSE temporarily
 			)
 		),
 		fluidRow(
-			column(6, actionButton("goButton", "Subset Data", icon="ok icon-white", styleclass="primary", block=T)),
+			column(6, 
+			conditionalPanel(condition="input.vars !== null && (input.doms !== null || input.cities !== '') &&
+				( (input.cmip3scens !== null && input.cmip3models !== null) || (input.cmip5scens !== null && input.cmip5models !== null) )", uiOutput("GoButton"))
+			),
 			column(6,
 				conditionalPanel(condition="input.tsp == 'plot1' && input.goButton > 0", downloadButton("dlCurTable1", "Download Data", class="btn-success btn-block")),
 				conditionalPanel(condition="input.tsp == 'plot2' && input.goButton > 0", downloadButton("dlCurTable2", "Download Data", class="btn-success btn-block")),
@@ -68,12 +69,14 @@ column(4,
 			),
 			fluidRow(
 				column(4,
+					checkboxInput("showTitle", "Title", TRUE),
 					checkboxInput("showpts", "Show points", TRUE),
 					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("LinePlot")),
 					conditionalPanel(condition="input.tsp == 'plot2'", uiOutput("Conplot")),
 					conditionalPanel(condition="input.tsp == 'plot3'", uiOutput("Variability"))
 				),
 				column(4,
+					checkboxInput("showPanelText", "Panel text", TRUE),
 					checkboxInput("jitterXY", "Jitter points", FALSE),
 					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("BarPlot")),
 					conditionalPanel(condition="input.tsp == 'plot2'", ""),
@@ -101,7 +104,6 @@ column(4,
 					#conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("CLbootbar"))),
 				column(4,
 					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("CLbootsmooth")))),
-			#fluidRow( column(6, p(style="text-align:justify", em("Additional display options available below plot."))), column(6, "") ),
 			fluidRow(
 				column(6,
 					conditionalPanel(condition="input.tsp == 'plot1'", uiOutput("Colorseq"), uiOutput("Alpha1"), uiOutput("Bardirection"),
