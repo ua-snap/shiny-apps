@@ -1,4 +1,20 @@
 # Datasets, scenarios, models, years, decades
+output$ShowPlotOptionsPanel <- reactive({
+	if(is.null(input$goButton) || input$goButton==0) return()
+	isolate({
+		x <- TRUE
+	})
+	x
+})
+outputOptions(output, "ShowPlotOptionsPanel", suspendWhenHidden=FALSE)
+
+observe({
+	input$goButton
+	isolate(
+		if(!is.null(input$goButton) && input$goButton!=0) updateCheckboxInput(session, "showDataPanel1", value=FALSE)
+	)
+})
+
 currentYears <- reactive({ if(!is.null(input$yrs)) as.numeric(input$yrs[1]):as.numeric(input$yrs[2]) })
 
 limitedYears <- reactive({
@@ -84,7 +100,7 @@ dat_master <- reactive({
 	progress <- Progress$new(session, min=1, max=10)
 	on.exit(progress$close())
 	isolate(
-		if(is.null(Months()) | is.null(currentYears()) | is.null(Decades()) | is.null(input$vars) | is.null(input$units) | is.null(scenarios()) | is.null(models_original()) | locSelected()==FALSE){
+		if(is.null(Months()) | is.null(input$vars) | is.null(scenarios()) | is.null(models_original()) | locSelected()==FALSE){
 			x <- NULL
 		} else {
 			progress$set(message="Calculating, please wait", detail="Loading requested data...")
@@ -154,12 +170,15 @@ dat_master <- reactive({
 })
 
 dat <- reactive({
-	if(is.null(dat_master())){
-		x <- NULL
-	} else {
-		x <- subset(dat_master(), Var %in% input$vars[1]) # only one (first) climate variable permitted for use in TS plot, even if user selects multiple
-		rownames(x) <- NULL
-	}
+	if(is.null(input$goButton) || input$goButton==0) return()
+	isolate({
+		if(is.null(dat_master())){
+			x <- NULL
+		} else {
+			x <- subset(dat_master(), Var %in% input$vars[1]) # only one (first) climate variable permitted for use in TS plot, even if user selects multiple
+			rownames(x) <- NULL
+		}
+	})
 	x
 })
 
@@ -173,7 +192,7 @@ dat2 <- reactive({
 CRU_master <- reactive({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	isolate(
-		if(is.null(Months()) | is.null(currentYears()) | is.null(Decades()) | is.null(input$vars) | is.null(input$units) | is.null(scenarios()) | is.null(models_original()) | locSelected()==FALSE){
+		if(is.null(Months()) | is.null(input$vars) | is.null(input$units) | is.null(scenarios()) | is.null(models_original()) | locSelected()==FALSE){
 			x <- NULL
 		} else {
 			if(length(input$cities) && input$cities[1]!="") {
@@ -203,12 +222,15 @@ CRU_master <- reactive({
 })
 
 CRU <- reactive({
-	if(is.null(CRU_master())){
-		x <- NULL
-	} else {
-		x <- subset(CRU_master(), Var %in% input$vars[1]) # only one (first) climate variable permitted for use in TS plot, even if user selects multiple
-		rownames(x) <- NULL
-	}
+	if(is.null(input$goButton) || input$goButton==0) return()
+	isolate(
+		if(is.null(CRU_master())){
+			x <- NULL
+		} else {
+			x <- subset(CRU_master(), Var %in% input$vars[1]) # only one (first) climate variable permitted for use in TS plot, even if user selects multiple
+			rownames(x) <- NULL
+		}
+	)
 	x
 })
 

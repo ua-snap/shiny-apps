@@ -60,7 +60,7 @@ output$plot1 <- renderPlot({
 		progress$set(message="Plotting, please wait", detail="Generating plot...")
 		doPlot_ts(show.logo=F)
 	})
-}, height=700, width=1200)
+}, height=function(){ if(is.null(input$plotButton) || input$plotButton==0) 0 else 700 }, width=1200)
 
 output$dlCurPlot1 <- downloadHandler(
 	filename='timeseries.pdf',
@@ -73,7 +73,7 @@ output$dlCurTable1 <- downloadHandler(
 
 # Scatterplot
 plot2ht <- function(){
-	if(is.null(input$plotButton) || input$plotButton==0) return()
+	if(is.null(input$plotButton) || input$plotButton==0) return(0)
 	ht <- 700
 	if(!is.null(facet.panels2())){
 		cols <- ceiling(sqrt(facet.panels2()))
@@ -111,7 +111,7 @@ output$plot3 <- renderPlot({
 		progress$set(message="Plotting, please wait", detail="Generating plot...")
 		doPlot_var(show.logo=F)
 		})
-}, height=700, width=1200)
+}, height=function(){ if(is.null(input$plotButton) || input$plotButton==0) 0 else 700 }, width=1200)
 
 output$dlCurPlot3 <- downloadHandler(
 	filename='variability.pdf',

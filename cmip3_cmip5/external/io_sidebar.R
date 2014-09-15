@@ -1,27 +1,57 @@
 # x-axis variable (TS plot, Variability plot), x/y axes variables (scatter plot), grouping variable, faceting variable
 # x and y variables have no reactive dependencies for plot tabs 1 and 2, see sidebar.R
 output$GoButton <- renderUI({
+	input$vars
+	input$units
+	input$cmip3scens
+	input$cmip5scens
+	input$cmip3models
+	input$cmip5models
+	input$compositeModel
+	input$yrs
+	input$mos
+	input$decs
+	input$doms
+	input$cities
 	actionButton("goButton", "Subset Data", icon="ok icon-white", styleclass="primary", block=T)
 })
 
 output$Group <- renderUI({
-	if(!is.null(group.choices())) selectInput("group", "Group/color by:", choices=group.choices(), selected=group.choices()[1], width="100%")
+	if(is.null(input$goButton) || input$goButton==0) return()
+	isolate(
+		if(!is.null(group.choices())) selectInput("group", "Group/color by:", choices=group.choices(), selected=group.choices()[1], width="100%")
+	)
 })
 
 output$Facet <- renderUI({
-	if(!is.null(facet.choices())) selectInput("facet","Facet/panel by:", choices=facet.choices(), selected=facet.choices()[1], width="100%")
+	if(is.null(input$goButton) || input$goButton==0) return()
+	input$group
+	isolate(
+		if(!is.null(facet.choices())) selectInput("facet","Facet/panel by:", choices=facet.choices(), selected=facet.choices()[1], width="100%")
+	)
 })
 
 output$Subjects <- renderUI({
-	if(!is.null(subjectChoices())) selectInput("subjects", "Subject/Within-group lines:", choices=subjectChoices(), selected=subjectChoices()[1], width="100%")
+	if(is.null(input$goButton) || input$goButton==0) return()
+	input$facet
+	isolate(
+		if(!is.null(subjectChoices())) selectInput("subjects", "Subject/Within-group lines:", choices=subjectChoices(), selected=subjectChoices()[1], width="100%")
+	)
 })
 
 output$Group2 <- renderUI({
-	if(!is.null(group.choices2())) selectInput("group2", "Group/color by:", choices=group.choices2(), selected=group.choices2()[1], width="100%")
+	if(is.null(input$goButton) || input$goButton==0) return()
+	isolate(
+		if(!is.null(group.choices2())) selectInput("group2", "Group/color by:", choices=group.choices2(), selected=group.choices2()[1], width="100%")
+	)
 })
 
 output$Facet2 <- renderUI({
-	if(!is.null(facet.choices2())) selectInput("facet2","Facet/panel by:", choices=facet.choices2(), selected=facet.choices2()[1], width="100%")
+	if(is.null(input$goButton) || input$goButton==0) return()
+	input$group2
+	isolate(
+		if(!is.null(facet.choices2())) selectInput("facet2","Facet/panel by:", choices=facet.choices2(), selected=facet.choices2()[1], width="100%")
+	)
 })
 
 output$Xvar <- renderUI({
@@ -29,18 +59,29 @@ output$Xvar <- renderUI({
 })
 
 output$Group3 <- renderUI({
-	if(!is.null(group.choices3())) selectInput("group3", "Group/color by:", choices=group.choices3(), selected=group.choices3()[1], width="100%")
+	if(is.null(input$goButton) || input$goButton==0) return()
+	isolate(
+		if(!is.null(group.choices3())) selectInput("group3", "Group/color by:", choices=group.choices3(), selected=group.choices3()[1], width="100%")
+	)
 })
 
 output$Facet3 <- renderUI({
-	if(!is.null(facet.choices3())) selectInput("facet3","Facet/panel by:", choices=facet.choices3(), selected=facet.choices3()[1], width="100%")
+	if(is.null(input$goButton) || input$goButton==0) return()
+	input$group3
+	isolate(
+		if(!is.null(facet.choices3())) selectInput("facet3","Facet/panel by:", choices=facet.choices3(), selected=facet.choices3()[1], width="100%")
+	)
 })
 
 output$Subjects3 <- renderUI({
+	if(is.null(input$goButton) || input$goButton==0) return()
+	input$facet3
 	x <- NULL
-	if(!is.null(subjectChoices3())){
-		x <- selectInput("subjects3", "Subject/Within-group lines:", choices=subjectChoices3(), selected=subjectChoices3()[1], width="100%")
-	}
+	isolate(
+		if(!is.null(subjectChoices3())){
+			x <- selectInput("subjects3", "Subject/Within-group lines:", choices=subjectChoices3(), selected=subjectChoices3()[1], width="100%")
+		}
+	)
 	x
 })
 

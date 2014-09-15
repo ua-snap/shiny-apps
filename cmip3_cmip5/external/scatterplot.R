@@ -7,7 +7,6 @@ function(d, form.string, panels, grp, n.grp, facet.cols=ceiling(sqrt(panels)), f
 		if(!length(lgd.pos)) lgd.pos="Top"
 		if(!length(fontsize)) fontsize <- 16
 		fontsize=as.numeric(fontsize)
-		#if(show.logo) fontsize <- fontsize - 0
 		if(is.null(pts.alpha)) pts.alpha <- 0.5
 		if(!is.null(d)){
 			lab <- sp_xlabylab(units=units, form.string=form.string)

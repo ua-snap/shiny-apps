@@ -210,8 +210,7 @@ getColorSeq <- function(id, d, grp, n.grp, overlay=FALSE){
 	if(is.null(grp) || grp=="None/Force Pool") return()
 	if(overlay) n.grp <- n.grp + 1
 	x <- "Nominal"
-	print(n.grp)
-	if(n.grp>9) x <- "Evenly spaced" else if(n.grp>8) x <- c("Increasing","Centered") else if(grp!="Model") x <- c("Nominal","Increasing","Centered")
+	if(n.grp>=9) x <- "Evenly spaced" else if(n.grp>=8) x <- c("Increasing","Centered") else if(grp!="Model") x <- c("Nominal","Increasing","Centered")
 	if(!is.null(d)) selectInput(id, "Color levels", x, selected=x[1], width="100%") else NULL
 }
 

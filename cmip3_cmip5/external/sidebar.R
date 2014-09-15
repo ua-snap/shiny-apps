@@ -39,6 +39,7 @@ column(4,
 			)
 		)
 	),
+	conditionalPanel(condition="output.ShowPlotOptionsPanel == true",
 	wellPanel(
 		checkboxInput("showDisplayPanel1", h5("Plot Options"), TRUE),
 		conditionalPanel(condition="input.showDisplayPanel1",
@@ -130,6 +131,7 @@ column(4,
 				conditionalPanel(condition="input.tsp == 'plot3' && input.goButton > 0", downloadButton("dlCurPlot3", "Download Plot", class="btn-success btn-block"))
 			)
 		)
+	)
 	),
 	conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
 )
