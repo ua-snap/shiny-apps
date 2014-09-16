@@ -223,7 +223,7 @@ getColorPalettes <- function(id, colseq, grp, n.grp, fill.vs.border=NULL, fill.v
 			if(n.grp<=8) pal <- c("CB-friendly",pal)
 			if(!is.null(fill.vs.border)) if(fill.vs.border & fill.vs.border2) pal <- paste(rep(pal,each=2),c("fill","border")) 
 		} else if(colseq=="Evenly spaced"){
-			if(n.grp>9) pal <- "HCL: 9+ levels"
+			if(n.grp>=9) pal <- "HCL: 9+ levels"
 			if(!is.null(fill.vs.border)) if(fill.vs.border & fill.vs.border2) pal <- paste(rep(pal,each=2),c("fill","border")) 
 		} else if(colseq=="Increasing"){
 			pal <- c("Blues","BuGn","BuPu","GnBu","Greens","Greys","Oranges","OrRd","PuBu","PuBuGn","PuRd","Purples","RdPu","Reds","YlGn","YlGnBu","YlOrBr","YlOrRd")

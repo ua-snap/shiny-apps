@@ -55,7 +55,7 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 			main <- paste0("", tolower(d$Var[1]), " variability: ", plot.title)
 			if(jit) point.pos <- position_jitter(0.1,0.1) else point.pos <- "identity"
 			if(!is.null(bartype)){
-				bar.pos <- tolower(strsplit(bartype," ")[[1]])
+				bar.pos <- tolower(strsplit(bartype," ")[[1]][1])
 				if(bartype=="Fill (Proportions)") ylb <- "Precipitation (proportions)"
 			} else bar.pos <- "dodge"
 			wgl <- withinGroupLines(x=x, subjects=ingroup.subjects)

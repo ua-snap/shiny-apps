@@ -59,10 +59,7 @@ output$Xvar <- renderUI({
 })
 
 output$Group3 <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
-	isolate(
-		if(!is.null(group.choices3())) selectInput("group3", "Group/color by:", choices=group.choices3(), selected=group.choices3()[1], width="100%")
-	)
+	if(!is.null(group.choices3())) selectInput("group3", "Group/color by:", choices=group.choices3(), selected=group.choices3()[1], width="100%")
 })
 
 output$Facet3 <- renderUI({
