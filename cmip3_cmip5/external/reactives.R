@@ -182,6 +182,13 @@ dat <- reactive({
 	x
 })
 
+dat_heatmap <- reactive({
+	if(is.null(input$goButton) || input$goButton==0) return()
+	isolate(
+		dat() #if(!is.null(dat()) && length(input$vars)>1) dcast(dat_master(), Phase + Model + Scenario + Domain + Month + Year + Decade ~ Var, value.var="Val") else NULL
+	)
+})
+
 dat2 <- reactive({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	isolate(
@@ -234,6 +241,13 @@ CRU <- reactive({
 	x
 })
 
+CRU_heatmap <- reactive({
+	if(is.null(input$goButton) || input$goButton==0) return()
+	isolate(
+		CRU() #if(!is.null(CRU_master()) && length(input$vars)>1) dcast(CRU_master(), Phase + Model + Scenario + Domain + Month + Year + Decade ~ Var, value.var="Val") else NULL
+	)
+})
+
 CRU2 <- reactive({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	isolate(
@@ -274,8 +288,10 @@ facet.panels <- reactive({
 			if(input$facet=="Phase") return(2)
 			if(input$facet=="Model") return(length(models()))
 			if(input$facet=="Scenario") return(length(scenarios()))
-			long <- c("Month","Decade","Domain")
-			short <- c("mos","decs","doms")
+			if(input$facet=="Month"){ x <- length(input$mos); if(x==0) x <- 12; return(x) }
+			if(input$facet=="Decade"){ x <- length(input$decs); if(x==0) x <- 23; return(x) }
+			long <- c("Domain")#"Month","Decade",)
+			short <- c("doms")#"mos","decs",)
 			eval(parse(text=sprintf("n <- length(input$%s)", short[which(long==input$facet)])))
 			if(!exists("n")) n <- NULL
 		} else n <- NULL
@@ -320,8 +336,10 @@ facet.panels2 <- reactive({
 			if(input$facet2=="Phase") return(2)
 			if(input$facet2=="Model") return(length(models()))
 			if(input$facet2=="Scenario") return(length(scenarios()))
-			long <- c("Month","Decade","Domain")
-			short <- c("mos","decs","doms")
+			if(input$facet2=="Month"){ x <- length(input$mos); if(x==0) x <- 12; return(x) }
+			if(input$facet2=="Decade"){ x <- length(input$decs); if(x==0) x <- 23; return(x) }
+			long <- c("Domain")#"Month","Decade",)
+			short <- c("doms")#"mos","decs",)
 			eval(parse(text=sprintf("n <- length(input$%s)", short[which(long==input$facet2)])))
 			if(!exists("n")) n <- NULL
 		} else n <- NULL
@@ -331,6 +349,57 @@ facet.panels2 <- reactive({
 
 pooled.var2 <- reactive({
 	x <- getPooledVars(inx=input$xy, ingrp=input$group2, infct=input$facet2, grp.choices=group.choices2(), fct.choices=facet.choices2(),
+			choices=c("Phase","Scenario","Model","Month","Year","Decade","Domain"),
+			mos=Months(), years=currentYears(), decades=Decades(), domains=input$doms, scenarios=scenarios(), models=models(),
+			cmip3scens=input$cmip3scens, cmip5scens=input$cmip5scens, cmip3mods=input$cmip3models, cmip5mods=input$cmip5models)
+	x
+})
+
+heatmap_x_choices <- reactive({
+		ind <- which(unlist(lapply(list(phases, scenarios(), models(), input$doms, Months(), currentYears(), Decades()), length))>0)
+		if(length(ind)) choices <- c("Phase","Scenario", "Model", "Domain", "Month", "Year", "Decade")[ind] else choices <- NULL
+		if(length(choices)){
+			if(length(scenarios()) < 1) choices <- choices[choices!="Scenario"]
+			if(length(models()) < 1) choices <- choices[choices!="Model"]
+			if(!length(input$cmip3scens) | !length(input$cmip5scens)) choices <- choices[choices!="Phase"]
+			if(!length(input$cmip3models) | !length(input$cmip5models)) choices <- choices[choices!="Phase"]
+		} else choices <- NULL
+	choices
+})
+
+heatmap_y_choices <- reactive({
+		ind <- which(unlist(lapply(list(phases, scenarios(), models(), input$doms, Months(), currentYears(), Decades()), length))>0)
+		if(length(ind)) choices <- c("Phase","Scenario", "Model", "Domain", "Month", "Year", "Decade")[ind] else choices <- NULL
+		if(length(choices)){
+			if(length(scenarios()) < 1) choices <- choices[choices!="Scenario"]
+			if(length(models()) < 1) choices <- choices[choices!="Model"]
+			if(!length(input$cmip3scens) | !length(input$cmip5scens)) choices <- choices[choices!="Phase"]
+			if(!length(input$cmip3models) | !length(input$cmip5models)) choices <- choices[choices!="Phase"]
+		} else choices <- NULL
+	choices
+})
+
+facetChoicesHeatmap <- reactive({ getFacetChoices(inx=input$heatmap_x, iny=input$heatmap_y, grp.choices=heatmap_x_choices()) })
+
+facetPanelsHeatmap <- reactive({
+	if(!is.null(input$facetHeatmap)){
+		if(input$facetHeatmap!="None/Force Pool"){
+			if(input$facetHeatmap=="Phase") return(2)
+			if(input$facetHeatmap=="Model") return(length(models()))
+			if(input$facetHeatmap=="Scenario") return(length(scenarios()))
+			if(input$facetHeatmap=="Month"){ x <- length(input$mos); if(x==0) x <- 12; return(x) }
+			if(input$facetHeatmap=="Decade"){ x <- length(input$decs); if(x==0) x <- 23; return(x) }
+			long <- c("Domain")#"Month","Decade",)
+			short <- c("doms")#"mos","decs",)
+			eval(parse(text=sprintf("n <- length(input$%s)", short[which(long==input$facetHeatmap)])))
+			if(!exists("n")) n <- NULL
+		} else n <- NULL
+	} else n <- NULL
+	n
+})
+
+pooledVarHeatmap <- reactive({
+	x <- getPooledVars(inx=input$heatmap_x, iny=input$heatmap_y, infct=input$facet, fct.choices=facetChoicesHeatmap(),
 			choices=c("Phase","Scenario","Model","Month","Year","Decade","Domain"),
 			mos=Months(), years=currentYears(), decades=Decades(), domains=input$doms, scenarios=scenarios(), models=models(),
 			cmip3scens=input$cmip3scens, cmip5scens=input$cmip5scens, cmip3mods=input$cmip3models, cmip5mods=input$cmip5models)
@@ -375,8 +444,10 @@ facet.panels3 <- reactive({
 			if(input$facet3=="Phase") return(2)
 			if(input$facet3=="Model") return(length(models()))
 			if(input$facet3=="Scenario") return(length(scenarios()))
-			long <- c("Month","Decade","Domain")
-			short <- c("mos","decs","doms")
+			if(input$facet3=="Month"){ x <- length(input$mos); if(x==0) x <- 12; return(x) }
+			if(input$facet3=="Decade"){ x <- length(input$decs); if(x==0) x <- 23; return(x) }
+			long <- c("Domain")#"Month","Decade",)
+			short <- c("doms")#"mos","decs",)
 			eval(parse(text=sprintf("n <- length(input$%s)", short[which(long==input$facet3)])))
 			if(!exists("n")) n <- NULL
 		} else n <- NULL
@@ -460,10 +531,12 @@ modelScenPair2 <- reactive({
 
 plot_ts_title <- reactive({ getPlotTitle(grp=input$group, facet=input$facet, pooled=pooled.var(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), dom=input$doms) })
 plot_sp_title <- reactive({ getPlotTitle(grp=input$group2, facet=input$facet2, pooled=pooled.var2(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), dom=input$doms) })
+plot_hm_title <- reactive({ getPlotTitle(grp="", facet=input$facetHeatmap, pooled=pooledVarHeatmap(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), dom=input$doms) })
 plot_var_title <- reactive({ getPlotTitle(grp=input$group3, facet=input$facet3, pooled=pooled.var3(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), dom=input$doms) })
 
 plot_ts_subtitle <- reactive({ getPlotSubTitle(pooled=pooled.var(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), dom=input$doms) })
 plot_sp_subtitle <- reactive({ getPlotSubTitle(pooled=pooled.var2(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), dom=input$doms) })
+plot_hm_subtitle <- reactive({ getPlotSubTitle(pooled=pooledVarHeatmap(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), dom=input$doms) })
 plot_var_subtitle <- reactive({ getPlotSubTitle(pooled=pooled.var3(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), dom=input$doms) })
 
 permitPlot <- reactive({

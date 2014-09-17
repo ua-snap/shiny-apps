@@ -1,8 +1,5 @@
 library(shiny)
-pkgs <- c("ggplot2","plyr","reshape2","gridExtra","png","Hmisc")
-pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
-if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
-library(Hmisc); library(png); library(ggplot2); library(plyr); library(reshape2); library(gridExtra)
+library(Hmisc); library(png); library(RColorBrewer); library(ggplot2); library(plyr); library(reshape2); library(gridExtra)
 
 library(leaflet)
 library(maps)
@@ -50,7 +47,11 @@ nGroups <- function(grp, scenarios, models, mos, decs){
 	return(eval(parse(text=sprintf("length(input$%s)",short[which(long==grp)]))))
 }
 	
-getFacetChoices <- function(inx, ingrp, grp.choices){
+getFacetChoices <- function(inx, iny=NULL, ingrp=NULL, grp.choices=NULL){
+	if(!is.null(iny)){
+		choices <- grp.choices[-which(grp.choices==inx | grp.choices==iny)]
+		if(length(choices)) return(c("None/Force Pool", choices)) else return()
+	}
 	if(!is.null(ingrp)){
 		if(length(grp.choices)>=2){ # greater than (or equal to, since group not required) 1, plus 1 to account for the "None/Force Pool" group option
 			grp.choices.sub <- grp.choices[grp.choices!="None/Force Pool"]
@@ -63,32 +64,38 @@ getFacetChoices <- function(inx, ingrp, grp.choices){
 	choices
 }
 
-getPooledVars <- function(inx, ingrp, infct, grp.choices, fct.choices, choices, mos, years, decades, domains, scenarios, models, cmip3scens, cmip5scens, cmip3mods, cmip5mods){
+getPooledVars <- function(inx, iny=NULL, ingrp=NULL, infct, grp.choices=NULL, fct.choices, choices, mos, years, decades, domains, scenarios, models, cmip3scens, cmip5scens, cmip3mods, cmip5mods){
 	if(!is.null(ingrp) & !is.null(infct)){
 		if( # the +1s are to make explicit the non-group "None/Force Pool" option in the group and facet choices
-			length(grp.choices)>=3+1 |
-			(length(grp.choices)==2+1 & !(ingrp!="None/Force Pool" & infct!="None/Force Pool")) |
-			(length(grp.choices)==1+1 & ingrp=="None/Force Pool" & infct=="None/Force Pool")
+			!(
+				length(grp.choices)>=3+1 |
+				(length(grp.choices)==2+1 & !(ingrp!="None/Force Pool" & infct!="None/Force Pool")) |
+				(length(grp.choices)==1+1 & ingrp=="None/Force Pool" & infct=="None/Force Pool")
+			)
 		){
-			pooled.var <- choices[!(choices %in% c(inx,ingrp,infct))]
-			if(infct=="None/Force Pool"){
-				pooled.var <- choices[sort(match( unique(c("Year", pooled.var[which(pooled.var %in% fct.choices)])), choices))]
-				if(inx=="Year") pooled.var <- pooled.var[pooled.var!="Year"]
-			}
-			if(length(years)==1) pooled.var <- pooled.var[pooled.var!="Year"]
-			if(length(decades)==1) pooled.var <- pooled.var[pooled.var!="Decade"]
-			if(length(domains)==1) pooled.var <- pooled.var[pooled.var!="Domain"]
-			if(length(scenarios)==1) pooled.var <- pooled.var[!(pooled.var %in% c("Phase", "Scenario"))]
-			if( (ingrp=="Scenario" | infct=="Scenario") & length(cmip3scens) & length(cmip5scens) & length(models)==2 ) pooled.var <- pooled.var[pooled.var!="Model"]
-			if( (ingrp=="Model" | infct=="Model") & length(cmip3scens) & length(cmip5scens) & length(models)==2 ) pooled.var <- pooled.var[pooled.var!="Scenario"]
-			if(length(models)==1) pooled.var <- pooled.var[!(pooled.var %in% c("Phase", "Model"))]
-			if(!length(cmip3scens) | !length(cmip5scens) | !length(cmip3mods) | !length(cmip5mods) | ingrp=="Scenario" | infct=="Scenario" | ingrp=="Model" | infct=="Model") pooled.var <- pooled.var[pooled.var!="Phase"]
-			if(length(cmip3scens) & length(cmip5scens) & length(scenarios)==2 & (ingrp=="Phase" | infct=="Phase")) pooled.var <- pooled.var[pooled.var!="Scenario"]
-			if(length(cmip3mods) & length(cmip5mods) & length(models)==2 & (ingrp=="Phase" | infct=="Phase")) pooled.var <- pooled.var[pooled.var!="Model"]
-			if(length(mos)==1) pooled.var <- pooled.var[pooled.var!="Month"]
-			if("Year" %in% pooled.var | inx=="Year") pooled.var <- pooled.var[pooled.var!="Decade"]
-			pooled.var
-		} else return()
+			return()
+		}
+	}
+	if(!is.null(iny) & !is.null(infct)) ingrp <- iny
+	if(!is.null(ingrp) & !is.null(infct)){
+		pooled.var <- choices[!(choices %in% c(inx,ingrp,infct))]
+		if(infct=="None/Force Pool"){
+			pooled.var <- choices[sort(match( unique(c("Year", pooled.var[which(pooled.var %in% fct.choices)])), choices))]
+			if(inx=="Year") pooled.var <- pooled.var[pooled.var!="Year"]
+		}
+		if(length(years)==1) pooled.var <- pooled.var[pooled.var!="Year"]
+		if(length(decades)==1) pooled.var <- pooled.var[pooled.var!="Decade"]
+		if(length(domains)==1) pooled.var <- pooled.var[pooled.var!="Domain"]
+		if(length(scenarios)==1) pooled.var <- pooled.var[!(pooled.var %in% c("Phase", "Scenario"))]
+		if( (ingrp=="Scenario" | infct=="Scenario") & length(cmip3scens) & length(cmip5scens) & length(models)==2 ) pooled.var <- pooled.var[pooled.var!="Model"]
+		if( (ingrp=="Model" | infct=="Model") & length(cmip3scens) & length(cmip5scens) & length(models)==2 ) pooled.var <- pooled.var[pooled.var!="Scenario"]
+		if(length(models)==1) pooled.var <- pooled.var[!(pooled.var %in% c("Phase", "Model"))]
+		if(!length(cmip3scens) | !length(cmip5scens) | !length(cmip3mods) | !length(cmip5mods) | ingrp=="Scenario" | infct=="Scenario" | ingrp=="Model" | infct=="Model") pooled.var <- pooled.var[pooled.var!="Phase"]
+		if(length(cmip3scens) & length(cmip5scens) & length(scenarios)==2 & (ingrp=="Phase" | infct=="Phase")) pooled.var <- pooled.var[pooled.var!="Scenario"]
+		if(length(cmip3mods) & length(cmip5mods) & length(models)==2 & (ingrp=="Phase" | infct=="Phase")) pooled.var <- pooled.var[pooled.var!="Model"]
+		if(length(mos)==1) pooled.var <- pooled.var[pooled.var!="Month"]
+		if("Year" %in% pooled.var | inx=="Year") pooled.var <- pooled.var[pooled.var!="Decade"]
+		pooled.var
 	} else return()
 }
 
@@ -177,12 +184,13 @@ scaleColFillMan_prep <- function(fill=NULL, col){
 scaleColFillMan <- function(g, default, colseq, colpal, mos, n.grp, cbpalette){
 	if(colseq=="Nominal" & default) g <- g + scale_colour_manual(values=cbpalette) + scale_fill_manual(values=cbpalette)
 	if(!default){
-		if(colseq=="Cyclic"){
-			if(colpal %in% c("Yellow-Red","Blue-Orange","Brown-Orange","Blue-Red")){
-				colorcycle <- rep(strsplit(tolower(colpal),"-")[[1]],2)[-4]
-				g <- g + scale_colour_manual( values=colorRampPalette(colorcycle)(length(mos)) ) + scale_fill_manual( values=colorRampPalette(colorcycle)(length(mos)) )
-			}
-		} else if(substr(colpal,1,3)=="HCL"){
+		#if(colseq=="Cyclic"){
+		#	if(colpal %in% c("Yellow-Red","Blue-Orange","Brown-Orange","Blue-Red")){
+		#		colorcycle <- rep(strsplit(tolower(colpal),"-")[[1]],2)[-4]
+		#		g <- g + scale_colour_manual( values=colorRampPalette(colorcycle)(length(mos)) ) + scale_fill_manual( values=colorRampPalette(colorcycle)(length(mos)) )
+		#	}
+		#} else
+		if(substr(colpal,1,3)=="HCL"){
 			g <- g + scale_color_manual(values=colorsHCL(n.grp)) + scale_fill_manual(values=colorsHCL(n.grp))
 		} else if(colpal!="none"){
 			g <- g + scale_color_brewer(palette=strsplit(colpal," ")[[1]][1]) + scale_fill_brewer(palette=strsplit(colpal," ")[[1]][1])
@@ -191,7 +199,7 @@ scaleColFillMan <- function(g, default, colseq, colpal, mos, n.grp, cbpalette){
 	g
 }
 
-pooledVarsCaption <- function(pv, permit, ingrp){
+pooledVarsCaption <- function(pv, permit, ingrp=NULL){
 	if(length(pv)){
 		pv <- tolower(paste0(pv,"s"))
 		if(length(pv)==2){
@@ -201,12 +209,13 @@ pooledVarsCaption <- function(pv, permit, ingrp){
 			pv <- paste(c(paste(pv[1:(n-2)], collapse=", "), paste(pv[(n-1):n], collapse=" and ")), collapse=", ")
 		}
 		if(permit){
-			if(ingrp=="None/Force Pool") h5(paste0("Observations include multiple ", pv, ".")) else h5(paste0("Observations in each color group include multiple ", pv, "."))
+			if(is.null(ingrp) || ingrp=="None/Force Pool") h5(paste0("Observations include multiple ", pv, ".")) else h5(paste0("Observations in each color group include multiple ", pv, "."))
 		}
 	}
 }
 
-getColorSeq <- function(id, d, grp, n.grp, overlay=FALSE){
+getColorSeq <- function(id, d, grp=NULL, n.grp=NULL, heat=FALSE, overlay=FALSE){
+	if(!is.null(d) && heat) return( selectInput(id, "Color levels", c("Increasing","Centered"), selected="Increasing", width="100%") )
 	if(is.null(grp) || grp=="None/Force Pool") return()
 	if(overlay) n.grp <- n.grp + 1
 	x <- "Nominal"
@@ -214,28 +223,33 @@ getColorSeq <- function(id, d, grp, n.grp, overlay=FALSE){
 	if(!is.null(d)) selectInput(id, "Color levels", x, selected=x[1], width="100%") else NULL
 }
 
-getColorPalettes <- function(id, colseq, grp, n.grp, fill.vs.border=NULL, fill.vs.border2=TRUE, overlay=FALSE){
-	if(is.null(grp) || grp=="None/Force Pool") return()
-	if(overlay) n.grp <- n.grp + 1
+getColorPalettes <- function(id, colseq, grp=NULL, n.grp=NULL, fill.vs.border=NULL, fill.vs.border2=TRUE, heat=FALSE, overlay=FALSE){
 	if(!is.null(colseq)){
+		pal.inc <- c("Blues","BuGn","BuPu","GnBu","Greens","Greys","Oranges","OrRd","PuBu","PuBuGn","PuRd","Purples","RdPu","Reds","YlGn","YlGnBu","YlOrBr","YlOrRd")
+		pal.cen <- c("BrBG","PiYG","PRGn","PuOr","RdBu","RdGy","RdYlBu","RdYlGn","Spectral")
+		pal.nom <- c("Accent","Dark2","Pastel1","Pastel2","Paired","Set1","Set2","Set3")
+		if(heat & colseq=="Increasing") return( selectInput(id, "Color palette", pal.inc, selected=pal.inc[1], width="100%") )
+		if(heat & colseq=="Centered") return( selectInput(id, "Color palette", pal.cen, selected=pal.cen[1], width="100%") )
+		if(is.null(grp) || grp=="None/Force Pool") return()
+		if(overlay) n.grp <- n.grp + 1
 		if(colseq=="Nominal"){
-			pal <- c("Accent","Dark2","Pastel1","Pastel2","Paired","Set1","Set2","Set3")
+			pal <- pal.nom
 			if(n.grp<=8) pal <- c("CB-friendly",pal)
 			if(!is.null(fill.vs.border)) if(fill.vs.border & fill.vs.border2) pal <- paste(rep(pal,each=2),c("fill","border")) 
 		} else if(colseq=="Evenly spaced"){
 			if(n.grp>=9) pal <- "HCL: 9+ levels"
 			if(!is.null(fill.vs.border)) if(fill.vs.border & fill.vs.border2) pal <- paste(rep(pal,each=2),c("fill","border")) 
 		} else if(colseq=="Increasing"){
-			pal <- c("Blues","BuGn","BuPu","GnBu","Greens","Greys","Oranges","OrRd","PuBu","PuBuGn","PuRd","Purples","RdPu","Reds","YlGn","YlGnBu","YlOrBr","YlOrRd")
+			pal <- pal.inc
 		} else if(colseq=="Centered"){
-			pal <- c("BrBG","PiYG","PRGn","PuOr","RdBu","RdGy","RdYlBu","RdYlGn","Spectral")
+			pal <- pal.cen
 		}
 		selectInput(id, "Color palette", pal, selected=pal[1], width="100%")
 	}
 }
 
 annotatePlot <- function(g, data, x, y, y.fixed=NULL, text, bp=NULL, bp.position=NULL, n.groups=1){
-	if(is.null(y.fixed)) y.coord <- max(data[[y]]) else y.coord <- y.fixed
+	if(is.factor(data[[y]])) y.coord <- 0.525 else if(is.null(y.fixed)) y.coord <- max(data[[y]]) else y.coord <- y.fixed
 	if(!is.null(bp) && bp) if(bp.position=="fill") y.coord <- 1 else if(bp.position=="stack") y.coord <- n.groups*y.coord
 	x.coord <- if(is.factor(data[[x]])) 0.525 else min(data[[x]])
 	g <- g + annotate("text", y=y.coord, x=x.coord, label=bquote(.(text)), hjust=0, vjust=1, fontface=3)

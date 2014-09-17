@@ -54,6 +54,23 @@ output$Facet2 <- renderUI({
 	)
 })
 
+output$Heatmap_x <- renderUI({
+	if(!is.null(heatmap_x_choices())) selectInput("heatmap_x", "X axis:", choices=heatmap_x_choices(), selected=heatmap_x_choices()[1], width="100%")
+})
+
+output$Heatmap_y <- renderUI({
+	if(!is.null(heatmap_y_choices())) selectInput("heatmap_y", "Y axis:", choices=heatmap_y_choices(), selected=heatmap_y_choices()[1], width="100%")
+})
+
+output$FacetHeatmap <- renderUI({
+	if(is.null(input$goButton) || input$goButton==0) return()
+	input$heatmap_x
+	input$heatmap_y
+	isolate(
+		if(!is.null(facetChoicesHeatmap())) selectInput("facetHeatmap","Facet/panel by:", choices=facetChoicesHeatmap(), selected=facetChoicesHeatmap()[1], width="100%")
+	)
+})
+
 output$Xvar <- renderUI({
 	if(!is.null(xvarChoices())) selectInput("xvar", "Primary axis:", choices=xvarChoices(), selected=xvarChoices()[1], width="100%")
 })
@@ -99,6 +116,10 @@ output$PooledVar2 <- renderUI({
 	if(length(pooled.var2())) HTML(paste('<div>Pooled variable(s): ', paste(pooled.var2(), collapse=", "), '</div>', sep=""))
 })
 
+output$PooledVarHeatmap <- renderUI({
+	if(length(pooledVarHeatmap())) HTML(paste('<div>Pooled variable(s): ', paste(pooledVarHeatmap(), collapse=", "), '</div>', sep=""))
+})
+
 output$VertFacet3 <- renderUI({
 	if(!is.null(facet.panels3())) if(facet.panels3()>1) checkboxInput("vert.facet3", "Vertical facet", value=FALSE)
 })
@@ -107,7 +128,7 @@ output$PooledVar3 <- renderUI({
 	if(length(pooled.var3())) HTML(paste('<div>Pooled variable(s): ', paste(pooled.var3(), collapse=", "), '</div>', sep=""))
 })
 
-# Conditional inputs (tabset panel tab panel 1)
+# Conditional inputs (tabset panel tab: time series plot)
 output$Colorseq <- renderUI({
 	getColorSeq(id="colorseq", d=dat(), grp=input$group, n.grp=n.groups())
 })
@@ -154,7 +175,7 @@ output$BarPlot <- renderUI({
 	)
 })
 
-# Conditional inputs (tabset panel tab panel 2)
+# Conditional inputs (tabset panel tab: scatter plot)
 output$Colorseq2 <- renderUI({
 	getColorSeq(id="colorseq2", d=dat2(), grp=input$group2, n.grp=n.groups2())
 })
@@ -178,7 +199,20 @@ output$Conplot <- renderUI({
 	)
 })
 
-# Conditional inputs (tabset panel tab panel 3)
+# Conditional inputs (tabset panel tab: heatmap)
+output$ColorseqHeatmap <- renderUI({
+	getColorSeq(id="colorseqHeatmap", d=dat_heatmap(), heat=TRUE)
+})
+
+output$ColorpalettesHeatmap <- renderUI({
+	getColorPalettes(id="colorpalettesHeatmap", colseq=input$colorseqHeatmap, heat=TRUE)
+})
+
+output$PlotFontSizeHeatmap <- renderUI({
+	if(!is.null(dat_heatmap())) selectInput("plotFontSizeHeatmap","Font size",seq(12,24,by=2),selected=16, width="100%")
+})
+
+# Conditional inputs (tabset panel tab: variability plots)
 output$Colorseq3 <- renderUI({
 	getColorSeq(id="colorseq3", d=dat(), grp=input$group3, n.grp=n.groups3(), overlay=input$showCRU)
 })
