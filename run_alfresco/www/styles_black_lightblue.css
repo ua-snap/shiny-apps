@@ -5,6 +5,8 @@ body {
   line-height: 20px;
   color: #CCCCCC;
   background-color: #000000;
+  background-image:url('./img/flames_plot_mirror.jpg');
+  background-size: 100%;
 }
 
 a {

@@ -1,13 +1,13 @@
 # Source reactive expressions and other code
-source("external/appSourceFiles/reactives.R",local=T) # source reactive expressions
-source("external/appSourceFiles/reactives_leaflet.R",local=T) # source reactive expressions for leaflet
-#source("external/appSourceFiles/io.sidebar.wp1.R",local=T) # source input/output objects associated with sidebar wellPanel 1
-source("external/appSourceFiles/io.sidebar.wp2.R",local=T) # source input/output objects associated with sidebar wellPanel 2
-source("external/appSourceFiles/io.mainPanel.tp1.R",local=T) # source input/output objects associated with mainPanel tabPanel 1
+source("external/reactives.R",local=T) # source reactive expressions
+source("external/reactives_leaflet.R",local=T) # source reactive expressions for leaflet
+source("external/io_sidebar.R",local=T) # source input/output objects associated with sidebar
+source("external/io_mainPanel.R",local=T) # source input/output objects associated with mainPanel
 
-tsPlot <- source("external/appSourceFiles/doPlot1.R",local=T)$value
-scatterPlot <- source("external/appSourceFiles/doPlot2.R",local=T)$value
-varPlot <- source("external/appSourceFiles/doPlot3.R",local=T)$value
+tsPlot <- source("external/plot_ts.R",local=T)$value
+scatterPlot <- source("external/plot_scatter.R",local=T)$value
+varPlot <- source("external/plot_variability.R",local=T)$value
+heatPlot <- source("external/plot_heatmap.R",local=T)$value
 
 # Specific plot function setup
 doPlot_ts <- function(...){
@@ -17,7 +17,7 @@ doPlot_ts <- function(...){
 				panels=facet.panels(), facet.by=input$facet, vert.facet=input$vert.facet,
 				fontsize=input$plotFontSize, colpal=input$colorpalettes, colseq=input$colorseq, mos=Months(),
 				linePlot=input$linePlot, barPlot=input$barPlot, pts.alpha=input$alpha1, bartype=input$bartype, bardirection=input$bardirection, show.points=input$showpts, show.overlay=input$showCRU, overlay=CRU(), jit=input$jitterXY,
-				plot.title=plot_ts_title(), plot.subtitle=plot_ts_subtitle(), lgd.pos=input$legendPos1,
+				plot.title=plot_ts_title(), plot.subtitle=plot_ts_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle, lgd.pos=input$legendPos1,
 				units=currentUnits(), yrange=input$yrange, clbootbar=input$clbootbar, clbootsmooth=input$clbootsmooth,
 				pooled.var=pooled.var(), logo.mat=logo.mat, ...)
 		} else NULL
@@ -30,9 +30,21 @@ doPlot_scatter <- function(...){
 			scatterPlot(d=dat2(), form.string=input$xy, grp=input$group2, n.grp=n.groups2(),
 				panels=facet.panels2(), facet.by=input$facet2, vert.facet=input$vert.facet2,
 				fontsize=input$plotFontSize2, colpal=input$colorpalettes2, colseq=input$colorseq2, mos=Months(),
-				contourlines=input$conplot, hexbin=input$hexbin, pts.alpha=input$alpha2, show.overlay=input$showCRU, overlay=CRU2(), jit=input$jitterXY, plot.title=plot_sp_title(), plot.subtitle=plot_sp_subtitle(),
+				contourlines=input$conplot, hexbin=input$hexbin, pts.alpha=input$alpha2, show.overlay=input$showCRU, overlay=CRU2(), jit=input$jitterXY,
+				plot.title=plot_sp_title(), plot.subtitle=plot_sp_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle,
 				lgd.pos=input$legendPos2, units=currentUnits(),	pooled.var=pooled.var2(), logo.mat=logo.mat, ...)
 		} else NULL
+	} else NULL
+}
+
+doPlot_heatmap <- function(...){
+	if(permitPlot() & !is.null(input$heatmap_x) & !is.null(input$heatmap_y) & length(input$colorpalettesHeatmap)){
+		heatPlot(d=dat_heatmap(), x=input$heatmap_x, y=input$heatmap_y,
+			panels=facetPanelsHeatmap(), facet.by=input$facetHeatmap,
+			fontsize=input$plotFontSizeHeatmap, colpal=input$colorpalettesHeatmap, reverse.colors=input$revHeatmapColors, aspect_1to1=input$aspect1to1, show.values=input$showHeatmapVals,
+			show.overlay=input$showCRU, overlay=CRU_heatmap(),
+			plot.title=plot_hm_title(), plot.subtitle=plot_hm_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle,
+			lgd.pos=input$legendPosHeatmap, units=currentUnits(), pooled.var=pooledVarHeatmap(), logo.mat=logo.mat, ...)
 	} else NULL
 }
 
@@ -43,7 +55,7 @@ doPlot_var <- function(...){
 				panels=facet.panels3(), facet.by=input$facet3, vert.facet=input$vert.facet3,
 				fontsize=input$plotFontSize3, colpal=input$colorpalettes3, colseq=input$colorseq3, mos=Months(),
 				altplot=input$altplot, boxplots=input$boxplots, pts.alpha=input$alpha3, bartype=input$bartype3, bardirection=input$bardirection3, show.points=input$showpts, show.overlay=input$showCRU, overlay=CRU(),
-				jit=input$jitterXY, plot.title=plot_var_title(), plot.subtitle=plot_var_subtitle(), lgd.pos=input$legendPos3,
+				jit=input$jitterXY, plot.title=plot_var_title(), plot.subtitle=plot_var_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle, lgd.pos=input$legendPos3,
 				units=currentUnits(), yrange=input$yrange, clbootbar=input$clbootbar, clbootsmooth=input$clbootsmooth,
 				logo.mat=logo.mat, ...)
 		} else NULL
@@ -52,7 +64,7 @@ doPlot_var <- function(...){
 
 # Primary outputs
 # Time series plot
-output$plot1 <- renderPlot({
+output$PlotTS <- renderPlot({
 	if(is.null(input$plotButton) || input$plotButton==0) return()
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
@@ -60,20 +72,20 @@ output$plot1 <- renderPlot({
 		progress$set(message="Plotting, please wait", detail="Generating plot...")
 		doPlot_ts(show.logo=F)
 	})
-}, height=700, width=1200)
+}, height=function(){ if(is.null(input$plotButton) || input$plotButton==0) 0 else 700 }, width=1200)
 
-output$dlCurPlot1 <- downloadHandler(
+output$dlCurPlotTS <- downloadHandler(
 	filename='timeseries.pdf',
 	content=function(file){ pdf(file = file, width=1.5*12, height=1.5*7, pointsize=12, onefile=FALSE); doPlot_ts(show.logo=T); dev.off() }
 )
 
-output$dlCurTable1 <- downloadHandler(
+output$dlCurTableTS <- downloadHandler(
 	filename=function(){ 'timeseries_data.csv' }, content=function(file){ write.csv(dat(), file) }
 )
 
 # Scatterplot
-plot2ht <- function(){
-	if(is.null(input$plotButton) || input$plotButton==0) return()
+plot_scatter_ht <- function(){
+	if(is.null(input$plotButton) || input$plotButton==0) return(0)
 	ht <- 700
 	if(!is.null(facet.panels2())){
 		cols <- ceiling(sqrt(facet.panels2()))
@@ -83,7 +95,7 @@ plot2ht <- function(){
 	ht
 }
 
-output$plot2 <- renderPlot({
+output$PlotScatter <- renderPlot({
 	if(is.null(input$plotButton) || input$plotButton==0) return()
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
@@ -91,19 +103,19 @@ output$plot2 <- renderPlot({
 		progress$set(message="Plotting, please wait", detail="Generating plot...")
 		doPlot_scatter(show.logo=F)
 		})
-}, height=plot2ht, width=700)
+}, height=plot_scatter_ht, width=700)
 
-output$dlCurPlot2 <- downloadHandler(
+output$dlCurPlotScatter <- downloadHandler(
 	filename='scatterplot.pdf',
 	content=function(file){ pdf(file = file, width=1.5*12, height=1.5*12, pointsize=12, onefile=FALSE); doPlot_scatter(show.logo=T); dev.off() }
 )
 
-output$dlCurTable2 <- downloadHandler(
+output$dlCurTableScatter <- downloadHandler(
 	filename=function(){ 'scatterplot_data.csv' }, content=function(file){ write.csv(dat2(), file) }
 )
 
 # Variability plot
-output$plot3 <- renderPlot({
+output$PlotVariability <- renderPlot({
 	if(is.null(input$plotButton) || input$plotButton==0) return()
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
@@ -111,15 +123,35 @@ output$plot3 <- renderPlot({
 		progress$set(message="Plotting, please wait", detail="Generating plot...")
 		doPlot_var(show.logo=F)
 		})
-}, height=700, width=1200)
+}, height=function(){ if(is.null(input$plotButton) || input$plotButton==0) 0 else 700 }, width=1200)
 
-output$dlCurPlot3 <- downloadHandler(
+output$dlCurPlotVariability <- downloadHandler(
 	filename='variability.pdf',
 	content=function(file){ pdf(file = file, width=1.5*12, height=1.5*7, pointsize=12, onefile=FALSE); doPlot_var(show.logo=T); dev.off() }
 )
 
-output$dlCurTable3 <- downloadHandler(
+output$dlCurTableVariability <- downloadHandler(
 	filename=function(){ 'variability_data.csv' }, content=function(file){ write.csv(dat(), file) }
+)
+
+# Heatmap plot
+output$PlotHeatmap <- renderPlot({
+	if(is.null(input$plotButton) || input$plotButton==0) return()
+	isolate({
+		progress <- Progress$new(session, min=1, max=10)
+		on.exit(progress$close())
+		progress$set(message="Plotting, please wait", detail="Generating plot...")
+		doPlot_heatmap(show.logo=F)
+		})
+}, height=function(){ if(is.null(input$plotButton) || input$plotButton==0) 0 else 700 }, width=1200)
+
+output$dlCurPlotHeatmap <- downloadHandler(
+	filename='heatmap.pdf',
+	content=function(file){ pdf(file = file, width=1.5*12, height=1.5*7, pointsize=12, onefile=FALSE); doPlot_heatmap(show.logo=T); dev.off() }
+)
+
+output$dlCurTableHeatmap <- downloadHandler(
+	filename=function(){ 'heatmap_data.csv' }, content=function(file){ write.csv(dat(), file) }
 )
 
 ############################## Leaflet testing

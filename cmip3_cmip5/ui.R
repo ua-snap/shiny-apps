@@ -49,6 +49,7 @@ shinyUI(fluidPage(
     )
 	),
 	################################################################
+	tags$head(tags$link(rel="stylesheet", type="text/css", href="styles.css")),
 	fluidRow(
 		source("external/sidebar.R",local=T)$value,
 		source("external/main.R",local=T)$value
