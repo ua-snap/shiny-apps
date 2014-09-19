@@ -10,13 +10,13 @@ source("external/appSourceFiles/iosidebarwp2.R",local=T) # source input/output o
 # Ideal, but cannot do this on the server side due to a bug in the shinyAce package.
 #output$codeTab <- renderUI({ codeTab() })
 
-observe({
-	input$tsp
-	input$nlp
-	input$hltheme
-	for(i in 1:length(R_files)) eval(parse(text=sprintf("input$%s", gsub("\\.", "", basename(R_files[i])))))
-	for(i in 1:length(R_files)) updateAceEditor(session, gsub("\\.", "", basename(R_files[i])), theme=input$hltheme, fontSize=input$hlfontsize)
-})
+#observe({
+#	input$tsp
+#	input$nlp
+#	input$hltheme
+#	for(i in 1:length(R_files)) eval(parse(text=sprintf("input$%s", gsub("\\.", "", basename(R_files[i])))))
+#	for(i in 1:length(R_files)) updateAceEditor(session, gsub("\\.", "", basename(R_files[i])), theme=input$hltheme, fontSize=input$hlfontsize)
+#})
 
 output$CodeDescription <- renderUI({
 	h6(HTML(
@@ -30,9 +30,9 @@ output$CodeDescription <- renderUI({
 	))
 })
 
-output$pageviews <-	renderText({
-	if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
-	pageviews <- pageviews + 1
-	save(pageviews,file="pageviews.Rdata")
-	paste("Visits:",pageviews)
-})
+#output$pageviews <-	renderText({
+#	if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
+#	pageviews <- pageviews + 1
+#	save(pageviews,file="pageviews.Rdata")
+#	paste("Visits:",pageviews)
+#})
