@@ -62,6 +62,7 @@ column(4,
 					conditionalPanel(condition="input.tsp == 'plot_scatter'", uiOutput("Facet2")),
 					conditionalPanel(condition="input.tsp == 'plot_variability'", uiOutput("Facet3"))),
 				column(6,
+					conditionalPanel(condition="input.tsp == 'plot_heatmap'", uiOutput("StatHeatmap")),
 					conditionalPanel(condition="input.tsp == 'plot_ts'", uiOutput("Subjects")),#,
 					#conditionalPanel(condition="input.tsp == 'plot_scatter'", uiOutput("Subjects2")),
 					conditionalPanel(condition="input.tsp == 'plot_variability'", uiOutput("Subjects3"))

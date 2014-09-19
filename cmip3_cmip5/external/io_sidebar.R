@@ -71,6 +71,18 @@ output$FacetHeatmap <- renderUI({
 	)
 })
 
+output$StatHeatmap <- renderUI({
+	if(is.null(input$goButton) || input$goButton==0) return()
+	input$heatmap_x
+	input$heatmap_y
+	input$facetHeatmap
+	isolate({
+		stats <- c("Mean", "Total", "SD")
+		statChoicesHeatmap <- stats[which(stats %in% names(dat_heatmap()))]
+		if(!length(statChoicesHeatmap)) x <- NULL else x <- selectInput("statHeatmap","Stat:", choices=statChoicesHeatmap, selected=statChoicesHeatmap[1], width="100%")
+	})
+})
+
 output$Xvar <- renderUI({
 	if(!is.null(xvarChoices())) selectInput("xvar", "Primary axis:", choices=xvarChoices(), selected=xvarChoices()[1], width="100%")
 })

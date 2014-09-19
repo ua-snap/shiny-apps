@@ -1,8 +1,8 @@
 library(shiny)
 library(Hmisc); library(png); library(RColorBrewer); library(ggplot2); library(plyr); library(reshape2); library(gridExtra)
 
-library(leaflet)
-library(maps)
+#library(leaflet)
+#library(maps)
 
 #load("external/data.RData",envir=.GlobalEnv)
 #load("external/data_CRU31.RData", envir=.GlobalEnv)
