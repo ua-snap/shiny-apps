@@ -15,6 +15,8 @@ observe({
 	)
 })
 
+anyBtnNullOrZero <- reactive({ is.null(input$goButton) || input$goButton==0 || is.null(input$plotButton) || input$plotButton==0 })
+
 currentYears <- reactive({ if(!is.null(input$yrs)) as.numeric(input$yrs[1]):as.numeric(input$yrs[2]) })
 
 limitedYears <- reactive({
@@ -183,10 +185,31 @@ dat <- reactive({
 })
 
 dat_heatmap <- reactive({
-	if(is.null(input$goButton) || input$goButton==0) return()
-	isolate(
-		dat() #if(!is.null(dat()) && length(input$vars)>1) dcast(dat_master(), Phase + Model + Scenario + Domain + Month + Year + Decade ~ Var, value.var="Val") else NULL
-	)
+	if(is.null(input$goButton) || input$goButton==0 || is.null(dat())) return()
+	input$heatmap_x
+	input$heatmap_y
+	input$facetHeatmap
+	input$showCRU
+	isolate({
+		d <- dat()
+		if(input$showCRU){
+			n.d <- nrow(d)
+			mods.d <- unique(d$Model)
+			yrs.tmp <- as.numeric(c(as.character(d$Year), as.character(CRU()$Year)))
+			d <- data.frame(rbind(d[1:7], CRU()[1:7]), Year=yrs.tmp, rbind(d[9:ncol(d)], CRU()[9:ncol(CRU())]))
+			d$Year <- yrs.tmp
+			d$Source <- factor(c(rep("Modeled", n.d), rep("Observed", nrow(CRU()))))
+			d$Model <- factor(d$Model, levels=c(CRU()$Model[1], mods.d))
+		}
+		if(!is.null(input$heatmap_x) & !is.null(input$heatmap_y)){
+			x <- c(input$heatmap_x, input$heatmap_y)
+			if(!(is.null(input$facetHeatmap) || input$facetHeatmap=="None/Force Pool")) x <- c(x, input$facetHeatmap)
+			if(dat()$Var[1]=="Temperature") d <- ddply(d, x, summarise, Mean=round(mean(Val), 1), SD=round(sd(Val), 1))
+			if(dat()$Var[1]=="Precipitation") d <- ddply(d, x, summarise, Mean=round(mean(Val)), Total=round(sum(Val)), SD=round(sd(Val)))
+			if(all(is.na(d$SD))) d <- d[, -ncol(d)]
+		}
+	})
+	d
 })
 
 dat2 <- reactive({
@@ -239,13 +262,6 @@ CRU <- reactive({
 		}
 	)
 	x
-})
-
-CRU_heatmap <- reactive({
-	if(is.null(input$goButton) || input$goButton==0) return()
-	isolate(
-		CRU() #if(!is.null(CRU_master()) && length(input$vars)>1) dcast(CRU_master(), Phase + Model + Scenario + Domain + Month + Year + Decade ~ Var, value.var="Val") else NULL
-	)
 })
 
 CRU2 <- reactive({

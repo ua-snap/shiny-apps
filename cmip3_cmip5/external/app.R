@@ -39,10 +39,10 @@ doPlot_scatter <- function(...){
 
 doPlot_heatmap <- function(...){
 	if(permitPlot() & !is.null(input$heatmap_x) & !is.null(input$heatmap_y) & length(input$colorpalettesHeatmap)){
-		heatPlot(d=dat_heatmap(), x=input$heatmap_x, y=input$heatmap_y,
+		heatPlot(d=dat(), d2=dat_heatmap(), x=input$heatmap_x, y=input$heatmap_y, z=input$statHeatmap,
 			panels=facetPanelsHeatmap(), facet.by=input$facetHeatmap,
 			fontsize=input$plotFontSizeHeatmap, colpal=input$colorpalettesHeatmap, reverse.colors=input$revHeatmapColors, aspect_1to1=input$aspect1to1, show.values=input$showHeatmapVals,
-			show.overlay=input$showCRU, overlay=CRU_heatmap(),
+			show.overlay=input$showCRU, overlay=CRU(),
 			plot.title=plot_hm_title(), plot.subtitle=plot_hm_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle,
 			lgd.pos=input$legendPosHeatmap, units=currentUnits(), pooled.var=pooledVarHeatmap(), logo.mat=logo.mat, ...)
 	} else NULL
@@ -65,14 +65,14 @@ doPlot_var <- function(...){
 # Primary outputs
 # Time series plot
 output$PlotTS <- renderPlot({
-	if(is.null(input$plotButton) || input$plotButton==0) return()
+	if(anyBtnNullOrZero()) return()
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
 		progress$set(message="Plotting, please wait", detail="Generating plot...")
 		doPlot_ts(show.logo=F)
 	})
-}, height=function(){ if(is.null(input$plotButton) || input$plotButton==0) 0 else 700 }, width=1200)
+}, height=function(){ if(anyBtnNullOrZero()) 0 else 700 }, width=1200)
 
 output$dlCurPlotTS <- downloadHandler(
 	filename='timeseries.pdf',
@@ -85,7 +85,7 @@ output$dlCurTableTS <- downloadHandler(
 
 # Scatterplot
 plot_scatter_ht <- function(){
-	if(is.null(input$plotButton) || input$plotButton==0) return(0)
+	if(anyBtnNullOrZero()) return(0)
 	ht <- 700
 	if(!is.null(facet.panels2())){
 		cols <- ceiling(sqrt(facet.panels2()))
@@ -96,7 +96,7 @@ plot_scatter_ht <- function(){
 }
 
 output$PlotScatter <- renderPlot({
-	if(is.null(input$plotButton) || input$plotButton==0) return()
+	if(anyBtnNullOrZero()) return()
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
@@ -116,14 +116,14 @@ output$dlCurTableScatter <- downloadHandler(
 
 # Variability plot
 output$PlotVariability <- renderPlot({
-	if(is.null(input$plotButton) || input$plotButton==0) return()
+	if(anyBtnNullOrZero()) return()
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
 		progress$set(message="Plotting, please wait", detail="Generating plot...")
 		doPlot_var(show.logo=F)
 		})
-}, height=function(){ if(is.null(input$plotButton) || input$plotButton==0) 0 else 700 }, width=1200)
+}, height=function(){ if(anyBtnNullOrZero()) 0 else 700 }, width=1200)
 
 output$dlCurPlotVariability <- downloadHandler(
 	filename='variability.pdf',
@@ -136,14 +136,14 @@ output$dlCurTableVariability <- downloadHandler(
 
 # Heatmap plot
 output$PlotHeatmap <- renderPlot({
-	if(is.null(input$plotButton) || input$plotButton==0) return()
+	if(anyBtnNullOrZero()) return()
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
 		progress$set(message="Plotting, please wait", detail="Generating plot...")
 		doPlot_heatmap(show.logo=F)
 		})
-}, height=function(){ if(is.null(input$plotButton) || input$plotButton==0) 0 else 700 }, width=1200)
+}, height=function(){ if(anyBtnNullOrZero()) 0 else 700 }, width=1200)
 
 output$dlCurPlotHeatmap <- downloadHandler(
 	filename='heatmap.pdf',
