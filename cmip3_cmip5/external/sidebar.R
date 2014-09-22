@@ -23,13 +23,17 @@ column(4,
 				column(6,  selectInput("decs", "Decades:", choices=c("", paste0(decades,"s")), selected="", multiple=T, width="100%"))
 			),
 			fluidRow(
-				column(6, selectInput("doms", "Region:", c("", region.names), selected="", multiple=T, width="100%")),
-				column(6, selectInput("cities", "City:", c("", city.names), selected="", multiple=F, width="100%")) # multiple=FALSE temporarily
+				column(6, selectInput("loctype", "Spatial scale:", c("Regions", "Cities"), selected="Regions", multiple=FALSE, width="100%")), # May use multiple=TRUE later
+				column(6,
+					conditionalPanel(condition="input.loctype == 'Regions'", selectInput("locs_regions", "Regions:", c("", region.names), selected="", multiple=T, width="100%")),
+					conditionalPanel(condition="input.loctype == 'Cities'", selectInput("locs_cities", "Cities:", c("", city.names), selected="", multiple=T, width="100%"))
+				)
 			)
 		),
 		fluidRow(
 			column(6, 
-			conditionalPanel(condition="input.vars !== null && (input.doms !== null || input.cities !== '') &&
+			conditionalPanel(condition="input.vars !== null &&
+			( (input.loctype == 'Regions' && input.locs_regions !== null) || (input.loctype == 'Cities' && input.locs_cities !== null) ) &&
 				( (input.cmip3scens !== null && input.cmip3models !== null) || (input.cmip5scens !== null && input.cmip5models !== null) )", uiOutput("GoButton"))
 			),
 			column(6,

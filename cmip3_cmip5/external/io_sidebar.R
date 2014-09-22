@@ -11,8 +11,9 @@ output$GoButton <- renderUI({
 	input$yrs
 	input$mos
 	input$decs
-	input$doms
-	input$cities
+	input$loctype
+	input$locs_regions
+	input$locs_cities
 	actionButton("goButton", "Subset Data", icon="ok icon-white", styleclass="primary", block=T)
 })
 

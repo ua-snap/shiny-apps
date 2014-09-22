@@ -82,19 +82,10 @@ Decades <- reactive({
 	x
 })
 
-regionSelected <- reactive({ length(input$doms) > 0 })
-citySelected <- reactive({ length(input$cities) > 0 })
-locSelected <- reactive({ regionSelected() | citySelected() })
-
-#loadData <- reactive({
-#	if(length(input$loc)){
-#		if(length(input$loc)>=1 & input$cond=="Location"){
-#			for(i in 1:length(input$loc)) if(!exists(input$loc[i], envir=.GlobalEnv)) load(paste("data/",input$loc[i],".RData",sep=""), envir=.GlobalEnv)
-#		} else {
-#			if(!exists(input$loc[1], envir=.GlobalEnv)) load(paste("data/",input$loc[1],".RData",sep=""), envir=.GlobalEnv)
-#		}
-#	}
-#})
+Locs <- reactive({ if(is.null(input$loctype) || input$loctype=="Regions")  input$locs_regions else if(input$loctype=="Cities") input$locs_cities else NULL })
+regionSelected <- reactive({ input$loctype=="Regions" & length(Locs())  })
+citySelected <- reactive({ input$loctype=="Cities" & length(Locs()) })
+locSelected <- reactive({ length(Locs()) })
 	
 # Initially retain all climate variables regardless of user's selection
 dat_master <- reactive({
@@ -106,13 +97,16 @@ dat_master <- reactive({
 			x <- NULL
 		} else {
 			progress$set(message="Calculating, please wait", detail="Loading requested data...")
-			if(length(input$cities) && input$cities[1]!="") {
-				city.ind <- which(city.names==input$cities)
-				load(city.gcm.files[city.ind], envir=environment())
+			if(input$loctype=="Cities" && length(input$locs_cities) && input$locs_cities[1]!="") {
+				city.ind <- which(city.names %in% Locs())
+				for(i in 1:length(city.ind)) {
+					load(city.gcm.files[city.ind[i]], envir=environment())
+					if(i==1) city.dat.final <- city.dat else city.dat.final <- rbind(city.dat.final, city.dat)
+				}
 				progress$set(message="Calculating, please wait", detail="Subsetting data...")
-				x <- subset(city.dat, Month %in% month.abb[match(Months(), month.abb)] & 
+				x <- subset(city.dat.final, Month %in% month.abb[match(Months(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & 
-					Scenario %in% scenarios() & Model %in% models_original() & Domain %in% input$cities)
+					Scenario %in% scenarios() & Model %in% models_original() & Domain %in% input$locs_cities)
 			} else if(is.character(input$map_shape_click$id) && input$map_shape_click$id[1]!="") {
 				city.ind <- which(city.names==input$map_shape_click$id)
 				load(city.gcm.files[city.ind], envir=environment())
@@ -120,8 +114,8 @@ dat_master <- reactive({
 				x <- subset(city.dat, Month %in% month.abb[match(Months(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Domain %in% input$map_shape_click$id)
-			} else {
-				region.ind <- which(region.names %in% input$doms)
+			} else if(input$loctype=="Regions"){
+				region.ind <- which(region.names %in% Locs())
 				for(i in 1:length(region.ind)) {
 					load(region.gcm.files[region.ind[i]], envir=environment())
 					if(i==1) region.dat.final <- region.dat else region.dat.final <- rbind(region.dat.final, region.dat)
@@ -129,7 +123,7 @@ dat_master <- reactive({
 				progress$set(message="Calculating, please wait", detail="Subsetting data...")
 				x <- subset(region.dat.final, Month %in% month.abb[match(Months(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & 
-					Scenario %in% scenarios() & Model %in% models_original() & Domain %in% input$doms)
+					Scenario %in% scenarios() & Model %in% models_original() & Domain %in% input$locs_regions)
 			}
 			#print(input$map_shape_click$id)
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
@@ -225,15 +219,15 @@ CRU_master <- reactive({
 		if(is.null(Months()) | is.null(input$vars) | is.null(input$units) | is.null(scenarios()) | is.null(models_original()) | locSelected()==FALSE){
 			x <- NULL
 		} else {
-			if(length(input$cities) && input$cities[1]!="") {
+			if(input$loctype=="Cities" && length(input$locs_cities) && input$locs_cities[1]!="") {
 				x <- subset(d.cities.cru31, Month %in% month.abb[match(Months(), month.abb)] & 
-					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & Domain %in% input$cities)
+					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & Domain %in% input$locs_cities)
 			} else if(is.character(input$map_shape_click$id) && input$map_shape_click$id[1]!="") {
 				x <- subset(d.cities.cru31, Month %in% month.abb[match(Months(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & Domain %in% input$map_shape_click$id)
-			} else {
+			} else if(input$loctype=="Regions"){
 				x <- subset(d.cru31, Month %in% month.abb[match(Months(), month.abb)] & 
-					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & Domain %in% input$doms)
+					Year %in% currentYears() & Decade %in% substr(Decades(),1,4) & Domain %in% input$locs_regions)
 			}
 			if(nrow(x)==0) return()
 			#print(input$map_shape_click$id)
@@ -275,13 +269,13 @@ CRU2 <- reactive({
 group.choices <- reactive({
 	if(!is.null(input$xtime)){
 		if(input$xtime=="Year") {
-			ind <- which(unlist(lapply(list(phases, models(), scenarios(), Months(), Decades(), input$doms), length))>1)
+			ind <- which(unlist(lapply(list(phases, models(), scenarios(), Months(), Decades(), Locs()), length))>1)
 			choices <- c("Phase","Model","Scenario","Month","Decade","Domain")[ind]
 		} else if(input$xtime=="Month") {
-			ind <- which(unlist(lapply(list(phases, models(), scenarios(),Decades(), input$doms), length))>1)
+			ind <- which(unlist(lapply(list(phases, models(), scenarios(),Decades(), Locs()), length))>1)
 			choices <- c("Phase","Model","Scenario","Decade","Domain")[ind]
 		} else if(input$xtime=="Decade") {
-			ind <- which(unlist(lapply(list(phases, models(), scenarios(),Months(), input$doms), length))>1)
+			ind <- which(unlist(lapply(list(phases, models(), scenarios(),Months(), Locs()), length))>1)
 			choices <- c("Phase","Model","Scenario","Month","Domain")[ind]
 		}
 		choices <- c("None/Force Pool", choices)
@@ -318,7 +312,7 @@ facet.panels <- reactive({
 pooled.var <- reactive({
 	x <- getPooledVars(inx=input$xtime, ingrp=input$group, infct=input$facet, grp.choices=group.choices(), fct.choices=facet.choices(),
 			choices=c("Phase","Scenario","Model","Month","Year","Decade","Domain"),
-			mos=Months(), years=currentYears(), decades=Decades(), domains=input$doms, scenarios=scenarios(), models=models(),
+			mos=Months(), years=currentYears(), decades=Decades(), domains=Locs(), scenarios=scenarios(), models=models(),
 			cmip3scens=input$cmip3scens, cmip5scens=input$cmip5scens, cmip3mods=input$cmip3models, cmip5mods=input$cmip5models)
 	x
 })
@@ -330,7 +324,7 @@ subjectSelected <- reactive({
 })
 
 group.choices2 <- reactive({
-	ind <- which(unlist(lapply(list(phases, models(), scenarios(), Months(), Decades(), input$doms), length))>1)
+	ind <- which(unlist(lapply(list(phases, models(), scenarios(), Months(), Decades(), Locs()), length))>1)
 	choices <- c("None/Force Pool", c("Phase","Model","Scenario","Month","Decade","Domain")[ind])
 	if(!is.null(choices)){
 		if(length(scenarios()) < 2) choices <- choices[choices!="Scenario"]
@@ -366,13 +360,13 @@ facet.panels2 <- reactive({
 pooled.var2 <- reactive({
 	x <- getPooledVars(inx=input$xy, ingrp=input$group2, infct=input$facet2, grp.choices=group.choices2(), fct.choices=facet.choices2(),
 			choices=c("Phase","Scenario","Model","Month","Year","Decade","Domain"),
-			mos=Months(), years=currentYears(), decades=Decades(), domains=input$doms, scenarios=scenarios(), models=models(),
+			mos=Months(), years=currentYears(), decades=Decades(), domains=Locs(), scenarios=scenarios(), models=models(),
 			cmip3scens=input$cmip3scens, cmip5scens=input$cmip5scens, cmip3mods=input$cmip3models, cmip5mods=input$cmip5models)
 	x
 })
 
 heatmap_x_choices <- reactive({
-		ind <- which(unlist(lapply(list(phases, scenarios(), models(), input$doms, Months(), currentYears(), Decades()), length))>0)
+		ind <- which(unlist(lapply(list(phases, scenarios(), models(), Locs(), Months(), currentYears(), Decades()), length))>0)
 		if(length(ind)) choices <- c("Phase","Scenario", "Model", "Domain", "Month", "Year", "Decade")[ind] else choices <- NULL
 		if(length(choices)){
 			if(length(scenarios()) < 1) choices <- choices[choices!="Scenario"]
@@ -384,7 +378,7 @@ heatmap_x_choices <- reactive({
 })
 
 heatmap_y_choices <- reactive({
-		ind <- which(unlist(lapply(list(phases, scenarios(), models(), input$doms, Months(), currentYears(), Decades()), length))>0)
+		ind <- which(unlist(lapply(list(phases, scenarios(), models(), Locs(), Months(), currentYears(), Decades()), length))>0)
 		if(length(ind)) choices <- c("Phase","Scenario", "Model", "Domain", "Month", "Year", "Decade")[ind] else choices <- NULL
 		if(length(choices)){
 			if(length(scenarios()) < 1) choices <- choices[choices!="Scenario"]
@@ -417,13 +411,13 @@ facetPanelsHeatmap <- reactive({
 pooledVarHeatmap <- reactive({
 	x <- getPooledVars(inx=input$heatmap_x, iny=input$heatmap_y, infct=input$facet, fct.choices=facetChoicesHeatmap(),
 			choices=c("Phase","Scenario","Model","Month","Year","Decade","Domain"),
-			mos=Months(), years=currentYears(), decades=Decades(), domains=input$doms, scenarios=scenarios(), models=models(),
+			mos=Months(), years=currentYears(), decades=Decades(), domains=Locs(), scenarios=scenarios(), models=models(),
 			cmip3scens=input$cmip3scens, cmip5scens=input$cmip5scens, cmip3mods=input$cmip3models, cmip5mods=input$cmip5models)
 	x
 })
 
 xvarChoices <- reactive({
-		ind <- which(unlist(lapply(list(phases, scenarios(), models(), input$doms, Months(), currentYears(), Decades()), length))>1)
+		ind <- which(unlist(lapply(list(phases, scenarios(), models(), Locs(), Months(), currentYears(), Decades()), length))>1)
 		if(length(ind)) choices <- c("Phase","Scenario", "Model", "Domain", "Month", "Year", "Decade")[ind] else choices <- NULL
 		if(length(choices)){
 			if(length(scenarios()) < 2) choices <- choices[choices!="Scenario"]
@@ -436,7 +430,7 @@ xvarChoices <- reactive({
 
 group.choices3 <- reactive({
 	if(!is.null(input$xvar)){
-		ind <- which(unlist(lapply(list(phases, models(), scenarios(), Months(), Decades(), input$doms), length))>1)
+		ind <- which(unlist(lapply(list(phases, models(), scenarios(), Months(), Decades(), Locs()), length))>1)
 		choices <- c("None/Force Pool", c("Phase","Model","Scenario","Month","Decade","Domain")[ind])
 		if(!is.null(choices)){
 			choices <- choices[choices!=input$xvar]
@@ -474,7 +468,7 @@ facet.panels3 <- reactive({
 pooled.var3 <- reactive({
 	x <- getPooledVars(inx=input$xvar, ingrp=input$group3, infct=input$facet3, grp.choices=group.choices3(), fct.choices=facet.choices3(),
 			choices=c("Phase","Scenario","Model","Month","Year","Decade","Domain"),
-			mos=Months(), years=currentYears(), decades=Decades(), domains=input$doms, scenarios=scenarios(), models=models(),
+			mos=Months(), years=currentYears(), decades=Decades(), domains=Locs(), scenarios=scenarios(), models=models(),
 			cmip3scens=input$cmip3scens, cmip5scens=input$cmip5scens, cmip3mods=input$cmip3models, cmip5mods=input$cmip5models)
 	x
 })
@@ -545,19 +539,19 @@ modelScenPair2 <- reactive({
 	if(length(input$cmip5scens) & length(input$cmip5models)) TRUE else FALSE
 })
 
-plot_ts_title <- reactive({ getPlotTitle(grp=input$group, facet=input$facet, pooled=pooled.var(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), dom=input$doms) })
-plot_sp_title <- reactive({ getPlotTitle(grp=input$group2, facet=input$facet2, pooled=pooled.var2(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), dom=input$doms) })
-plot_hm_title <- reactive({ getPlotTitle(grp="", facet=input$facetHeatmap, pooled=pooledVarHeatmap(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), dom=input$doms) })
-plot_var_title <- reactive({ getPlotTitle(grp=input$group3, facet=input$facet3, pooled=pooled.var3(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), dom=input$doms) })
+plot_ts_title <- reactive({ getPlotTitle(grp=input$group, facet=input$facet, pooled=pooled.var(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), dom=Locs()) })
+plot_sp_title <- reactive({ getPlotTitle(grp=input$group2, facet=input$facet2, pooled=pooled.var2(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), dom=Locs()) })
+plot_hm_title <- reactive({ getPlotTitle(grp="", facet=input$facetHeatmap, pooled=pooledVarHeatmap(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), dom=Locs()) })
+plot_var_title <- reactive({ getPlotTitle(grp=input$group3, facet=input$facet3, pooled=pooled.var3(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), dom=Locs()) })
 
-plot_ts_subtitle <- reactive({ getPlotSubTitle(pooled=pooled.var(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), dom=input$doms) })
-plot_sp_subtitle <- reactive({ getPlotSubTitle(pooled=pooled.var2(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), dom=input$doms) })
-plot_hm_subtitle <- reactive({ getPlotSubTitle(pooled=pooledVarHeatmap(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), dom=input$doms) })
-plot_var_subtitle <- reactive({ getPlotSubTitle(pooled=pooled.var3(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), dom=input$doms) })
+plot_ts_subtitle <- reactive({ getPlotSubTitle(pooled=pooled.var(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), dom=Locs()) })
+plot_sp_subtitle <- reactive({ getPlotSubTitle(pooled=pooled.var2(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), dom=Locs()) })
+plot_hm_subtitle <- reactive({ getPlotSubTitle(pooled=pooledVarHeatmap(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), dom=Locs()) })
+plot_var_subtitle <- reactive({ getPlotSubTitle(pooled=pooled.var3(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), dom=Locs()) })
 
 permitPlot <- reactive({
 	if(!( is.null(Months()) | is.null(currentYears()) | is.null(Decades()) | is.null(input$vars) |
-		is.null(input$units) | is.null(scenarios()) | is.null(models()) | (!length(input$doms) && !length(input$cities)) )){
+		is.null(input$units) | is.null(scenarios()) | is.null(models()) | (!length(Locs()) && !length(input$cities)) )){
 		if(input$vars[1]!="" & anyModelScenPair()){
 			x <- TRUE
 		} else {
