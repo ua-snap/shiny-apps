@@ -139,10 +139,10 @@ column(4,
 		fluidRow(
 			column(6, uiOutput("PlotButton")),
 			column(6,
-				conditionalPanel(condition="input.tsp == 'plot_heatmap' && input.goButton > 0", downloadButton("dlCurPlotHeatmap", "Download Plot", class="btn-success btn-block")),
-				conditionalPanel(condition="input.tsp == 'plot_ts' && input.goButton > 0", downloadButton("dlCurPlot1", "Download Plot", class="btn-success btn-block")),
-				conditionalPanel(condition="input.tsp == 'plot_scatter' && input.goButton > 0", downloadButton("dlCurplot_scatter", "Download Plot", class="btn-success btn-block")),
-				conditionalPanel(condition="input.tsp == 'plot_variability' && input.goButton > 0", downloadButton("dlCurplot_variability", "Download Plot", class="btn-success btn-block"))
+				conditionalPanel(condition="input.tsp == 'plot_heatmap' && input.plotButton > 0", downloadButton("dlCurPlotHeatmap", "Download Plot", class="btn-success btn-block")),
+				conditionalPanel(condition="input.tsp == 'plot_ts' && input.plotButton > 0", downloadButton("dlCurPlot1", "Download Plot", class="btn-success btn-block")),
+				conditionalPanel(condition="input.tsp == 'plot_scatter' && input.plotButton > 0", downloadButton("dlCurplot_scatter", "Download Plot", class="btn-success btn-block")),
+				conditionalPanel(condition="input.tsp == 'plot_variability' && input.plotButton > 0", downloadButton("dlCurplot_variability", "Download Plot", class="btn-success btn-block"))
 			)
 		)
 	)
