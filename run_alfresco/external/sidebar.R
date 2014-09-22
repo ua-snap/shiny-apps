@@ -54,30 +54,30 @@ column(4,
 		)
 	),
 	conditionalPanel(condition="input.tsp==='rcode'",
-		navlistPanel(
-			"Top-level Code",
-			tabPanel("Global", value="nlp_globalR"),
-			tabPanel("UI", value="nlp_uiR"),
-			tabPanel("Server", value="nlp_serverR"),
-			"Mid-level Code",
-			tabPanel("App", value="nlp_appR"),
-			tabPanel("Header", value="nlp_headerR"), # cannot include "header" if it contains Google Analytics tracking code
-			tabPanel("Sidebar", value="nlp_sidebarR"),
-			tabPanel("Main", value="nlp_mainR"),
-			tabPanel("About", value="nlp_aboutR"),
-			"Bottom-level Code",
-			tabPanel("Well Panel 1", value="nlp_iosidebarwp1R"),
-			tabPanel("Well Panel 2", value="nlp_iosidebarwp2R"),
-			tabPanel("Reactives", value="nlp_reactivesR"),
-			id="nlp",
-			widths=c(12,1)
-		),
-		div(class="row-fluid",
-			div(class="span6", selectInput("hltheme", "Code highlighting theme:", getAceThemes(), selected="clouds_midnight", width="100%")),
-			div(class="span6", selectInput("hlfontsize", "Font size:", seq(8,24,by=2), selected=12, width="100%"))
-		),
+	#	navlistPanel(
+	#		"Top-level Code",
+	#		tabPanel("Global", value="nlp_globalR"),
+	#		tabPanel("UI", value="nlp_uiR"),
+	#		tabPanel("Server", value="nlp_serverR"),
+	#		"Mid-level Code",
+	#		tabPanel("App", value="nlp_appR"),
+	#		tabPanel("Header", value="nlp_headerR"), # cannot include "header" if it contains Google Analytics tracking code
+	#		tabPanel("Sidebar", value="nlp_sidebarR"),
+	#		tabPanel("Main", value="nlp_mainR"),
+	#		tabPanel("About", value="nlp_aboutR"),
+	#		"Bottom-level Code",
+	#		tabPanel("Well Panel 1", value="nlp_iosidebarwp1R"),
+	#		tabPanel("Well Panel 2", value="nlp_iosidebarwp2R"),
+	#		tabPanel("Reactives", value="nlp_reactivesR"),
+	#		id="nlp",
+	#		widths=c(12,1)
+	#	),
+	#	div(class="row-fluid",
+	#		div(class="span6", selectInput("hltheme", "Code highlighting theme:", getAceThemes(), selected="clouds_midnight", width="100%")),
+	#		div(class="span6", selectInput("hlfontsize", "Font size:", seq(8,24,by=2), selected=12, width="100%"))
+	#	),
 		uiOutput("CodeDescription")
-	),
-	conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
+	)#,
+	#conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
 )
 #) 
