@@ -1,9 +1,10 @@
 function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE, panels, grp, n.grp, ingroup.subjects=NULL,
 	facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
-	colpal, colseq, altplot, boxplots=FALSE, pts.alpha=0.5, bartype, bardirection, show.points=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
+	colpal, colseq, altplot, boxplots=FALSE, pts.alpha=0.5, bartype, bardirection, show.points=FALSE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
 	plot.title="", plot.subtitle="", show.panel.text=FALSE, show.title=FALSE, lgd.pos="Top", units=c("C","mm"),
 	mos=12, yrange, clbootbar, clbootsmooth, show.logo=F, logo.mat=NULL){
 		if(is.null(d)) return(plot(0,0,type="n",axes=F,xlab="",ylab=""))
+		if(!show.lines) ingroup.subjects <- NULL
 		if(show.overlay & !is.null(overlay)) show.overlay <- TRUE else show.overlay <- FALSE
 		if(show.overlay){
 			n.d <- nrow(d)
@@ -21,7 +22,7 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 		if(is.null(pts.alpha)) pts.alpha <- 0.5
 		x.n <- length(unique(d[,x]))
 		if(is.character(grp) & n.grp>1){
-			if(facet.by=="None/Force Pool"){
+			if(facet.by=="None"){
 				x.names <- unique(as.character(d[,x]))
 				x.num <- grp.n <- grp.num <- rep(NA, nrow(d))
 				for(m in 1:length(x.names)){
@@ -31,7 +32,7 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 					grp.num[ind] <- 0.9*( (as.numeric(factor(d[ind ,grp]))/grp.n[ind])-(1/grp.n[ind] + ((grp.n[ind]-1)/2)/(grp.n[ind])) )
 				}
 				d$xdodge <- x.num + grp.num
-			} else if(facet.by!="None/Force Pool") {
+			} else if(facet.by!="None") {
 				x.names <- unique(as.character(d[,x]))
 				panel.names <- unique(as.character(d[,facet.by]))
 				n.panels <- length(panel.names)
@@ -61,14 +62,14 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 		wgl <- withinGroupLines(x=x, subjects=ingroup.subjects)
 		ingroup.subjects <- wgl$subjects
 		subject.lines <- wgl$subjectlines
-		if(is.null(grp) || grp=="None/Force Pool") grp <- 1
+		if(is.null(grp) || grp=="None") grp <- 1
 		if(n.grp==1) grp <- 1
 		if(grp==1) {colpal <- "none"; color <- fill <- NULL} else color <- fill <- grp
 		scfm <- scaleColFillMan_prep(fill=fill, col=colpal)
 		fill <- scfm$fill
 		if(length(vert.facet)) if(vert.facet) facet.cols <- 1
 		ply.vars <- c(x,grp)
-		if(!is.null(facet.by) && facet.by!="None/Force Pool") ply.vars <- c(ply.vars, facet.by)
+		if(!is.null(facet.by) && facet.by!="None") ply.vars <- c(ply.vars, facet.by)
 		d.sum <- ddply(d, ply.vars, summarise, Mean=mean(Val), SD=sd(Val), SE=sd(Val)/sqrt(length(Val)), tval95=qt(0.975, df=length(Val)), Min=min(Val), Max=max(Val))
 				
 		if(around.mean){
@@ -77,7 +78,7 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 		g <- g + theme_bw(base_size=fontsize) + ylab(ylb) + theme(legend.position=tolower(lgd.pos))
 		if(!show.logo && show.title) g <- g + ggtitle(bquote(atop(.(main))))
 		if(length(colpal) & length(colseq)) g <- scaleColFillMan(g=g, default=scfm$scfm, colseq=colseq, colpal=colpal, mos=mos, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
-		if(!is.null(facet.by)) if(facet.by!="None/Force Pool") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)
+		if(!is.null(facet.by)) if(facet.by!="None") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)
 		if(!around.mean & stat %in% c("SD", "SE", "Full Spread")){
 			f <- switch(stat, "SD" = sd, "SE" = function(x) sd(x)/sqrt(length(x)), "Full Spread" = function(x) diff(range(x)))
 			if(length(grep("border",colpal))){

@@ -170,7 +170,7 @@ output$PlotFontSize <- renderUI({
 })
 
 output$Bartype <- renderUI({
-	if(is.null(input$group) || input$group=="None/Force Pool") return()
+	if(is.null(input$group) || input$group=="None") return()
 	if(!is.null(dat())){
 		styles <- c("Dodge (Grouped)","Stack (Totals)","Fill (Proportions)")
 		if(!is.null(input$barPlot)) if(input$barPlot & dat()$Var[1]=="Precipitation") selectInput("bartype","Barplot style",styles,selected=styles[1], width="100%")
@@ -187,7 +187,7 @@ output$Bardirection <- renderUI({
 output$LinePlot <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	isolate(
-		if(!is.null(dat())) checkboxInput("linePlot", "Trend Lines", FALSE)
+		if(!is.null(dat())) checkboxInput("linePlot", "Trend lines", FALSE)
 	)
 })
 
@@ -253,7 +253,7 @@ output$PlotFontSize3 <- renderUI({
 })
 
 output$Bartype3 <- renderUI({
-	if(is.null(input$group3) || input$group3=="None/Force Pool") return()
+	if(is.null(input$group3) || input$group3=="None") return()
 	if(!is.null(dat()) & !is.null(input$variability)){
 		if(!input$variability){
 			styles <- c("Dodge (Grouped)","Stack (Totals)","Fill (Proportions)")

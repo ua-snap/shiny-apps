@@ -21,7 +21,7 @@ function(d, form.string, panels, grp, n.grp, facet.cols=ceiling(sqrt(panels)), f
 		g <- ggplot(d, aes_string(x=x,y=y,group=grp,order=grp,colour=color,fill=fill)) + theme_bw(base_size=fontsize) + xlab(lab$xlb) + ylab(lab$ylb) + theme(legend.position=tolower(lgd.pos))
 		if(!show.logo && show.title) g <- g + ggtitle(bquote(atop(.(main))))
 		if(length(colpal) & length(colseq)) g <- scaleColFillMan(g=g, default=scfm$scfm, colseq=colseq, colpal=colpal, mos=mos, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
-		if(!is.null(facet.by)) if(facet.by!="None/Force Pool") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)
+		if(!is.null(facet.by)) if(facet.by!="None") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)
 		g <- g + geom_point(position=point.pos, pch=21, size=4, colour="black", alpha=pts.alpha)
 		if(!is.null(contourlines) && contourlines) g <- g + stat_density2d(size=1)
 		if(hexbin) g <- g + scale_alpha(range=c(0.1,0.5), guide="none") + stat_binhex(bins=30, aes(alpha=..count..))
