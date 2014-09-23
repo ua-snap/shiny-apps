@@ -186,7 +186,7 @@ dat_heatmap <- reactive({
 	input$showCRU
 	isolate({
 		d <- dat()
-		if(input$showCRU){
+		if(input$showCRU & !is.null(CRU())){
 			n.d <- nrow(d)
 			mods.d <- unique(d$Model)
 			yrs.tmp <- as.numeric(c(as.character(d$Year), as.character(CRU()$Year)))
@@ -197,7 +197,7 @@ dat_heatmap <- reactive({
 		}
 		if(!is.null(input$heatmap_x) & !is.null(input$heatmap_y)){
 			x <- c(input$heatmap_x, input$heatmap_y)
-			if(!(is.null(input$facetHeatmap) || input$facetHeatmap=="None/Force Pool")) x <- c(x, input$facetHeatmap)
+			if(!(is.null(input$facetHeatmap) || input$facetHeatmap=="None")) x <- c(x, input$facetHeatmap)
 			if(dat()$Var[1]=="Temperature") d <- ddply(d, x, summarise, Mean=round(mean(Val), 1), SD=round(sd(Val), 1))
 			if(dat()$Var[1]=="Precipitation") d <- ddply(d, x, summarise, Mean=round(mean(Val)), Total=round(sum(Val)), SD=round(sd(Val)))
 			if(all(is.na(d$SD))) d <- d[, -ncol(d)]
@@ -278,7 +278,7 @@ group.choices <- reactive({
 			ind <- which(unlist(lapply(list(phases, models(), scenarios(),Months(), Locs()), length))>1)
 			choices <- c("Phase","Model","Scenario","Month","Domain")[ind]
 		}
-		choices <- c("None/Force Pool", choices)
+		choices <- c("None", choices)
 		if(length(scenarios()) < 2) choices <- choices[choices!="Scenario"]
 		if(length(models()) < 2) choices <- choices[choices!="Model"]
 		if(!length(input$cmip3scens) | !length(input$cmip5scens)) choices <- choices[choices!="Phase"]
@@ -304,13 +304,9 @@ pooled.var <- reactive({
 
 subjectChoices <- reactive({ getSubjectChoices(inx=input$xtime, ingrp=input$group, pooled.vars=pooled.var()) })
 
-subjectSelected <- reactive({
-	if(!is.null(input$subjects)) strsplit(input$subjects, "-")[[1]] else NULL
-})
-
 group.choices2 <- reactive({
 	ind <- which(unlist(lapply(list(phases, models(), scenarios(), Months(), Decades(), Locs()), length))>1)
-	choices <- c("None/Force Pool", c("Phase","Model","Scenario","Month","Decade","Domain")[ind])
+	choices <- c("None", c("Phase","Model","Scenario","Month","Decade","Domain")[ind])
 	if(!is.null(choices)){
 		if(length(scenarios()) < 2) choices <- choices[choices!="Scenario"]
 		if(length(models()) < 2) choices <- choices[choices!="Model"]
@@ -336,27 +332,13 @@ pooled.var2 <- reactive({
 })
 
 heatmap_x_choices <- reactive({
-		ind <- which(unlist(lapply(list(phases, scenarios(), models(), Locs(), Months(), currentYears(), Decades()), length))>0)
-		if(length(ind)) choices <- c("Phase","Scenario", "Model", "Domain", "Month", "Year", "Decade")[ind] else choices <- NULL
-		if(length(choices)){
-			if(length(scenarios()) < 1) choices <- choices[choices!="Scenario"]
-			if(length(models()) < 1) choices <- choices[choices!="Model"]
-			if(!length(input$cmip3scens) | !length(input$cmip5scens)) choices <- choices[choices!="Phase"]
-			if(!length(input$cmip3models) | !length(input$cmip5models)) choices <- choices[choices!="Phase"]
-		} else choices <- NULL
-	choices
+	getHeatmapAxisChoices(scenarios(), models(), Locs(), Months(), currentYears(), Decades(),
+		input$cmip3scens, input$cmip5scens, input$cmip3models, input$cmip5models)
 })
 
 heatmap_y_choices <- reactive({
-		ind <- which(unlist(lapply(list(phases, scenarios(), models(), Locs(), Months(), currentYears(), Decades()), length))>0)
-		if(length(ind)) choices <- c("Phase","Scenario", "Model", "Domain", "Month", "Year", "Decade")[ind] else choices <- NULL
-		if(length(choices)){
-			if(length(scenarios()) < 1) choices <- choices[choices!="Scenario"]
-			if(length(models()) < 1) choices <- choices[choices!="Model"]
-			if(!length(input$cmip3scens) | !length(input$cmip5scens)) choices <- choices[choices!="Phase"]
-			if(!length(input$cmip3models) | !length(input$cmip5models)) choices <- choices[choices!="Phase"]
-		} else choices <- NULL
-	choices
+	getHeatmapAxisChoices(scenarios(), models(), Locs(), Months(), currentYears(), Decades(),
+		input$cmip3scens, input$cmip5scens, input$cmip3models, input$cmip5models)
 })
 
 facetChoicesHeatmap <- reactive({ getFacetChoices(inx=input$heatmap_x, iny=input$heatmap_y, grp.choices=heatmap_x_choices()) })
@@ -364,7 +346,7 @@ facetChoicesHeatmap <- reactive({ getFacetChoices(inx=input$heatmap_x, iny=input
 facetPanelsHeatmap <- reactive({ getFacetPanels(input$facetHeatmap, models(), scenarios(), input$mos, input$decs, Locs()) })
 
 pooledVarHeatmap <- reactive({
-	x <- getPooledVars(inx=input$heatmap_x, iny=input$heatmap_y, infct=input$facet, fct.choices=facetChoicesHeatmap(),
+	x <- getPooledVars(inx=input$heatmap_x, iny=input$heatmap_y, infct=input$facetHeatmap, fct.choices=facetChoicesHeatmap(),
 			choices=c("Phase","Scenario","Model","Month","Year","Decade","Domain"),
 			mos=Months(), years=currentYears(), decades=Decades(), domains=Locs(), scenarios=scenarios(), models=models(),
 			cmip3scens=input$cmip3scens, cmip5scens=input$cmip5scens, cmip3mods=input$cmip3models, cmip5mods=input$cmip5models)
@@ -386,7 +368,7 @@ xvarChoices <- reactive({
 group.choices3 <- reactive({
 	if(!is.null(input$xvar)){
 		ind <- which(unlist(lapply(list(phases, models(), scenarios(), Months(), Decades(), Locs()), length))>1)
-		choices <- c("None/Force Pool", c("Phase","Model","Scenario","Month","Decade","Domain")[ind])
+		choices <- c("None", c("Phase","Model","Scenario","Month","Decade","Domain")[ind])
 		if(!is.null(choices)){
 			choices <- choices[choices!=input$xvar]
 			if(length(scenarios()) < 2) choices <- choices[choices!="Scenario"]
@@ -414,10 +396,6 @@ pooled.var3 <- reactive({
 })
 
 subjectChoices3 <- reactive({ getSubjectChoices(inx=input$xvar, ingrp=input$group3, pooled.vars=pooled.var3()) })
-
-subjectSelected3 <- reactive({
-	if(!is.null(input$subjects3)) strsplit(input$subjects3, "-")[[1]] else NULL
-})
 
 Variability <- reactive({ if(!is.null(input$variability)) !input$variability else NULL })
 

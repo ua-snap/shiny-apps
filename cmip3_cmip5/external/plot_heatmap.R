@@ -26,7 +26,7 @@ function(d, d2, x, y, z, panels, facet.cols=ceiling(sqrt(panels)), facet.by, fon
 		if(reverse.colors) brew.col <- rev(brew.col)
 		g <- g + scale_fill_gradientn(colours=brew.col)
 		if(!show.logo && show.title) g <- g + ggtitle(bquote(atop(.(main))))
-		if(!is.null(facet.by)) if(facet.by!="None/Force Pool") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)
+		if(!is.null(facet.by)) if(facet.by!="None") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)
 		if(show.panel.text) g <- annotatePlot(g, data=d, x=x, y=y, text=plot.subtitle)
 		if(show.values) g <- g + geom_text(data=d2, aes_string(fill=z, label=z))
 		g <- addLogo(g, show.logo, logo.mat, show.title, main, fontsize)

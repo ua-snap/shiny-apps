@@ -34,9 +34,20 @@ logo.alpha <- 1
 logo.mat <- matrix(rgb(logo[,,1],logo[,,2],logo[,,3],logo[,,4]*logo.alpha), nrow=dim(logo)[1])
 
 # These functions are written with the structure of the app in mind. They are intended to avoid code duplication.
+getHeatmapAxisChoices <- function(scens, mods, locs, mos, yrs, decs, cmip3scens, cmip5scens, cmip3models, cmip5models){
+	ind <- which(unlist(lapply(list(phases, scens, mods, locs, mos, yrs, decs), length))>0)
+		if(length(ind)) choices <- c("Phase","Scenario", "Model", "Domain", "Month", "Year", "Decade")[ind] else choices <- NULL
+		if(length(choices)){
+			if(length(scens) < 1) choices <- choices[choices!="Scenario"]
+			if(length(mods) < 1) choices <- choices[choices!="Model"]
+			if(!length(cmip3scens) | !length(cmip5scens)) choices <- choices[choices!="Phase"]
+			if(!length(cmip3models) | !length(cmip5models)) choices <- choices[choices!="Phase"]
+		} else choices <- NULL
+	choices
+}
 
 nGroups <- function(grp, scenarios, models, mos, decs, locs){
-	if(is.null(grp) || grp=="None/Force Pool") return(1)
+	if(is.null(grp) || grp=="None") return(1)
 	if(grp=="Phase") return(2)
 	if(grp=="Model") return(length(models))
 	if(grp=="Scenario") return(length(scenarios))
@@ -48,12 +59,12 @@ nGroups <- function(grp, scenarios, models, mos, decs, locs){
 getFacetChoices <- function(inx, iny=NULL, ingrp=NULL, grp.choices=NULL){
 	if(!is.null(iny)){
 		choices <- grp.choices[-which(grp.choices==inx | grp.choices==iny)]
-		if(length(choices)) return(c("None/Force Pool", choices)) else return()
+		if(length(choices)) return(c("None", choices)) else return()
 	}
 	if(!is.null(ingrp)){
-		if(length(grp.choices)>=2){ # greater than (or equal to, since group not required) 1, plus 1 to account for the "None/Force Pool" group option
-			grp.choices.sub <- grp.choices[grp.choices!="None/Force Pool"]
-			choices <- c("None/Force Pool", grp.choices.sub[which(!(grp.choices.sub %in% ingrp))])
+		if(length(grp.choices)>=2){ # greater than (or equal to, since group not required) 1, plus 1 to account for the "None" group option
+			grp.choices.sub <- grp.choices[grp.choices!="None"]
+			choices <- c("None", grp.choices.sub[which(!(grp.choices.sub %in% ingrp))])
 			if(inx=="Year") choices <- choices[choices!="Decade"]
 			if(inx=="Scenario" | inx=="Model") choices <- choices[choices!="Phase"]
 			if(length(choices)==1) choices <- NULL
@@ -63,7 +74,7 @@ getFacetChoices <- function(inx, iny=NULL, ingrp=NULL, grp.choices=NULL){
 }
 
 getFacetPanels <- function(fct, mods, scens, mos, decs, locs){
-	if(!is.null(fct) && fct!="None/Force Pool"){
+	if(!is.null(fct) && fct!="None"){
 		if(fct=="Phase") return(2)
 		if(fct=="Model") return(length(mods))
 		if(fct=="Scenario") return(length(scens))
@@ -75,11 +86,11 @@ getFacetPanels <- function(fct, mods, scens, mos, decs, locs){
 
 getPooledVars <- function(inx, iny=NULL, ingrp=NULL, infct, grp.choices=NULL, fct.choices, choices, mos, years, decades, domains, scenarios, models, cmip3scens, cmip5scens, cmip3mods, cmip5mods){
 	if(!is.null(ingrp) & !is.null(infct)){
-		if( # the +1s are to make explicit the non-group "None/Force Pool" option in the group and facet choices
+		if( # the +1s are to make explicit the non-group "None" option in the group and facet choices
 			!(
 				length(grp.choices)>=3+1 |
-				(length(grp.choices)==2+1 & !(ingrp!="None/Force Pool" & infct!="None/Force Pool")) |
-				(length(grp.choices)==1+1 & ingrp=="None/Force Pool" & infct=="None/Force Pool")
+				(length(grp.choices)==2+1 & !(ingrp!="None" & infct!="None")) |
+				(length(grp.choices)==1+1 & ingrp=="None" & infct=="None")
 			)
 		){
 			return()
@@ -88,7 +99,7 @@ getPooledVars <- function(inx, iny=NULL, ingrp=NULL, infct, grp.choices=NULL, fc
 	if(!is.null(iny) & !is.null(infct)) ingrp <- iny
 	if(!is.null(ingrp) & !is.null(infct)){
 		pooled.var <- choices[!(choices %in% c(inx,ingrp,infct))]
-		if(infct=="None/Force Pool"){
+		if(infct=="None"){
 			pooled.var <- choices[sort(match( unique(c("Year", pooled.var[which(pooled.var %in% fct.choices)])), choices))]
 			if(inx=="Year") pooled.var <- pooled.var[pooled.var!="Year"]
 		}
@@ -109,6 +120,7 @@ getPooledVars <- function(inx, iny=NULL, ingrp=NULL, infct, grp.choices=NULL, fc
 }
 
 getPlotSubTitle <- function(pooled, yrs, mos, mod, scen, phase=c("CMIP3", "CMIP5"), dom){
+	if(!length(mos)) mos <- "Jan - Dec"
 	yrs.lab <- ifelse("Year" %in% pooled, paste("Years: ", paste(yrs[1], "-", tail(yrs,1)), "\n", collapse=""), "")
 	mos.lab <- ifelse("Month" %in% pooled, paste("Months: ", paste(mos, collapse=", "), "\n", collapse=""), "")
 	mod.lab <- ifelse("Model" %in% pooled, paste("GCMs: ", paste(mod, collapse=", "), "\n", collapse=""), "")
@@ -122,6 +134,7 @@ getPlotSubTitle <- function(pooled, yrs, mos, mod, scen, phase=c("CMIP3", "CMIP5
 
 getPlotTitle <- function(grp, facet, pooled, yrs, mos, mod, scen, phase=c("CMIP3", "CMIP5"), dom){
 	gfp <- c(grp, facet, pooled)
+	if(!length(mos)) mos <- "Jan - Dec"
 	yrs.lab <- ifelse("Year" %in% gfp, "", paste(yrs[1], "-", tail(yrs,1)))
 	mos.lab <- ifelse("Month" %in% gfp, "", paste(mos, collapse=", "))
 	mod.lab <- ifelse("Model" %in% gfp, "", paste(mod, collapse=", "))
@@ -138,15 +151,9 @@ getSubjectChoices <- function(inx, ingrp, pooled.vars){
 		if(inx!="Year") y <- "Year" else y <- ""
 		if(inx=="Decade"){
 			x <- NULL
-		#if(input$xvar=="Decade"){
-		#	x <- x[x!="Year"]
-		#	x <- unique(c(input$group3, x, y))
-		#	x <- x[x!="" & x!="None/Force Pool"]
-		#	x <- c("", paste(x, sep="", collapse="-"))
 		} else {
 			x <- unique(c(ingrp, x[x!="Decade"], y))
-			x <- x[x!="" & x!="None/Force Pool"]
-			x <- if(inx=="Year") c("", paste(x, sep="", collapse="-"), paste(c(x,"Decade"), sep="", collapse="-")) else c("", paste(x, sep="", collapse="-"))
+			x <- x[x!="" & x!="None"]
 		}
 		if(length(x)==1) x <- NULL
 	} else x <- NULL
@@ -161,7 +168,7 @@ sp_xlabylab <- function(units, form.string){
 }
 
 adjustGroup <- function(grp, n.grp){
-	if(is.null(grp) || grp=="None/Force Pool") grp <- 1
+	if(is.null(grp) || grp=="None") grp <- 1
 	if(n.grp==1) grp <- 1
 	grp
 }
@@ -218,14 +225,14 @@ pooledVarsCaption <- function(pv, permit, ingrp=NULL){
 			pv <- paste(c(paste(pv[1:(n-2)], collapse=", "), paste(pv[(n-1):n], collapse=" and ")), collapse=", ")
 		}
 		if(permit){
-			if(is.null(ingrp) || ingrp=="None/Force Pool") h5(paste0("Observations include multiple ", pv, ".")) else h5(paste0("Observations in each color group include multiple ", pv, "."))
+			if(is.null(ingrp) || ingrp=="None") h5(paste0("Observations include multiple ", pv, ".")) else h5(paste0("Observations in each color group include multiple ", pv, "."))
 		}
 	}
 }
 
 getColorSeq <- function(id, d, grp=NULL, n.grp=NULL, heat=FALSE, overlay=FALSE){
 	if(!is.null(d) && heat) return( selectInput(id, "Color levels", c("Increasing","Centered"), selected="Increasing", width="100%") )
-	if(is.null(grp) || grp=="None/Force Pool") return()
+	if(is.null(grp) || grp=="None") return()
 	if(overlay) n.grp <- n.grp + 1
 	x <- "Nominal"
 	if(n.grp>=9) x <- "Evenly spaced" else if(n.grp>=8) x <- c("Increasing","Centered") else if(grp!="Model" & grp!="Domain") x <- c("Nominal","Increasing","Centered")
@@ -239,7 +246,7 @@ getColorPalettes <- function(id, colseq, grp=NULL, n.grp=NULL, fill.vs.border=NU
 		pal.nom <- c("Accent","Dark2","Pastel1","Pastel2","Paired","Set1","Set2","Set3")
 		if(heat & colseq=="Increasing") return( selectInput(id, "Color palette", pal.inc, selected=pal.inc[1], width="100%") )
 		if(heat & colseq=="Centered") return( selectInput(id, "Color palette", pal.cen, selected=pal.cen[1], width="100%") )
-		if(is.null(grp) || grp=="None/Force Pool") return()
+		if(is.null(grp) || grp=="None") return()
 		if(overlay) n.grp <- n.grp + 1
 		if(colseq=="Nominal"){
 			pal <- pal.nom
