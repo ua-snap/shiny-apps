@@ -35,16 +35,14 @@ logo.mat <- matrix(rgb(logo[,,1],logo[,,2],logo[,,3],logo[,,4]*logo.alpha), nrow
 
 # These functions are written with the structure of the app in mind. They are intended to avoid code duplication.
 
-nGroups <- function(grp, scenarios, models, mos, decs){
+nGroups <- function(grp, scenarios, models, mos, decs, locs){
 	if(is.null(grp) || grp=="None/Force Pool") return(1)
 	if(grp=="Phase") return(2)
 	if(grp=="Model") return(length(models))
 	if(grp=="Scenario") return(length(scenarios))
 	if(grp=="Month"){ x <- length(mos); if(x==0) x <- 12; return(x) }
 	if(grp=="Decade"){ x <- length(decs); if(x==0) x <- 23; return(x) }
-	long <- c("Domain")#"Month","Decade",)
-	short <- c("doms")#"mos","decs",)
-	return(eval(parse(text=sprintf("length(input$%s)",short[which(long==grp)]))))
+	if(grp=="Domain") return(length(locs))
 }
 	
 getFacetChoices <- function(inx, iny=NULL, ingrp=NULL, grp.choices=NULL){
@@ -62,6 +60,17 @@ getFacetChoices <- function(inx, iny=NULL, ingrp=NULL, grp.choices=NULL){
 		} else choices <- NULL
 	} else choices <- NULL
 	choices
+}
+
+getFacetPanels <- function(fct, mods, scens, mos, decs, locs){
+	if(!is.null(fct) && fct!="None/Force Pool"){
+		if(fct=="Phase") return(2)
+		if(fct=="Model") return(length(mods))
+		if(fct=="Scenario") return(length(scens))
+		if(fct=="Month"){ x <- length(mos); if(x==0) x <- 12; return(x) }
+		if(fct=="Decade"){ x <- length(decs); if(x==0) x <- 23; return(x) }
+		if(fct=="Domain") return(length(locs))
+	} else NULL
 }
 
 getPooledVars <- function(inx, iny=NULL, ingrp=NULL, infct, grp.choices=NULL, fct.choices, choices, mos, years, decades, domains, scenarios, models, cmip3scens, cmip5scens, cmip3mods, cmip5mods){
@@ -219,7 +228,7 @@ getColorSeq <- function(id, d, grp=NULL, n.grp=NULL, heat=FALSE, overlay=FALSE){
 	if(is.null(grp) || grp=="None/Force Pool") return()
 	if(overlay) n.grp <- n.grp + 1
 	x <- "Nominal"
-	if(n.grp>=9) x <- "Evenly spaced" else if(n.grp>=8) x <- c("Increasing","Centered") else if(grp!="Model") x <- c("Nominal","Increasing","Centered")
+	if(n.grp>=9) x <- "Evenly spaced" else if(n.grp>=8) x <- c("Increasing","Centered") else if(grp!="Model" & grp!="Domain") x <- c("Nominal","Increasing","Centered")
 	if(!is.null(d)) selectInput(id, "Color levels", x, selected=x[1], width="100%") else NULL
 }
 
@@ -244,7 +253,7 @@ getColorPalettes <- function(id, colseq, grp=NULL, n.grp=NULL, fill.vs.border=NU
 		} else if(colseq=="Centered"){
 			pal <- pal.cen
 		}
-		selectInput(id, "Color palette", pal, selected=pal[1], width="100%")
+		if(exists("pal")) selectInput(id, "Color palette", pal, selected=pal[1], width="100%")
 	}
 }
 
