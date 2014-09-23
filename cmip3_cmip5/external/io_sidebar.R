@@ -19,6 +19,7 @@ output$GoButton <- renderUI({
 
 output$Group <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
+	input$xtime
 	isolate(
 		if(!is.null(group.choices())) selectInput("group", "Group/color by:", choices=group.choices(), selected=group.choices()[1], width="100%")
 	)
@@ -26,6 +27,7 @@ output$Group <- renderUI({
 
 output$Facet <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
+	input$xtime
 	input$group
 	isolate(
 		if(!is.null(facet.choices())) selectInput("facet","Facet/panel by:", choices=facet.choices(), selected=facet.choices()[1], width="100%")
@@ -34,6 +36,8 @@ output$Facet <- renderUI({
 
 output$Subjects <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
+	input$xtime
+	input$group
 	input$facet
 	isolate(
 		if(!is.null(subjectChoices())) selectInput("subjects", "Subject/Within-group lines:", choices=subjectChoices(), selected=subjectChoices()[1], width="100%")
@@ -42,6 +46,7 @@ output$Subjects <- renderUI({
 
 output$Group2 <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
+	input$xy
 	isolate(
 		if(!is.null(group.choices2())) selectInput("group2", "Group/color by:", choices=group.choices2(), selected=group.choices2()[1], width="100%")
 	)
@@ -49,6 +54,7 @@ output$Group2 <- renderUI({
 
 output$Facet2 <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
+	input$xy
 	input$group2
 	isolate(
 		if(!is.null(facet.choices2())) selectInput("facet2","Facet/panel by:", choices=facet.choices2(), selected=facet.choices2()[1], width="100%")
@@ -89,11 +95,13 @@ output$Xvar <- renderUI({
 })
 
 output$Group3 <- renderUI({
+	input$xvar
 	if(!is.null(group.choices3())) selectInput("group3", "Group/color by:", choices=group.choices3(), selected=group.choices3()[1], width="100%")
 })
 
 output$Facet3 <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
+	input$xvar
 	input$group3
 	isolate(
 		if(!is.null(facet.choices3())) selectInput("facet3","Facet/panel by:", choices=facet.choices3(), selected=facet.choices3()[1], width="100%")
@@ -102,6 +110,8 @@ output$Facet3 <- renderUI({
 
 output$Subjects3 <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
+	input$xvar
+	input$group3
 	input$facet3
 	x <- NULL
 	isolate(

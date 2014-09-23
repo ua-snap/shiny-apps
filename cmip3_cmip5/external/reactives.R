@@ -288,26 +288,11 @@ group.choices <- reactive({
 	choices
 })
 
-n.groups <- reactive({ nGroups(input$group, scenarios(), models(), input$mos, input$decs) })
+n.groups <- reactive({ nGroups(input$group, scenarios(), models(), input$mos, input$decs, Locs()) })
 
 facet.choices <- reactive({	getFacetChoices(inx=input$xtime, ingrp=input$group, grp.choices=group.choices()) })
 
-facet.panels <- reactive({
-	if(!is.null(input$facet)){
-		if(input$facet!="None/Force Pool"){
-			if(input$facet=="Phase") return(2)
-			if(input$facet=="Model") return(length(models()))
-			if(input$facet=="Scenario") return(length(scenarios()))
-			if(input$facet=="Month"){ x <- length(input$mos); if(x==0) x <- 12; return(x) }
-			if(input$facet=="Decade"){ x <- length(input$decs); if(x==0) x <- 23; return(x) }
-			long <- c("Domain")#"Month","Decade",)
-			short <- c("doms")#"mos","decs",)
-			eval(parse(text=sprintf("n <- length(input$%s)", short[which(long==input$facet)])))
-			if(!exists("n")) n <- NULL
-		} else n <- NULL
-	} else n <- NULL
-	n
-})
+facet.panels <- reactive({ getFacetPanels(input$facet, models(), scenarios(), input$mos, input$decs, Locs()) })
 
 pooled.var <- reactive({
 	x <- getPooledVars(inx=input$xtime, ingrp=input$group, infct=input$facet, grp.choices=group.choices(), fct.choices=facet.choices(),
@@ -336,26 +321,11 @@ group.choices2 <- reactive({
 	choices
 })
 
-n.groups2 <- reactive({ nGroups(input$group2, scenarios(), models(), input$mos, input$decs) })
+n.groups2 <- reactive({ nGroups(input$group2, scenarios(), models(), input$mos, input$decs, Locs()) })
 
 facet.choices2 <- reactive({ getFacetChoices(inx=input$xy, ingrp=input$group2, grp.choices=group.choices2()) })
 
-facet.panels2 <- reactive({
-	if(!is.null(input$facet2)){
-		if(input$facet2!="None/Force Pool"){
-			if(input$facet2=="Phase") return(2)
-			if(input$facet2=="Model") return(length(models()))
-			if(input$facet2=="Scenario") return(length(scenarios()))
-			if(input$facet2=="Month"){ x <- length(input$mos); if(x==0) x <- 12; return(x) }
-			if(input$facet2=="Decade"){ x <- length(input$decs); if(x==0) x <- 23; return(x) }
-			long <- c("Domain")#"Month","Decade",)
-			short <- c("doms")#"mos","decs",)
-			eval(parse(text=sprintf("n <- length(input$%s)", short[which(long==input$facet2)])))
-			if(!exists("n")) n <- NULL
-		} else n <- NULL
-	} else n <- NULL
-	n
-})
+facet.panels2 <- reactive({ getFacetPanels(input$facet2, models(), scenarios(), input$mos, input$decs, Locs()) })
 
 pooled.var2 <- reactive({
 	x <- getPooledVars(inx=input$xy, ingrp=input$group2, infct=input$facet2, grp.choices=group.choices2(), fct.choices=facet.choices2(),
@@ -391,22 +361,7 @@ heatmap_y_choices <- reactive({
 
 facetChoicesHeatmap <- reactive({ getFacetChoices(inx=input$heatmap_x, iny=input$heatmap_y, grp.choices=heatmap_x_choices()) })
 
-facetPanelsHeatmap <- reactive({
-	if(!is.null(input$facetHeatmap)){
-		if(input$facetHeatmap!="None/Force Pool"){
-			if(input$facetHeatmap=="Phase") return(2)
-			if(input$facetHeatmap=="Model") return(length(models()))
-			if(input$facetHeatmap=="Scenario") return(length(scenarios()))
-			if(input$facetHeatmap=="Month"){ x <- length(input$mos); if(x==0) x <- 12; return(x) }
-			if(input$facetHeatmap=="Decade"){ x <- length(input$decs); if(x==0) x <- 23; return(x) }
-			long <- c("Domain")#"Month","Decade",)
-			short <- c("doms")#"mos","decs",)
-			eval(parse(text=sprintf("n <- length(input$%s)", short[which(long==input$facetHeatmap)])))
-			if(!exists("n")) n <- NULL
-		} else n <- NULL
-	} else n <- NULL
-	n
-})
+facetPanelsHeatmap <- reactive({ getFacetPanels(input$facetHeatmap, models(), scenarios(), input$mos, input$decs, Locs()) })
 
 pooledVarHeatmap <- reactive({
 	x <- getPooledVars(inx=input$heatmap_x, iny=input$heatmap_y, infct=input$facet, fct.choices=facetChoicesHeatmap(),
@@ -444,26 +399,11 @@ group.choices3 <- reactive({
 	choices
 })
 
-n.groups3 <- reactive({ nGroups(input$group3, scenarios(), models(), input$mos, input$decs) })
+n.groups3 <- reactive({ nGroups(input$group3, scenarios(), models(), input$mos, input$decs, Locs()) })
 
 facet.choices3 <- reactive({ getFacetChoices(inx=input$xvar, ingrp=input$group3, grp.choices=group.choices3()) })
 
-facet.panels3 <- reactive({
-	if(!is.null(input$facet3)){
-		if(input$facet3!="None/Force Pool"){
-			if(input$facet3=="Phase") return(2)
-			if(input$facet3=="Model") return(length(models()))
-			if(input$facet3=="Scenario") return(length(scenarios()))
-			if(input$facet3=="Month"){ x <- length(input$mos); if(x==0) x <- 12; return(x) }
-			if(input$facet3=="Decade"){ x <- length(input$decs); if(x==0) x <- 23; return(x) }
-			long <- c("Domain")#"Month","Decade",)
-			short <- c("doms")#"mos","decs",)
-			eval(parse(text=sprintf("n <- length(input$%s)", short[which(long==input$facet3)])))
-			if(!exists("n")) n <- NULL
-		} else n <- NULL
-	} else n <- NULL
-	n
-})
+facet.panels3 <- reactive({ getFacetPanels(input$facet3, models(), scenarios(), input$mos, input$decs, Locs()) })
 
 pooled.var3 <- reactive({
 	x <- getPooledVars(inx=input$xvar, ingrp=input$group3, infct=input$facet3, grp.choices=group.choices3(), fct.choices=facet.choices3(),
