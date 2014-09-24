@@ -33,5 +33,5 @@ function(d, form.string, panels, grp, n.grp, facet.cols=ceiling(sqrt(panels)), f
 		}
 		g <- g + annotate("text", y=max(d[[y]]), x=min(d[[x]]), label=bquote(.(plot.subtitle)), hjust=0, vjust=1, fontface=3)
 		g <- addLogo(g, show.logo, logo.mat, show.title, main, fontsize)
-		g
+		print(g)
 }

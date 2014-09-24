@@ -30,5 +30,5 @@ function(d, d2, x, y, z, panels, facet.cols=ceiling(sqrt(panels)), facet.by, fon
 		if(show.panel.text) g <- annotatePlot(g, data=d, x=x, y=y, text=plot.subtitle)
 		if(show.values) g <- g + geom_text(data=d2, aes_string(fill=z, label=z))
 		g <- addLogo(g, show.logo, logo.mat, show.title, main, fontsize)
-		g
+		print(g)
 }
