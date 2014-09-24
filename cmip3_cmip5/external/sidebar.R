@@ -1,4 +1,5 @@
 column(4,
+	conditionalPanel(condition="input.tsp !== 'about'",
 	wellPanel(
 		checkboxInput("showDataPanel1", h5("Data Selection"), TRUE),
 		conditionalPanel(condition="input.showDataPanel1",
@@ -38,116 +39,122 @@ column(4,
 			),
 			column(6,
 				conditionalPanel(condition="input.tsp == 'plot_heatmap' && input.goButton > 0", downloadButton("dlCurTableHeatmap", "Download Data", class="btn-success btn-block")),
-				conditionalPanel(condition="input.tsp == 'plot_ts' && input.goButton > 0", downloadButton("dlCurTable1", "Download Data", class="btn-success btn-block")),
-				conditionalPanel(condition="input.tsp == 'plot_scatter' && input.goButton > 0", downloadButton("dlCurTable2", "Download Data", class="btn-success btn-block")),
-				conditionalPanel(condition="input.tsp == 'plot_variability' && input.goButton > 0", downloadButton("dlCurTable3", "Download Data", class="btn-success btn-block"))
+				conditionalPanel(condition="input.tsp == 'plot_ts' && input.goButton > 0", downloadButton("dlCurTableTS", "Download Data", class="btn-success btn-block")),
+				conditionalPanel(condition="input.tsp == 'plot_scatter' && input.goButton > 0", downloadButton("dlCurTableScatter", "Download Data", class="btn-success btn-block")),
+				conditionalPanel(condition="input.tsp == 'plot_variability' && input.goButton > 0", downloadButton("dlCurTableVariability", "Download Data", class="btn-success btn-block"))
 			)
 		)
+	)
 	),
-	conditionalPanel(condition="output.ShowPlotOptionsPanel == true",
+	conditionalPanel(condition="output.ShowPlotOptionsPanel == true && input.tsp !== 'about'",
 	wellPanel(
 		checkboxInput("showDisplayPanel1", h5("Plot Options"), TRUE),
 		conditionalPanel(condition="input.showDisplayPanel1",
-			fluidRow(
-				column(6,
-					conditionalPanel(condition="input.tsp == 'plot_heatmap'", uiOutput("Heatmap_x")),
-					conditionalPanel(condition="input.tsp == 'plot_ts'", selectInput("xtime", "X-axis (time)", choices=c("Month", "Year", "Decade"), selected="Year", width="100%")), 
-					conditionalPanel(condition="input.tsp == 'plot_scatter'", selectInput("xy", "X & Y axes", choices=c("P ~ T", "T ~ P"), selected="P ~ T", width="100%")),
-					conditionalPanel(condition="input.tsp == 'plot_variability'", uiOutput("Xvar"))),
-				column(6,
-					conditionalPanel(condition="input.tsp == 'plot_heatmap'", uiOutput("Heatmap_y")),
-					conditionalPanel(condition="input.tsp == 'plot_ts'", uiOutput("Group")),
-					conditionalPanel(condition="input.tsp == 'plot_scatter'", uiOutput("Group2")),
-					conditionalPanel(condition="input.tsp == 'plot_variability'", uiOutput("Group3")))),
-			fluidRow(
-				column(6,
-					conditionalPanel(condition="input.tsp == 'plot_heatmap'", uiOutput("FacetHeatmap")),
-					conditionalPanel(condition="input.tsp == 'plot_ts'", uiOutput("Facet")),
-					conditionalPanel(condition="input.tsp == 'plot_scatter'", uiOutput("Facet2")),
-					conditionalPanel(condition="input.tsp == 'plot_variability'", uiOutput("Facet3"))),
-				column(6,
-					conditionalPanel(condition="input.tsp == 'plot_heatmap'", uiOutput("StatHeatmap"))
-					)
-				),
-			fluidRow(
-				conditionalPanel(condition="input.tsp == 'plot_heatmap'", uiOutput("PooledVarHeatmap")),
-				conditionalPanel(condition="input.tsp == 'plot_ts'", uiOutput("PooledVar")),
-				conditionalPanel(condition="input.tsp == 'plot_scatter'", uiOutput("PooledVar2")),
-				conditionalPanel(condition="input.tsp == 'plot_variability'", uiOutput("PooledVar3"))
-			),
+		
+		conditionalPanel(condition="input.tsp == 'plot_heatmap'",
+			fluidRow(column(6, uiOutput("Heatmap_x")), column(6, uiOutput("Heatmap_y"))),
+			fluidRow(column(6,uiOutput("FacetHeatmap")), column(6, uiOutput("StatHeatmap"))),
+			fluidRow(uiOutput("PooledVarHeatmap"))
+		),
+		conditionalPanel(condition="input.tsp == 'plot_ts'",
+			fluidRow(column(6, selectInput("xtime", "X-axis (time)", choices=c("Month", "Year", "Decade"), selected="Year", width="100%")), column(6, uiOutput("Group"))),
+			fluidRow(column(6,uiOutput("Facet"))),
+			fluidRow(uiOutput("PooledVar"))
+		),
+		conditionalPanel(condition="input.tsp == 'plot_scatter'",
+			fluidRow(column(6, selectInput("xy", "X & Y axes", choices=c("P ~ T", "T ~ P"), selected="P ~ T", width="100%")), column(6, uiOutput("Group2"))),
+			fluidRow(column(6,uiOutput("Facet2"))),
+			fluidRow(uiOutput("PooledVar2"))
+		),
+		conditionalPanel(condition="input.tsp == 'plot_variability'",
+			fluidRow(column(6, uiOutput("Xvar")), column(6, uiOutput("Group3"))),
+			fluidRow(column(6,uiOutput("Facet3"))),
+			fluidRow(uiOutput("PooledVar3"))
+		),
+		fluidRow(column(4, checkboxInput("showTitle", "Title", TRUE)), column(4, checkboxInput("showPanelText", "Panel text", TRUE)), column(4, checkboxInput("showCRU","Show CRU 3.1", FALSE))),
+		conditionalPanel(condition="input.tsp !== 'plot_heatmap'",
 			fluidRow(
 				column(4,
-					checkboxInput("showTitle", "Title", TRUE),
-					conditionalPanel(condition="input.tsp !== 'plot_heatmap'", checkboxInput("showpts", "Show points", TRUE)),
-					conditionalPanel(condition="input.tsp == 'plot_heatmap'", checkboxInput("aspect1to1", "1:1 Aspect", FALSE)),
+					checkboxInput("showpts", "Show points", TRUE),
 					conditionalPanel(condition="input.tsp == 'plot_ts'", uiOutput("LinePlot")),
 					conditionalPanel(condition="input.tsp == 'plot_scatter'", uiOutput("Conplot")),
 					conditionalPanel(condition="input.tsp == 'plot_variability'", uiOutput("Variability"))
 				),
 				column(4,
-					checkboxInput("showPanelText", "Panel text", TRUE),
-					conditionalPanel(condition="input.tsp !== 'plot_heatmap'", checkboxInput("jitterXY", "Jitter points", FALSE)),
-					conditionalPanel(condition="input.tsp == 'plot_heatmap'", checkboxInput("revHeatmapColors", "Reverse colors", FALSE)),
+					checkboxInput("jitterXY", "Jitter points", FALSE),
 					conditionalPanel(condition="input.tsp == 'plot_ts'", uiOutput("BarPlot")),
 					conditionalPanel(condition="input.tsp == 'plot_scatter'", ""),
 					conditionalPanel(condition="input.tsp == 'plot_variability' & input.variability == true", checkboxInput("boxplots", "Box plots", FALSE))
 				),
 				column(4,
-					checkboxInput("showCRU","Show CRU 3.1", FALSE),
 					conditionalPanel(condition="input.tsp == 'plot_ts' || input.tsp == 'plot_variability'", checkboxInput("showlines", "Show lines", FALSE)),
-					conditionalPanel(condition="input.tsp == 'plot_heatmap'", checkboxInput("showHeatmapVals", "Cell values", FALSE)),
 					conditionalPanel(condition="input.tsp == 'plot_ts'", uiOutput("VertFacet")),
 					conditionalPanel(condition="input.tsp == 'plot_scatter'", uiOutput("VertFacet2")),
 					conditionalPanel(condition="input.tsp == 'plot_variability'", uiOutput("VertFacet3"))
 				)
-			),
-			conditionalPanel(condition="input.tsp == 'plot_variability'",
-				fluidRow(
-					column(6,
-						conditionalPanel(condition="input.variability == true && input.boxplots == ''", selectInput("errorBars", "Error bars", choices=c("", "95% CI", "SD", "SE", "Range"), selected="", width="100%")),
-						conditionalPanel(condition="input.variability == false", selectInput("dispersion", "Dispersion stat", choices=c("SD", "SE", "Full Spread"), selected="SD", width="100%"))),
-					column(6, "")# h5(uiOutput("SummarizeByXtitle"))),	
-				)),
-			fluidRow(
-				column(4,
-					conditionalPanel(condition="input.tsp == 'plot_ts'", uiOutput("Yrange")),
-					conditionalPanel(condition="input.tsp == 'plot_scatter'", uiOutput("Hexbin"))),
-				column(4,""),
-					#conditionalPanel(condition="input.tsp == 'plot_ts'", uiOutput("CLbootbar"))),
-				column(4,
-					conditionalPanel(condition="input.tsp == 'plot_ts'", uiOutput("CLbootsmooth")))),
-			fluidRow(
-				column(6,
-					conditionalPanel(condition="input.tsp == 'plot_heatmap'", uiOutput("ColorseqHeatmap"),
-						conditionalPanel(condition="input.heatmap_x !== null && input.heatmap_y !== null",
-							selectInput("legendPosHeatmap","Legend",c("Top","Right","Bottom","Left"),selected="Top", width="100%"))),
-					conditionalPanel(condition="input.tsp == 'plot_ts'", uiOutput("Colorseq"), uiOutput("Alpha1"), uiOutput("Bardirection"),
-						conditionalPanel(condition="input.group !== null && input.group !== 'None'",
-							selectInput("legendPos1","Legend",c("Top","Right","Bottom","Left"),selected="Top", width="100%"))),
-					conditionalPanel(condition="input.tsp == 'plot_scatter'", uiOutput("Colorseq2"), uiOutput("Alpha2"), 
-						conditionalPanel(condition="input.group2 !== null && input.group2 !== 'None'",
-							selectInput("legendPos2","Legend",c("Top","Right","Bottom","Left"),selected="Top", width="100%"))),
-					conditionalPanel(condition="input.tsp == 'plot_variability'", uiOutput("Colorseq3"), uiOutput("Alpha3"), uiOutput("Bardirection3"),
-						conditionalPanel(condition="input.group3 !== null && input.group3 !== 'None'",
-							selectInput("legendPos3","Legend",c("Top","Right","Bottom","Left"),selected="Top", width="100%")))),
-				column(6,
-					conditionalPanel(condition="input.tsp == 'plot_heatmap'", uiOutput("ColorpalettesHeatmap"), uiOutput("PlotFontSizeHeatmap")),
-					conditionalPanel(condition="input.tsp == 'plot_ts'", uiOutput("Colorpalettes"), uiOutput("PlotFontSize"), uiOutput("Bartype")),
-					conditionalPanel(condition="input.tsp == 'plot_scatter'", uiOutput("Colorpalettes2"), uiOutput("PlotFontSize2")),
-					conditionalPanel(condition="input.tsp == 'plot_variability'", uiOutput("Colorpalettes3"), uiOutput("PlotFontSize3"), uiOutput("Bartype3"))
-				)
 			)
+		),
+		conditionalPanel(condition="input.tsp == 'plot_heatmap'",
+			fluidRow(column(4, checkboxInput("aspect1to1", "1:1 Aspect", FALSE)), column(4, checkboxInput("revHeatmapColors", "Reverse colors", FALSE)), column(4, checkboxInput("showHeatmapVals", "Cell values", FALSE)))
+		),
+		conditionalPanel(condition="input.tsp == 'plot_heatmap'",
+			fluidRow(
+				column(6,
+					uiOutput("ColorseqHeatmap"),
+					conditionalPanel(condition="input.heatmap_x !== null && input.heatmap_y !== null",
+						selectInput("legendPosHeatmap","Legend",c("Top","Right","Bottom","Left"),selected="Top", width="100%"))
+				),
+				column(6, uiOutput("ColorpalettesHeatmap"), uiOutput("PlotFontSizeHeatmap"))
+			)
+		),
+		conditionalPanel(condition="input.tsp == 'plot_ts'",
+			fluidRow(column(4, uiOutput("Yrange")), column(4,""), column(4, uiOutput("CLbootsmooth"))),
+			fluidRow(
+				column(6,
+					uiOutput("Colorseq"), uiOutput("Alpha1"), uiOutput("Bardirection"),
+					conditionalPanel(condition="input.group !== null && input.group !== 'None'",
+						selectInput("legendPos1","Legend",c("Top","Right","Bottom","Left"),selected="Top", width="100%"))
+					),
+				column(6, uiOutput("Colorpalettes"), uiOutput("PlotFontSize"), uiOutput("Bartype"))
+			)
+		),
+		conditionalPanel(condition="input.tsp == 'plot_scatter'",
+			fluidRow(column(4, uiOutput("Hexbin"))),
+			fluidRow(
+				column(6, uiOutput("Colorseq2"), uiOutput("Alpha2"), 
+					conditionalPanel(condition="input.group2 !== null && input.group2 !== 'None'",
+						selectInput("legendPos2","Legend",c("Top","Right","Bottom","Left"),selected="Top", width="100%"))
+				),
+				column(6, uiOutput("Colorpalettes2"), uiOutput("PlotFontSize2"))
+			)
+		),
+		conditionalPanel(condition="input.tsp == 'plot_variability'",
+			fluidRow(
+				column(6,
+					conditionalPanel(condition="input.variability == true && input.boxplots == ''", selectInput("errorBars", "Error bars", choices=c("", "95% CI", "SD", "SE", "Range"), selected="", width="100%")),
+					conditionalPanel(condition="input.variability == false", selectInput("dispersion", "Dispersion stat", choices=c("SD", "SE", "Full Spread"), selected="SD", width="100%"))),
+				column(6, "")# h5(uiOutput("SummarizeByXtitle"))),	
+			),
+			fluidRow(
+				column(6,
+					uiOutput("Colorseq3"), uiOutput("Alpha3"), uiOutput("Bardirection3"),
+					conditionalPanel(condition="input.group3 !== null && input.group3 !== 'None'",
+						selectInput("legendPos3","Legend",c("Top","Right","Bottom","Left"),selected="Top", width="100%"))
+				),
+				column(6, uiOutput("Colorpalettes3"), uiOutput("PlotFontSize3"), uiOutput("Bartype3"))
+			)
+		)
 		),
 		fluidRow(
 			column(6, uiOutput("PlotButton")),
 			column(6,
 				conditionalPanel(condition="input.tsp == 'plot_heatmap' && input.plotButton > 0", downloadButton("dlCurPlotHeatmap", "Download Plot", class="btn-success btn-block")),
-				conditionalPanel(condition="input.tsp == 'plot_ts' && input.plotButton > 0", downloadButton("dlCurPlot1", "Download Plot", class="btn-success btn-block")),
-				conditionalPanel(condition="input.tsp == 'plot_scatter' && input.plotButton > 0", downloadButton("dlCurplot_scatter", "Download Plot", class="btn-success btn-block")),
-				conditionalPanel(condition="input.tsp == 'plot_variability' && input.plotButton > 0", downloadButton("dlCurplot_variability", "Download Plot", class="btn-success btn-block"))
+				conditionalPanel(condition="input.tsp == 'plot_ts' && input.plotButton > 0", downloadButton("dlCurPlotTS", "Download Plot", class="btn-success btn-block")),
+				conditionalPanel(condition="input.tsp == 'plot_scatter' && input.plotButton > 0", downloadButton("dlCurPlotScatter", "Download Plot", class="btn-success btn-block")),
+				conditionalPanel(condition="input.tsp == 'plot_variability' && input.plotButton > 0", downloadButton("dlCurPlotVariability", "Download Plot", class="btn-success btn-block"))
 			)
 		)
 	)
-	),
-	conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
+	)#,
+	#conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
 )
