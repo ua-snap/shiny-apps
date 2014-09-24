@@ -70,5 +70,5 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, face
 		}
 		if(show.panel.text) g <- annotatePlot(g, data=d, x=x, y=y, text=plot.subtitle, bp=barPlot, bp.position=bar.pos, n.groups=n.grp/2) #n.grp/2 is a rough estimate
 		g <- addLogo(g, show.logo, logo.mat, show.title, main, fontsize)
-		print(g)
+		g
 }

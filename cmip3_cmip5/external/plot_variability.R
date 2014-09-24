@@ -128,5 +128,5 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 			}
 		}
 		g <- addLogo(g, show.logo, logo.mat, show.title, main, fontsize)
-		print(g)
+		g
 }
