@@ -1,6 +1,6 @@
 # Source reactive expressions and other code
 source("external/reactives.R",local=T) # source reactive expressions
-source("external/reactives_leaflet.R",local=T) # source reactive expressions for leaflet
+#source("external/reactives_leaflet.R",local=T) # source reactive expressions for leaflet
 source("external/io_sidebar.R",local=T) # source input/output objects associated with sidebar
 source("external/io_mainPanel.R",local=T) # source input/output objects associated with mainPanel
 
@@ -20,7 +20,7 @@ doPlot_ts <- function(...){
 				show.points=input$showpts, show.lines=input$showlines, show.overlay=input$showCRU, overlay=CRU(), jit=input$jitterXY,
 				plot.title=plot_ts_title(), plot.subtitle=plot_ts_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle, lgd.pos=input$legendPos1,
 				units=currentUnits(), yrange=input$yrange, clbootbar=input$clbootbar, clbootsmooth=input$clbootsmooth,
-				pooled.var=pooled.var(), logo.mat=logo.mat, ...)
+				pooled.var=pooled.var(), color.theme="black", logo.mat=logo.mat, ...)
 		} else NULL
 	} else NULL
 }
@@ -159,71 +159,60 @@ output$dlCurTableHeatmap <- downloadHandler(
 ############################## Leaflet testing
 # Create the map; this is not the "real" map, but rather a proxy
 # object that lets us control the leaflet map on the page.
-map <- createLeafletMap(session, 'map')
+#map <- createLeafletMap(session, 'map')
 
-observe({
-	if(is.null(input$map_click)) return()
-	selectedCity <<- NULL
-})
+#observe({
+#	if(is.null(input$map_click)) return()
+#	selectedCity <<- NULL
+#})
 
-radiusFactor <- 1000
-observe({
-	map$clearShapes()
-	cities <- topCitiesInBounds()
-	if(nrow(cities) == 0) return()
+#radiusFactor <- 1000
+#observe({
+#	map$clearShapes()
+#	cities <- topCitiesInBounds()
+#	if(nrow(cities) == 0) return()
 
-	map$addCircle(
-		cities$Lat,
-		cities$Lon,
-		sqrt(cities$Population)*radiusFactor/max(5, input$map_zoom)^2,
-		cities$Domain,
-		list(weight=1.2, fill=TRUE, color='#8B008B')
-	)
-})
+#	map$addCircle(
+#		cities$Lat,
+#		cities$Lon,
+#		sqrt(cities$Population)*radiusFactor/max(5, input$map_zoom)^2,
+#		cities$Domain,
+#		list(weight=1.2, fill=TRUE, color='#8B008B')
+#	)
+#})
 
-observe({
-	event <- input$map_shape_click
-	if(is.null(event)) return()
-	map$clearPopups()
+#observe({
+#	event <- input$map_shape_click
+#	if(is.null(event)) return()
+#	map$clearPopups()
     
-	isolate({
-		cities <- topCitiesInBounds()
-		city <- cities[cities$Domain == event$id,]
-		selectedCity <<- city
-		content <- as.character(tagList(
-			tags$strong(city$Domain),
-			tags$br(),
-			sprintf("Estimated population, %s:", 2010), #2010?
-			tags$br(),
-			prettyNum(city$Population, big.mark=',')
-		))
-		map$showPopup(event$lat, event$lng, content, event$id)
-	})
-})
+#	isolate({
+#		cities <- topCitiesInBounds()
+#		city <- cities[cities$Domain == event$id,]
+#		selectedCity <<- city
+#		content <- as.character(tagList(
+#			tags$strong(city$Domain),
+#			tags$br(),
+#			sprintf("Estimated population, %s:", 2010), #2010?
+#			tags$br(),
+#			prettyNum(city$Population, big.mark=',')
+#		))
+#		map$showPopup(event$lat, event$lng, content, event$id)
+#	})
+#})
 
-output$desc <- reactive({
-	if(is.null(input$map_bounds)) return(list())
-	list(
-		lat=mean(c(input$map_bounds$north, input$map_bounds$south)),
-		lng=mean(c(input$map_bounds$east, input$map_bounds$west)),
-		zoom=input$map_zoom,
-		shownCities=nrow(topCitiesInBounds()),
-		totalCities=nrow(citiesInBounds())
-	)
-})
+#output$desc <- reactive({
+#	if(is.null(input$map_bounds)) return(list())
+#	list(
+#		lat=mean(c(input$map_bounds$north, input$map_bounds$south)),
+#		lng=mean(c(input$map_bounds$east, input$map_bounds$west)),
+#		shownCities=nrow(topCitiesInBounds()),
+#		totalCities=nrow(citiesInBounds())
+#	)
+#})
 
-output$citydata <- renderTable({
-	if(nrow(topCitiesInBounds()) == 0) return(NULL)
-	topCitiesInBounds()
-}, include.rownames = FALSE)
-
-
+#output$citydata <- renderTable({
+#	if(nrow(topCitiesInBounds()) == 0) return(NULL)
+#	topCitiesInBounds()
+#}, include.rownames = FALSE)
 ###################################################
-
-# Visitor counter for About tab
-output$pageviews <-	renderText({
-	if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
-	pageviews <- pageviews + 1
-	save(pageviews,file="pageviews.Rdata")
-	paste("Visits:",pageviews)
-})

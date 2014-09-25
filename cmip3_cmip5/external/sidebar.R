@@ -1,5 +1,5 @@
 column(4,
-	conditionalPanel(condition="input.tsp !== 'about'",
+	conditionalPanel(condition="input.tsp !== 'home' && input.tsp !== 'about'",
 	wellPanel(
 		checkboxInput("showDataPanel1", h5("Data Selection"), TRUE),
 		conditionalPanel(condition="input.showDataPanel1",
@@ -46,7 +46,7 @@ column(4,
 		)
 	)
 	),
-	conditionalPanel(condition="output.ShowPlotOptionsPanel == true && input.tsp !== 'about'",
+	conditionalPanel(condition="output.ShowPlotOptionsPanel == true && input.tsp !== 'home' && input.tsp !== 'about'",
 	wellPanel(
 		checkboxInput("showDisplayPanel1", h5("Plot Options"), TRUE),
 		conditionalPanel(condition="input.showDisplayPanel1",
@@ -102,7 +102,7 @@ column(4,
 				column(6,
 					uiOutput("ColorseqHeatmap"),
 					conditionalPanel(condition="input.heatmap_x !== null && input.heatmap_y !== null",
-						selectInput("legendPosHeatmap","Legend",c("Top","Right","Bottom","Left"),selected="Top", width="100%"))
+						selectInput("legendPosHeatmap","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
 				),
 				column(6, uiOutput("ColorpalettesHeatmap"), uiOutput("PlotFontSizeHeatmap"))
 			)
@@ -113,7 +113,7 @@ column(4,
 				column(6,
 					uiOutput("Colorseq"), uiOutput("Alpha1"), uiOutput("Bardirection"),
 					conditionalPanel(condition="input.group !== null && input.group !== 'None'",
-						selectInput("legendPos1","Legend",c("Top","Right","Bottom","Left"),selected="Top", width="100%"))
+						selectInput("legendPos1","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
 					),
 				column(6, uiOutput("Colorpalettes"), uiOutput("PlotFontSize"), uiOutput("Bartype"))
 			)
@@ -123,7 +123,7 @@ column(4,
 			fluidRow(
 				column(6, uiOutput("Colorseq2"), uiOutput("Alpha2"), 
 					conditionalPanel(condition="input.group2 !== null && input.group2 !== 'None'",
-						selectInput("legendPos2","Legend",c("Top","Right","Bottom","Left"),selected="Top", width="100%"))
+						selectInput("legendPos2","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
 				),
 				column(6, uiOutput("Colorpalettes2"), uiOutput("PlotFontSize2"))
 			)
@@ -139,7 +139,7 @@ column(4,
 				column(6,
 					uiOutput("Colorseq3"), uiOutput("Alpha3"), uiOutput("Bardirection3"),
 					conditionalPanel(condition="input.group3 !== null && input.group3 !== 'None'",
-						selectInput("legendPos3","Legend",c("Top","Right","Bottom","Left"),selected="Top", width="100%"))
+						selectInput("legendPos3","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
 				),
 				column(6, uiOutput("Colorpalettes3"), uiOutput("PlotFontSize3"), uiOutput("Bartype3"))
 			)
@@ -155,6 +155,5 @@ column(4,
 			)
 		)
 	)
-	)#,
-	#conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
+	)
 )
