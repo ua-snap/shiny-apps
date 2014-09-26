@@ -2,8 +2,9 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 	facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
 	colpal, colseq, altplot, boxplots=FALSE, pts.alpha=0.5, bartype, bardirection, show.points=FALSE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
 	plot.title="", plot.subtitle="", show.panel.text=FALSE, show.title=FALSE, lgd.pos="Top", units=c("C","mm"),
-	mos=12, yrange, clbootbar, clbootsmooth, show.logo=F, logo.mat=NULL){
+	mos=12, yrange, clbootbar, clbootsmooth, plot.theme.dark=FALSE, show.logo=F, logo.mat=NULL){
 		if(is.null(d)) return(plot(0,0,type="n",axes=F,xlab="",ylab=""))
+		if(plot.theme.dark) { bg.theme <- "black"; color.theme <- "white" } else { bg.theme <- "white"; color.theme <- "black" }
 		if(!show.lines) ingroup.subjects <- NULL
 		if(show.overlay & !is.null(overlay)) show.overlay <- TRUE else show.overlay <- FALSE
 		if(show.overlay){
@@ -75,7 +76,8 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 		if(around.mean){
 			if(is.null(boxplots) || boxplots==FALSE) { g <- ggplot(d, aes_string(x=x,y=y,order=grp,colour=color,fill=fill)) } else { d$Year <- factor(d$Year); g <- ggplot(d, aes_string(x=x,y=y)) }
 		} else g <- ggplot(d, aes_string(x=x,y=y,group=grp,order=grp,colour=color,fill=fill))
-		g <- g + theme_bw(base_size=fontsize) + ylab(ylb) + theme(legend.position=tolower(lgd.pos))
+		if(plot.theme.dark) g <- g + theme_black(base_size=fontsize) else g <- g + theme_bw(base_size=fontsize)
+		g <- g + ylab(ylb) + theme(legend.position=tolower(lgd.pos))
 		if(!show.logo && show.title) g <- g + ggtitle(bquote(atop(.(main))))
 		if(length(colpal) & length(colseq)) g <- scaleColFillMan(g=g, default=scfm$scfm, colseq=colseq, colpal=colpal, mos=mos, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
 		if(!is.null(facet.by)) if(facet.by!="None") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)
@@ -83,22 +85,22 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 			f <- switch(stat, "SD" = sd, "SE" = function(x) sd(x)/sqrt(length(x)), "Full Spread" = function(x) diff(range(x)))
 			if(length(grep("border",colpal))){
 				g <- g + stat_summary(aes_string(group=grp), fun.y=f, geom="bar", position=bar.pos)
-			} else g <- g + stat_summary(aes_string(group=grp), colour="black", fun.y=f, geom="bar", position=bar.pos)
+			} else g <- g + stat_summary(aes_string(group=grp), colour=color.theme, fun.y=f, geom="bar", position=bar.pos)
 		}
 		#g <- g + geom_bar(stat=stat, position=bar.pos)
 		#g <- g + stat_summary(data=d.pool,aes_string(group=grp),fun.y=stat, geom="bar", position=bar.pos)
 		if(around.mean){
 			if(subject.lines){
-				if(grp==1) g <- g + geom_line(aes_string(group=ingroup.subjects), position="identity", alpha=pts.alpha) else g <- g + geom_line(aes_string(group=ingroup.subjects, colour=grp), position="identity", alpha=pts.alpha)
+				if(grp==1) g <- g + geom_line(aes_string(group=ingroup.subjects), position="identity", colour=color.theme, alpha=pts.alpha) else g <- g + geom_line(aes_string(group=ingroup.subjects, colour=grp), position="identity", alpha=pts.alpha)
 			}
 			if(grp==1) basic.fill.clr <- NULL else basic.fill.clr <- grp
 			if(boxplots & !show.points) if(is.null(basic.fill.clr)) g <- g + geom_boxplot(aes_string(fill=basic.fill.clr), fill="#DDDDDD") else g <- g + geom_boxplot(aes_string(fill=basic.fill.clr))
 			if(boxplots & show.points){
-				g <- g + geom_boxplot(aes_string(colour=basic.fill.clr), fill="white", outlier.colour=NA, position=dodge)
+				g <- g + geom_boxplot(aes_string(colour=basic.fill.clr), fill=bg.theme, outlier.colour=NA, position=dodge) ############
 				if(is.character(grp) & n.grp>1){
-					g <- g + geom_point(aes_string(x=xdodge, fill=basic.fill.clr), pch=21, size=4, colour="black", alpha=pts.alpha, position=position_jitter(width=0.9/(x.n*grp.n)))
+					g <- g + geom_point(aes_string(x=xdodge, fill=basic.fill.clr), pch=21, size=4, colour=color.theme, alpha=pts.alpha, position=position_jitter(width=0.9/(x.n*grp.n)))
 				} else {
-					g <- g + geom_point(aes_string(fill=basic.fill.clr), pch=21, size=4, colour="black", fill="red", alpha=pts.alpha, position=position_jitter(width=0.9/x.n))
+					g <- g + geom_point(aes_string(fill=basic.fill.clr), pch=21, size=4, colour=color.theme, fill="red", alpha=pts.alpha, position=position_jitter(width=0.9/x.n))
 				}
 			}
 			if(is.null(boxplots) || boxplots==FALSE){
@@ -106,9 +108,9 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 				if(!subject.lines) g <- g + stat_summary(fun.y=mean, geom="line", lwd=1)
 				if(show.points){
 					if(is.character(grp) & n.grp>1){
-						g <- g + geom_point(position=point.pos, pch=21, size=4, colour="black", alpha=pts.alpha)
+						g <- g + geom_point(position=point.pos, pch=21, size=4, colour=color.theme, alpha=pts.alpha)
 					} else {
-						g <- g + geom_point(position=point.pos, pch=21, size=4, colour="black", fill="red", alpha=pts.alpha)
+						g <- g + geom_point(position=point.pos, pch=21, size=4, colour=color.theme, fill="red", alpha=pts.alpha)
 					}
 				}
 				if(stat=="95% CI") g <- g + geom_errorbar(aes(y=Mean, ymin = Mean-tval95*SE, ymax = Mean+tval95*SE), data=d.sum, width=0.25)
@@ -121,10 +123,10 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 		if(!is.null(bardirection)) if(bardirection=="Horizontal bars") g <- g + coord_flip()
 		if(show.panel.text){
 			if(around.mean){
-				g <- annotatePlot(g, data=d, x=x, y=y, text=plot.subtitle, bp=FALSE, bp.position=bar.pos, n.groups=n.grp/2) #n.grp/2 is a rough estimate
+				g <- annotatePlot(g, data=d, x=x, y=y, text=plot.subtitle, col=color.theme, bp=FALSE, bp.position=bar.pos, n.groups=n.grp/2) #n.grp/2 is a rough estimate
 			} else {
 				max.val <- if(stat=="SD") max(d.sum[,"SD"]) else if(stat=="SE") max(d.sum[,"SE"]) else if(stat=="Full Spread") max(d.sum[,"Max"] - d.sum[,"Min"])
-				g <- annotatePlot(g, data=d, x=x, y=y, y.fixed=max.val, text=plot.subtitle, bp=TRUE, bp.position=bar.pos, n.groups=n.grp) #n.grp is a rough estimate
+				g <- annotatePlot(g, data=d, x=x, y=y, y.fixed=max.val, text=plot.subtitle, col=color.theme, bp=TRUE, bp.position=bar.pos, n.groups=n.grp) #n.grp is a rough estimate
 			}
 		}
 		g <- addLogo(g, show.logo, logo.mat, show.title, main, fontsize)

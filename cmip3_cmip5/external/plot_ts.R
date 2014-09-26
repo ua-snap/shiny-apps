@@ -1,8 +1,9 @@
 function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
 	colpal, colseq, linePlot, barPlot, pts.alpha=0.5, bartype, bardirection, show.points=TRUE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
 	plot.title="", plot.subtitle="", show.panel.text=FALSE, show.title=FALSE, lgd.pos="Top", units=c("C","mm"),
-	mos=12, yrange, clbootbar, clbootsmooth, pooled.var, color.theme="white", show.logo=F, logo.mat=NULL){
+	mos=12, yrange, clbootbar, clbootsmooth, pooled.var, plot.theme.dark=FALSE, show.logo=F, logo.mat=NULL){
 		if(is.null(d)) return(plot(0,0,type="n",axes=F,xlab="",ylab=""))
+		if(plot.theme.dark) { bg.theme <- "black"; color.theme <- "white" } else { bg.theme <- "white"; color.theme <- "black" }
 		if(!show.lines) ingroup.subjects <- NULL
 		if(show.overlay && !is.null(overlay)) show.overlay <- TRUE else show.overlay <- FALSE
 		if(show.overlay) overlay$Observed <- "CRU 3.1"
@@ -25,7 +26,7 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, face
 		fill <- scfm$fill
 		if(length(vert.facet)) if(vert.facet) facet.cols <- 1
 		g <- ggplot(d, aes_string(x=x,y=y,group=wgl$subjects,order=grp,colour=color,fill=fill))
-		if(color.theme=="white") { g <- g + theme_bw(base_size=fontsize); color.theme <- "black" } else if(color.theme=="black") { g <- g + theme_black(base_size=fontsize); color.theme <- "white" }
+		if(plot.theme.dark) g <- g + theme_black(base_size=fontsize) else g <- g + theme_bw(base_size=fontsize)
 		g <- g + ylab(ylb) + theme(legend.position=tolower(lgd.pos))
 		if(!show.logo && show.title) g <- g + ggtitle(bquote(atop(.(main))))
 		if(length(colpal) & length(colseq)) g <- scaleColFillMan(g=g, default=scfm$scfm, colseq=colseq, colpal=colpal, mos=mos, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
@@ -37,11 +38,11 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, face
 			if(!is.null(bardirection)) if(bardirection=="Horizontal bars") g <- g + coord_flip()
 		}
 		if(!is.null(linePlot) && linePlot){
-			if(wgl$subjectlines) if(grp==1){ g <- g + geom_line(position="identity", colour=color.theme, alpha=pts.alpha) } else { if(wgl$subjectlines) g <- g + geom_line(position="identity", alpha=pts.alpha) }
+			if(wgl$subjectlines) if(grp==1) g <- g + geom_line(position="identity", colour=color.theme, alpha=pts.alpha) else g <- g + geom_line(position="identity", alpha=pts.alpha)
 			if(show.points) g <- g + geom_point(position=point.pos, pch=21, size=4, colour=color.theme, alpha=pts.alpha)
-			if(grp==1){ g <- g + stat_summary(data=d, aes_string(group=grp),fun.y=mean, colour=color.theme, size=1, geom="line") } else { g <- g + stat_summary(data=d, aes_string(group=grp),fun.y=mean, size=1, geom="line") }
+			if(grp==1) g <- g + stat_summary(data=d, aes_string(group=grp),fun.y=mean, colour=color.theme, size=1, geom="line") else g <- g + stat_summary(data=d, aes_string(group=grp),fun.y=mean, size=1, geom="line")
 		} else {
-			if(wgl$subjectlines) if(grp==1){ g <- g + geom_line(position="identity", colour=color.theme, alpha=pts.alpha) } else { if(wgl$subjectlines) g <- g + geom_line(position="identity", alpha=pts.alpha) }
+			if(wgl$subjectlines) if(grp==1) g <- g + geom_line(position="identity", colour=color.theme, alpha=pts.alpha) else if(wgl$subjectlines) g <- g + geom_line(position="identity", alpha=pts.alpha)
 			if(show.points) g <- g + geom_point(position=point.pos, pch=21, size=4, colour=color.theme, alpha=pts.alpha)
 		}
 		if(!is.null(yrange)){
@@ -69,7 +70,7 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, face
 			}
 			if(show.points) g <- g + geom_point(data=overlay, aes_string(x=x, y=y, group=NULL, colour=NULL, fill=NULL), position=point.pos, pch=21, size=4, fill=color.theme, colour="red", alpha=pts.alpha)
 		}
-		if(show.panel.text) g <- annotatePlot(g, data=d, x=x, y=y, text=plot.subtitle, bp=barPlot, bp.position=bar.pos, n.groups=n.grp/2) #n.grp/2 is a rough estimate
+		if(show.panel.text) g <- annotatePlot(g, data=d, x=x, y=y, text=plot.subtitle, col=color.theme, bp=barPlot, bp.position=bar.pos, n.groups=n.grp/2) #n.grp/2 is a rough estimate
 		g <- addLogo(g, show.logo, logo.mat, show.title, main, fontsize)
 		print(g)
 }
