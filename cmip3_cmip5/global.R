@@ -17,8 +17,6 @@ if(Sys.info()["sysname"]=="Windows"){ # for local devl/testing
 
 help_tabpanel_conditional <- conditionalPanel(
 	condition=
-	#"input.vars == null || (input.doms == null && input.cities == '') ||
-	#( (input.cmip3scens == null || input.cmip3models == null) && (input.cmip5scens == null || input.cmip5models == null) )",
 	"(input.tsp == 'plot_heatmap' || input.tsp == 'plot_ts' || input.tsp == 'plot_scatter' || input.tsp == 'plot_variability') && (input.goButton == null || input.goButton == 0)",
-	includeMarkdown("intro.md")
+	includeMarkdown("www/intro.md")
 )
