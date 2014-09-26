@@ -1,4 +1,5 @@
 column(4,
+	#### Data selection panel
 	conditionalPanel(condition="input.tsp == 'plot_heatmap' || input.tsp == 'plot_ts' || input.tsp == 'plot_scatter' || input.tsp == 'plot_variability'",
 	wellPanel(
 		checkboxInput("showDataPanel1", h5("Data Selection"), TRUE),
@@ -46,6 +47,7 @@ column(4,
 		)
 	)
 	),
+	#### Plot options panel
 	conditionalPanel(condition="output.ShowPlotOptionsPanel == true && (input.tsp == 'plot_heatmap' || input.tsp == 'plot_ts' || input.tsp == 'plot_scatter' || input.tsp == 'plot_variability')",
 	wellPanel(
 		checkboxInput("showDisplayPanel1", h5("Plot Options"), TRUE),
@@ -68,35 +70,34 @@ column(4,
 		),
 		conditionalPanel(condition="input.tsp == 'plot_variability'",
 			fluidRow(column(6, uiOutput("Xvar")), column(6, uiOutput("Group3"))),
-			fluidRow(column(6,uiOutput("Facet3"))),
+			fluidRow(
+				column(6,uiOutput("Facet3")),
+				column(6,
+					conditionalPanel(condition="input.variability == true && input.boxplots == ''", selectInput("errorBars", "Error bars", choices=c("", "95% CI", "SD", "SE", "Range"), selected="", width="100%")),
+					conditionalPanel(condition="input.variability == false", selectInput("dispersion", "Dispersion stat", choices=c("SD", "SE", "Full Spread"), selected="SD", width="100%"))
+				)
+			),
 			fluidRow(uiOutput("PooledVar3"))
 		),
 		fluidRow(column(4, checkboxInput("showTitle", "Title", TRUE)), column(4, checkboxInput("showPanelText", "Panel text", TRUE)), column(4, checkboxInput("showCRU","Show CRU 3.1", FALSE))),
 		conditionalPanel(condition="input.tsp !== 'plot_heatmap'",
-			fluidRow(
-				column(4,
-					checkboxInput("showpts", "Show points", TRUE),
-					conditionalPanel(condition="input.tsp == 'plot_ts'", uiOutput("LinePlot")),
-					conditionalPanel(condition="input.tsp == 'plot_scatter'", uiOutput("Conplot")),
-					conditionalPanel(condition="input.tsp == 'plot_variability'", uiOutput("Variability"))
-				),
-				column(4,
-					checkboxInput("jitterXY", "Jitter points", FALSE),
-					conditionalPanel(condition="input.tsp == 'plot_ts'", uiOutput("BarPlot")),
-					conditionalPanel(condition="input.tsp == 'plot_scatter'", ""),
-					conditionalPanel(condition="input.tsp == 'plot_variability' & input.variability == true", checkboxInput("boxplots", "Box plots", FALSE))
-				),
-				column(4,
-					conditionalPanel(condition="input.tsp == 'plot_ts' || input.tsp == 'plot_variability'", checkboxInput("showlines", "Show lines", FALSE)),
-					conditionalPanel(condition="input.tsp == 'plot_ts'", uiOutput("VertFacet")),
-					conditionalPanel(condition="input.tsp == 'plot_scatter'", uiOutput("VertFacet2")),
-					conditionalPanel(condition="input.tsp == 'plot_variability'", uiOutput("VertFacet3"))
+			fluidRow(column(4, checkboxInput("showpts", "Show points", TRUE)), column(4, checkboxInput("jitterXY", "Jitter points", FALSE)), column(4, checkboxInput("showlines", "Show lines", FALSE))),
+			conditionalPanel(condition="input.tsp == 'plot_ts'", 
+				fluidRow(column(4, uiOutput("LinePlot")), column(4, uiOutput("BarPlot")), column(4, uiOutput("VertFacet")))
+			),
+			conditionalPanel(condition="input.tsp == 'plot_scatter'", fluidRow(column(4, uiOutput("Hexbin")))),
+			conditionalPanel(condition="input.tsp == 'plot_variability'",
+				fluidRow(
+					column(4, uiOutput("Variability")),
+					column(4, conditionalPanel(condition="input.tsp == 'plot_variability'", checkboxInput("boxplots", "Box plots", FALSE))),
+					column(4, uiOutput("VertFacet3"))
 				)
 			)
 		),
 		conditionalPanel(condition="input.tsp == 'plot_heatmap'",
 			fluidRow(column(4, checkboxInput("aspect1to1", "1:1 Aspect", FALSE)), column(4, checkboxInput("revHeatmapColors", "Reverse colors", FALSE)), column(4, checkboxInput("showHeatmapVals", "Cell values", FALSE)))
 		),
+		fluidRow(column(4, checkboxInput("plotThemeDark", "Dark theme", FALSE))),
 		conditionalPanel(condition="input.tsp == 'plot_heatmap'",
 			fluidRow(
 				column(6,
@@ -119,7 +120,6 @@ column(4,
 			)
 		),
 		conditionalPanel(condition="input.tsp == 'plot_scatter'",
-			fluidRow(column(4, uiOutput("Hexbin"))),
 			fluidRow(
 				column(6, uiOutput("Colorseq2"), uiOutput("Alpha2"), 
 					conditionalPanel(condition="input.group2 !== null && input.group2 !== 'None'",
@@ -129,12 +129,6 @@ column(4,
 			)
 		),
 		conditionalPanel(condition="input.tsp == 'plot_variability'",
-			fluidRow(
-				column(6,
-					conditionalPanel(condition="input.variability == true && input.boxplots == ''", selectInput("errorBars", "Error bars", choices=c("", "95% CI", "SD", "SE", "Range"), selected="", width="100%")),
-					conditionalPanel(condition="input.variability == false", selectInput("dispersion", "Dispersion stat", choices=c("SD", "SE", "Full Spread"), selected="SD", width="100%"))),
-				column(6, "")# h5(uiOutput("SummarizeByXtitle"))),	
-			),
 			fluidRow(
 				column(6,
 					uiOutput("Colorseq3"), uiOutput("Alpha3"), uiOutput("Bardirection3"),
