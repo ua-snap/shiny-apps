@@ -20,7 +20,7 @@ doPlot_ts <- function(...){
 				show.points=input$showpts, show.lines=input$showlines, show.overlay=input$showCRU, overlay=CRU(), jit=input$jitterXY,
 				plot.title=plot_ts_title(), plot.subtitle=plot_ts_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle, lgd.pos=input$legendPos1,
 				units=currentUnits(), yrange=input$yrange, clbootbar=input$clbootbar, clbootsmooth=input$clbootsmooth,
-				pooled.var=pooled.var(), color.theme="black", logo.mat=logo.mat, ...)
+				pooled.var=pooled.var(), plot.theme.dark=input$plotThemeDark, logo.mat=logo.mat, ...)
 		} else NULL
 	} else NULL
 }
@@ -31,9 +31,9 @@ doPlot_scatter <- function(...){
 			scatterPlot(d=dat2(), form.string=input$xy, grp=input$group2, n.grp=n.groups2(),
 				panels=facet.panels2(), facet.by=input$facet2, vert.facet=input$vert.facet2,
 				fontsize=input$plotFontSize2, colpal=input$colorpalettes2, colseq=input$colorseq2, mos=Months(),
-				contourlines=input$conplot, hexbin=input$hexbin, pts.alpha=input$alpha2, show.overlay=input$showCRU, overlay=CRU2(), jit=input$jitterXY,
+				show.points=input$showpts, contourlines=input$showlines, hexbin=input$hexbin, pts.alpha=input$alpha2, show.overlay=input$showCRU, overlay=CRU2(), jit=input$jitterXY,
 				plot.title=plot_sp_title(), plot.subtitle=plot_sp_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle,
-				lgd.pos=input$legendPos2, units=currentUnits(),	pooled.var=pooled.var2(), logo.mat=logo.mat, ...)
+				lgd.pos=input$legendPos2, units=currentUnits(),	pooled.var=pooled.var2(), plot.theme.dark=input$plotThemeDark, logo.mat=logo.mat, ...)
 		} else NULL
 	} else NULL
 }
@@ -45,7 +45,7 @@ doPlot_heatmap <- function(...){
 			fontsize=input$plotFontSizeHeatmap, colpal=input$colorpalettesHeatmap, reverse.colors=input$revHeatmapColors, aspect_1to1=input$aspect1to1, show.values=input$showHeatmapVals,
 			show.overlay=input$showCRU, overlay=CRU(),
 			plot.title=plot_hm_title(), plot.subtitle=plot_hm_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle,
-			lgd.pos=input$legendPosHeatmap, units=currentUnits(), pooled.var=pooledVarHeatmap(), logo.mat=logo.mat, ...)
+			lgd.pos=input$legendPosHeatmap, units=currentUnits(), pooled.var=pooledVarHeatmap(), plot.theme.dark=input$plotThemeDark, logo.mat=logo.mat, ...)
 	} else NULL
 }
 
@@ -59,7 +59,7 @@ doPlot_var <- function(...){
 				show.points=input$showpts, show.lines=input$showlines, show.overlay=input$showCRU, overlay=CRU(),
 				jit=input$jitterXY, plot.title=plot_var_title(), plot.subtitle=plot_var_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle, lgd.pos=input$legendPos3,
 				units=currentUnits(), yrange=input$yrange, clbootbar=input$clbootbar, clbootsmooth=input$clbootsmooth,
-				logo.mat=logo.mat, ...)
+				plot.theme.dark=input$plotThemeDark, logo.mat=logo.mat, ...)
 		} else NULL
 	} else NULL
 }

@@ -57,8 +57,10 @@ theme_black=function(base_size=12,base_family="") {
       # Specify panel options
       panel.background=element_rect(fill="black",color = NA), 
       panel.border=element_rect(fill=NA,color="white"), 
-      panel.grid.major=element_blank(), 
-      panel.grid.minor=element_blank(), 
+      #panel.grid.major=element_blank(), 
+      #panel.grid.minor=element_blank(), 
+	  panel.grid.major = element_line(colour = "grey10", size = 0.2), # test alternate
+	  panel.grid.minor = element_line(colour = "grey2", size = 0.5), # test alternate
       panel.margin=unit(0.25,"lines"),  
       # Specify facetting options
       strip.background=element_rect(fill="grey30",color="grey10"), 
@@ -310,11 +312,11 @@ getColorPalettes <- function(id, colseq, grp=NULL, n.grp=NULL, fill.vs.border=NU
 	}
 }
 
-annotatePlot <- function(g, data, x, y, y.fixed=NULL, text, bp=NULL, bp.position=NULL, n.groups=1){
+annotatePlot <- function(g, data, x, y, y.fixed=NULL, text, col="black", bp=NULL, bp.position=NULL, n.groups=1){
 	if(is.factor(data[[y]])) y.coord <- 0.525 else if(is.null(y.fixed)) y.coord <- max(data[[y]]) else y.coord <- y.fixed
 	if(!is.null(bp) && bp) if(bp.position=="fill") y.coord <- 1 else if(bp.position=="stack") y.coord <- n.groups*y.coord
 	x.coord <- if(is.factor(data[[x]])) 0.525 else min(data[[x]])
-	g <- g + annotate("text", y=y.coord, x=x.coord, label=bquote(.(text)), hjust=0, vjust=1, fontface=3)
+	g <- g + annotate("text", y=y.coord, x=x.coord, label=bquote(.(text)), hjust=0, vjust=1, fontface=3, colour=col)
 	g
 }
 
