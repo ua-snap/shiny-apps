@@ -1,5 +1,5 @@
 column(4,
-	conditionalPanel(condition="input.tsp !== 'home' && input.tsp !== 'about'",
+	conditionalPanel(condition="input.tsp == 'plot_heatmap' || input.tsp == 'plot_ts' || input.tsp == 'plot_scatter' || input.tsp == 'plot_variability'",
 	wellPanel(
 		checkboxInput("showDataPanel1", h5("Data Selection"), TRUE),
 		conditionalPanel(condition="input.showDataPanel1",
@@ -46,7 +46,7 @@ column(4,
 		)
 	)
 	),
-	conditionalPanel(condition="output.ShowPlotOptionsPanel == true && input.tsp !== 'home' && input.tsp !== 'about'",
+	conditionalPanel(condition="output.ShowPlotOptionsPanel == true && (input.tsp == 'plot_heatmap' || input.tsp == 'plot_ts' || input.tsp == 'plot_scatter' || input.tsp == 'plot_variability')",
 	wellPanel(
 		checkboxInput("showDisplayPanel1", h5("Plot Options"), TRUE),
 		conditionalPanel(condition="input.showDisplayPanel1",

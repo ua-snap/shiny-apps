@@ -11,16 +11,31 @@ headerPanel_2 <- function(title, h, windowTitle=title) {
 
 shinyUI(fluidPage(
 	#source("external/header.R",local=T)$value,
-	HTML(
-		'<script>
-		(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');
-		ga(\'create\', \'UA-46129458-2\', \'rstudio.com\');
-		ga(\'send\', \'pageview\');
-		</script>'
-	),
+	
+	#tags$head(HTML(
+	#	'<script>
+	#	(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){
+	#	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	#	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	#	})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');
+	#	ga(\'create\', \'UA-46129458-2\', \'rstudio.com\');
+	#	ga(\'send\', \'pageview\');
+	#	
+	#	$(document).ready(function() { 
+	#		$("#mystyles li a").click(function() { 
+	#			$("link[rel=\'stylesheet\']").attr("href",$(this).attr("rel"));
+	#			return false;
+	#		});
+	#	});
+	#	</script>'
+	#)),
+	#tags$head(HTML(
+	#	'<ul id="mystyles">
+	#		<li><a href="#" rel="http://bootswatch.com/2/cosmo/bootstrap.css">Light Theme</a></li>
+	#		<li><a href="#" rel="http://bootswatch.com/2/cyborg/bootstrap.css">Dark Theme</a></li>
+	#	</ul>'
+	#)),
+	
 	########################################## leaflet testing
 	#leafletMap(
 	#"map", "100%", 200,
@@ -46,6 +61,7 @@ shinyUI(fluidPage(
 	#  )
 	#),
 	#hr(),
+	
 	progressInit(),
 	navbarPage(
 		title=div(a(img(src="./img/SNAP_acronym_100px.png", width="50%"), "", href="http://snap.uaf.edu", target="_blank")),
@@ -54,6 +70,13 @@ shinyUI(fluidPage(
 		tabPanel("Scatter Plot", value="plot_scatter"),
 		tabPanel("Heat Map", value="plot_heatmap"),
 		tabPanel("Variability", value="plot_variability"),
+		navbarMenu("Help", 
+			tabPanel("Getting Started", includeMarkdown("www/help01_start.md")),
+			tabPanel("Working With Data", includeMarkdown("www/help02_data.md")),
+			tabPanel("Graphical Options", includeMarkdown("www/help03_plotOptions.md")),
+			tabPanel("Updating Settings", includeMarkdown("www/help04_updating.md")),
+			tabPanel("Graphing", includeMarkdown("www/help05_graphing.md"))
+		),
 		tabPanelAbout(),
 		windowTitle="AKCAN CMIP3/CMIP5",
 		collapsable=TRUE,
@@ -71,9 +94,9 @@ shinyUI(fluidPage(
     #  tableOutput('citydata')
 	##)),
 	################################################################
-	tags$head(tags$link(rel="stylesheet", type="text/css", href="http://bootswatch.com/2/cyborg/bootstrap.css")),
-	#tags$head(tags$link(rel="stylesheet", type="text/css", href="http://bootswatch.com/2/cosmo/bootstrap.css")),
-	#tags$head(tags$link(rel="stylesheet", type="text/css", href="styles.css")),
+	#tags$head(tags$link(rel="stylesheet", type="text/css", href="http://bootswatch.com/2/cyborg/bootstrap.css")),
+	tags$head(tags$link(rel="stylesheet", type="text/css", href="http://bootswatch.com/2/cosmo/bootstrap.css")),
+	tags$head(tags$link(rel="stylesheet", type="text/css", href="styles.css")),
 	fluidRow(
 		source("external/sidebar.R",local=T)$value,
 		source("external/main.R",local=T)$value
