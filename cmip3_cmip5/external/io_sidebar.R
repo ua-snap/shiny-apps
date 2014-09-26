@@ -131,9 +131,9 @@ output$PooledVar <- renderUI({
 	if(length(pooled.var())) HTML(paste('<div>Pooled variable(s): ', paste(pooled.var(), collapse=", "), '</div>', sep=""))
 })
 
-output$VertFacet2 <- renderUI({
-	if(!is.null(facet.panels2())) if(facet.panels2()>1) checkboxInput("vert.facet2", "Vertical facet", value=FALSE)
-})
+#output$VertFacet2 <- renderUI({
+#	if(!is.null(facet.panels2())) if(facet.panels2()>1) checkboxInput("vert.facet2", "Vertical facet", value=FALSE)
+#})
 
 output$PooledVar2 <- renderUI({
 	if(length(pooled.var2())) HTML(paste('<div>Pooled variable(s): ', paste(pooled.var2(), collapse=", "), '</div>', sep=""))
@@ -215,12 +215,12 @@ output$PlotFontSize2 <- renderUI({
 	if(!is.null(dat2())) selectInput("plotFontSize2","Font size",seq(12,24,by=2),selected=16, width="100%")
 })
 
-output$Conplot <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
-	isolate(
-		if(!is.null(dat2())) checkboxInput("conplot", "Contour lines", FALSE)
-	)
-})
+#output$Conplot <- renderUI({
+#	if(is.null(input$goButton) || input$goButton==0) return()
+#	isolate(
+#		if(!is.null(dat2())) checkboxInput("conplot", "Contour lines", FALSE)
+#	)
+#})
 
 # Conditional inputs (tabset panel tab: heatmap)
 output$ColorseqHeatmap <- renderUI({
