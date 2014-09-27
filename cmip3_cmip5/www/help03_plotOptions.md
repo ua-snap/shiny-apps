@@ -35,8 +35,8 @@ this is obvious, such as not adding points to a heat map, or contour
 lines to a univariate time series plot. But others are more subtle. For
 example, in the time series plot CRU data can be directly overlaid on
 the selected GCMs by checking the `Show CRU 3.1` checkbox. In the heat
-map there is no way to so directly overlay CRU on top of GCM(s). The
-only option is to merge them by properly weighted averaging into one
+map there is no way to overlay CRU on top of GCM(s) in the same fashion.
+The only option is to merge them by properly weighted averaging into one
 heat map, though realistically you want to facet, not group, by GCM/CRU
 and see them side by side. The heat map offers a `Cell values` checkbox
 which when checked will print the data values in the heat map cells.
@@ -50,7 +50,7 @@ printing values on the time series plot would largely be clutter.
 In the time series plot, precipitation may be plotted with points,
 lines, and/or bars. For temperature, bars are prohibited. Yes, I can
 force `ggplot` to generate such a graphic, but it does not make much
-sense and is bad practice time temperature does not have a real zero
+sense and is bad practice since temperature does not have a real zero
 (unless we're working in Kelvins, which we're not). The app uses bars to
 plot amounts, not deviations from a mean for instance. As such they
 don't work well for temperature. It's certainly impossible to plot the

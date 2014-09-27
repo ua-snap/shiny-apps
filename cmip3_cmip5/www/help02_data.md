@@ -4,7 +4,8 @@ Returning to the data selection panel, how do we use it?
 
 #### Variables
 
-Several of the variables are categorical. Some are discrete numerical
+Several of the variables are categorical (climate models, emissions
+scenarios, geographic locations, etc.). Some are discrete numerical
 (months, years, decades). All of these serve in subsetting the two main
 continuous numerical variables (temperature and precipitation) by way of
 selecting factor levels and ranges, respectively. Going row by row,

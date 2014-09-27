@@ -11,6 +11,42 @@ scatter plots, heat maps, and various plots designed more specifically
 to highlight variability. Below you can find more information regarding
 the data in this app, and how to manipulate and graph it.
 
+#### Explore Simpler Apps First (if you need to)
+
+If you are not familiar with
+<a href="http://shiny.rstudio.com/" target="_blank">Shiny</a> by
+RStudio, it is *highly* advised that you first get acquainted with basic
+R Shiny web applications for data analysis and visualization! You don't
+need to learn how to make them, but this app certainly shouldn't be the
+first one you use. But I'm a statistician; I like to urge caution. So
+you may take that suggestion lightly. Another likely possibility is that
+you are a colleague working in climate science who is well-versed in
+climate modelling and the types of data contained in this app, in which
+case you may be more at home just poking around the app until you figure
+things out. This is really the audience the app is intended for, so
+terms like `SRES A1B` or `RCP 6.0` should not seem so alien. If you are
+an **R** user and have not explored Shiny, here is a
+<a href="http://shiny.rstudio.com/tutorial/" target="_blank">tutorial</a>
+if you wish to experiment with making your own apps. They are fun and as
+simple as you want them to be. If you already are comfortable with
+**R**, you will have no problem. Excellent collections of **R** Shiny
+web application examples to play around with can be found in RStudio's
+<a href="http://shiny.rstudio.com/gallery/" target="_blank">Gallery</a>
+and at <a href="http://www.showmeshiny.com/" target="_blank">Show Me
+Shiny</a>. I suggest checking out many apps ranging from simple to
+complex so that you can get a sense for how they operate as well as a
+range of approaches people take that result in somewhat stylistically
+and functionally different apps. This will also give you a sense for how
+relatively complex this particular app is.
+
+This app is quite complex. There are two ways to learn how to use it
+properly and successfully. One is the brute force method. You can click
+on every button in every conceivable permutation until you figure out
+what is going on. This is unlikely to work for you with an app this
+complex so if you want instant gratification I suggest a chocolate chip
+cookie. The other method is to read the documentation. You are here.
+Good. Continue.
+
 ### Exploratory Data Analysis
 
 The plots available in the app allow for an in-depth graphical analysis
