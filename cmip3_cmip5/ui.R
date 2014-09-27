@@ -75,7 +75,12 @@ shinyUI(fluidPage(
 			tabPanel("Working With Data", includeMarkdown("www/help02_data.md")),
 			tabPanel("Graphical Options", includeMarkdown("www/help03_plotOptions.md")),
 			tabPanel("Updating Settings", includeMarkdown("www/help04_updating.md")),
-			tabPanel("Graphing", includeMarkdown("www/help05_graphing.md"))
+			#navbarMenu("Graphing", # Nested navbarMenu not functional in Shiny at this time
+				tabPanel("Graphing: Time Series", includeMarkdown("www/help05_01_graphTS.md")),
+				tabPanel("Graphing: Scatter Plots", includeMarkdown("www/help05_02_graphScatter.md")),
+				tabPanel("Graphing: Heat Maps", includeMarkdown("www/help05_03_graphHeat.md")),
+				tabPanel("Graphing: Variability", includeMarkdown("www/help05_04_graphVar.md"))
+			#)
 		),
 		tabPanelAbout(),
 		windowTitle="AKCAN CMIP3/CMIP5",

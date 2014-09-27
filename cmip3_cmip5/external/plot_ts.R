@@ -38,11 +38,11 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, face
 			if(!is.null(bardirection)) if(bardirection=="Horizontal bars") g <- g + coord_flip()
 		}
 		if(!is.null(linePlot) && linePlot){
-			if(wgl$subjectlines) if(grp==1) g <- g + geom_line(position="identity", colour=color.theme, alpha=pts.alpha) else g <- g + geom_line(position="identity", alpha=pts.alpha)
+			if(wgl$subjectlines) { if(grp==1) g <- g + geom_line(position="identity", colour=color.theme, alpha=pts.alpha) else g <- g + geom_line(position="identity", alpha=pts.alpha) }
 			if(show.points) g <- g + geom_point(position=point.pos, pch=21, size=4, colour=color.theme, alpha=pts.alpha)
 			if(grp==1) g <- g + stat_summary(data=d, aes_string(group=grp),fun.y=mean, colour=color.theme, size=1, geom="line") else g <- g + stat_summary(data=d, aes_string(group=grp),fun.y=mean, size=1, geom="line")
 		} else {
-			if(wgl$subjectlines) if(grp==1) g <- g + geom_line(position="identity", colour=color.theme, alpha=pts.alpha) else if(wgl$subjectlines) g <- g + geom_line(position="identity", alpha=pts.alpha)
+			if(wgl$subjectlines) { if(grp==1) g <- g + geom_line(position="identity", colour=color.theme, alpha=pts.alpha) else g <- g + geom_line(position="identity", alpha=pts.alpha) }
 			if(show.points) g <- g + geom_point(position=point.pos, pch=21, size=4, colour=color.theme, alpha=pts.alpha)
 		}
 		if(!is.null(yrange)){
