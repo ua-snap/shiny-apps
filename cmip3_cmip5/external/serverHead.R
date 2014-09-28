@@ -82,6 +82,30 @@ logo.alpha <- 1
 logo.mat <- matrix(rgb(logo[,,1],logo[,,2],logo[,,3],logo[,,4]*logo.alpha), nrow=dim(logo)[1])
 
 # These functions are written with the structure of the app in mind. They are intended to avoid code duplication.
+collapseMonths <- function(d, n.s, mos){
+	nrx <- nrow(d)
+	p <- length(mos)/n.s
+	ind.keep <- seq(1, nrx, by=p)
+	m <- length(ind.keep)
+	id.seasons <- sapply(split(mos, rep(1:n.s, each=p)), function(x) paste(c(x[1], tail(x,1)), collapse="-"))
+	id.seasons <- rep(factor(id.seasons, levels=id.seasons), length=m)
+	v <- round(tapply(d[["Val"]], rep(1:(nrx/p), each=p), FUN=mean), 1)
+	d <- d[ind.keep,]
+	d$Month <- id.seasons
+	d$Val <- v
+	d$Val[d$Var=="Precipitation"] <- round(p*d$Val[d$Var=="Precipitation"])
+	d
+}
+
+periodsFromDecades <- function(d, n.p, decs){
+	nrx <- nrow(d)
+	n.mos <- length(unique(d$Month))
+	p <- length(decs)/n.p
+	periods <- sapply(split(decs, rep(1:n.p, each=p)), function(x) paste(c(x[1], tail(x,1)), collapse="-"))
+	d$Decade <- rep(periods, each=n.mos*10*p)
+	d
+}
+
 getHeatmapAxisChoices <- function(scens, mods, locs, mos, yrs, decs, cmip3scens, cmip5scens, cmip3models, cmip5models){
 	ind <- which(unlist(lapply(list(phases, scens, mods, locs, mos, yrs, decs), length))>0)
 		if(length(ind)) choices <- c("Phase","Scenario", "Model", "Domain", "Month", "Year", "Decade")[ind] else choices <- NULL
@@ -104,21 +128,11 @@ nGroups <- function(grp, scenarios, models, mos, decs, locs){
 	if(grp=="Domain") return(length(locs))
 }
 	
-getFacetChoices <- function(inx, iny=NULL, ingrp=NULL, grp.choices=NULL){
+getFacetChoicesHeatmap <- function(inx, iny=NULL, x.choices=NULL){
 	if(!is.null(iny)){
-		choices <- grp.choices[-which(grp.choices==inx | grp.choices==iny)]
+		choices <- x.choices[-which(x.choices==inx | x.choices==iny)]
 		if(length(choices)) return(c("None", choices)) else return()
-	}
-	if(!is.null(ingrp)){
-		if(length(grp.choices)>=2){ # greater than (or equal to, since group not required) 1, plus 1 to account for the "None" group option
-			grp.choices.sub <- grp.choices[grp.choices!="None"]
-			choices <- c("None", grp.choices.sub[which(!(grp.choices.sub %in% ingrp))])
-			if(inx=="Year") choices <- choices[choices!="Decade"]
-			if(inx=="Scenario" | inx=="Model") choices <- choices[choices!="Phase"]
-			if(length(choices)==1) choices <- NULL
-		} else choices <- NULL
-	} else choices <- NULL
-	choices
+	} else NULL
 }
 
 getFacetPanels <- function(fct, mods, scens, mos, decs, locs){
@@ -132,23 +146,17 @@ getFacetPanels <- function(fct, mods, scens, mos, decs, locs){
 	} else NULL
 }
 
-getPooledVars <- function(inx, iny=NULL, ingrp=NULL, infct, grp.choices=NULL, fct.choices, choices, mos, years, decades, domains, scenarios, models, cmip3scens, cmip5scens, cmip3mods, cmip5mods){
+getPooledVars <- function(inx, iny=NULL, ingrp=NULL, infct, grp.fct.choices=NULL, choices, mos, years, decades, domains, scenarios, models, cmip3scens, cmip5scens, cmip3mods, cmip5mods){
 	if(!is.null(ingrp) & !is.null(infct)){
-		if( # the +1s are to make explicit the non-group "None" option in the group and facet choices
-			!(
-				length(grp.choices)>=3+1 |
-				(length(grp.choices)==2+1 & !(ingrp!="None" & infct!="None")) |
-				(length(grp.choices)==1+1 & ingrp=="None" & infct=="None")
-			)
-		){
-			return()
-		}
+		ind <- which(grp.fct.choices %in% union(c("None", ingrp), infct))
+		if(length(ind)) grp.fct.choices <- grp.fct.choices[-ind]
+		if(length(grp.fct.choices)) choices <- grp.fct.choices else return()
 	}
 	if(!is.null(iny) & !is.null(infct)) ingrp <- iny
 	if(!is.null(ingrp) & !is.null(infct)){
 		pooled.var <- choices[!(choices %in% c(inx,ingrp,infct))]
 		if(infct=="None"){
-			pooled.var <- choices[sort(match( unique(c("Year", pooled.var[which(pooled.var %in% fct.choices)])), choices))]
+			pooled.var <- choices[sort(match( unique(c("Year", pooled.var[which(pooled.var %in% grp.fct.choices)])), choices))]
 			if(inx=="Year") pooled.var <- pooled.var[pooled.var!="Year"]
 		}
 		if(length(years)==1) pooled.var <- pooled.var[pooled.var!="Year"]
@@ -248,12 +256,6 @@ scaleColFillMan_prep <- function(fill=NULL, col){
 scaleColFillMan <- function(g, default, colseq, colpal, mos, n.grp, cbpalette){
 	if(colseq=="Nominal" & default) g <- g + scale_colour_manual(values=cbpalette) + scale_fill_manual(values=cbpalette)
 	if(!default){
-		#if(colseq=="Cyclic"){
-		#	if(colpal %in% c("Yellow-Red","Blue-Orange","Brown-Orange","Blue-Red")){
-		#		colorcycle <- rep(strsplit(tolower(colpal),"-")[[1]],2)[-4]
-		#		g <- g + scale_colour_manual( values=colorRampPalette(colorcycle)(length(mos)) ) + scale_fill_manual( values=colorRampPalette(colorcycle)(length(mos)) )
-		#	}
-		#} else
 		if(substr(colpal,1,3)=="HCL"){
 			g <- g + scale_color_manual(values=colorsHCL(n.grp)) + scale_fill_manual(values=colorsHCL(n.grp))
 		} else if(colpal!="none"){
@@ -283,7 +285,7 @@ getColorSeq <- function(id, d, grp=NULL, n.grp=NULL, heat=FALSE, overlay=FALSE){
 	if(is.null(grp) || grp=="None") return()
 	if(overlay) n.grp <- n.grp + 1
 	x <- "Nominal"
-	if(n.grp>=9) x <- "Evenly spaced" else if(n.grp>=8) x <- c("Increasing","Centered") else if(grp!="Model" & grp!="Domain") x <- c("Nominal","Increasing","Centered")
+	if(n.grp>=9) x <- "Evenly spaced" else if(n.grp>=8) x <- c("Increasing","Centered") else if(!(grp %in% c("Phase", "Model", "Domain"))) x <- c("Nominal","Increasing","Centered")
 	if(!is.null(d)) selectInput(id, "Color levels", x, selected=x[1], width="100%") else NULL
 }
 
@@ -308,8 +310,8 @@ getColorPalettes <- function(id, colseq, grp=NULL, n.grp=NULL, fill.vs.border=NU
 		} else if(colseq=="Centered"){
 			pal <- pal.cen
 		}
-		if(exists("pal")) selectInput(id, "Color palette", pal, selected=pal[1], width="100%")
-	}
+		if(exists("pal")) return(selectInput(id, "Color palette", pal, selected=pal[1], width="100%")) else return()
+	} else NULL
 }
 
 annotatePlot <- function(g, data, x, y, y.fixed=NULL, text, col="black", bp=NULL, bp.position=NULL, n.groups=1){

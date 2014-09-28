@@ -1,5 +1,45 @@
 # x-axis variable (TS plot, Variability plot), x/y axes variables (scatter plot), grouping variable, faceting variable
 # x and y variables have no reactive dependencies for plot tabs 1 and 2, see sidebar.R
+output$ShowPlotOptionsPanel <- reactive({
+	if(is.null(input$goButton) || input$goButton==0) return()
+	isolate({
+		x <- TRUE
+	})
+	x
+})
+outputOptions(output, "ShowPlotOptionsPanel", suspendWhenHidden=FALSE)
+
+observe({
+	input$goButton
+	isolate(
+		if(!is.null(input$goButton) && input$goButton!=0) updateCheckboxInput(session, "showDataPanel1", value=FALSE)
+	)
+})
+
+output$N_Seasons <- renderUI({
+	if(is.null(input$months2seasons) || !input$months2seasons) return()
+	if(length(input$mos) < 2) return()
+	isolate({
+		n <- length(input$mos) # Do not permit 1-month "seasons"
+		v <- 1:(n-1)
+		v <- v[which((n %% v)==0)]
+		selectInput("n_seasons", "Number of seasons:", choices=v, selected=v[1], width="100%")
+	})
+})
+outputOptions(output, "N_Seasons", suspendWhenHidden=FALSE)
+
+output$N_Periods <- renderUI({
+	if(is.null(input$decades2periods) || !input$decades2periods) return()
+	if(length(input$decs) < 2) return()
+	isolate({
+		n <- length(input$decs) # Do not permit 1-decade "periods"
+		v <- 1:(n-1)
+		v <- v[which((n %% v)==0)]
+		selectInput("n_periods", "Number of Periods:", choices=v, selected=v[1], width="100%")
+	})
+})
+outputOptions(output, "N_Periods", suspendWhenHidden=FALSE)
+
 output$GoButton <- renderUI({
 	input$vars
 	input$units
@@ -14,6 +54,10 @@ output$GoButton <- renderUI({
 	input$loctype
 	input$locs_regions
 	input$locs_cities
+	input$months2seasons
+	input$decades2periods
+	input$n_seasons
+	input$n_periods
 	actionButton("goButton", "Subset Data", icon="ok icon-white", styleclass="primary", block=T)
 })
 
@@ -21,16 +65,15 @@ output$Group <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	input$xtime
 	isolate(
-		if(!is.null(group.choices())) selectInput("group", "Group/color by:", choices=group.choices(), selected=group.choices()[1], width="100%")
+		if(!is.null(groupFacetChoicesTS())) selectInput("group", "Group/color by:", choices=groupFacetChoicesTS(), selected=groupFacetChoicesTS()[1], width="100%")
 	)
 })
 
 output$Facet <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	input$xtime
-	input$group
 	isolate(
-		if(!is.null(facet.choices())) selectInput("facet","Facet/panel by:", choices=facet.choices(), selected=facet.choices()[1], width="100%")
+		if(!is.null(groupFacetChoicesTS())) selectInput("facet","Facet/panel by:", choices=groupFacetChoicesTS(), selected=groupFacetChoicesTS()[1], width="100%")
 	)
 })
 
@@ -48,16 +91,15 @@ output$Group2 <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	input$xy
 	isolate(
-		if(!is.null(group.choices2())) selectInput("group2", "Group/color by:", choices=group.choices2(), selected=group.choices2()[1], width="100%")
+		if(!is.null(groupFacetChoicesScatter())) selectInput("group2", "Group/color by:", choices=groupFacetChoicesScatter(), selected=groupFacetChoicesScatter()[1], width="100%")
 	)
 })
 
 output$Facet2 <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	input$xy
-	input$group2
 	isolate(
-		if(!is.null(facet.choices2())) selectInput("facet2","Facet/panel by:", choices=facet.choices2(), selected=facet.choices2()[1], width="100%")
+		if(!is.null(groupFacetChoicesScatter())) selectInput("facet2","Facet/panel by:", choices=groupFacetChoicesScatter(), selected=groupFacetChoicesScatter()[1], width="100%")
 	)
 })
 
@@ -95,16 +137,18 @@ output$Xvar <- renderUI({
 })
 
 output$Group3 <- renderUI({
+	if(is.null(input$goButton) || input$goButton==0) return()
 	input$xvar
-	if(!is.null(group.choices3())) selectInput("group3", "Group/color by:", choices=group.choices3(), selected=group.choices3()[1], width="100%")
+	isolate(
+		if(!is.null(groupFacetChoicesVar())) selectInput("group3", "Group/color by:", choices=groupFacetChoicesVar(), selected=groupFacetChoicesVar()[1], width="100%")
+	)
 })
 
 output$Facet3 <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	input$xvar
-	input$group3
 	isolate(
-		if(!is.null(facet.choices3())) selectInput("facet3","Facet/panel by:", choices=facet.choices3(), selected=facet.choices3()[1], width="100%")
+		if(!is.null(groupFacetChoicesVar())) selectInput("facet3","Facet/panel by:", choices=groupFacetChoicesVar(), selected=groupFacetChoicesVar()[1], width="100%")
 	)
 })
 
@@ -131,6 +175,7 @@ output$PooledVar <- renderUI({
 	if(length(pooled.var())) HTML(paste('<div>Pooled variable(s): ', paste(pooled.var(), collapse=", "), '</div>', sep=""))
 })
 
+#### I may bring this back, but when changing all plot types' vertical facet option to a number of columns option.
 #output$VertFacet2 <- renderUI({
 #	if(!is.null(facet.panels2())) if(facet.panels2()>1) checkboxInput("vert.facet2", "Vertical facet", value=FALSE)
 #})

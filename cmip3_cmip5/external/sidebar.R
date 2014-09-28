@@ -25,6 +25,10 @@ column(4,
 				column(6,  selectInput("decs", "Decades:", choices=c("", paste0(decades,"s")), selected="", multiple=T, width="100%"))
 			),
 			fluidRow(
+				column(6, conditionalPanel(condition="input.mos !== null && input.mos.length > 1", checkboxInput("months2seasons", "Make equal-length season(s) of months", FALSE)), uiOutput("N_Seasons")),
+				column(6, conditionalPanel(condition="input.decs !== null && input.decs.length > 1", checkboxInput("decades2periods", "Make equal-length periods(s) of decades", FALSE)), uiOutput("N_Periods"))
+			),
+			fluidRow(
 				column(6, selectInput("loctype", "Spatial scale:", c("Regions", "Cities"), selected="Regions", multiple=FALSE, width="100%")), # May use multiple=TRUE later
 				column(6,
 					conditionalPanel(condition="input.loctype == 'Regions'", selectInput("locs_regions", "Regions:", c("", region.names), selected="", multiple=T, width="100%")),
