@@ -285,7 +285,7 @@ getColorSeq <- function(id, d, grp=NULL, n.grp=NULL, heat=FALSE, overlay=FALSE){
 	if(is.null(grp) || grp=="None") return()
 	if(overlay) n.grp <- n.grp + 1
 	x <- "Nominal"
-	if(n.grp>=9) x <- "Evenly spaced" else if(n.grp>=8) x <- c("Increasing","Centered") else if(!(grp %in% c("Phase", "Model", "Domain"))) x <- c("Nominal","Increasing","Centered")
+	if(n.grp>=8) x <- c("Increasing","Centered", "Cyclic") else if(!(grp %in% c("Phase", "Model", "Domain"))) x <- c("Nominal","Increasing","Centered","Cyclic")
 	if(!is.null(d)) selectInput(id, "Color levels", x, selected=x[1], width="100%") else NULL
 }
 
@@ -302,8 +302,8 @@ getColorPalettes <- function(id, colseq, grp=NULL, n.grp=NULL, fill.vs.border=NU
 			pal <- pal.nom
 			if(n.grp<=8) pal <- c("CB-friendly",pal)
 			if(!is.null(fill.vs.border)) if(fill.vs.border & fill.vs.border2) pal <- paste(rep(pal,each=2),c("fill","border")) 
-		} else if(colseq=="Evenly spaced"){
-			if(n.grp>=9) pal <- "HCL: 9+ levels"
+		} else if(colseq=="Cyclic"){
+			pal <- "HCL"
 			if(!is.null(fill.vs.border)) if(fill.vs.border & fill.vs.border2) pal <- paste(rep(pal,each=2),c("fill","border")) 
 		} else if(colseq=="Increasing"){
 			pal <- pal.inc
