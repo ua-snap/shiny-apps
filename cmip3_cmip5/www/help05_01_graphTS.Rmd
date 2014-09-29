@@ -62,7 +62,7 @@ The former shows a single line representing the mean of all the pooled data, or 
 
 The `Dark theme` checkbox is unchecked by default. When checked the plot will take on a black background and previously black colors such as text or lines will switch to white.
 
-There are also checkboxes showing the full range across all groups, `Group range`, and confidence bands around trend lines either for all data or by group, `Confidence band`, but these are subject to change.
+There are also checkboxes showing the data range by group, `Group range`, and confidence bands around trend lines by group, `Confidence band`, but these are subject to change.
 
 After all of these checkboxes, the user has some additional drop down menus. First are `Transparency` and `Font size`.
 Depending on user data selections, this may be all that appears.
