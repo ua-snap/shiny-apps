@@ -229,20 +229,6 @@ output$Bardirection <- renderUI({
 	}
 })
 
-output$LinePlot <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
-	isolate(
-		if(!is.null(dat())) checkboxInput("linePlot", "Trend lines", FALSE)
-	)
-})
-
-output$BarPlot <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
-	isolate(
-		if(!is.null(dat())) if(!("Temperature" %in% dat()$Var)) checkboxInput("barPlot", "Barplot", FALSE) else return()
-	)
-})
-
 # Conditional inputs (tabset panel tab: scatter plot)
 output$Colorseq2 <- renderUI({
 	getColorSeq(id="colorseq2", d=dat2(), grp=input$group2, n.grp=n.groups2())
@@ -259,13 +245,6 @@ output$Alpha2 <- renderUI({
 output$PlotFontSize2 <- renderUI({
 	if(!is.null(dat2())) selectInput("plotFontSize2","Font size",seq(12,24,by=2),selected=16, width="100%")
 })
-
-#output$Conplot <- renderUI({
-#	if(is.null(input$goButton) || input$goButton==0) return()
-#	isolate(
-#		if(!is.null(dat2())) checkboxInput("conplot", "Contour lines", FALSE)
-#	)
-#})
 
 # Conditional inputs (tabset panel tab: heatmap)
 output$ColorseqHeatmap <- renderUI({
@@ -337,11 +316,7 @@ output$Variability <- renderUI({
 # Options for summarizing data in TS plot (range markers, CIs, CBs)
 #output$SummarizeByXtitle <- renderUI({ if(!is.null(input$group)) HTML(paste('<div>Summarize by ', input$xtime, '</div>', sep="", collapse="")) })
 
-output$Yrange <- renderUI({ if(!is.null(input$group)) checkboxInput("yrange", "Group range", FALSE) })
-
 #output$CLbootbar <- renderUI({ if(!is.null(input$group)) checkboxInput("clbootbar", "Group mean CI", FALSE) })
-
-output$CLbootsmooth <- renderUI({ if(!is.null(input$group)) checkboxInput("clbootsmooth", "Confidence band", FALSE) })
 
 # Options for summarizing data in scatter plot (hexbin)
 output$Hexbin <- renderUI({ checkboxInput("hexbin", "Hex bins", FALSE) })

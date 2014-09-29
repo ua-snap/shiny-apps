@@ -87,7 +87,11 @@ column(4,
 		conditionalPanel(condition="input.tsp !== 'plot_heatmap'",
 			fluidRow(column(4, checkboxInput("showpts", "Show points", TRUE)), column(4, checkboxInput("jitterXY", "Jitter points", FALSE)), column(4, checkboxInput("showlines", "Show lines", FALSE))),
 			conditionalPanel(condition="input.tsp == 'plot_ts'", 
-				fluidRow(column(4, uiOutput("LinePlot")), column(4, uiOutput("BarPlot")), column(4, uiOutput("VertFacet")))
+				fluidRow(
+					column(4, checkboxInput("linePlot", "Trend lines", FALSE)),
+					column(4, checkboxInput("yrange", "Group range", FALSE), conditionalPanel(condition="input.vars !== null && input.vars == 'Precipitation'", checkboxInput("barPlot", "Barplot", FALSE))),
+					column(4, checkboxInput("clbootsmooth", "Confidence band", FALSE), uiOutput("VertFacet"))
+				)
 			),
 			conditionalPanel(condition="input.tsp == 'plot_scatter'", fluidRow(column(4, uiOutput("Hexbin")))),
 			conditionalPanel(condition="input.tsp == 'plot_variability'",
