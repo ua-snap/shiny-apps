@@ -4,6 +4,7 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, face
 	mos=12, yrange, clbootbar, clbootsmooth, pooled.var, plot.theme.dark=FALSE, show.logo=F, logo.mat=NULL){
 		if(is.null(d)) return(plot(0,0,type="n",axes=F,xlab="",ylab=""))
 		if(plot.theme.dark) { bg.theme <- "black"; color.theme <- "white" } else { bg.theme <- "white"; color.theme <- "black" }
+		if(d$Var[1]=="Temperature") { bartype <- barPlot <- NULL }
 		if(!show.lines) ingroup.subjects <- NULL
 		if(show.overlay && !is.null(overlay)) show.overlay <- TRUE else show.overlay <- FALSE
 		if(show.overlay) overlay$Observed <- "CRU 3.1"
