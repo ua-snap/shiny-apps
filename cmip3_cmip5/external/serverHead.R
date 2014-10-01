@@ -119,12 +119,12 @@ periodsFromDecades <- function(d, n.p, decs, check.years=FALSE){
 		keep.ind <- which(sapply(splt, function(x) all(x %in% unique(d$Decade))))
 		if(length(keep.ind)){
 			splt <- splt[keep.ind]
-			periods <- sapply(splt, function(x) paste(c(x[1], tail(x,1)), collapse="-"))
+			periods <- paste0(substr(sapply(splt, function(x) paste(c(x[1], tail(x,1)), collapse="-")), 1, 8), 9)
 			for(i in 1:length(periods)) d$Decade[d$Decade %in% splt[[i]]] <- periods[i]
 			d <- subset(d, nchar(Decade)>4)
 		} else d <- NULL
 	} else {
-		periods <- sapply(splt, function(x) paste(c(x[1], tail(x,1)), collapse="-"))
+		periods <- paste0(substr(sapply(splt, function(x) paste(c(x[1], tail(x,1)), collapse="-")), 1, 8), 9)
 		d$Decade <- rep(periods, each=n.mos*10*p)
 	}
 	d
