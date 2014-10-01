@@ -16,27 +16,45 @@ observe({
 	)
 })
 
+output$Months2Seasons <- renderUI({
+	if(!is.null(SeasonLength())) checkboxInput("months2seasons", "Make equal-length season(s) of months", FALSE) else NULL # Do not allow unequal length seasons
+})
+
 output$N_Seasons <- renderUI({
 	if(is.null(input$months2seasons) || !input$months2seasons) return()
 	if(length(input$mos) < 2) return()
 	isolate({
-		n <- length(input$mos) # Do not permit 1-month "seasons"
-		v <- 1:(n-1)
-		v <- v[which((n %% v)==0)]
-		selectInput("n_seasons", "Number of seasons:", choices=v, selected=v[1], width="100%")
+		n <- SeasonLength()
+		if(is.null(n)){
+			x <- NULL
+		} else {
+			v <- 1:(n[1]-1) # Do not permit 1-month "seasons"
+			v <- v[which((n[1] %% v)==0)]*length(n)
+			x <- selectInput("n_seasons", "Number of seasons:", choices=v, selected=v[1], width="100%")
+		}
 	})
+	x
 })
 outputOptions(output, "N_Seasons", suspendWhenHidden=FALSE)
+
+output$Decades2Periods <- renderUI({
+	if(!is.null(PeriodLength())) checkboxInput("decades2periods", "Make equal-length periods(s) of decades", FALSE) else NULL # Do not allow unequal length periods
+})
 
 output$N_Periods <- renderUI({
 	if(is.null(input$decades2periods) || !input$decades2periods) return()
 	if(length(input$decs) < 2) return()
 	isolate({
-		n <- length(input$decs) # Do not permit 1-decade "periods"
-		v <- 1:(n-1)
-		v <- v[which((n %% v)==0)]
-		selectInput("n_periods", "Number of Periods:", choices=v, selected=v[1], width="100%")
+		n <- PeriodLength()
+		if(is.null(n)){
+			x <- NULL
+		} else {
+			v <- 1:(n[1]-1) # Do not permit 1-decade "periods"
+			v <- v[which((n[1] %% v)==0)]*length(n)
+			x <- selectInput("n_periods", "Number of Periods:", choices=v, selected=v[1], width="100%")
+		}
 	})
+	x
 })
 outputOptions(output, "N_Periods", suspendWhenHidden=FALSE)
 
