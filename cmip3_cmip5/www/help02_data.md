@@ -73,6 +73,43 @@ checkbox is checked and unequal numbers of models have been selected
 from each CMIP phase, the averaging is simply ignored, which is evident
 in the resulting data table.
 
+#### Optional Settings
+
+Additional data selection options which are not required include
+defining seasons and multi-decade periods. Since these are optional they
+are hidden from view unless they become applicable based on user
+selections of months and decades. Although months and decades are each
+assumed to be the full set if none are individually selected from their
+respective menus, seasonal and multi-decade specifications each require
+that the user explicitly select months and decades, respectively. If
+only one month or one decade are explicitly selected, seasonal and
+multi-decade aggregation remain unavailable because there is nothing to
+aggregate yet.
+
+If the user explicitly selects two or more consecutive months, a
+checkbox appears for making equal-length seasons from the selected
+months. By default it is unchecked. Once checked, a selection menu
+appears offering the possible number of equal-length seasons which can
+be defined based on the selected months. One-month seasons are
+disallowed because they are trivial and change nothing. Any other whole
+number factor will appear in the menu. For example, if six consecutive
+months are selected, the options include aggregating to three 2-month
+seasons, two 3-month seasons, or one 6-month season. If a month is added
+to the list, bring the total months to seven, the number of seasons
+available will drop to only the one 7-month season. The rules are
+similar with respect to multi-decade periods.
+
+If the months or decades selected are not all consecutive (e.g.,
+January, February, and July, or 1950s, 1960s, 1990s, and 2000s), each
+continuous subset is checked separately. If each continuous subset is
+not of equal length, aggregation is not allowed and the option to
+combine selections does not display. For equal-length subsets, the
+number of equal-length seasons available to choose from is based on the
+individual subsets, not the entire selection. This ensures no
+overlapping of data which are not included, e.g., in the example above,
+calling a multi-decade period "1950s-2000s". In this example two 20-year
+periods can be defined, but a single 40-year period cannot.
+
 #### Generating a Data Subset
 
 In order to generate a data subset the user must fill in all selection
