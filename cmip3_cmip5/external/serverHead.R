@@ -82,6 +82,16 @@ logo.alpha <- 1
 logo.mat <- matrix(rgb(logo[,,1],logo[,,2],logo[,,3],logo[,,4]*logo.alpha), nrow=dim(logo)[1])
 
 # These functions are written with the structure of the app in mind. They are intended to avoid code duplication.
+splitAt <- function(x, pos=NULL) if(is.null(pos)) list(x) else unname(split(x, cumsum(seq_along(x) %in% pos)))
+
+periodLength <- function(x){
+	x.diff <- diff(sort(x))
+	pos.split <- if(all(x.diff==1)) NULL else which(x.diff!=1)+1
+	x <- splitAt(x=x, pos=pos.split)
+	n <- sapply(x, length)
+	if(length(n)==1 || all(diff(n)==0)) n else NULL # Do not allow unequal length periods
+}
+
 collapseMonths <- function(d, n.s, mos){
 	nrx <- nrow(d)
 	p <- length(mos)/n.s
@@ -97,12 +107,26 @@ collapseMonths <- function(d, n.s, mos){
 	d
 }
 
-periodsFromDecades <- function(d, n.p, decs){
+periodsFromDecades <- function(d, n.p, decs, check.years=FALSE){
+	decs <- as.numeric(substr(decs,1,4)) #### Need to develop code to support additional of CRU that parallels it's inclusion when not forming periods
+	start <- seq(decs[1], tail(decs,1), by=10*n.p)
+	end <- seq(decs[1+n.p], tail(decs,1), by=10*n.p)
 	nrx <- nrow(d)
 	n.mos <- length(unique(d$Month))
 	p <- length(decs)/n.p
-	periods <- sapply(split(decs, rep(1:n.p, each=p)), function(x) paste(c(x[1], tail(x,1)), collapse="-"))
-	d$Decade <- rep(periods, each=n.mos*10*p)
+	splt <- split(decs, rep(1:n.p, each=p))
+	if(check.years){ # Ensure inclusion only of CRU data which span an entire defined multi-decade period
+		keep.ind <- which(sapply(splt, function(x) all(x %in% unique(d$Decade))))
+		if(length(keep.ind)){
+			splt <- splt[keep.ind]
+			periods <- sapply(splt, function(x) paste(c(x[1], tail(x,1)), collapse="-"))
+			for(i in 1:length(periods)) d$Decade[d$Decade %in% splt[[i]]] <- periods[i]
+			d <- subset(d, nchar(Decade)>4)
+		} else d <- NULL
+	} else {
+		periods <- sapply(splt, function(x) paste(c(x[1], tail(x,1)), collapse="-"))
+		d$Decade <- rep(periods, each=n.mos*10*p)
+	}
 	d
 }
 
@@ -301,10 +325,10 @@ getColorPalettes <- function(id, colseq, grp=NULL, n.grp=NULL, fill.vs.border=NU
 		if(colseq=="Nominal"){
 			pal <- pal.nom
 			if(n.grp<=8) pal <- c("CB-friendly",pal)
-			if(!is.null(fill.vs.border)) if(fill.vs.border & fill.vs.border2) pal <- paste(rep(pal,each=2),c("fill","border")) 
+			if(length(fill.vs.border) & length(fill.vs.border2)) pal <- paste(rep(pal,each=2),c("fill","border")) 
 		} else if(colseq=="Cyclic"){
 			pal <- "HCL"
-			if(!is.null(fill.vs.border)) if(fill.vs.border & fill.vs.border2) pal <- paste(rep(pal,each=2),c("fill","border")) 
+			if(length(fill.vs.border) & length(fill.vs.border2)) pal <- paste(rep(pal,each=2),c("fill","border")) 
 		} else if(colseq=="Increasing"){
 			pal <- pal.inc
 		} else if(colseq=="Centered"){

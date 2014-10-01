@@ -68,6 +68,10 @@ Months <- reactive({
 	x
 })
 
+SeasonLength <- reactive({
+	if(length(input$mos)<=1) NULL else periodLength(x=match(input$mos, month.abb))
+})
+
 Decades_original <- reactive({
 	x <- input$decs
 	if(!length(x)) x <- decades
@@ -80,6 +84,10 @@ Decades <- reactive({
 		if(input$decades2periods & !is.null(dat_master())) x <- unique(dat_master()$Decade)
 	}
 	x
+})
+
+PeriodLength <- reactive({
+	if(length(input$decs)<=1) NULL else periodLength(x=as.numeric(substr(input$decs,1,4))/10)
 })
 
 Locs <- reactive({ if(is.null(input$loctype) || input$loctype=="Regions")  input$locs_regions else if(input$loctype=="Cities") input$locs_cities else NULL })
@@ -233,7 +241,8 @@ CRU_master <- reactive({
 			}
 			if(nrow(x)==0) return()
 			if(!is.null(input$months2seasons) && input$months2seasons) x <- collapseMonths(x, as.numeric(input$n_seasons), Months_original())
-			if(!is.null(input$decades2periods) && input$decades2periods) x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original())
+			if(!is.null(input$decades2periods) && input$decades2periods) x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), check.years=TRUE)
+			if(is.null(x)) return()
 			#print(input$map_shape_click$id)
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
 			# Otherwise compositing prohibited.
