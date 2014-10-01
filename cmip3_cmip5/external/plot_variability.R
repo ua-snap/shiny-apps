@@ -21,6 +21,8 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 		if(!length(fontsize)) fontsize <- 16
 		dodge <- position_dodge(width = 0.9)
 		if(is.null(pts.alpha)) pts.alpha <- 0.5
+		
+		#### Point dodging when using grouping variable
 		x.n <- length(unique(d[,x]))
 		if(is.character(grp) & n.grp>1){
 			if(facet.by=="None"){
@@ -51,6 +53,8 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 			xdodge <- "xdodge"
 			if(show.overlay) n.grp <- n.grp + 1
 		}
+		#### End point dodge code
+		
 		fontsize=as.numeric(fontsize)
 		if(around.mean) ylb.insert <- "" else ylb.insert <- paste0(stat, " ")
 		if(d$Var[1]=="Temperature") ylb <- paste0("Temperature ", ylb.insert, "(",units[1],")") else ylb <- paste0("Precipitation ", ylb.insert, "(",units[2],")")

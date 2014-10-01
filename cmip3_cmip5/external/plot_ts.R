@@ -11,6 +11,41 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, face
 		bar.pos <- "dodge"
 		if(!length(lgd.pos)) lgd.pos="Top"
 		if(!length(fontsize)) fontsize <- 16
+		
+		#### Point dodging when using grouping variable
+		dodge <- position_dodge(width = 0.9)
+		if(is.null(pts.alpha)) pts.alpha <- 0.5
+		x.n <- length(unique(d[,x]))
+		if(is.character(grp) & n.grp>1){
+			if(facet.by=="None"){
+				x.names <- unique(as.character(d[,x]))
+				x.num <- grp.n <- grp.num <- rep(NA, nrow(d))
+				for(m in 1:length(x.names)){
+					ind <- which(as.character(d[,x])==x.names[m])
+					grp.n[ind] <- length(unique(d[ind, grp]))
+					x.num[ind] <- m
+					grp.num[ind] <- 0.9*( (as.numeric(factor(d[ind ,grp]))/grp.n[ind])-(1/grp.n[ind] + ((grp.n[ind]-1)/2)/(grp.n[ind])) )
+				}
+				d$xdodge <- x.num + grp.num
+			} else if(facet.by!="None") {
+				x.names <- unique(as.character(d[,x]))
+				panel.names <- unique(as.character(d[,facet.by]))
+				n.panels <- length(panel.names)
+				x.num <- grp.n <- grp.num <- rep(NA, nrow(d))
+				for(m in 1:n.panels){
+					for(mm in 1:length(x.names)){
+						ind <- which(as.character(d[,facet.by])==panel.names[m] & as.character(d[,x])==x.names[mm])
+						grp.n[ind] <- length(unique(d[ind, grp]))
+						x.num[ind] <- mm - 1 + as.numeric(factor(d[ind, x]))
+						grp.num[ind] <- 0.9*( (as.numeric(factor(d[ind ,grp]))/grp.n[ind])-(1/grp.n[ind] + ((grp.n[ind]-1)/2)/(grp.n[ind])) )
+					}
+				}
+				d$xdodge <- x.num + grp.num
+			}
+			xdodge <- "xdodge"
+		}
+		#### End point dodge code
+		
 		fontsize=as.numeric(fontsize)
 		if(is.null(pts.alpha)) pts.alpha <- 0.5
 		if(d$Var[1]=="Temperature") ylb <- paste0("Temperature (",units[1],")") else ylb <- paste0("Precipitation (",units[2],")")
@@ -40,12 +75,25 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, face
 		}
 		if(!is.null(linePlot) && linePlot){
 			if(wgl$subjectlines) { if(grp==1) g <- g + geom_line(position="identity", colour=color.theme, alpha=pts.alpha) else g <- g + geom_line(position="identity", alpha=pts.alpha) }
-			if(show.points) g <- g + geom_point(position=point.pos, pch=21, size=4, colour=color.theme, alpha=pts.alpha)
+			if(show.points){
+				if(!is.null(barPlot) && barPlot && is.character(grp) && n.grp>1 && x!="Year"){
+					g <- g + geom_point(aes_string(x=xdodge), pch=21, size=4, colour=color.theme, alpha=pts.alpha, position=position_jitter(width=0.9/(x.n*mean(grp.n))))
+				} else {
+					g <- g + geom_point(pch=21, size=4, colour=color.theme, alpha=pts.alpha, position=point.pos)
+				}
+			}
 			if(grp==1) g <- g + stat_summary(data=d, aes_string(group=grp),fun.y=mean, colour=color.theme, size=1, geom="line") else g <- g + stat_summary(data=d, aes_string(group=grp),fun.y=mean, size=1, geom="line")
 		} else {
 			if(wgl$subjectlines) { if(grp==1) g <- g + geom_line(position="identity", colour=color.theme, alpha=pts.alpha) else g <- g + geom_line(position="identity", alpha=pts.alpha) }
-			if(show.points) g <- g + geom_point(position=point.pos, pch=21, size=4, colour=color.theme, alpha=pts.alpha)
+			if(show.points){
+				if(!is.null(barPlot) && barPlot && is.character(grp) && n.grp>1 && x!="Year"){
+					g <- g + geom_point(aes_string(x=xdodge), pch=21, size=4, colour=color.theme, alpha=pts.alpha, position=position_jitter(width=0.9/(x.n*mean(grp.n))))
+				} else {
+					g <- g + geom_point(pch=21, size=4, colour=color.theme, alpha=pts.alpha, position=point.pos)
+				}
+			}
 		}
+
 		if(!is.null(yrange)){
 			if(yrange){
 				dodge <- position_dodge(width=0.9)
