@@ -123,11 +123,9 @@ Obs_updateFiles <- reactive({
 			alf.domain <- substr(input$json_files, 1, nchar(input$json_files)-5)
 			domainDir <- paste0("Runs_", alf.domain)
 			userDir <- gsub("@", "_at_", user_email_address())
-			
-			#outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
-			outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/",format(Sys.time(), "%Y-%m-%d-%H-%M-%S"))
-			relDir <- outDir #paste0(domainDir,"/",userDir,"/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
-			#resultsDir <- paste0("/big_scratch/shiny/Ignit_",ignition.factor.sub,"_Sens",fire.sensitivity.sub,"_complexGBMs")
+			#outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/",format(Sys.time(), "%Y-%m-%d-%H-%M-%S"))
+			outDir <- paste0(mainDir,"/",domainDir,"/",userDir)
+			relDir <- outDir # Still need this?
 			
 			for(i in JSON_current()){
 				alfJSON <- fromJSON(i, simplify=F)
@@ -139,6 +137,7 @@ Obs_updateFiles <- reactive({
 			
 			# system calls begin here
 			# Create Alfresco run-specific output directories and give shiny group write permissions
+			system(paste("ssh", server, "rm -rf", outDir))
 			system(paste("ssh", server, "mkdir -p", outDir))
 			system(paste("ssh", server, "chmod 2775", outDir))
 			
