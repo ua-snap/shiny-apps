@@ -18,6 +18,10 @@ output$varTextSub <- renderUI({
 	isolate( pooledVarsCaption(pv=pooled.var3(), permit=permitPlot(), ingrp=input$group3) )
 })
 
+output$spatialTextSub <- renderUI({
+	if(anyBtnNullOrZero()) return()
+	isolate( pooledVarsCaption(pv=pooledVarSpatial(), permit=permitPlot(), ingrp=input$groupSpatial) )
+})
 
 output$SubsetTableTS <- renderDataTable({ if(!is.null(dat())) dat()[-9] }, options=list(bSortClasses = TRUE, aLengthMenu=c(5, 10, 25, 50), iDisplayLength=5))
 
@@ -54,5 +58,14 @@ output$TableVariability <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	isolate(
 		if(permitPlot()) fluidRow(column(12, dataTableOutput("SubsetTableVariability")))
+	)
+})
+
+output$SubsetTableSpatial <- renderDataTable({ if(!is.null(dat_spatial())) dat_spatial()[-9] }, options=list(bSortClasses = TRUE, aLengthMenu=c(5, 10, 25, 50), iDisplayLength=5))
+
+output$TableSpatial <- renderUI({
+	if(is.null(input$goButton) || input$goButton==0) return()
+	isolate(
+		if(permitPlot()) fluidRow(column(12, dataTableOutput("SubsetTableSpatial")))
 	)
 })

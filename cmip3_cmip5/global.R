@@ -8,15 +8,32 @@ load("external/data_cities_CRU31.RData", envir=.GlobalEnv)
 
 #### If overriding these four objects from files_meta.RData ####
 if(Sys.info()["sysname"]=="Windows"){ # for local devl/testing
-	region.gcm.files.path <- "Y:/Users/mfleonawicz/AR4_AR5_Comparisons/region_files_GCM"
-	region.gcm.files <- list.files(region.gcm.files.path, full=T)
+	load("X:/Leonawicz/Projects/2014/AR4_AR5_comparisons/data/final/gcm_meta.RData",envir=.GlobalEnv)
+	#region.gcm.stats.path <- "Y:/Users/mfleonawicz/AR4_AR5_Comparisons/region_files_GCM"
+	region.gcm.stats.path <- list.files("X:/Leonawicz/Projects/2014/AR4_AR5_comparisons/data/final/region_files_GCM/stats", full=T)
+	region.gcm.stats.files <- lapply(region.gcm.stats.path, list.files, full=T)
+	region.cru.stats.path <- list.files("X:/Leonawicz/Projects/2014/AR4_AR5_comparisons/data/final/region_files_CRU/stats", full=T)
+	region.cru.stats.files <- lapply(region.cru.stats.path, list.files, full=T)
+	
+	region.gcm.samples.path <- list.files("X:/Leonawicz/Projects/2014/AR4_AR5_comparisons/data/final/region_files_GCM/samples", full=T)
+	# Hardcode for sidebar input
+	region.names <- c(names(region.names.out), "Cities")
+	region.gcm.samples.files <- lapply(region.gcm.samples.path, list.files, full=T)
+	region.cru.samples.path <- list.files("X:/Leonawicz/Projects/2014/AR4_AR5_comparisons/data/final/region_files_CRU/samples", full=T)
+	region.cru.samples.files <- lapply(region.cru.samples.path, list.files, full=T)
+	names(region.cru.stats.files) <- names(region.gcm.stats.files) <- names(region.cru.samples.files) <- names(region.gcm.samples.files) <- basename(region.gcm.stats.path)
+	
 	city.gcm.files.path <- "Y:/Users/mfleonawicz/AR4_AR5_Comparisons/city_files_GCM"
 	city.gcm.files <- list.files(city.gcm.files.path, full=T)
+	
+	agg.stat.names <- c("Mean", "Std. Dev.", paste0(c(5,10,25,50,75,90,95), "th percentile"))
+	agg.stat.names[agg.stat.names=="50th percentile"] <- "50th (Median)"
+	agg.stat.IDs <- c("Mean", "SD", "Pct_5", "Pct_10", "Pct_25", "Pct_50", "Pct_75", "Pct_90", "Pct_95")
 }
 ###############################################################
 
 help_tabpanel_conditional <- conditionalPanel(
 	condition=
-	"(input.tsp == 'plot_heatmap' || input.tsp == 'plot_ts' || input.tsp == 'plot_scatter' || input.tsp == 'plot_variability') && (input.goButton == null || input.goButton == 0)",
+	"(input.tsp == 'plot_heatmap' || input.tsp == 'plot_ts' || input.tsp == 'plot_scatter' || input.tsp == 'plot_variability' || input.tsp == 'plot_spatial') && (input.goButton == null || input.goButton == 0)",
 	includeMarkdown("www/intro.md")
 )

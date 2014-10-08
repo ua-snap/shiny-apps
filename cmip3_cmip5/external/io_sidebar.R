@@ -16,6 +16,13 @@ observe({
 	)
 })
 
+output$Location <- renderUI({
+	if(is.null(input$loctype)) return()
+	if(input$loctype!="Cities") x <- selectInput("locs_regions", "Regions:", c("", region.names.out[[input$loctype]]), selected="", multiple=T, width="100%")
+	if(input$loctype=="Cities") x <- selectInput("locs_cities", "Cities:", c("", city.names), selected="", multiple=T, width="100%")
+	x
+})
+
 output$Months2Seasons <- renderUI({
 	if(!is.null(SeasonLength())) checkboxInput("months2seasons", "Make equal-length season(s) of months", FALSE) else NULL # Do not allow unequal length seasons
 })
@@ -95,15 +102,15 @@ output$Facet <- renderUI({
 	)
 })
 
-output$Subjects <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
-	input$xtime
-	input$group
-	input$facet
-	isolate(
-		if(!is.null(subjectChoices())) selectInput("subjects", "Subject/Within-group lines:", choices=subjectChoices(), selected=subjectChoices()[1], width="100%")
-	)
-})
+#output$Subjects <- renderUI({
+#	if(is.null(input$goButton) || input$goButton==0) return()
+#	input$xtime
+#	input$group
+#	input$facet
+#	isolate(
+#		if(!is.null(subjectChoices())) selectInput("subjects", "Subject/Within-group lines:", choices=subjectChoices(), selected=subjectChoices()[1], width="100%")
+#	)
+#})
 
 output$Group2 <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
@@ -170,19 +177,61 @@ output$Facet3 <- renderUI({
 	)
 })
 
-output$Subjects3 <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
-	input$xvar
-	input$group3
-	input$facet3
-	x <- NULL
-	isolate(
-		if(!is.null(subjectChoices3())){
-			x <- selectInput("subjects3", "Subject/Within-group lines:", choices=subjectChoices3(), selected=subjectChoices3()[1], width="100%")
-		}
-	)
-	x
+#output$Subjects3 <- renderUI({
+#	if(is.null(input$goButton) || input$goButton==0) return()
+#	input$xvar
+#	input$group3
+#	input$facet3
+#	x <- NULL
+#	isolate(
+#		if(!is.null(subjectChoices3())){
+#			x <- selectInput("subjects3", "Subject/Within-group lines:", choices=subjectChoices3(), selected=subjectChoices3()[1], width="100%")
+#		}
+#	)
+#	x
+#})
+
+output$Spatial_x <- renderUI({
+	if(!is.null(spatial_x_choices())) selectInput("spatial_x", "Primary axis:", choices=spatial_x_choices(), selected=spatial_x_choices()[1], width="100%")
 })
+
+output$GroupSpatial <- renderUI({
+	if(is.null(input$goButton) || input$goButton==0) return()
+	input$spatial_x
+	isolate(
+		if(!is.null(groupFacetChoicesSpatial())) selectInput("groupSpatial", "Group/color by:", choices=groupFacetChoicesSpatial(), selected=groupFacetChoicesSpatial()[1], width="100%")
+	)
+})
+
+output$FacetSpatial <- renderUI({
+	if(is.null(input$goButton) || input$goButton==0) return()
+	input$spatial_x
+	isolate(
+		if(!is.null(groupFacetChoicesSpatial())) selectInput("facetSpatial","Facet/panel by:", choices=groupFacetChoicesSpatial(), selected=groupFacetChoicesSpatial()[1], width="100%")
+	)
+})
+
+output$PlotTypeSpatial <- renderUI({
+	if(is.null(input$goButton) || input$goButton==0) return()
+	input$spatial_x
+	isolate(
+		if(!is.null(input$spatial_x)) selectInput("plotTypeSpatial","Plot type:", choices=plotTypeChoicesSpatial(), selected=plotTypeChoicesSpatial()[1], width="100%")
+	)
+})
+
+#output$SubjectsSpatial <- renderUI({
+#	if(is.null(input$goButton) || input$goButton==0) return()
+#	input$spatial_x
+#	input$groupSpatial
+#	input$facetSpatial
+#	x <- NULL
+#	isolate(
+#		if(!is.null(subjectChoicesSpatial())){
+#			x <- selectInput("subjectsSpatial", "Subject/Within-group lines:", choices=subjectChoicesSpatial(), selected=subjectChoicesSpatial()[1], width="100%")
+#		}
+#	)
+#	x
+#})
 
 # Options for jittering, faceting, and pooling
 output$VertFacet <- renderUI({
@@ -212,6 +261,14 @@ output$VertFacet3 <- renderUI({
 
 output$PooledVar3 <- renderUI({
 	if(length(pooled.var3())) HTML(paste('<div>Pooled variable(s): ', paste(pooled.var3(), collapse=", "), '</div>', sep=""))
+})
+
+output$VertFacetSpatial <- renderUI({
+	if(!is.null(facetPanelsSpatial())) if(facetPanelsSpatial()>1) checkboxInput("vertFacetSpatial", "Vertical facet", value=FALSE)
+})
+
+output$PooledVarSpatial <- renderUI({
+	if(length(pooledVarSpatial())) HTML(paste('<div>Pooled variable(s): ', paste(pooledVarSpatial(), collapse=", "), '</div>', sep=""))
 })
 
 # Conditional inputs (tabset panel tab: time series plot)
@@ -330,6 +387,38 @@ output$Variability <- renderUI({
 #		if(!is.null(input$boxplots) && input$boxplots=="") selectInput("errorBars", "Error bars", choices=c("", "95% CI", "SD", "SE", "Range"), selected="", width="100%")
 #	}
 #})
+
+# Conditional inputs (tabset panel tab: spatial plots)
+output$ColorseqSpatial <- renderUI({
+	getColorSeq(id="colorseqSpatial", d=dat_spatial(), grp=input$groupSpatial, n.grp=nGroupsSpatial(), overlay=input$showCRU)
+})
+
+output$ColorpalettesSpatial <- renderUI({
+	getColorPalettes(id="colorpalettesSpatial", colseq=input$colorseqSpatial, grp=input$groupSpatial, n.grp=nGroupsSpatial(), overlay=input$showCRU)
+})
+
+output$AlphaSpatial <- renderUI({
+	if(!is.null(dat_spatial())) selectInput("alphaSpatial", "Transparency", seq(0.1, 1, by=0.1), selected=0.5, width="100%")
+})
+
+output$PlotFontSizeSpatial <- renderUI({
+	if(!is.null(dat_spatial())) selectInput("plotFontSizeSpatial","Font size",seq(12,24,by=2),selected=16, width="100%")
+})
+
+output$BartypeSpatial <- renderUI({
+	if(is.null(input$groupSpatial) || input$groupSpatial=="None") return()
+	if(!is.null(dat_spatial()) && !is.null(input$plotTypeSpatial) && input$plotTypeSpatial){ # condition???
+		styles <- c("Dodge (Grouped)","Stack (Totals)","Fill (Proportions)") #### Work on this for the density stat/position, can combine with boxplots/points?
+		selectInput("bartypeSpatial","Density style",styles,selected=styles[1], width="100%")
+	} else return()
+})
+
+output$BardirectionSpatial <- renderUI({ #### Consider swapping this out for a checkbox in each plot tab in which it occurs
+	if(!is.null(dat_spatial()) && !is.null(input$plotTypeSpatial) && input$plotTypeSpatial=="Stripcharts"){
+		directions <- c("Vertical bars","Horizontal bars")
+		selectInput("bardirectionSpatial","Stripchart orientation",directions,selected=directions[1], width="100%")
+	}
+})
 
 # Options for summarizing data in TS plot (range markers, CIs, CBs)
 #output$SummarizeByXtitle <- renderUI({ if(!is.null(input$group)) HTML(paste('<div>Summarize by ', input$xtime, '</div>', sep="", collapse="")) })

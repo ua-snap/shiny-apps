@@ -1,12 +1,15 @@
 column(4,
 	#### Data selection panel
-	conditionalPanel(condition="input.tsp == 'plot_heatmap' || input.tsp == 'plot_ts' || input.tsp == 'plot_scatter' || input.tsp == 'plot_variability'",
+	conditionalPanel(condition="input.tsp == 'plot_heatmap' || input.tsp == 'plot_ts' || input.tsp == 'plot_scatter' || input.tsp == 'plot_variability' || input.tsp == 'plot_spatial'",
 	wellPanel(
 		checkboxInput("showDataPanel1", h5("Data Selection"), TRUE),
 		conditionalPanel(condition="input.showDataPanel1",
 			fluidRow(
 				column(6, selectInput("vars", "Climate variable:", c("", varnames), selected="", multiple=T, width="100%")),
-				column(6, selectInput("units", "Units:", c("C, mm","F, in"), selected="C, mm", width="100%"))
+				column(6, 
+					selectInput("aggStats", "Stat:", agg.stat.names, selected=agg.stat.names[1], width="100%"),
+					selectInput("units", "Units:", c("C, mm","F, in"), selected="C, mm", width="100%")
+				)
 			),
 			fluidRow(
 				column(6, selectInput("cmip3scens", "CMIP3 emissions scenarios:", choices=c("", scennames[[1]]), selected="", multiple=T, width="100%")),
@@ -29,30 +32,28 @@ column(4,
 				column(6, uiOutput("Decades2Periods"), uiOutput("N_Periods"))
 			),
 			fluidRow(
-				column(6, selectInput("loctype", "Spatial scale:", c("Regions", "Cities"), selected="Regions", multiple=FALSE, width="100%")), # May use multiple=TRUE later
-				column(6,
-					conditionalPanel(condition="input.loctype == 'Regions'", selectInput("locs_regions", "Regions:", c("", region.names), selected="", multiple=T, width="100%")),
-					conditionalPanel(condition="input.loctype == 'Cities'", selectInput("locs_cities", "Cities:", c("", city.names), selected="", multiple=T, width="100%"))
-				)
+				column(6, selectInput("loctype", "Spatial scale:", region.names, selected=region.names[1], multiple=FALSE, width="100%")), # May use multiple=TRUE later
+				column(6, uiOutput("Location"))
 			)
 		),
 		fluidRow(
 			column(6, 
 			conditionalPanel(condition="input.vars !== null &&
-			( (input.loctype == 'Regions' && input.locs_regions !== null) || (input.loctype == 'Cities' && input.locs_cities !== null) ) &&
+			( (input.loctype !== 'Cities' && input.locs_regions !== null) || (input.loctype == 'Cities' && input.locs_cities !== null) ) &&
 				( (input.cmip3scens !== null && input.cmip3models !== null) || (input.cmip5scens !== null && input.cmip5models !== null) )", uiOutput("GoButton"))
 			),
 			column(6,
 				conditionalPanel(condition="input.tsp == 'plot_heatmap' && input.goButton > 0", downloadButton("dlCurTableHeatmap", "Download Data", class="btn-success btn-block")),
 				conditionalPanel(condition="input.tsp == 'plot_ts' && input.goButton > 0", downloadButton("dlCurTableTS", "Download Data", class="btn-success btn-block")),
 				conditionalPanel(condition="input.tsp == 'plot_scatter' && input.goButton > 0", downloadButton("dlCurTableScatter", "Download Data", class="btn-success btn-block")),
-				conditionalPanel(condition="input.tsp == 'plot_variability' && input.goButton > 0", downloadButton("dlCurTableVariability", "Download Data", class="btn-success btn-block"))
+				conditionalPanel(condition="input.tsp == 'plot_variability' && input.goButton > 0", downloadButton("dlCurTableVariability", "Download Data", class="btn-success btn-block")),
+				conditionalPanel(condition="input.tsp == 'plot_spatial' && input.goButton > 0", downloadButton("dlCurTableSpatial", "Download Data", class="btn-success btn-block"))
 			)
 		)
 	)
 	),
 	#### Plot options panel
-	conditionalPanel(condition="output.ShowPlotOptionsPanel == true && (input.tsp == 'plot_heatmap' || input.tsp == 'plot_ts' || input.tsp == 'plot_scatter' || input.tsp == 'plot_variability')",
+	conditionalPanel(condition="output.ShowPlotOptionsPanel == true && (input.tsp == 'plot_heatmap' || input.tsp == 'plot_ts' || input.tsp == 'plot_scatter' || input.tsp == 'plot_variability' || input.tsp == 'plot_spatial')",
 	wellPanel(
 		checkboxInput("showDisplayPanel1", h5("Plot Options"), TRUE),
 		conditionalPanel(condition="input.showDisplayPanel1",
@@ -82,6 +83,14 @@ column(4,
 				)
 			),
 			fluidRow(uiOutput("PooledVar3"))
+		),
+		conditionalPanel(condition="input.tsp == 'plot_spatial'",
+			fluidRow(column(6, uiOutput("Spatial_x")), column(6, uiOutput("GroupSpatial"))),
+			fluidRow(
+				column(6,uiOutput("FacetSpatial")),
+				column(6,uiOutput("PlotTypeSpatial"))
+			),
+			fluidRow(uiOutput("PooledVarSpatial"))
 		),
 		fluidRow(column(4, checkboxInput("showTitle", "Title", TRUE)), column(4, checkboxInput("showPanelText", "Panel text", TRUE)), column(4, checkboxInput("showCRU","Show CRU 3.1", FALSE))),
 		conditionalPanel(condition="input.tsp !== 'plot_heatmap'",
@@ -145,6 +154,16 @@ column(4,
 				),
 				column(6, uiOutput("Colorpalettes3"), uiOutput("PlotFontSize3"), uiOutput("Bartype3"))
 			)
+		),
+		conditionalPanel(condition="input.tsp == 'plot_spatial'",
+			fluidRow(
+				column(6,
+					uiOutput("ColorseqSpatial"), uiOutput("AlphaSpatial"), uiOutput("BardirectionSpatial"),
+					conditionalPanel(condition="input.groupSpatial !== null && input.groupSpatial !== 'None'",
+						selectInput("legendPosSpatial","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
+				),
+				column(6, uiOutput("ColorpalettesSpatial"), uiOutput("PlotFontSizeSpatial"), uiOutput("BartypeSpatial"))
+			)
 		)
 		),
 		fluidRow(
@@ -153,7 +172,8 @@ column(4,
 				conditionalPanel(condition="input.tsp == 'plot_heatmap' && input.plotButton > 0", downloadButton("dlCurPlotHeatmap", "Download Plot", class="btn-success btn-block")),
 				conditionalPanel(condition="input.tsp == 'plot_ts' && input.plotButton > 0", downloadButton("dlCurPlotTS", "Download Plot", class="btn-success btn-block")),
 				conditionalPanel(condition="input.tsp == 'plot_scatter' && input.plotButton > 0", downloadButton("dlCurPlotScatter", "Download Plot", class="btn-success btn-block")),
-				conditionalPanel(condition="input.tsp == 'plot_variability' && input.plotButton > 0", downloadButton("dlCurPlotVariability", "Download Plot", class="btn-success btn-block"))
+				conditionalPanel(condition="input.tsp == 'plot_variability' && input.plotButton > 0", downloadButton("dlCurPlotVariability", "Download Plot", class="btn-success btn-block")),
+				conditionalPanel(condition="input.tsp == 'plot_spatial' && input.plotButton > 0", downloadButton("dlCurPlotSpatial", "Download Plot", class="btn-success btn-block"))
 			)
 		)
 	)

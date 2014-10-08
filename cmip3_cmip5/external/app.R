@@ -8,12 +8,13 @@ tsPlot <- source("external/plot_ts.R",local=T)$value
 scatterPlot <- source("external/plot_scatter.R",local=T)$value
 varPlot <- source("external/plot_variability.R",local=T)$value
 heatPlot <- source("external/plot_heatmap.R",local=T)$value
+spatialPlot <- source("external/plot_spatial.R",local=T)$value
 
 # Specific plot function setup
 doPlot_ts <- function(...){
 	if(permitPlot() & !is.null(input$group)){
 		if(!(input$group!="None" & !length(input$colorpalettes))){
-			tsPlot(d=dat(), x=input$xtime, y="Val", d.grp=datCollapseGroups(), d.pool=datCollapsePooled(), grp=input$group, n.grp=n.groups(), ingroup.subjects=subjectChoices(),
+			tsPlot(d=dat(), x=input$xtime, y=input$aggStats, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(), grp=input$group, n.grp=n.groups(), ingroup.subjects=subjectChoices(),
 				panels=facet.panels(), facet.by=input$facet, vert.facet=input$vert.facet,
 				fontsize=input$plotFontSize, colpal=input$colorpalettes, colseq=input$colorseq, mos=Months(),
 				linePlot=input$linePlot, barPlot=input$barPlot, pts.alpha=input$alpha1, bartype=input$bartype, bardirection=input$bardirection,
@@ -52,13 +53,29 @@ doPlot_heatmap <- function(...){
 doPlot_var <- function(...){
 	if(permitPlot() & !is.null(pooled.var3()) & !is.null(input$group3)){
 		if(!(input$group3!="None" & !length(input$colorpalettes3))){
-			varPlot(d=dat(), x=input$xvar, y="Val", stat=stat(), around.mean=input$variability, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(), grp=input$group3, n.grp=n.groups3(), ingroup.subjects=subjectChoices3(),
+			varPlot(d=dat(), x=input$xvar, y=agg.stat.IDs[which(agg.stat.names %in% input$aggStats)], stat=stat(), around.mean=input$variability, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(),
+				grp=input$group3, n.grp=n.groups3(), ingroup.subjects=subjectChoices3(),
 				panels=facet.panels3(), facet.by=input$facet3, vert.facet=input$vert.facet3,
 				fontsize=input$plotFontSize3, colpal=input$colorpalettes3, colseq=input$colorseq3, mos=Months(),
-				altplot=input$altplot, boxplots=input$boxplots, pts.alpha=input$alpha3, bartype=input$bartype3, bardirection=input$bardirection3,
+				boxplots=input$boxplots, pts.alpha=input$alpha3, bartype=input$bartype3, bardirection=input$bardirection3,
 				show.points=input$showpts, show.lines=input$showlines, show.overlay=input$showCRU, overlay=CRU(),
 				jit=input$jitterXY, plot.title=plot_var_title(), plot.subtitle=plot_var_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle, lgd.pos=input$legendPos3,
 				units=currentUnits(), yrange=input$yrange, clbootbar=input$clbootbar, clbootsmooth=input$clbootsmooth,
+				plot.theme.dark=input$plotThemeDark, logo.mat=logo.mat, ...)
+		} else NULL
+	} else NULL
+}
+
+doPlot_spatial <- function(...){
+	if(permitPlot() & !is.null(pooledVarSpatial()) & !is.null(input$groupSpatial)){
+		if(!(input$groupSpatial!="None" & !length(input$colorpalettesSpatial))){
+			spatialPlot(d=dat_spatial(), x=input$spatial_x, y=input$aggStats, grp=input$groupSpatial, n.grp=nGroupsSpatial(), ingroup.subjects=subjectChoicesSpatial(),
+				panels=facetPanelsSpatial(), facet.by=input$facetSpatial, vert.facet=input$vertFacetSpatial,
+				fontsize=input$plotFontSizeSpatial, colpal=input$colorpalettesSpatial, colseq=input$colorseqSpatial,
+				linePlot=input$linePlot, boxplots=input$boxplots, pts.alpha=input$alphaSpatial, bartype=input$bartypeSpatial, bardirection=input$bardirectionSpatial,
+				show.points=input$showpts, show.lines=input$showlines, show.overlay=input$showCRU, overlay=CRU_spatial(),
+				jit=input$jitterXY, plot.title=plot_spatial_title(), plot.subtitle=plot_spatial_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle, lgd.pos=input$legendPosSpatial,
+				units=currentUnits(),
 				plot.theme.dark=input$plotThemeDark, logo.mat=logo.mat, ...)
 		} else NULL
 	} else NULL
@@ -156,6 +173,26 @@ output$dlCurTableHeatmap <- downloadHandler(
 	filename=function(){ 'heatmap_data.csv' }, content=function(file){ write.csv(dat(), file) }
 )
 
+# Spatial plot
+output$PlotSpatial <- renderPlot({
+	if(anyBtnNullOrZero()) return()
+	isolate({
+		progress <- Progress$new(session, min=1, max=10)
+		on.exit(progress$close())
+		progress$set(message="Plotting, please wait", detail="Generating plot...")
+		doPlot_spatial(show.logo=F)
+		})
+}, height=function(){ if(anyBtnNullOrZero()) 0 else 700 }, width=1200)
+
+output$dlCurPlotSpatial <- downloadHandler(
+	filename='spatial.pdf',
+	content=function(file){ pdf(file = file, width=1.5*12, height=1.5*7, pointsize=12, onefile=FALSE); doPlot_spatial(show.logo=T); dev.off() }
+)
+
+output$dlCurTableSpatial <- downloadHandler(
+	filename=function(){ 'spatial_data.csv' }, content=function(file){ write.csv(dat_spatial(), file) }
+)
+
 ############################## Leaflet testing
 # Create the map; this is not the "real" map, but rather a proxy
 # object that lets us control the leaflet map on the page.
@@ -176,7 +213,7 @@ output$dlCurTableHeatmap <- downloadHandler(
 #		cities$Lat,
 #		cities$Lon,
 #		sqrt(cities$Population)*radiusFactor/max(5, input$map_zoom)^2,
-#		cities$Domain,
+#		cities$Location,
 #		list(weight=1.2, fill=TRUE, color='#8B008B')
 #	)
 #})
@@ -188,10 +225,10 @@ output$dlCurTableHeatmap <- downloadHandler(
     
 #	isolate({
 #		cities <- topCitiesInBounds()
-#		city <- cities[cities$Domain == event$id,]
+#		city <- cities[cities$Location == event$id,]
 #		selectedCity <<- city
 #		content <- as.character(tagList(
-#			tags$strong(city$Domain),
+#			tags$strong(city$Location),
 #			tags$br(),
 #			sprintf("Estimated population, %s:", 2010), #2010?
 #			tags$br(),

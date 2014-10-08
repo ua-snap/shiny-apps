@@ -19,5 +19,10 @@ column(8,
 		plotOutput("PlotVariability",height="auto"),
 		uiOutput("varTextSub"),
 		uiOutput("TableVariability")
+	),
+	conditionalPanel(condition="input.tsp == 'plot_spatial' && input.goButton !== null && input.goButton > 0",
+		plotOutput("PlotSpatial",height="auto"),
+		uiOutput("spatialTextSub"),
+		uiOutput("TableSpatial")
 	)
 )

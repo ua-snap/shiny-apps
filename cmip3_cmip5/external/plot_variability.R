@@ -1,6 +1,6 @@
 function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE, panels, grp, n.grp, ingroup.subjects=NULL,
 	facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
-	colpal, colseq, altplot, boxplots=FALSE, pts.alpha=0.5, bartype, bardirection, show.points=FALSE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
+	colpal, colseq, boxplots=FALSE, pts.alpha=0.5, bartype, bardirection, show.points=FALSE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
 	plot.title="", plot.subtitle="", show.panel.text=FALSE, show.title=FALSE, lgd.pos="Top", units=c("C","mm"),
 	mos=12, yrange, clbootbar, clbootsmooth, plot.theme.dark=FALSE, show.logo=F, logo.mat=NULL){
 		if(is.null(d)) return(plot(0,0,type="n",axes=F,xlab="",ylab=""))
@@ -73,10 +73,14 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 		scfm <- scaleColFillMan_prep(fill=fill, col=colpal)
 		fill <- scfm$fill
 		if(length(vert.facet)) if(vert.facet) facet.cols <- 1
-		ply.vars <- c(x,grp)
+		if(grp==1) ply.vars <- x else ply.vars <- c(x,grp)
 		if(!is.null(facet.by) && facet.by!="None") ply.vars <- c(ply.vars, facet.by)
-		d.sum <- ddply(d, ply.vars, summarise, Mean=mean(Val), SD=sd(Val), SE=sd(Val)/sqrt(length(Val)), tval95=qt(0.975, df=length(Val)), Min=min(Val), Max=max(Val))
-				
+		d.sum <- ddply(d, ply.vars, here(summarise),
+			Mean1=mean(eval(parse(text=y))),
+			SD1=sd(eval(parse(text=y))),
+			SE=sd(eval(parse(text=y)))/sqrt(length(eval(parse(text=y)))),
+			tval95=qt(0.975, df=length(eval(parse(text=y)))), Min=min(eval(parse(text=y))), Max=max(eval(parse(text=y))))
+		names(d.sum)[length(ply.vars) + c(1:2)] <- c("Mean", "SD")
 		if(around.mean){
 			if(is.null(boxplots) || boxplots==FALSE) { g <- ggplot(d, aes_string(x=x,y=y,order=grp,colour=color,fill=fill)) } else { d$Year <- factor(d$Year); g <- ggplot(d, aes_string(x=x,y=y)) }
 		} else g <- ggplot(d, aes_string(x=x,y=y,group=grp,order=grp,colour=color,fill=fill))

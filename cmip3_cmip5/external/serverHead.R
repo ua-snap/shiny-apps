@@ -82,6 +82,17 @@ logo.alpha <- 1
 logo.mat <- matrix(rgb(logo[,,1],logo[,,2],logo[,,3],logo[,,4]*logo.alpha), nrow=dim(logo)[1])
 
 # These functions are written with the structure of the app in mind. They are intended to avoid code duplication.
+density2bootstrap <- function(d, n.density, n.boot=10000){
+	n.fact <- n.boot/n.density
+	n.grp <- nrow(d)/n.density
+	d$Index <- rep(1:n.grp, each=n.density)
+	d2 <- data.frame(lapply(d, rep, n.fact), stringsAsFactors=FALSE)
+	prob.col <- which(names(d2) %in% c("Prob","Index"))
+	d2 <- d2[order(d2$Index), -prob.col]
+	d2$Val <- unlist(lapply(1:n.grp, FUN=function(i,d,n) sample(d$Val[d$Index==i], n, prob=d$Prob[d$Index==i], rep=T), d=d, n=n.boot))
+	d2
+}
+
 splitAt <- function(x, pos=NULL) if(is.null(pos)) list(x) else unname(split(x, cumsum(seq_along(x) %in% pos)))
 
 periodLength <- function(x){
@@ -92,14 +103,14 @@ periodLength <- function(x){
 	if(length(n)==1 || all(diff(n)==0)) n else NULL # Do not allow unequal length periods
 }
 
-collapseMonths <- function(d, n.s, mos){
+collapseMonths <- function(d, n.s, mos, n.samples=1){
 	nrx <- nrow(d)
 	p <- length(mos)/n.s
-	ind.keep <- seq(1, nrx, by=p)
+	ind.keep <- rep(seq(1, nrx, by=p*n.samples), each=n.samples) + 0:(n.samples-1)
 	m <- length(ind.keep)
 	id.seasons <- sapply(split(mos, rep(1:n.s, each=p)), function(x) paste(c(x[1], tail(x,1)), collapse="-"))
-	id.seasons <- rep(factor(id.seasons, levels=id.seasons), length=m)
-	v <- round(tapply(d[["Val"]], rep(1:(nrx/p), each=p), FUN=mean), 1)
+	id.seasons <- rep(rep(factor(id.seasons, levels=id.seasons), each=n.samples) , length=m)
+	v <- round(tapply(d[["Val"]], rep(1:(nrx/(p*n.samples)), each=p*n.samples), FUN=mean), 1)
 	d <- d[ind.keep,]
 	d$Month <- id.seasons
 	d$Val <- v
@@ -107,11 +118,11 @@ collapseMonths <- function(d, n.s, mos){
 	d
 }
 
-periodsFromDecades <- function(d, n.p, decs, check.years=FALSE){
+periodsFromDecades <- function(d, n.p, decs, check.years=FALSE, n.samples=1){
 	decs <- as.numeric(substr(decs,1,4)) #### Need to develop code to support additional of CRU that parallels it's inclusion when not forming periods
-	start <- seq(decs[1], tail(decs,1), by=10*n.p)
-	end <- seq(decs[1+n.p], tail(decs,1), by=10*n.p)
-	nrx <- nrow(d)
+	#start <- seq(decs[1], tail(decs,1), by=10*n.p)
+	#end <- seq(decs[1+n.p], tail(decs,1), by=10*n.p)
+	#nrx <- nrow(d)
 	n.mos <- length(unique(d$Month))
 	p <- length(decs)/n.p
 	splt <- split(decs, rep(1:n.p, each=p))
@@ -125,14 +136,14 @@ periodsFromDecades <- function(d, n.p, decs, check.years=FALSE){
 		} else d <- NULL
 	} else {
 		periods <- paste0(substr(sapply(splt, function(x) paste(c(x[1], tail(x,1)), collapse="-")), 1, 8), 9)
-		d$Decade <- rep(periods, each=n.mos*10*p)
+		d$Decade <- rep(periods, each=n.mos*10*p*n.samples)
 	}
 	d
 }
 
 getHeatmapAxisChoices <- function(scens, mods, locs, mos, yrs, decs, cmip3scens, cmip5scens, cmip3models, cmip5models){
 	ind <- which(unlist(lapply(list(phases, scens, mods, locs, mos, yrs, decs), length))>0)
-		if(length(ind)) choices <- c("Phase","Scenario", "Model", "Domain", "Month", "Year", "Decade")[ind] else choices <- NULL
+		if(length(ind)) choices <- c("Phase","Scenario", "Model", "Location", "Month", "Year", "Decade")[ind] else choices <- NULL
 		if(length(choices)){
 			if(length(scens) < 1) choices <- choices[choices!="Scenario"]
 			if(length(mods) < 1) choices <- choices[choices!="Model"]
@@ -149,7 +160,7 @@ nGroups <- function(grp, scenarios, models, mos, decs, locs){
 	if(grp=="Scenario") return(length(scenarios))
 	if(grp=="Month"){ x <- length(mos); if(x==0) x <- 12; return(x) }
 	if(grp=="Decade"){ x <- length(decs); if(x==0) x <- 23; return(x) }
-	if(grp=="Domain") return(length(locs))
+	if(grp=="Location") return(length(locs))
 }
 	
 getFacetChoicesHeatmap <- function(inx, iny=NULL, x.choices=NULL){
@@ -166,12 +177,13 @@ getFacetPanels <- function(fct, mods, scens, mos, decs, locs){
 		if(fct=="Scenario") return(length(scens))
 		if(fct=="Month"){ x <- length(mos); if(x==0) x <- 12; return(x) }
 		if(fct=="Decade"){ x <- length(decs); if(x==0) x <- 23; return(x) }
-		if(fct=="Domain") return(length(locs))
+		if(fct=="Location") return(length(locs))
 	} else NULL
 }
 
-getPooledVars <- function(inx, iny=NULL, ingrp=NULL, infct, grp.fct.choices=NULL, choices, mos, years, decades, domains, scenarios, models, cmip3scens, cmip5scens, cmip3mods, cmip5mods){
+getPooledVars <- function(inx, iny=NULL, ingrp=NULL, infct, grp.fct.choices=NULL, choices, mos, years, decades, locs, scenarios, models, cmip3scens, cmip5scens, cmip3mods, cmip5mods){
 	if(!is.null(ingrp) & !is.null(infct)){
+		if(inx!="Year") grp.fct.choices <- union("Year", grp.fct.choices)
 		ind <- which(grp.fct.choices %in% union(c("None", ingrp), infct))
 		if(length(ind)) grp.fct.choices <- grp.fct.choices[-ind]
 		if(length(grp.fct.choices)) choices <- grp.fct.choices else return()
@@ -185,7 +197,7 @@ getPooledVars <- function(inx, iny=NULL, ingrp=NULL, infct, grp.fct.choices=NULL
 		}
 		if(length(years)==1) pooled.var <- pooled.var[pooled.var!="Year"]
 		if(length(decades)==1) pooled.var <- pooled.var[pooled.var!="Decade"]
-		if(length(domains)==1) pooled.var <- pooled.var[pooled.var!="Domain"]
+		if(length(locs)==1) pooled.var <- pooled.var[pooled.var!="Location"]
 		if(length(scenarios)==1) pooled.var <- pooled.var[!(pooled.var %in% c("Phase", "Scenario"))]
 		if( (ingrp=="Scenario" | infct=="Scenario") & length(cmip3scens) & length(cmip5scens) & length(models)==2 ) pooled.var <- pooled.var[pooled.var!="Model"]
 		if( (ingrp=="Model" | infct=="Model") & length(cmip3scens) & length(cmip5scens) & length(models)==2 ) pooled.var <- pooled.var[pooled.var!="Scenario"]
@@ -199,20 +211,20 @@ getPooledVars <- function(inx, iny=NULL, ingrp=NULL, infct, grp.fct.choices=NULL
 	} else return()
 }
 
-getPlotSubTitle <- function(pooled, yrs, mos, mod, scen, phase=c("CMIP3", "CMIP5"), dom){
+getPlotSubTitle <- function(pooled, yrs, mos, mod, scen, phase=c("CMIP3", "CMIP5"), loc){
 	if(!length(mos)) mos <- "Jan - Dec"
 	yrs.lab <- ifelse("Year" %in% pooled, paste("Years: ", paste(yrs[1], "-", tail(yrs,1)), "\n", collapse=""), "")
 	mos.lab <- ifelse("Month" %in% pooled, paste("Months: ", paste(mos, collapse=", "), "\n", collapse=""), "")
 	mod.lab <- ifelse("Model" %in% pooled, paste("GCMs: ", paste(mod, collapse=", "), "\n", collapse=""), "")
 	scen.lab <- ifelse("Scenario" %in% pooled, paste("Scenarios: ", paste(scen, collapse=", "), "\n", collapse=""), "")
 	phase.lab <- ifelse("Phase" %in% pooled, paste("Phases: ", paste(phase, collapse=", "), "\n", collapse=""), "")
-	dom.lab <- ifelse("Domain" %in% pooled, paste("Domains: ", paste(dom, collapse=", "), "\n", collapse=""), "")
-	no.pooled <- all(c(dom.lab, phase.lab, scen.lab, mod.lab, mos.lab, yrs.lab) == "")
-	x <- ifelse(no.pooled, "", paste("Pooled variables:\n", dom.lab, phase.lab, scen.lab, mod.lab, mos.lab, yrs.lab, sep=""))
+	loc.lab <- ifelse("Location" %in% pooled, paste("Locations: ", paste(loc, collapse=", "), "\n", collapse=""), "")
+	no.pooled <- all(c(loc.lab, phase.lab, scen.lab, mod.lab, mos.lab, yrs.lab) == "")
+	x <- ifelse(no.pooled, "", paste("Pooled variables:\n", loc.lab, phase.lab, scen.lab, mod.lab, mos.lab, yrs.lab, sep=""))
 	x
 }
 
-getPlotTitle <- function(grp, facet, pooled, yrs, mos, mod, scen, phase=c("CMIP3", "CMIP5"), dom){
+getPlotTitle <- function(grp, facet, pooled, yrs, mos, mod, scen, phase=c("CMIP3", "CMIP5"), loc){
 	gfp <- c(grp, facet, pooled)
 	if(!length(mos)) mos <- "Jan - Dec"
 	yrs.lab <- ifelse("Year" %in% gfp, "", paste(yrs[1], "-", tail(yrs,1)))
@@ -220,8 +232,8 @@ getPlotTitle <- function(grp, facet, pooled, yrs, mos, mod, scen, phase=c("CMIP3
 	mod.lab <- ifelse("Model" %in% gfp, "", paste(mod, collapse=", "))
 	scen.lab <- ifelse("Scenario" %in% gfp, "", paste(scen, collapse=", "))
 	#phase.lab <- ifelse("Phase" %in% gfp, "", paste(phase, collapse=", "))
-	dom.lab <- ifelse("Domain" %in% gfp, "", paste(dom, collapse=", "))
-	x <- paste(dom.lab, scen.lab, mod.lab, mos.lab, yrs.lab)
+	loc.lab <- ifelse("Location" %in% gfp, "", paste(loc, collapse=", "))
+	x <- paste(loc.lab, scen.lab, mod.lab, mos.lab, yrs.lab)
 	x
 }
 
@@ -309,7 +321,7 @@ getColorSeq <- function(id, d, grp=NULL, n.grp=NULL, heat=FALSE, overlay=FALSE){
 	if(is.null(grp) || grp=="None") return()
 	if(overlay) n.grp <- n.grp + 1
 	x <- "Nominal"
-	if(n.grp>=8) x <- c("Increasing","Centered", "Cyclic") else if(!(grp %in% c("Phase", "Model", "Domain"))) x <- c("Nominal","Increasing","Centered","Cyclic")
+	if(n.grp>=8) x <- c("Increasing","Centered", "Cyclic") else if(!(grp %in% c("Phase", "Model", "Location"))) x <- c("Nominal","Increasing","Centered","Cyclic")
 	if(!is.null(d)) selectInput(id, "Color levels", x, selected=x[1], width="100%") else NULL
 }
 

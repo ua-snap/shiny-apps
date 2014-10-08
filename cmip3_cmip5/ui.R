@@ -70,6 +70,7 @@ shinyUI(fluidPage(
 		tabPanel("Scatter Plot", value="plot_scatter"),
 		tabPanel("Heat Map", value="plot_heatmap"),
 		tabPanel("Variability", value="plot_variability"),
+		tabPanel("Spatial Distributions", value="plot_spatial"),
 		navbarMenu("Help", 
 			tabPanel("Getting Started", includeMarkdown("www/help01_start.md")),
 			tabPanel("Working With Data", includeMarkdown("www/help02_data.md")),
