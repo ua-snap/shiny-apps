@@ -405,18 +405,18 @@ output$PlotFontSizeSpatial <- renderUI({
 	if(!is.null(dat_spatial())) selectInput("plotFontSizeSpatial","Font size",seq(12,24,by=2),selected=16, width="100%")
 })
 
-output$BartypeSpatial <- renderUI({
+output$DensityTypeSpatial <- renderUI({
 	if(is.null(input$groupSpatial) || input$groupSpatial=="None") return()
-	if(!is.null(dat_spatial()) && !is.null(input$plotTypeSpatial) && input$plotTypeSpatial){ # condition???
-		styles <- c("Dodge (Grouped)","Stack (Totals)","Fill (Proportions)") #### Work on this for the density stat/position, can combine with boxplots/points?
-		selectInput("bartypeSpatial","Density style",styles,selected=styles[1], width="100%")
+	if(!is.null(dat_spatial()) && !is.null(input$plotTypeSpatial) && input$plotTypeSpatial!="Stripchart"){
+		styles <- c("Overlay","Fill/Relative") #### Cn combine with boxplots/points? NO
+		selectInput("densityTypeSpatial","Density style",styles,selected=styles[1], width="100%")
 	} else return()
 })
 
-output$BardirectionSpatial <- renderUI({ #### Consider swapping this out for a checkbox in each plot tab in which it occurs
+output$StripDirectionSpatial <- renderUI({ #### Consider swapping this out for a checkbox in each plot tab in which it occurs
 	if(!is.null(dat_spatial()) && !is.null(input$plotTypeSpatial) && input$plotTypeSpatial=="Stripcharts"){
-		directions <- c("Vertical bars","Horizontal bars")
-		selectInput("bardirectionSpatial","Stripchart orientation",directions,selected=directions[1], width="100%")
+		directions <- c("Vertical strips","Horizontal strips")
+		selectInput("stripDirectionSpatial","Stripchart orientation",directions,selected=directions[1], width="100%")
 	}
 })
 

@@ -109,6 +109,13 @@ column(4,
 					column(4, conditionalPanel(condition="input.tsp == 'plot_variability'", checkboxInput("boxplots", "Box plots", FALSE))),
 					column(4, uiOutput("VertFacet3"))
 				)
+			),
+			conditionalPanel(condition="input.tsp == 'plot_spatial'", 
+				fluidRow(
+					column(4, checkboxInput("linePlotSpatial", "Trend lines", FALSE))#,
+					#column(4, checkboxInput("yrange", "Group range", FALSE), conditionalPanel(condition="input.vars !== null && input.vars == 'Precipitation'", checkboxInput("barPlot", "Barplot", FALSE))),
+					#column(4, checkboxInput("clbootsmooth", "Confidence band", FALSE), uiOutput("VertFacet"))
+				)
 			)
 		),
 		conditionalPanel(condition="input.tsp == 'plot_heatmap'",
@@ -158,11 +165,11 @@ column(4,
 		conditionalPanel(condition="input.tsp == 'plot_spatial'",
 			fluidRow(
 				column(6,
-					uiOutput("ColorseqSpatial"), uiOutput("AlphaSpatial"), uiOutput("BardirectionSpatial"),
+					uiOutput("ColorseqSpatial"), uiOutput("AlphaSpatial"), uiOutput("StripDirectionSpatial"),
 					conditionalPanel(condition="input.groupSpatial !== null && input.groupSpatial !== 'None'",
 						selectInput("legendPosSpatial","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
 				),
-				column(6, uiOutput("ColorpalettesSpatial"), uiOutput("PlotFontSizeSpatial"), uiOutput("BartypeSpatial"))
+				column(6, uiOutput("ColorpalettesSpatial"), uiOutput("PlotFontSizeSpatial"), uiOutput("DensityTypeSpatial"))
 			)
 		)
 		),

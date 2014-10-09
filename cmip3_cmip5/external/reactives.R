@@ -324,7 +324,7 @@ dat_spatial <- reactive({
 				progress$set(message="Calculating, please wait", detail="Subsetting data...")
 				x <- subset(rsd.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
-					Scenario %in% scenarios() & Model %in% models_original() & Location %in% input$locs_regions)
+					Scenario %in% scenarios() & Model %in% models_original() & Location %in% input$locs_regions & Var %in% input$vars[1])
 			}
 			x <- density2bootstrap(x, n.density=50, n.boot=1000) # Hardcoded n.density=50 for now, put in metadata workspace. n.boot value tentative
 			if(!is.null(input$months2seasons) && input$months2seasons) x <- collapseMonths(x, as.numeric(input$n_seasons), Months_original(), n.samples=50) # Probably won't work with samples. Hardcode.
@@ -382,8 +382,13 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 				x <- subset(d.cities.cru31, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & Location %in% input$map_shape_click$id)
 			} else if(input$loctype!="Cities"){
-				x <- subset(d.cru31, Month %in% month.abb[match(Months_original(), month.abb)] & 
-					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & Location %in% input$locs_regions)
+				region.ind <- which(region.names.out[[input$loctype]] %in% Locs())
+				for(i in 1:length(region.ind)) {
+					load(region.cru.samples.files[[input$loctype]][region.ind[i]], envir=environment()) # Store list of file names in metadata workspace
+					if(i==1) rsd.cru.final <- rsd.cru else rsd.cru.final <- rbind(rsd.cru.final, rsd.cru)
+				}
+				x <- subset(rsd.cru.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
+					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & Location %in% input$locs_regions & Var %in% input$vars[1])
 			}
 			if(nrow(x)==0) return()
 			if(!is.null(input$months2seasons) && input$months2seasons) x <- collapseMonths(x, as.numeric(input$n_seasons), Months_original())

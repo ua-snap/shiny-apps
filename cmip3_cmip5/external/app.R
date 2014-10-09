@@ -16,7 +16,7 @@ doPlot_ts <- function(...){
 		if(!(input$group!="None" & !length(input$colorpalettes))){
 			tsPlot(d=dat(), x=input$xtime, y=input$aggStats, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(), grp=input$group, n.grp=n.groups(), ingroup.subjects=subjectChoices(),
 				panels=facet.panels(), facet.by=input$facet, vert.facet=input$vert.facet,
-				fontsize=input$plotFontSize, colpal=input$colorpalettes, colseq=input$colorseq, mos=Months(),
+				fontsize=input$plotFontSize, colpal=input$colorpalettes, colseq=input$colorseq,
 				linePlot=input$linePlot, barPlot=input$barPlot, pts.alpha=input$alpha1, bartype=input$bartype, bardirection=input$bardirection,
 				show.points=input$showpts, show.lines=input$showlines, show.overlay=input$showCRU, overlay=CRU(), jit=input$jitterXY,
 				plot.title=plot_ts_title(), plot.subtitle=plot_ts_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle, lgd.pos=input$legendPos1,
@@ -31,7 +31,7 @@ doPlot_scatter <- function(...){
 		if(!(input$group2!="None" & !length(input$colorpalettes2))){
 			scatterPlot(d=dat2(), form.string=input$xy, grp=input$group2, n.grp=n.groups2(),
 				panels=facet.panels2(), facet.by=input$facet2, vert.facet=input$vert.facet2,
-				fontsize=input$plotFontSize2, colpal=input$colorpalettes2, colseq=input$colorseq2, mos=Months(),
+				fontsize=input$plotFontSize2, colpal=input$colorpalettes2, colseq=input$colorseq2,
 				show.points=input$showpts, contourlines=input$showlines, hexbin=input$hexbin, pts.alpha=input$alpha2, show.overlay=input$showCRU, overlay=CRU2(), jit=input$jitterXY,
 				plot.title=plot_sp_title(), plot.subtitle=plot_sp_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle,
 				lgd.pos=input$legendPos2, units=currentUnits(),	pooled.var=pooled.var2(), plot.theme.dark=input$plotThemeDark, logo.mat=logo.mat, ...)
@@ -56,7 +56,7 @@ doPlot_var <- function(...){
 			varPlot(d=dat(), x=input$xvar, y=agg.stat.IDs[which(agg.stat.names %in% input$aggStats)], stat=stat(), around.mean=input$variability, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(),
 				grp=input$group3, n.grp=n.groups3(), ingroup.subjects=subjectChoices3(),
 				panels=facet.panels3(), facet.by=input$facet3, vert.facet=input$vert.facet3,
-				fontsize=input$plotFontSize3, colpal=input$colorpalettes3, colseq=input$colorseq3, mos=Months(),
+				fontsize=input$plotFontSize3, colpal=input$colorpalettes3, colseq=input$colorseq3,
 				boxplots=input$boxplots, pts.alpha=input$alpha3, bartype=input$bartype3, bardirection=input$bardirection3,
 				show.points=input$showpts, show.lines=input$showlines, show.overlay=input$showCRU, overlay=CRU(),
 				jit=input$jitterXY, plot.title=plot_var_title(), plot.subtitle=plot_var_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle, lgd.pos=input$legendPos3,
@@ -69,10 +69,10 @@ doPlot_var <- function(...){
 doPlot_spatial <- function(...){
 	if(permitPlot() & !is.null(pooledVarSpatial()) & !is.null(input$groupSpatial)){
 		if(!(input$groupSpatial!="None" & !length(input$colorpalettesSpatial))){
-			spatialPlot(d=dat_spatial(), x=input$spatial_x, y=input$aggStats, grp=input$groupSpatial, n.grp=nGroupsSpatial(), ingroup.subjects=subjectChoicesSpatial(),
+			spatialPlot(d=dat_spatial(), x=input$spatial_x, y="Val", grp=input$groupSpatial, n.grp=nGroupsSpatial(), ingroup.subjects=subjectChoicesSpatial(), plottype=input$plotTypeSpatial,
 				panels=facetPanelsSpatial(), facet.by=input$facetSpatial, vert.facet=input$vertFacetSpatial,
 				fontsize=input$plotFontSizeSpatial, colpal=input$colorpalettesSpatial, colseq=input$colorseqSpatial,
-				linePlot=input$linePlot, boxplots=input$boxplots, pts.alpha=input$alphaSpatial, bartype=input$bartypeSpatial, bardirection=input$bardirectionSpatial,
+				linePlot=input$linePlotSpatial, boxplots=input$boxplots, pts.alpha=input$alphaSpatial, density.type=input$densityTypeSpatial, strip.direction=input$stripDirectionSpatial,
 				show.points=input$showpts, show.lines=input$showlines, show.overlay=input$showCRU, overlay=CRU_spatial(),
 				jit=input$jitterXY, plot.title=plot_spatial_title(), plot.subtitle=plot_spatial_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle, lgd.pos=input$legendPosSpatial,
 				units=currentUnits(),

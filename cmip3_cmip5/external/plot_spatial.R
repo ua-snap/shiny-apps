@@ -12,12 +12,13 @@
 
 #Two classes of plots: (Break out) boxplots/points along categorical x-axis or (Pool/aggregate) histograms/density curves along continuous x-axis (may still group, facet, or draw subject curves)
 
-function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL,
+function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, plottype,
 	facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
-	colpal, colseq, boxplots=FALSE, linePlot, pts.alpha=0.5, bartype, bardirection, show.points=FALSE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
+	colpal, colseq, boxplots=FALSE, linePlot, pts.alpha=0.5, density.type, strip.direction, show.points=FALSE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
 	plot.title="", plot.subtitle="", show.panel.text=FALSE, show.title=FALSE, lgd.pos="Top", units=c("C","mm"),
 	plot.theme.dark=FALSE, show.logo=F, logo.mat=NULL){
 		if(is.null(d)) return(plot(0,0,type="n",axes=F,xlab="",ylab=""))
+		if(x %in% c("Temperature", "Precipitation")) x <- y
 		if(plot.theme.dark) { bg.theme <- "black"; color.theme <- "white" } else { bg.theme <- "white"; color.theme <- "black" }
 		if(!show.lines) ingroup.subjects <- NULL
 		if(show.overlay & !is.null(overlay)) show.overlay <- TRUE else show.overlay <- FALSE
@@ -36,6 +37,7 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL,
 		dodge <- position_dodge(width = 0.9)
 		if(is.null(pts.alpha)) pts.alpha <- 0.5
 		
+		if(x!=y){
 		#### Point dodging when using grouping variable
 		x.n <- length(unique(d[,x]))
 		if(is.character(grp) & n.grp>1){
@@ -68,15 +70,17 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL,
 			if(show.overlay) n.grp <- n.grp + 1
 		}
 		#### End point dodge code
+		}
 		
 		fontsize=as.numeric(fontsize)
-		if(d$Var[1]=="Temperature") ylb <- paste0("Temperature ", ylb.insert, "(",units[1],")") else ylb <- paste0("Precipitation ", ylb.insert, "(",units[2],")")
+		if(d$Var[1]=="Temperature") ylb <- paste0("Temperature (",units[1],")") else ylb <- paste0("Precipitation ", ylb.insert, "(",units[2],")")
+		if(x==y) { xlb <- ylb; ylb <- "Density" }
 		main <- paste0("", tolower(d$Var[1]), " variability: ", plot.title)
 		if(jit) point.pos <- position_jitter(0.1,0.1) else point.pos <- "identity"
-		if(!is.null(bartype)){
-			bar.pos <- tolower(strsplit(bartype," ")[[1]][1])
-			if(bartype=="Fill (Proportions)") ylb <- "Relative density"
-		} else bar.pos <- "dodge"
+		if(!is.null(density.type)){
+			if(density.type=="Overlay") den.pos <- "identity" else if(density.type=="Fill/Relative") den.pos <- "fill"
+			if(density.type=="Fill/Relative") ylb <- "Relative density"
+		} else den.pos <- "identity"
 		wgl <- withinGroupLines(x=x, subjects=ingroup.subjects)
 		ingroup.subjects <- wgl$subjects
 		subject.lines <- wgl$subjectlines
@@ -86,22 +90,28 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL,
 		scfm <- scaleColFillMan_prep(fill=fill, col=colpal)
 		fill <- scfm$fill
 		if(length(vert.facet)) if(vert.facet) facet.cols <- 1
-	
-		g <- ggplot(data=d2)
+		
+		g <- ggplot(data=d)
 		if(plottype!="Boxplots/Points") {
 			if(plottype=="Histogram") {
-				g <- g + geom_histogram(aes_string(x=x, y="..density..", fill=grp, colour=grp), stat="bin", position="identity")
+				if(grp==1) g <- g + geom_histogram(aes_string(x=x, y="..density.."), colour=color.theme, fill=bg.theme, stat="bin", position=den.pos)
+				if(grp!=1) g <- g + geom_histogram(aes_string(x=x, y="..density..", fill=fill), colour=color.theme, stat="bin", position=den.pos, alpha=pts.alpha)
 			} else if(plottype=="Density") {
-				g <- g + geom_histogram(aes_string(x=x, y="..density..", fill=grp, colour=grp), stat="density", position="identity")
+				if(grp==1) g <- g + stat_density(aes_string(x=x, y="..density.."), colour=color.theme, fill=bg.theme, position=den.pos)
+				if(grp!=1) g <- g + stat_density(aes_string(x=x, y="..density..", fill=fill), position=den.pos, alpha=pts.alpha)
 			}
 			if(subject.lines){
 				if(grp==1){
-					g <- g + geom_line(aes_string(x=x, y="..density..", group=ingroup.subjects), stat="density", position="identity", colour=color.theme, alpha=pts.alpha)
+					g <- g + geom_line(aes_string(x=x, y="..density..", group=ingroup.subjects), stat="density", position=den.pos, colour=color.theme, alpha=pts.alpha)
 				} else {
-					g <- g + geom_line(aes_string(group=ingroup.subjects, colour=grp), stat="density", position="identity", alpha=pts.alpha)
+					if(den.pos=="identity") g <- g + geom_line(aes_string(x=x, y="..density..", group=ingroup.subjects, colour=grp), stat="density", position=den.pos, alpha=pts.alpha)
+					#if(den.pos=="fill") g <- g + geom_line(aes_string(x=x, y="..density..", ymax=1, group=ingroup.subjects, colour=grp), stat="density", position=den.pos, alpha=pts.alpha) #### THIS IS DIFFICULT TO FORCE
 				}
 			}
-			if(!is.null(linePlot) && linePlot) g <- g + geom_line(aes_string(x=x, y="..density..", group=grp, colour=grp), stat="density", position="identity")
+			if(!is.null(linePlot) && linePlot){
+				if(den.pos=="identity") g <- g + geom_line(aes_string(x=x, y="..density..", group=grp, colour=grp), stat="density", position=den.pos, size=1)
+				if(den.pos=="fill") g <- g + geom_line(aes_string(x=x, y="..density..", ymax=1, group=grp, colour=grp), stat="density", position=den.pos, size=1)
+			}
 			#if(!is.null(linePlot) && linePlot) if(grp==1) g <- g + stat_summary(data=d, aes_string(group=grp),fun.y=mean, colour=color.theme, size=1, geom="line") else g <- g + stat_summary(data=d, aes_string(group=grp),fun.y=mean, size=1, geom="line")
 		} else if(plottype=="Boxplots/Points") {
 			if(grp==1) basic.fill.clr <- NULL else basic.fill.clr <- grp
@@ -118,11 +128,12 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL,
 
 		if(plot.theme.dark) g <- g + theme_black(base_size=fontsize) else g <- g + theme_bw(base_size=fontsize)
 		g <- g + ylab(ylb) + theme(legend.position=tolower(lgd.pos))
+		if(x==y) g <- g + xlab(xlb)
 		if(!show.logo && show.title) g <- g + ggtitle(bquote(atop(.(main))))
-		if(length(colpal) & length(colseq)) g <- scaleColFillMan(g=g, default=scfm$scfm, colseq=colseq, colpal=colpal, mos=mos, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
+		if(length(colpal) & length(colseq)) g <- scaleColFillMan(g=g, default=scfm$scfm, colseq=colseq, colpal=colpal, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
 		if(!is.null(facet.by)) if(facet.by!="None") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)
 
-		if(plottype=="Boxplots/Points" && !is.null(bardirection) && bardirection=="Horizontal bars") g <- g + coord_flip()
+		if(plottype=="Boxplots/Points" && !is.null(strip.direction) && strip.direction=="Horizontal strips") g <- g + coord_flip()
 		if(show.panel.text){
 			if(plottype=="Boxplots/Points"){
 				g <- annotatePlot(g, data=d, x=x, y=y, text=plot.subtitle, col=color.theme, bp=FALSE, bp.position=bar.pos, n.groups=n.grp/2) #n.grp/2 is a rough estimate

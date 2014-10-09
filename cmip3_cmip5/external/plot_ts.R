@@ -1,7 +1,7 @@
 function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
 	colpal, colseq, linePlot, barPlot, pts.alpha=0.5, bartype, bardirection, show.points=TRUE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
 	plot.title="", plot.subtitle="", show.panel.text=FALSE, show.title=FALSE, lgd.pos="Top", units=c("C","mm"),
-	mos=12, yrange, clbootbar, clbootsmooth, pooled.var, plot.theme.dark=FALSE, show.logo=F, logo.mat=NULL){
+	yrange, clbootbar, clbootsmooth, pooled.var, plot.theme.dark=FALSE, show.logo=F, logo.mat=NULL){
 		if(is.null(d)) return(plot(0,0,type="n",axes=F,xlab="",ylab=""))
 		if(plot.theme.dark) { bg.theme <- "black"; color.theme <- "white" } else { bg.theme <- "white"; color.theme <- "black" }
 		if(d$Var[1]=="Temperature") { bartype <- barPlot <- NULL }
@@ -65,7 +65,7 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, face
 		if(plot.theme.dark) g <- g + theme_black(base_size=fontsize) else g <- g + theme_bw(base_size=fontsize)
 		g <- g + ylab(ylb) + theme(legend.position=tolower(lgd.pos))
 		if(!show.logo && show.title) g <- g + ggtitle(bquote(atop(.(main))))
-		if(length(colpal) & length(colseq)) g <- scaleColFillMan(g=g, default=scfm$scfm, colseq=colseq, colpal=colpal, mos=mos, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
+		if(length(colpal) & length(colseq)) g <- scaleColFillMan(g=g, default=scfm$scfm, colseq=colseq, colpal=colpal, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
 		if(!is.null(facet.by)) if(facet.by!="None") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)
 		if(!is.null(barPlot) && barPlot){
 			if(is.null(fill)){

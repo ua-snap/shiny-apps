@@ -289,7 +289,7 @@ scaleColFillMan_prep <- function(fill=NULL, col){
 	list(scfm=scfm, fill=fill)
 }
 
-scaleColFillMan <- function(g, default, colseq, colpal, mos, n.grp, cbpalette){
+scaleColFillMan <- function(g, default, colseq, colpal, n.grp, cbpalette){
 	if(colseq=="Nominal" & default) g <- g + scale_colour_manual(values=cbpalette) + scale_fill_manual(values=cbpalette)
 	if(!default){
 		if(substr(colpal,1,3)=="HCL"){
