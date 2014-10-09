@@ -12,7 +12,7 @@
 
 #Two classes of plots: (Break out) boxplots/points along categorical x-axis or (Pool/aggregate) histograms/density curves along continuous x-axis (may still group, facet, or draw subject curves)
 
-function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, plottype,
+function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, plottype, thin.sample=NULL,
 	facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
 	colpal, colseq, boxplots=FALSE, linePlot, pts.alpha=0.5, density.type, strip.direction, show.points=FALSE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
 	plot.title="", plot.subtitle="", show.panel.text=FALSE, show.title=FALSE, lgd.pos="Top", units=c("C","mm"),
@@ -26,11 +26,12 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, plot
 			n.d <- nrow(d)
 			mods.d <- unique(d$Model)
 			yrs.tmp <- as.numeric(c(as.character(d$Year), as.character(overlay$Year)))
-			d <- data.frame(rbind(d[1:7], overlay[1:7]), Year=yrs.tmp, rbind(d[9:ncol(d)], overlay[9:ncol(overlay)]))
-			d$Year <- yrs.tmp
+			d <- data.frame(rbind(d[1:6], overlay[1:6]), Year=yrs.tmp, rbind(d[8:ncol(d)], overlay[8:ncol(overlay)]))
+			#d$Year <- yrs.tmp
 			d$Source <- factor(c(rep("Modeled", n.d), rep("Observed", nrow(overlay))))
 			d$Model <- factor(d$Model, levels=c(overlay$Model[1], mods.d))
 		}
+		if(!is.null(thin.sample) && is.numeric(thin.sample)) d <- d[seq(1, nrow(d), by=round(1/thin.sample)),]
 		bar.pos <- "dodge"
 		if(!length(lgd.pos)) lgd.pos="Top"
 		if(!length(fontsize)) fontsize <- 16
@@ -92,7 +93,7 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, plot
 		if(length(vert.facet)) if(vert.facet) facet.cols <- 1
 		
 		g <- ggplot(data=d)
-		if(plottype!="Boxplots/Points") {
+		if(plottype!="Stripchart") {
 			if(plottype=="Histogram") {
 				if(grp==1) g <- g + geom_histogram(aes_string(x=x, y="..density.."), colour=color.theme, fill=bg.theme, stat="bin", position=den.pos)
 				if(grp!=1) g <- g + geom_histogram(aes_string(x=x, y="..density..", fill=fill), colour=color.theme, stat="bin", position=den.pos, alpha=pts.alpha)
@@ -113,15 +114,19 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, plot
 				if(den.pos=="fill") g <- g + geom_line(aes_string(x=x, y="..density..", ymax=1, group=grp, colour=grp), stat="density", position=den.pos, size=1)
 			}
 			#if(!is.null(linePlot) && linePlot) if(grp==1) g <- g + stat_summary(data=d, aes_string(group=grp),fun.y=mean, colour=color.theme, size=1, geom="line") else g <- g + stat_summary(data=d, aes_string(group=grp),fun.y=mean, size=1, geom="line")
-		} else if(plottype=="Boxplots/Points") {
+		} else if(plottype=="Stripchart") {
 			if(grp==1) basic.fill.clr <- NULL else basic.fill.clr <- grp
-			if(boxplots & !show.points) if(is.null(basic.fill.clr)) g <- g + geom_boxplot(aes_string(fill=basic.fill.clr), fill="#DDDDDD") else g <- g + geom_boxplot(aes_string(fill=basic.fill.clr))
-			if(boxplots & show.points) g <- g + geom_boxplot(aes_string(colour=basic.fill.clr), fill=bg.theme, outlier.colour=NA, position=dodge) ############
+			if(boxplots & !show.points) if(is.null(basic.fill.clr)) g <- g + geom_boxplot(aes_string(x=x, y=y, fill=basic.fill.clr), fill="#DDDDDD") else g <- g + geom_boxplot(aes_string(x=x, y=y, fill=basic.fill.clr))
+			if(boxplots & show.points){
+				if(grp==1) g <- g + geom_boxplot(aes_string(x=x, y=y), fill=bg.theme, colour=color.theme, outlier.colour=NA, position=dodge) # add something like this to boxplots in variability plot code
+				if(grp!=1) g <- g + geom_boxplot(aes_string(x=x, y=y, colour=basic.fill.clr), fill=bg.theme, outlier.colour=NA, position=dodge) 
+			}
 			if(show.points){
 				if(is.character(grp) & n.grp>1){
-					g <- g + geom_point(aes_string(x=xdodge, fill=basic.fill.clr), pch=21, size=4, colour=color.theme, alpha=pts.alpha, position=position_jitter(width=0.9/(x.n*grp.n)))
+					if(!boxplots) g <- g + geom_boxplot(aes_string(x=x, y=y), fill=bg.theme, colour=bg.theme, outlier.colour=NA, position=dodge)
+					g <- g + geom_point(aes_string(x=xdodge, y=y, fill=basic.fill.clr), pch=21, size=4, colour=color.theme, alpha=pts.alpha, position=position_jitter(width=0.9/(x.n*grp.n)))
 				} else {
-					g <- g + geom_point(aes_string(fill=basic.fill.clr), pch=21, size=4, colour=color.theme, fill="red", alpha=pts.alpha, position=position_jitter(width=0.9/x.n))
+					g <- g + geom_point(aes_string(x=x, y=y, fill=basic.fill.clr), pch=21, size=4, colour=color.theme, fill="red", alpha=pts.alpha, position=position_jitter(width=0.9/x.n))
 				}
 			}
 		}
@@ -133,9 +138,9 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, plot
 		if(length(colpal) & length(colseq)) g <- scaleColFillMan(g=g, default=scfm$scfm, colseq=colseq, colpal=colpal, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
 		if(!is.null(facet.by)) if(facet.by!="None") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)
 
-		if(plottype=="Boxplots/Points" && !is.null(strip.direction) && strip.direction=="Horizontal strips") g <- g + coord_flip()
+		if(plottype=="Stripchart" && !is.null(strip.direction) && strip.direction=="Horizontal strips") g <- g + coord_flip()
 		if(show.panel.text){
-			if(plottype=="Boxplots/Points"){
+			if(plottype=="Stripchart"){
 				g <- annotatePlot(g, data=d, x=x, y=y, text=plot.subtitle, col=color.theme, bp=FALSE, bp.position=bar.pos, n.groups=n.grp/2) #n.grp/2 is a rough estimate
 			} else {
 				#max.val <- if(stat=="SD") max(d.sum[,"SD"]) else if(stat=="SE") max(d.sum[,"SE"]) else if(stat=="Full Spread") max(d.sum[,"Max"] - d.sum[,"Min"])

@@ -90,6 +90,7 @@ column(4,
 				column(6,uiOutput("FacetSpatial")),
 				column(6,uiOutput("PlotTypeSpatial"))
 			),
+			conditionalPanel(condition="input.plotTypeSpatial == 'Stripchart'", sliderInput("thinSpatialSample", "Thin samples", 0.05, 1, 1, step=0.05, width="100%")),
 			fluidRow(uiOutput("PooledVarSpatial"))
 		),
 		fluidRow(column(4, checkboxInput("showTitle", "Title", TRUE)), column(4, checkboxInput("showPanelText", "Panel text", TRUE)), column(4, checkboxInput("showCRU","Show CRU 3.1", FALSE))),
@@ -112,9 +113,11 @@ column(4,
 			),
 			conditionalPanel(condition="input.tsp == 'plot_spatial'", 
 				fluidRow(
-					column(4, checkboxInput("linePlotSpatial", "Trend lines", FALSE))#,
-					#column(4, checkboxInput("yrange", "Group range", FALSE), conditionalPanel(condition="input.vars !== null && input.vars == 'Precipitation'", checkboxInput("barPlot", "Barplot", FALSE))),
-					#column(4, checkboxInput("clbootsmooth", "Confidence band", FALSE), uiOutput("VertFacet"))
+					column(4,
+						conditionalPanel(condition="input.plotTypeSpatial !== 'Stripchart'", checkboxInput("linePlotSpatial", "Trend lines", FALSE)),
+						conditionalPanel(condition="input.plotTypeSpatial == 'Stripchart'", checkboxInput("boxplotsSpatial", "Box plots", FALSE))
+					),
+					column(4, uiOutput("VertFacetSpatial"))
 				)
 			)
 		),
@@ -165,11 +168,11 @@ column(4,
 		conditionalPanel(condition="input.tsp == 'plot_spatial'",
 			fluidRow(
 				column(6,
-					uiOutput("ColorseqSpatial"), uiOutput("AlphaSpatial"), uiOutput("StripDirectionSpatial"),
+					uiOutput("ColorseqSpatial"), uiOutput("AlphaSpatial"), uiOutput("DensityTypeSpatial"), uiOutput("StripDirectionSpatial"),
 					conditionalPanel(condition="input.groupSpatial !== null && input.groupSpatial !== 'None'",
 						selectInput("legendPosSpatial","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
 				),
-				column(6, uiOutput("ColorpalettesSpatial"), uiOutput("PlotFontSizeSpatial"), uiOutput("DensityTypeSpatial"))
+				column(6, uiOutput("ColorpalettesSpatial"), uiOutput("PlotFontSizeSpatial"))
 			)
 		)
 		),

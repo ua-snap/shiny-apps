@@ -70,9 +70,9 @@ doPlot_spatial <- function(...){
 	if(permitPlot() & !is.null(pooledVarSpatial()) & !is.null(input$groupSpatial)){
 		if(!(input$groupSpatial!="None" & !length(input$colorpalettesSpatial))){
 			spatialPlot(d=dat_spatial(), x=input$spatial_x, y="Val", grp=input$groupSpatial, n.grp=nGroupsSpatial(), ingroup.subjects=subjectChoicesSpatial(), plottype=input$plotTypeSpatial,
-				panels=facetPanelsSpatial(), facet.by=input$facetSpatial, vert.facet=input$vertFacetSpatial,
+				thin.sample=as.numeric(input$thinSpatialSample), panels=facetPanelsSpatial(), facet.by=input$facetSpatial, vert.facet=input$vertFacetSpatial,
 				fontsize=input$plotFontSizeSpatial, colpal=input$colorpalettesSpatial, colseq=input$colorseqSpatial,
-				linePlot=input$linePlotSpatial, boxplots=input$boxplots, pts.alpha=input$alphaSpatial, density.type=input$densityTypeSpatial, strip.direction=input$stripDirectionSpatial,
+				linePlot=input$linePlotSpatial, boxplots=input$boxplotsSpatial, pts.alpha=input$alphaSpatial, density.type=input$densityTypeSpatial, strip.direction=input$stripDirectionSpatial,
 				show.points=input$showpts, show.lines=input$showlines, show.overlay=input$showCRU, overlay=CRU_spatial(),
 				jit=input$jitterXY, plot.title=plot_spatial_title(), plot.subtitle=plot_spatial_subtitle(), show.panel.text=input$showPanelText, show.title=input$showTitle, lgd.pos=input$legendPosSpatial,
 				units=currentUnits(),

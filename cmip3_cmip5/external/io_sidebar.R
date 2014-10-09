@@ -414,7 +414,7 @@ output$DensityTypeSpatial <- renderUI({
 })
 
 output$StripDirectionSpatial <- renderUI({ #### Consider swapping this out for a checkbox in each plot tab in which it occurs
-	if(!is.null(dat_spatial()) && !is.null(input$plotTypeSpatial) && input$plotTypeSpatial=="Stripcharts"){
+	if(!is.null(dat_spatial()) && !is.null(input$plotTypeSpatial) && input$plotTypeSpatial=="Stripchart"){
 		directions <- c("Vertical strips","Horizontal strips")
 		selectInput("stripDirectionSpatial","Stripchart orientation",directions,selected=directions[1], width="100%")
 	}
