@@ -35,46 +35,21 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, plot
 		bar.pos <- "dodge"
 		if(!length(lgd.pos)) lgd.pos="Top"
 		if(!length(fontsize)) fontsize <- 16
-		dodge <- position_dodge(width = 0.9)
+		fontsize=as.numeric(fontsize)
 		if(is.null(pts.alpha)) pts.alpha <- 0.5
 		
-		if(x!=y){
 		#### Point dodging when using grouping variable
+		wid <- 0.9
+		dodge <- position_dodge(width=wid)
 		x.n <- length(unique(d[,x]))
-		if(is.character(grp) & n.grp>1){
-			if(facet.by=="None"){
-				x.names <- unique(as.character(d[,x]))
-				x.num <- grp.n <- grp.num <- rep(NA, nrow(d))
-				for(m in 1:length(x.names)){
-					ind <- which(as.character(d[,x])==x.names[m])
-					grp.n[ind] <- length(unique(d[ind, grp]))
-					x.num[ind] <- m
-					grp.num[ind] <- 0.9*( (as.numeric(factor(d[ind ,grp]))/grp.n[ind])-(1/grp.n[ind] + ((grp.n[ind]-1)/2)/(grp.n[ind])) )
-				}
-				d$xdodge <- x.num + grp.num
-			} else if(facet.by!="None") {
-				x.names <- unique(as.character(d[,x]))
-				panel.names <- unique(as.character(d[,facet.by]))
-				n.panels <- length(panel.names)
-				x.num <- grp.n <- grp.num <- rep(NA, nrow(d))
-				for(m in 1:n.panels){
-					for(mm in 1:length(x.names)){
-						ind <- which(as.character(d[,facet.by])==panel.names[m] & as.character(d[,x])==x.names[mm])
-						grp.n[ind] <- length(unique(d[ind, grp]))
-						x.num[ind] <- mm - 1 + as.numeric(factor(d[ind, x]))
-						grp.num[ind] <- 0.9*( (as.numeric(factor(d[ind ,grp]))/grp.n[ind])-(1/grp.n[ind] + ((grp.n[ind]-1)/2)/(grp.n[ind])) )
-					}
-				}
-				d$xdodge <- x.num + grp.num
-			}
+		if(x!=y & is.character(grp) & n.grp>1){
+			dodge.pts <- dodgePoints(d, x, grp, n.grp, facet.by, width=wid)
 			xdodge <- "xdodge"
-			if(show.overlay) n.grp <- n.grp + 1
-		}
-		#### End point dodge code
+			d$xdodge <- dodge.pts$x.num + dodge.pts$grp.num
 		}
 		
-		fontsize=as.numeric(fontsize)
-		if(d$Var[1]=="Temperature") ylb <- paste0("Temperature (",units[1],")") else ylb <- paste0("Precipitation ", ylb.insert, "(",units[2],")")
+		
+		if(d$Var[1]=="Temperature") ylb <- paste0("Temperature (",units[1],")") else ylb <- paste0("Precipitation (",units[2],")")
 		if(x==y) { xlb <- ylb; ylb <- "Density" }
 		main <- paste0("", tolower(d$Var[1]), " variability: ", plot.title)
 		if(jit) point.pos <- position_jitter(0.1,0.1) else point.pos <- "identity"
@@ -113,20 +88,25 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, plot
 				if(den.pos=="identity") g <- g + geom_line(aes_string(x=x, y="..density..", group=grp, colour=grp), stat="density", position=den.pos, size=1)
 				if(den.pos=="fill") g <- g + geom_line(aes_string(x=x, y="..density..", ymax=1, group=grp, colour=grp), stat="density", position=den.pos, size=1)
 			}
-			#if(!is.null(linePlot) && linePlot) if(grp==1) g <- g + stat_summary(data=d, aes_string(group=grp),fun.y=mean, colour=color.theme, size=1, geom="line") else g <- g + stat_summary(data=d, aes_string(group=grp),fun.y=mean, size=1, geom="line")
 		} else if(plottype=="Stripchart") {
 			if(grp==1) basic.fill.clr <- NULL else basic.fill.clr <- grp
-			if(boxplots & !show.points) if(is.null(basic.fill.clr)) g <- g + geom_boxplot(aes_string(x=x, y=y, fill=basic.fill.clr), fill="#DDDDDD") else g <- g + geom_boxplot(aes_string(x=x, y=y, fill=basic.fill.clr))
+			if(boxplots & !show.points){
+				if(grp==1){
+					g <- g + geom_boxplot(aes_string(x=x, y=y), fill="#AAAAAA", colour=color.theme, outlier.colour=color.theme)
+				} else {
+					g <- g + geom_boxplot(aes_string(x=x, y=y, fill=basic.fill.clr), colour=color.theme, outlier.colour=color.theme)
+				}
+			}
 			if(boxplots & show.points){
-				if(grp==1) g <- g + geom_boxplot(aes_string(x=x, y=y), fill=bg.theme, colour=color.theme, outlier.colour=NA, position=dodge) # add something like this to boxplots in variability plot code
+				if(grp==1) g <- g + geom_boxplot(aes_string(x=x, y=y), fill=bg.theme, colour=color.theme, outlier.colour=NA, position=dodge)
 				if(grp!=1) g <- g + geom_boxplot(aes_string(x=x, y=y, colour=basic.fill.clr), fill=bg.theme, outlier.colour=NA, position=dodge) 
 			}
 			if(show.points){
 				if(is.character(grp) & n.grp>1){
 					if(!boxplots) g <- g + geom_boxplot(aes_string(x=x, y=y), fill=bg.theme, colour=bg.theme, outlier.colour=NA, position=dodge)
-					g <- g + geom_point(aes_string(x=xdodge, y=y, fill=basic.fill.clr), pch=21, size=4, colour=color.theme, alpha=pts.alpha, position=position_jitter(width=0.9/(x.n*grp.n)))
+					g <- g + geom_point(aes_string(x=xdodge, y=y, fill=basic.fill.clr), pch=21, size=4, colour=color.theme, alpha=pts.alpha, position=position_jitter(width=wid/(x.n*mean(dodge.pts$grp.n))))
 				} else {
-					g <- g + geom_point(aes_string(x=x, y=y, fill=basic.fill.clr), pch=21, size=4, colour=color.theme, fill="red", alpha=pts.alpha, position=position_jitter(width=0.9/x.n))
+					g <- g + geom_point(aes_string(x=x, y=y, fill=basic.fill.clr), pch=21, size=4, colour=color.theme, fill="red", alpha=pts.alpha, position=position_jitter(width=wid/x.n))
 				}
 			}
 		}

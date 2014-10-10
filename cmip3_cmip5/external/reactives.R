@@ -135,7 +135,7 @@ dat_master <- reactive({
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Location %in% input$locs_regions, select=-cols.drop)
 			}
-			if(!is.null(input$months2seasons) && input$months2seasons) x <- collapseMonths(x, as.numeric(input$n_seasons), Months_original())
+			if(!is.null(input$months2seasons) && input$months2seasons) x <- collapseMonths(x, input$aggStats, as.numeric(input$n_seasons), Months_original())
 			if(!is.null(input$decades2periods) && input$decades2periods) x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original())
 			#print(input$map_shape_click$id)
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
@@ -250,7 +250,7 @@ CRU_master <- reactive({
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & Location %in% input$locs_regions, select=-cols.drop)
 			}
 			if(nrow(x)==0) return()
-			if(!is.null(input$months2seasons) && input$months2seasons) x <- collapseMonths(x, as.numeric(input$n_seasons), Months_original())
+			if(!is.null(input$months2seasons) && input$months2seasons) x <- collapseMonths(x, input$aggStats, as.numeric(input$n_seasons), Months_original())
 			if(!is.null(input$decades2periods) && input$decades2periods) x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), check.years=TRUE)
 			if(is.null(x)) return()
 			#print(input$map_shape_click$id)
@@ -326,9 +326,16 @@ dat_spatial <- reactive({
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Location %in% input$locs_regions & Var %in% input$vars[1])
 			}
+			progress$set(message="Calculating, please wait", detail="Bootstrap resampling...")
 			x <- density2bootstrap(x, n.density=50, n.boot=1000) # Hardcoded n.density=50 for now, put in metadata workspace. n.boot value tentative
-			if(!is.null(input$months2seasons) && input$months2seasons) x <- collapseMonths(x, as.numeric(input$n_seasons), Months_original(), n.samples=50) # Probably won't work with samples. Hardcode.
-			if(!is.null(input$decades2periods) && input$decades2periods) x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), n.samples=50) # Probably won't work with samples. Hardcode.
+			if(!is.null(input$months2seasons) && input$months2seasons){
+				progress$set(message="Calculating, please wait", detail="Aggregating months...")
+				x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=50) # Probably won't work with samples. Hardcode.
+			}
+			if(!is.null(input$decades2periods) && input$decades2periods){
+				progress$set(message="Calculating, please wait", detail="Aggregating decades...")
+				x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), n.samples=50) # Probably won't work with samples. Hardcode.
+			}
 			#print(input$map_shape_click$id)
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
 			# Otherwise compositing prohibited.
@@ -391,8 +398,9 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & Location %in% input$locs_regions & Var %in% input$vars[1])
 			}
 			if(nrow(x)==0) return()
-			if(!is.null(input$months2seasons) && input$months2seasons) x <- collapseMonths(x, as.numeric(input$n_seasons), Months_original())
-			if(!is.null(input$decades2periods) && input$decades2periods) x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), check.years=TRUE)
+			x <- density2bootstrap(x, n.density=50, n.boot=1000) # Hardcoded n.density=50 for now, put in metadata workspace. n.boot value tentative
+			if(!is.null(input$months2seasons) && input$months2seasons) x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=50) # Probably won't work with samples. Hardcode.
+			if(!is.null(input$decades2periods) && input$decades2periods) x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), check.years=TRUE, n.samples=50) # Probably won't work with samples. Hardcode.
 			if(is.null(x)) return()
 			#print(input$map_shape_click$id)
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.

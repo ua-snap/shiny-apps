@@ -19,43 +19,20 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 		bar.pos <- "dodge"
 		if(!length(lgd.pos)) lgd.pos="Top"
 		if(!length(fontsize)) fontsize <- 16
-		dodge <- position_dodge(width = 0.9)
+		fontsize=as.numeric(fontsize)
 		if(is.null(pts.alpha)) pts.alpha <- 0.5
 		
 		#### Point dodging when using grouping variable
+		wid <- 0.9
+		dodge <- position_dodge(width=wid)
 		x.n <- length(unique(d[,x]))
 		if(is.character(grp) & n.grp>1){
-			if(facet.by=="None"){
-				x.names <- unique(as.character(d[,x]))
-				x.num <- grp.n <- grp.num <- rep(NA, nrow(d))
-				for(m in 1:length(x.names)){
-					ind <- which(as.character(d[,x])==x.names[m])
-					grp.n[ind] <- length(unique(d[ind, grp]))
-					x.num[ind] <- m
-					grp.num[ind] <- 0.9*( (as.numeric(factor(d[ind ,grp]))/grp.n[ind])-(1/grp.n[ind] + ((grp.n[ind]-1)/2)/(grp.n[ind])) )
-				}
-				d$xdodge <- x.num + grp.num
-			} else if(facet.by!="None") {
-				x.names <- unique(as.character(d[,x]))
-				panel.names <- unique(as.character(d[,facet.by]))
-				n.panels <- length(panel.names)
-				x.num <- grp.n <- grp.num <- rep(NA, nrow(d))
-				for(m in 1:n.panels){
-					for(mm in 1:length(x.names)){
-						ind <- which(as.character(d[,facet.by])==panel.names[m] & as.character(d[,x])==x.names[mm])
-						grp.n[ind] <- length(unique(d[ind, grp]))
-						x.num[ind] <- mm - 1 + as.numeric(factor(d[ind, x]))
-						grp.num[ind] <- 0.9*( (as.numeric(factor(d[ind ,grp]))/grp.n[ind])-(1/grp.n[ind] + ((grp.n[ind]-1)/2)/(grp.n[ind])) )
-					}
-				}
-				d$xdodge <- x.num + grp.num
-			}
+			dodge.pts <- dodgePoints(d, x, grp, n.grp, facet.by, width=wid)
 			xdodge <- "xdodge"
+			d$xdodge <- dodge.pts$x.num + dodge.pts$grp.num
 			if(show.overlay) n.grp <- n.grp + 1
 		}
-		#### End point dodge code
 		
-		fontsize=as.numeric(fontsize)
 		if(around.mean) ylb.insert <- "" else ylb.insert <- paste0(stat, " ")
 		if(d$Var[1]=="Temperature") ylb <- paste0("Temperature ", ylb.insert, "(",units[1],")") else ylb <- paste0("Precipitation ", ylb.insert, "(",units[2],")")
 		main <- paste0("", tolower(d$Var[1]), " variability: ", plot.title)
@@ -102,13 +79,14 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 				if(grp==1) g <- g + geom_line(aes_string(group=ingroup.subjects), position="identity", colour=color.theme, alpha=pts.alpha) else g <- g + geom_line(aes_string(group=ingroup.subjects, colour=grp), position="identity", alpha=pts.alpha)
 			}
 			if(grp==1) basic.fill.clr <- NULL else basic.fill.clr <- grp
-			if(boxplots & !show.points) if(is.null(basic.fill.clr)) g <- g + geom_boxplot(aes_string(fill=basic.fill.clr), fill="#DDDDDD") else g <- g + geom_boxplot(aes_string(fill=basic.fill.clr))
+			if(boxplots & !show.points) if(grp==1) g <- g + geom_boxplot(fill="#AAAAAA", colour=color.theme, outlier.colour=color.theme) else g <- g + geom_boxplot(aes_string(fill=basic.fill.clr), colour=color.theme, outlier.colour=color.theme)
 			if(boxplots & show.points){
-				g <- g + geom_boxplot(aes_string(colour=basic.fill.clr), fill=bg.theme, outlier.colour=NA, position=dodge) ############
 				if(is.character(grp) & n.grp>1){
-					g <- g + geom_point(aes_string(x=xdodge, fill=basic.fill.clr), pch=21, size=4, colour=color.theme, alpha=pts.alpha, position=position_jitter(width=0.9/(x.n*grp.n)))
+					g <- g + geom_boxplot(aes_string(colour=basic.fill.clr), fill=bg.theme, outlier.colour=NA, position=dodge)
+					g <- g + geom_point(aes_string(x=xdodge, fill=basic.fill.clr), pch=21, size=4, colour=color.theme, alpha=pts.alpha, position=position_jitter(width=wid/(x.n*mean(dodge.pts$grp.n))))
 				} else {
-					g <- g + geom_point(aes_string(fill=basic.fill.clr), pch=21, size=4, colour=color.theme, fill="red", alpha=pts.alpha, position=position_jitter(width=0.9/x.n))
+					g <- g + geom_boxplot(fill=bg.theme, colour=color.theme, outlier.colour=NA, position=dodge)
+					g <- g + geom_point(aes_string(fill=basic.fill.clr), pch=21, size=4, colour=color.theme, fill="red", alpha=pts.alpha, position=position_jitter(width=wid/x.n))
 				}
 			}
 			if(is.null(boxplots) || boxplots==FALSE){

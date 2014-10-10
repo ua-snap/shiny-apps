@@ -95,7 +95,10 @@ output$PlotTS <- renderPlot({
 
 output$dlCurPlotTS <- downloadHandler(
 	filename='timeseries.pdf',
-	content=function(file){ pdf(file = file, width=1.5*12, height=1.5*7, pointsize=12, onefile=FALSE); doPlot_ts(show.logo=T); dev.off() }
+	content=function(file){
+		if(input$plotThemeDark) bg <- "black" else bg <- "white"
+		pdf(file = file, width=1.5*12, height=1.5*7, pointsize=12, onefile=FALSE, bg=bg); doPlot_ts(show.logo=T); dev.off()
+	}
 )
 
 output$dlCurTableTS <- downloadHandler(
@@ -126,7 +129,10 @@ output$PlotScatter <- renderPlot({
 
 output$dlCurPlotScatter <- downloadHandler(
 	filename='scatterplot.pdf',
-	content=function(file){ pdf(file = file, width=1.5*12, height=1.5*12, pointsize=12, onefile=FALSE); doPlot_scatter(show.logo=T); dev.off() }
+	content=function(file){
+		if(input$plotThemeDark) bg <- "black" else bg <- "white"
+		pdf(file = file, width=1.5*12, height=1.5*12, pointsize=12, onefile=FALSE, bg=bg); doPlot_scatter(show.logo=T); dev.off()
+	}
 )
 
 output$dlCurTableScatter <- downloadHandler(
@@ -146,7 +152,10 @@ output$PlotVariability <- renderPlot({
 
 output$dlCurPlotVariability <- downloadHandler(
 	filename='variability.pdf',
-	content=function(file){ pdf(file = file, width=1.5*12, height=1.5*7, pointsize=12, onefile=FALSE); doPlot_var(show.logo=T); dev.off() }
+	content=function(file){
+		if(input$plotThemeDark) bg <- "black" else bg <- "white"
+		pdf(file = file, width=1.5*12, height=1.5*7, pointsize=12, onefile=FALSE, bg=bg); doPlot_var(show.logo=T); dev.off()
+	}
 )
 
 output$dlCurTableVariability <- downloadHandler(
@@ -166,7 +175,10 @@ output$PlotHeatmap <- renderPlot({
 
 output$dlCurPlotHeatmap <- downloadHandler(
 	filename='heatmap.pdf',
-	content=function(file){ pdf(file = file, width=1.5*12, height=1.5*7, pointsize=12, onefile=FALSE); doPlot_heatmap(show.logo=T); dev.off() }
+	content=function(file){
+		if(input$plotThemeDark) bg <- "black" else bg <- "white"
+		pdf(file = file, width=1.5*12, height=1.5*7, pointsize=12, onefile=FALSE, bg=bg); doPlot_heatmap(show.logo=T); dev.off()
+	}
 )
 
 output$dlCurTableHeatmap <- downloadHandler(
@@ -186,7 +198,10 @@ output$PlotSpatial <- renderPlot({
 
 output$dlCurPlotSpatial <- downloadHandler(
 	filename='spatial.pdf',
-	content=function(file){ pdf(file = file, width=1.5*12, height=1.5*7, pointsize=12, onefile=FALSE); doPlot_spatial(show.logo=T); dev.off() }
+	content=function(file){
+		if(input$plotThemeDark) bg <- "black" else bg <- "white"
+		pdf(file = file, width=1.5*12, height=1.5*7, pointsize=12, onefile=FALSE, bg=bg); doPlot_spatial(show.logo=T); dev.off()
+	}
 )
 
 output$dlCurTableSpatial <- downloadHandler(

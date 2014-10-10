@@ -99,7 +99,7 @@ column(4,
 			conditionalPanel(condition="input.tsp == 'plot_ts'", 
 				fluidRow(
 					column(4, checkboxInput("linePlot", "Trend lines", FALSE)),
-					column(4, checkboxInput("yrange", "Group range", FALSE), conditionalPanel(condition="input.vars !== null && input.vars == 'Precipitation'", checkboxInput("barPlot", "Barplot", FALSE))),
+					column(4, checkboxInput("yrange", "Group range", FALSE), conditionalPanel(condition="input.vars !== null && input.vars[0] == 'Precipitation'", checkboxInput("barPlot", "Barplot", FALSE))),
 					column(4, checkboxInput("clbootsmooth", "Confidence band", FALSE), uiOutput("VertFacet"))
 				)
 			),

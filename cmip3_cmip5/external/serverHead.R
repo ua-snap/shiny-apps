@@ -103,18 +103,23 @@ periodLength <- function(x){
 	if(length(n)==1 || all(diff(n)==0)) n else NULL # Do not allow unequal length periods
 }
 
-collapseMonths <- function(d, n.s, mos, n.samples=1){
+collapseMonths <- function(d, variable, n.s, mos, n.samples=1){
 	nrx <- nrow(d)
 	p <- length(mos)/n.s
 	ind.keep <- rep(seq(1, nrx, by=p*n.samples), each=n.samples) + 0:(n.samples-1)
 	m <- length(ind.keep)
 	id.seasons <- sapply(split(mos, rep(1:n.s, each=p)), function(x) paste(c(x[1], tail(x,1)), collapse="-"))
 	id.seasons <- rep(rep(factor(id.seasons, levels=id.seasons), each=n.samples) , length=m)
-	v <- round(tapply(d[["Val"]], rep(1:(nrx/(p*n.samples)), each=p*n.samples), FUN=mean), 1)
+	print(paste("nrx =", nrx))
+	print(paste("length(d$Val) =", length(d[[variable]])))
+	print(paste("p =", p))
+	print(paste("n.samples =", n.samples))
+	print(paste("rep length =", length(rep(1:(nrx/(p*n.samples)), each=p*n.samples))))
+	v <- round(tapply(d[[variable]], rep(1:(nrx/(p*n.samples)), each=p*n.samples), FUN=mean), 1)
 	d <- d[ind.keep,]
 	d$Month <- id.seasons
-	d$Val <- v
-	d$Val[d$Var=="Precipitation"] <- round(p*d$Val[d$Var=="Precipitation"])
+	d[[variable]] <- v
+	d[[variable]][d$Var=="Precipitation"] <- round(p*d[[variable]][d$Var=="Precipitation"])
 	d
 }
 
@@ -139,6 +144,35 @@ periodsFromDecades <- function(d, n.p, decs, check.years=FALSE, n.samples=1){
 		d$Decade <- rep(periods, each=n.mos*10*p*n.samples)
 	}
 	d
+}
+
+dodgePoints <- function(d, x, grp, n.grp, facet.by, width=0.9){
+	if(is.character(grp) & n.grp>1){
+		if(facet.by=="None"){
+			x.names <- unique(as.character(d[,x]))
+			x.num <- grp.n <- grp.num <- rep(NA, nrow(d))
+			for(m in 1:length(x.names)){
+				ind <- which(as.character(d[,x])==x.names[m])
+				grp.n[ind] <- length(unique(d[ind, grp]))
+				x.num[ind] <- m
+				grp.num[ind] <- width*( (as.numeric(factor(d[ind ,grp]))/grp.n[ind])-(1/grp.n[ind] + ((grp.n[ind]-1)/2)/(grp.n[ind])) )
+			}
+		} else if(facet.by!="None") {
+			x.names <- unique(as.character(d[,x]))
+			panel.names <- unique(as.character(d[,facet.by]))
+			n.panels <- length(panel.names)
+			x.num <- grp.n <- grp.num <- rep(NA, nrow(d))
+			for(m in 1:n.panels){
+				for(mm in 1:length(x.names)){
+					ind <- which(as.character(d[,facet.by])==panel.names[m] & as.character(d[,x])==x.names[mm])
+					grp.n[ind] <- length(unique(d[ind, grp]))
+					x.num[ind] <- mm - 1 + as.numeric(factor(d[ind, x]))
+					grp.num[ind] <- width*( (as.numeric(factor(d[ind ,grp]))/grp.n[ind])-(1/grp.n[ind] + ((grp.n[ind]-1)/2)/(grp.n[ind])) )
+				}
+			}
+		}
+		return(list(x.num=x.num, grp.num=grp.num, grp.n=grp.n))
+	}
 }
 
 getHeatmapAxisChoices <- function(scens, mods, locs, mos, yrs, decs, cmip3scens, cmip5scens, cmip3models, cmip5models){
