@@ -123,7 +123,7 @@ dat_master <- reactive({
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Location %in% input$map_shape_click$id)
 			} else if(input$loctype!="Cities"){
-				region.ind <- which(region.names.out[[input$loctype]] %in% Locs())
+				region.ind <- which(sort(region.names.out[[input$loctype]]) %in% Locs())
 				for(i in 1:length(region.ind)) {
 					load(region.gcm.stats.files[[input$loctype]][region.ind[i]], envir=environment())
 					if(i==1) region.dat.final <- region.dat else region.dat.final <- rbind(region.dat.final, region.dat)
@@ -131,10 +131,12 @@ dat_master <- reactive({
 				progress$set(message="Calculating, please wait", detail="Subsetting data...")
 				stat <- input$aggStats
 				cols.drop <- match(agg.stat.IDs[which(!(agg.stat.names %in% stat))], names(region.dat.final))
+				print(head(region.dat.final))
 				x <- subset(region.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Location %in% input$locs_regions, select=-cols.drop)
 			}
+			print(head(x))
 			if(!is.null(input$months2seasons) && input$months2seasons) x <- collapseMonths(x, input$aggStats, as.numeric(input$n_seasons), Months_original())
 			if(!is.null(input$decades2periods) && input$decades2periods) x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original())
 			#print(input$map_shape_click$id)
@@ -239,7 +241,7 @@ CRU_master <- reactive({
 				x <- subset(d.cities.cru31, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & Location %in% input$map_shape_click$id)
 			} else if(input$loctype!="Cities"){
-				region.ind <- which(region.names.out[[input$loctype]] %in% Locs())
+				region.ind <- which(sort(region.names.out[[input$loctype]]) %in% Locs())
 				for(i in 1:length(region.ind)) {
 					load(region.cru.stats.files[[input$loctype]][region.ind[i]], envir=environment())
 					if(i==1) region.cru.dat.final <- region.cru.dat else region.cru.dat.final <- rbind(region.cru.dat.final, region.cru.dat)
@@ -316,7 +318,7 @@ dat_spatial <- reactive({
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Location %in% input$map_shape_click$id)
 			} else if(input$loctype!="Cities"){ #### Regions: only this is under development for now
-				region.ind <- which(region.names.out[[input$loctype]] %in% Locs())
+				region.ind <- which(sort(region.names.out[[input$loctype]]) %in% Locs())
 				for(i in 1:length(region.ind)) {
 					load(region.gcm.samples.files[[input$loctype]][region.ind[i]], envir=environment()) # Store list of file names in metadata workspace
 					if(i==1) rsd.final <- rsd else rsd.final <- rbind(rsd.final, rsd)
@@ -389,7 +391,7 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 				x <- subset(d.cities.cru31, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & Location %in% input$map_shape_click$id)
 			} else if(input$loctype!="Cities"){
-				region.ind <- which(region.names.out[[input$loctype]] %in% Locs())
+				region.ind <- which(sort(region.names.out[[input$loctype]]) %in% Locs())
 				for(i in 1:length(region.ind)) {
 					load(region.cru.samples.files[[input$loctype]][region.ind[i]], envir=environment()) # Store list of file names in metadata workspace
 					if(i==1) rsd.cru.final <- rsd.cru else rsd.cru.final <- rbind(rsd.cru.final, rsd.cru)

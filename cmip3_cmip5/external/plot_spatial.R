@@ -27,7 +27,7 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, plot
 			mods.d <- unique(d$Model)
 			yrs.tmp <- as.numeric(c(as.character(d$Year), as.character(overlay$Year)))
 			d <- data.frame(rbind(d[1:6], overlay[1:6]), Year=yrs.tmp, rbind(d[8:ncol(d)], overlay[8:ncol(overlay)]))
-			#d$Year <- yrs.tmp
+			if(x=="Year") d$Year <- factor(d$Year)
 			d$Source <- factor(c(rep("Modeled", n.d), rep("Observed", nrow(overlay))))
 			d$Model <- factor(d$Model, levels=c(overlay$Model[1], mods.d))
 		}

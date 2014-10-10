@@ -11,8 +11,8 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 			n.d <- nrow(d)
 			mods.d <- unique(d$Model)
 			yrs.tmp <- as.numeric(c(as.character(d$Year), as.character(overlay$Year)))
-			d <- data.frame(rbind(d[1:7], overlay[1:7]), Year=yrs.tmp, rbind(d[9:ncol(d)], overlay[9:ncol(overlay)]))
-			d$Year <- yrs.tmp
+			d <- data.frame(rbind(d[1:6], overlay[1:6]), Year=yrs.tmp, rbind(d[8:ncol(d)], overlay[8:ncol(overlay)]))
+			#d$Year <- yrs.tmp
 			d$Source <- factor(c(rep("Modeled", n.d), rep("Observed", nrow(overlay))))
 			d$Model <- factor(d$Model, levels=c(overlay$Model[1], mods.d))
 		}
