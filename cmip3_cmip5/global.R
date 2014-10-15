@@ -25,10 +25,6 @@ if(Sys.info()["sysname"]=="Windows"){ # for local devl/testing
 	
 	city.gcm.files.path <- "Y:/Users/mfleonawicz/AR4_AR5_Comparisons/city_files_GCM"
 	city.gcm.files <- list.files(city.gcm.files.path, full=T)
-	
-	agg.stat.names <- c("Mean", "Std. Dev.", paste0(c(5,10,25,50,75,90,95), "th percentile"))
-	agg.stat.names[agg.stat.names=="50th percentile"] <- "50th (Median)"
-	agg.stat.IDs <- c("Mean", "SD", "Pct_5", "Pct_10", "Pct_25", "Pct_50", "Pct_75", "Pct_90", "Pct_95")
 }
 ###############################################################
 

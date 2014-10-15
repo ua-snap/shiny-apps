@@ -23,7 +23,7 @@ output$spatialTextSub <- renderUI({
 	isolate( pooledVarsCaption(pv=pooledVarSpatial(), permit=permitPlot(), ingrp=input$groupSpatial) )
 })
 
-output$SubsetTableTS <- renderDataTable({ if(!is.null(dat())) dat()[-9] }, options=list(bSortClasses = TRUE, aLengthMenu=c(5, 10, 25, 50), iDisplayLength=5))
+output$SubsetTableTS <- renderDataTable({ if(!is.null(dat())) dat()[-9] }, options=list(orderClasses = TRUE, lengthMenu=c(5, 10, 25, 50), pageLength=5))
 
 output$TableTS <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
@@ -32,7 +32,7 @@ output$TableTS <- renderUI({
 	)
 })
 
-output$SubsetTableScatter <- renderDataTable({ if(!is.null(dat2())) dat2()[-7] }, options=list(bSortClasses = TRUE, aLengthMenu=c(5, 10, 25, 50), iDisplayLength=5))
+output$SubsetTableScatter <- renderDataTable({ if(!is.null(dat2())) dat2()[-7] }, options=list(orderClasses = TRUE, lengthMenu=c(5, 10, 25, 50), pageLength=5))
 
 output$TableScatter <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
@@ -43,7 +43,7 @@ output$TableScatter <- renderUI({
 
 output$SubsetTableHeatmap <- renderDataTable(
 	{ if(!is.null(dat_heatmap()) && nrow(dat_heatmap() > 0)){ if(ncol(dat_heatmap()) >= 9) dat_heatmap()[-9] else dat_heatmap() } },
-	options=list(bSortClasses = TRUE, aLengthMenu=c(5, 10, 25, 50), iDisplayLength=5))
+	options=list(orderClasses = TRUE, lengthMenu=c(5, 10, 25, 50), pageLength=5))
 
 output$TableHeatmap <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
@@ -52,7 +52,7 @@ output$TableHeatmap <- renderUI({
 	)
 })
 
-output$SubsetTableVariability <- renderDataTable({ if(!is.null(dat())) dat()[-9] }, options=list(bSortClasses = TRUE, aLengthMenu=c(5, 10, 25, 50), iDisplayLength=5)) # same as table 1
+output$SubsetTableVariability <- renderDataTable({ if(!is.null(dat())) dat()[-9] }, options=list(orderClasses = TRUE, lengthMenu=c(5, 10, 25, 50), pageLength=5)) # same as table 1
 
 output$TableVariability <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
@@ -61,7 +61,7 @@ output$TableVariability <- renderUI({
 	)
 })
 
-output$SubsetTableSpatial <- renderDataTable({ if(!is.null(dat_spatial())) dat_spatial()[-9] }, options=list(bSortClasses = TRUE, aLengthMenu=c(5, 10, 25, 50), iDisplayLength=5))
+output$SubsetTableSpatial <- renderDataTable({ if(!is.null(dat_spatial())) dat_spatial()[-9] }, options=list(orderClasses = TRUE, lengthMenu=c(5, 10, 25, 50), pageLength=5))
 
 output$TableSpatial <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()

@@ -82,14 +82,20 @@ logo.alpha <- 1
 logo.mat <- matrix(rgb(logo[,,1],logo[,,2],logo[,,3],logo[,,4]*logo.alpha), nrow=dim(logo)[1])
 
 # These functions are written with the structure of the app in mind. They are intended to avoid code duplication.
-density2bootstrap <- function(d, n.density, n.boot=10000){
+density2bootstrap <- function(d, n.density, n.boot=10000, interp=FALSE, n.interp=1000, ...){
 	n.fact <- n.boot/n.density
 	n.grp <- nrow(d)/n.density
 	d$Index <- rep(1:n.grp, each=n.density)
 	d2 <- data.frame(lapply(d, rep, n.fact), stringsAsFactors=FALSE)
 	prob.col <- which(names(d2) %in% c("Prob","Index"))
 	d2 <- d2[order(d2$Index), -prob.col]
-	d2$Val <- unlist(lapply(1:n.grp, FUN=function(i,d,n) sample(d$Val[d$Index==i], n, prob=d$Prob[d$Index==i], rep=T), d=d, n=n.boot))
+	d2$Val <- unlist(lapply(1:n.grp,
+		FUN=function(i, d, n, interp, n.interp, ...){
+			p <- list(x=d$Val[d$Index==i], y=d$Prob[d$Index==i])
+			if(interp) p <- approx(p$x, p$y, n=n.interp)
+			round(sample(p$x, n, prob=p$y, rep=T), ...)
+		},
+		d=d, n=n.boot, interp=interp, n.interp=n.interp, ...))
 	d2
 }
 
@@ -108,26 +114,25 @@ collapseMonths <- function(d, variable, n.s, mos, n.samples=1){
 	p <- length(mos)/n.s
 	ind.keep <- rep(seq(1, nrx, by=p*n.samples), each=n.samples) + 0:(n.samples-1)
 	m <- length(ind.keep)
+	print(paste("input nrow(d) =", nrx))
+	print(paste("length(ind.keep) =", m))
 	id.seasons <- sapply(split(mos, rep(1:n.s, each=p)), function(x) paste(c(x[1], tail(x,1)), collapse="-"))
 	id.seasons <- rep(rep(factor(id.seasons, levels=id.seasons), each=n.samples) , length=m)
-	print(paste("nrx =", nrx))
-	print(paste("length(d$Val) =", length(d[[variable]])))
-	print(paste("p =", p))
-	print(paste("n.samples =", n.samples))
-	print(paste("rep length =", length(rep(1:(nrx/(p*n.samples)), each=p*n.samples))))
-	v <- round(tapply(d[[variable]], rep(1:(nrx/(p*n.samples)), each=p*n.samples), FUN=mean), 1)
+	print(paste("p =",p))
+	print(paste("n.samples =",n.samples))
+	if(n.samples>1) v <- round(unlist(tapply(d[[variable]], rep(1:(nrx/(p*n.samples)), each=p*n.samples), FUN=function(x, nc) rowMeans(matrix(x, ncol=nc)), nc=p)), 1)
+	if(n.samples==1) v <- round(tapply(d[[variable]], rep(1:(nrx/p), each=p), FUN=mean), 1)
 	d <- d[ind.keep,]
 	d$Month <- id.seasons
 	d[[variable]] <- v
-	d[[variable]][d$Var=="Precipitation"] <- round(p*d[[variable]][d$Var=="Precipitation"])
+	if(any(d$Var=="Precipitation")) d[[variable]][d$Var=="Precipitation"] <- round(p*d[[variable]][d$Var=="Precipitation"])
+	print(paste("length(v) =", length(v)))
+	print(paste("output nrow(d) =", nrow(d)))
 	d
 }
 
 periodsFromDecades <- function(d, n.p, decs, check.years=FALSE, n.samples=1){
-	decs <- as.numeric(substr(decs,1,4)) #### Need to develop code to support additional of CRU that parallels it's inclusion when not forming periods
-	#start <- seq(decs[1], tail(decs,1), by=10*n.p)
-	#end <- seq(decs[1+n.p], tail(decs,1), by=10*n.p)
-	#nrx <- nrow(d)
+	decs <- as.numeric(substr(decs,1,4))
 	n.mos <- length(unique(d$Month))
 	p <- length(decs)/n.p
 	splt <- split(decs, rep(1:n.p, each=p))

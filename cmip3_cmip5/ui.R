@@ -80,7 +80,8 @@ shinyUI(fluidPage(
 				tabPanel("Graphing: Time Series", includeMarkdown("www/help05_01_graphTS.md")),
 				tabPanel("Graphing: Scatter Plots", includeMarkdown("www/help05_02_graphScatter.md")),
 				tabPanel("Graphing: Heat Maps", includeMarkdown("www/help05_03_graphHeat.md")),
-				tabPanel("Graphing: Variability", includeMarkdown("www/help05_04_graphVar.md"))
+				tabPanel("Graphing: Variability", includeMarkdown("www/help05_04_graphVar.md")),
+				tabPanel("Graphing: Spatial Distributions", includeMarkdown("www/help05_05_graphSpatial.md"))
 			#)
 		),
 		tabPanelAbout(),

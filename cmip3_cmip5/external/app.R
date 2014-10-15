@@ -53,7 +53,7 @@ doPlot_heatmap <- function(...){
 doPlot_var <- function(...){
 	if(permitPlot() & !is.null(pooled.var3()) & !is.null(input$group3)){
 		if(!(input$group3!="None" & !length(input$colorpalettes3))){
-			varPlot(d=dat(), x=input$xvar, y=agg.stat.IDs[which(agg.stat.names %in% input$aggStats)], stat=stat(), around.mean=input$variability, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(),
+			varPlot(d=dat(), x=input$xvar, y=stats.colnames[which(stats.colnames %in% input$aggStats)], stat=stat(), around.mean=input$variability, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(),
 				grp=input$group3, n.grp=n.groups3(), ingroup.subjects=subjectChoices3(),
 				panels=facet.panels3(), facet.by=input$facet3, vert.facet=input$vert.facet3,
 				fontsize=input$plotFontSize3, colpal=input$colorpalettes3, colseq=input$colorseq3,

@@ -126,17 +126,17 @@ dat_master <- reactive({
 				region.ind <- which(sort(region.names.out[[input$loctype]]) %in% Locs())
 				for(i in 1:length(region.ind)) {
 					load(region.gcm.stats.files[[input$loctype]][region.ind[i]], envir=environment())
-					if(i==1) region.dat.final <- region.dat else region.dat.final <- rbind(region.dat.final, region.dat)
+					gcm.stats.df[,stats.columns] <- region.dat
+					gcm.stats.df$Location <- Locs()[i]
+					if(i==1) region.dat.final <- gcm.stats.df else region.dat.final <- rbind(region.dat.final, gcm.stats.df)
 				}
 				progress$set(message="Calculating, please wait", detail="Subsetting data...")
 				stat <- input$aggStats
-				cols.drop <- match(agg.stat.IDs[which(!(agg.stat.names %in% stat))], names(region.dat.final))
-				print(head(region.dat.final))
+				cols.drop <- match(stats.colnames[which(!(stats.colnames %in% stat))], names(region.dat.final))
 				x <- subset(region.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Location %in% input$locs_regions, select=-cols.drop)
 			}
-			print(head(x))
 			if(!is.null(input$months2seasons) && input$months2seasons) x <- collapseMonths(x, input$aggStats, as.numeric(input$n_seasons), Months_original())
 			if(!is.null(input$decades2periods) && input$decades2periods) x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original())
 			#print(input$map_shape_click$id)
@@ -247,7 +247,7 @@ CRU_master <- reactive({
 					if(i==1) region.cru.dat.final <- region.cru.dat else region.cru.dat.final <- rbind(region.cru.dat.final, region.cru.dat)
 				}
 				stat <- input$aggStats
-				cols.drop <- match(agg.stat.IDs[which(!(agg.stat.names %in% stat))], names(region.cru.dat.final))
+				cols.drop <- match(stats.colnames[which(!(stats.colnames %in% stat))], names(region.cru.dat.final))
 				x <- subset(region.cru.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & Location %in% input$locs_regions, select=-cols.drop)
 			}
@@ -290,7 +290,7 @@ CRU2 <- reactive({
 	)
 })
 
-# Initially retain all climate variables regardless of user's selection, but consider changing this depending on performance
+# Keep first climate variables only
 dat_spatial <- reactive({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	progress <- Progress$new(session, min=1, max=10)
@@ -320,23 +320,27 @@ dat_spatial <- reactive({
 			} else if(input$loctype!="Cities"){ #### Regions: only this is under development for now
 				region.ind <- which(sort(region.names.out[[input$loctype]]) %in% Locs())
 				for(i in 1:length(region.ind)) {
-					load(region.gcm.samples.files[[input$loctype]][region.ind[i]], envir=environment()) # Store list of file names in metadata workspace
-					if(i==1) rsd.final <- rsd else rsd.final <- rbind(rsd.final, rsd)
+					load(paste0(region.gcm.samples.files[[input$loctype]][region.ind[i]], "/", tolower(input$vars[1]), ".RData"), envir=environment()) # Store list of file locations in metadata workspace
+					gcm.samples.df[,samples.columns] <- rsd/rep(samples.multipliers, each=length(rsd)/2)
+					gcm.samples.df$Var <- input$vars[1]
+					gcm.samples.df$Location <- Locs()[i]
+					if(i==1) rsd.final <- gcm.samples.df else rsd.final <- rbind(rsd.final, gcm.samples.df)
 				}
 				progress$set(message="Calculating, please wait", detail="Subsetting data...")
 				x <- subset(rsd.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
-					Scenario %in% scenarios() & Model %in% models_original() & Location %in% input$locs_regions & Var %in% input$vars[1])
+					Scenario %in% scenarios() & Model %in% models_original())# & Location %in% input$locs_regions)# & Var %in% input$vars[1])
 			}
 			progress$set(message="Calculating, please wait", detail="Bootstrap resampling...")
-			x <- density2bootstrap(x, n.density=50, n.boot=1000) # Hardcoded n.density=50 for now, put in metadata workspace. n.boot value tentative
+			rnd <- if(input$vars[1]=="Precipitation") 0 else 1
+			x <- density2bootstrap(x, n.density=n.samples, n.boot=1000, interp=TRUE, n.interp=1000, digits=rnd) # n.boot and n.interp values tentative
 			if(!is.null(input$months2seasons) && input$months2seasons){
 				progress$set(message="Calculating, please wait", detail="Aggregating months...")
-				x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=50) # Probably won't work with samples. Hardcode.
+				x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=1000)
 			}
 			if(!is.null(input$decades2periods) && input$decades2periods){
 				progress$set(message="Calculating, please wait", detail="Aggregating decades...")
-				x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), n.samples=50) # Probably won't work with samples. Hardcode.
+				x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), n.samples=1000)
 			}
 			#print(input$map_shape_click$id)
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
@@ -393,16 +397,20 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 			} else if(input$loctype!="Cities"){
 				region.ind <- which(sort(region.names.out[[input$loctype]]) %in% Locs())
 				for(i in 1:length(region.ind)) {
-					load(region.cru.samples.files[[input$loctype]][region.ind[i]], envir=environment()) # Store list of file names in metadata workspace
-					if(i==1) rsd.cru.final <- rsd.cru else rsd.cru.final <- rbind(rsd.cru.final, rsd.cru)
+					load(paste0(region.cru.samples.files[[input$loctype]][region.ind[i]], "/", tolower(input$vars[1]), ".RData"), envir=environment()) # Store list of file locations in metadata workspace
+					cru.samples.df[,samples.columns.cru] <- rsd.cru/rep(samples.multipliers.cru, each=length(rsd.cru)/2)
+					cru.samples.df$Var <- input$vars[1]
+					cru.samples.df$Location <- Locs()[i]
+					if(i==1) rsd.cru.final <- cru.samples.df else rsd.cru.final <- rbind(rsd.cru.final, cru.samples.df)
 				}
 				x <- subset(rsd.cru.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
-					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & Location %in% input$locs_regions & Var %in% input$vars[1])
+					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4))# & Location %in% input$locs_regions & Var %in% input$vars[1])
 			}
 			if(nrow(x)==0) return()
-			x <- density2bootstrap(x, n.density=50, n.boot=1000) # Hardcoded n.density=50 for now, put in metadata workspace. n.boot value tentative
-			if(!is.null(input$months2seasons) && input$months2seasons) x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=50) # Probably won't work with samples. Hardcode.
-			if(!is.null(input$decades2periods) && input$decades2periods) x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), check.years=TRUE, n.samples=50) # Probably won't work with samples. Hardcode.
+			rnd <- if(input$vars[1]=="Precipitation") 0 else 1
+			x <- density2bootstrap(x, n.density=n.samples, n.boot=1000, interp=TRUE, n.interp=1000, digits=rnd) # n.boot and n.interp values tentative
+			if(!is.null(input$months2seasons) && input$months2seasons) x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=1000)
+			if(!is.null(input$decades2periods) && input$decades2periods) x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), check.years=TRUE, n.samples=1000)
 			if(is.null(x)) return()
 			#print(input$map_shape_click$id)
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.

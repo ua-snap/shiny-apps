@@ -7,7 +7,7 @@ column(4,
 			fluidRow(
 				column(6, selectInput("vars", "Climate variable:", c("", varnames), selected="", multiple=T, width="100%")),
 				column(6, 
-					selectInput("aggStats", "Stat:", agg.stat.names, selected=agg.stat.names[1], width="100%"),
+					selectInput("aggStats", "Stat:", stats.colnames, selected=stats.colnames[1], width="100%"),
 					selectInput("units", "Units:", c("C, mm","F, in"), selected="C, mm", width="100%")
 				)
 			),
