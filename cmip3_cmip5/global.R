@@ -2,7 +2,6 @@ library(shinyIncubator)
 library(shinysky)
 library(markdown)
 load("external/meta.RData",envir=.GlobalEnv)
-load("external/files_meta.RData",envir=.GlobalEnv)
 
 #### If overriding these four objects from files_meta.RData ####
 if(Sys.info()["sysname"]=="Windows"){ # for local devl/testing
