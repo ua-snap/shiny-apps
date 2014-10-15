@@ -104,21 +104,21 @@ dat_master <- reactive({
 		if(is.null(Months_original()) | is.null(input$vars) | is.null(scenarios()) | is.null(models_original()) | locSelected()==FALSE){
 			x <- NULL
 		} else {
-			progress$set(message="Calculating, please wait", detail="Loading requested data...")
+			progress$set(message="Calculating, please wait", detail="Loading GCM aggregate time series statistics...")
 			if(input$loctype=="Cities" && length(input$locs_cities) && input$locs_cities[1]!="") {
 				city.ind <- which(city.names %in% Locs())
 				for(i in 1:length(city.ind)) {
 					load(city.gcm.files[city.ind[i]], envir=environment())
 					if(i==1) city.dat.final <- city.dat else city.dat.final <- rbind(city.dat.final, city.dat)
 				}
-				progress$set(message="Calculating, please wait", detail="Subsetting data...")
+				progress$set(message="Calculating, please wait", detail="Subsetting GCM data...")
 				x <- subset(city.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Location %in% input$locs_cities)
 			} else if(is.character(input$map_shape_click$id) && input$map_shape_click$id[1]!="") {
 				city.ind <- which(city.names==input$map_shape_click$id)
 				load(city.gcm.files[city.ind], envir=environment())
-				progress$set(message="Calculating, please wait", detail="Subsetting data...")
+				progress$set(message="Calculating, please wait", detail="Subsetting GCM data...")
 				x <- subset(city.dat, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Location %in% input$map_shape_click$id)
@@ -130,7 +130,7 @@ dat_master <- reactive({
 					gcm.stats.df$Location <- Locs()[i]
 					if(i==1) region.dat.final <- gcm.stats.df else region.dat.final <- rbind(region.dat.final, gcm.stats.df)
 				}
-				progress$set(message="Calculating, please wait", detail="Subsetting data...")
+				progress$set(message="Calculating, please wait", detail="Subsetting GCM data...")
 				stat <- input$aggStats
 				cols.drop <- match(stats.colnames[which(!(stats.colnames %in% stat))], names(region.dat.final))
 				x <- subset(region.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
@@ -235,11 +235,22 @@ CRU_master <- reactive({
 			x <- NULL
 		} else {
 			if(input$loctype=="Cities" && length(input$locs_cities) && input$locs_cities[1]!="") {
-				x <- subset(d.cities.cru31, Month %in% month.abb[match(Months_original(), month.abb)] & 
-					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & Location %in% input$locs_cities)
+				city.ind <- which(city.names %in% Locs())
+				for(i in 1:length(city.ind)) {
+					load(city.cru.files[city.ind[i]], envir=environment())
+					if(i==1) city.cru.dat.final <- city.cru.dat else city.cru.dat.final <- rbind(city.cru.dat.final, city.cru.dat)
+				}
+				progress$set(message="Calculating, please wait", detail="Subsetting data...")
+				x <- subset(city.cru.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
+					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
+					Scenario %in% scenarios() & Model %in% models_original())# & Location %in% input$locs_cities)
 			} else if(is.character(input$map_shape_click$id) && input$map_shape_click$id[1]!="") {
-				x <- subset(d.cities.cru31, Month %in% month.abb[match(Months_original(), month.abb)] & 
-					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & Location %in% input$map_shape_click$id)
+				city.ind <- which(city.names==input$map_shape_click$id)
+				load(city.cru.files[city.ind], envir=environment())
+				progress$set(message="Calculating, please wait", detail="Subsetting data...")
+				x <- subset(city.cru.dat, Month %in% month.abb[match(Months_original(), month.abb)] & 
+					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
+					Scenario %in% scenarios() & Model %in% models_original())# & Location %in% input$map_shape_click$id)	
 			} else if(input$loctype!="Cities"){
 				region.ind <- which(sort(region.names.out[[input$loctype]]) %in% Locs())
 				for(i in 1:length(region.ind)) {
