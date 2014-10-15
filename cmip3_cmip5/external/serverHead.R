@@ -89,12 +89,13 @@ density2bootstrap <- function(d, n.density, n.boot=10000, interp=FALSE, n.interp
 	d2 <- data.frame(lapply(d, rep, n.fact), stringsAsFactors=FALSE)
 	prob.col <- which(names(d2) %in% c("Prob","Index"))
 	d2 <- d2[order(d2$Index), -prob.col]
-	d2$Val <- unlist(lapply(1:n.grp,
+	d2$Val <- as.numeric(vapply(X=1:n.grp,
 		FUN=function(i, d, n, interp, n.interp, ...){
 			p <- list(x=d$Val[d$Index==i], y=d$Prob[d$Index==i])
 			if(interp) p <- approx(p$x, p$y, n=n.interp)
 			round(sample(p$x, n, prob=p$y, rep=T), ...)
 		},
+		FUN.VALUE=numeric(n.boot),
 		d=d, n=n.boot, interp=interp, n.interp=n.interp, ...))
 	d2
 }
