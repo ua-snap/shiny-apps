@@ -1,9 +1,10 @@
 library(shiny)
 library(RJSONIO); library(assertive)
+options(scipen=999)
 
 server <- "atlas.snap.uaf.edu"
 mainDir <- "/big_scratch/shiny"
-exec <- "sbatch"
+exec <- "sbatch --reservation=shiny_2 -N4" # temporary additional args to sbatch
 slurmfile <- "RunAlfresco.slurm"
 
 setMethod("toJSON", "numeric",

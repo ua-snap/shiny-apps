@@ -161,9 +161,9 @@ Obs_updateFiles <- reactive({
 			frp_arguments <- paste0("pts=", input$frp_pts, " ", "'buffers=", buffers, "' group.name=", group.name, " run.name=", run.name, " emp.fire.cause=", input$fire_cause, collapse=" ")
 			if(input$skipAlf) postprocOnly <- 0 else postprocOnly <- 1
 			arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$json_files, postprocOnly, frp_arguments), collapse=" ")
-			sbatch_string <- paste("ssh",server,exec, slurm_arguments, file.path(outDir,slurmfile), arguments)
+			sbatch_string <- paste("ssh", server, exec, slurm_arguments, file.path(outDir,slurmfile), arguments)
 			system(sbatch_string)
-			x <- paste("Alfresco job started on Atlas:\n",gsub(" ", " \n", sbatch_string))
+			x <- paste("Alfresco job started on Atlas:\n", gsub(" ", " \n", sbatch_string))
 		}
 		if(substr(x,1,8)!="Alfresco") x <- "Alfresco job did not launch"
 		
