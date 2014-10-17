@@ -31,7 +31,7 @@ fif_lines <- reactive({
 	x
 })
 
-JSON_lines <- reactive({
+output$JSON_lines <- renderText({
 	JSON_mtime()
 	x <- readLines(JSON_current())
 	x
@@ -172,3 +172,5 @@ Obs_updateFiles <- reactive({
 	return(x)
 }
 )
+
+output$sbatch_call <- renderText({ Obs_updateFiles })
