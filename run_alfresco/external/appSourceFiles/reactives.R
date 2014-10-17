@@ -31,7 +31,7 @@ fif_lines <- reactive({
 	x
 })
 
-output$JSON_lines <- renderText({
+output$JSON_Lines <- renderText({
 	if(is.null(JSON_mtime()) | is.null(JSON_current)) return("No JSON file loaded yet.")
 	readLines(JSON_current())
 })
@@ -172,4 +172,7 @@ Obs_updateFiles <- reactive({
 }
 )
 
-output$sbatch_call <- renderText({ Obs_updateFiles() })
+output$sbatch_call <- renderText({
+	if(is.null(Obs_updateFiles())) return("Choose settings and run Alfresco simulations.")
+	Obs_updateFiles()
+})
