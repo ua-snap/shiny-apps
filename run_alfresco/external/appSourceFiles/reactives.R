@@ -32,9 +32,8 @@ fif_lines <- reactive({
 })
 
 output$JSON_lines <- renderText({
-	JSON_mtime()
-	x <- readLines(JSON_current())
-	x
+	if(is.null(JSON_mtime()) | is.null(JSON_current)) return("No JSON file loaded yet.")
+	readLines(JSON_current())
 })
 
 user_email_address <- reactive({
@@ -173,4 +172,4 @@ Obs_updateFiles <- reactive({
 }
 )
 
-output$sbatch_call <- renderText({ Obs_updateFiles })
+output$sbatch_call <- renderText({ Obs_updateFiles() })
