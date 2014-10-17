@@ -31,7 +31,7 @@ fif_lines <- reactive({
 	x
 })
 
-output$JSON_Lines <- renderText({
+output$JSON_lines <- renderText({
 	if(is.null(JSON_mtime()) | is.null(JSON_current)) return("No JSON file loaded yet.")
 	readLines(JSON_current())
 })

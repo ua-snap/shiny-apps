@@ -3,7 +3,7 @@ column(8,
 		tabPanel("Home", 
 			h1("Welcome to the Alfresco web GUI"), h3("Powered by R and Shiny"), div(verbatimTextOutput("sbatch_call"), style="height: 400px;"), value="home"),
 		tabPanel("View JSON", 
-			div(verbatimTextOutput("JSON_Lines"), style="height: 800px;"), value="viewjson"),
+			div(verbatimTextOutput("JSON_lines"), style="height: 800px;"), value="viewjson"),
 		tabPanelAbout(),
 		tabPanel("R Code",
 			#uiOutput("codeTab"), # This single line preferable to the below lines
