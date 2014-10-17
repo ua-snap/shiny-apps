@@ -1,9 +1,9 @@
 column(8,
 	tabsetPanel(
 		tabPanel("Home", 
-			h1("Welcome to the Alfresco web GUI"), h3("Powered by R and Shiny"), verbatimTextOutput("Obs_UpdateFiles"), value="home"),
+			h1("Welcome to the Alfresco web GUI"), h3("Powered by R and Shiny"), textOutput("Obs_UpdateFiles"), value="home"),
 		tabPanel("View JSON", 
-			verbatimTextOutput("JSON_Lines"), value="viewjson"),
+			textOutput("JSON_Lines"), value="viewjson"),
 		tabPanelAbout(),
 		tabPanel("R Code",
 			#uiOutput("codeTab"), # This single line preferable to the below lines
