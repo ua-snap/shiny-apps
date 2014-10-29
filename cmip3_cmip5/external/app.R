@@ -14,7 +14,7 @@ spatialPlot <- source("external/plot_spatial.R",local=T)$value
 doPlot_ts <- function(...){
 	if(permitPlot() & !is.null(input$group)){
 		if(!(input$group!="None" & !length(input$colorpalettes))){
-			tsPlot(d=dat(), x=input$xtime, y=input$aggStats, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(), grp=input$group, n.grp=n.groups(), ingroup.subjects=subjectChoices(),
+			tsPlot(d=dat(), x=input$xtime, y=aggStatsID(), y.name=input$aggStats, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(), grp=input$group, n.grp=n.groups(), ingroup.subjects=subjectChoices(),
 				panels=facet.panels(), facet.by=input$facet, vert.facet=input$vert.facet,
 				fontsize=input$plotFontSize, colpal=input$colorpalettes, colseq=input$colorseq,
 				linePlot=input$linePlot, barPlot=input$barPlot, pts.alpha=input$alpha1, bartype=input$bartype, bardirection=input$bardirection,
@@ -53,7 +53,7 @@ doPlot_heatmap <- function(...){
 doPlot_var <- function(...){
 	if(permitPlot() & !is.null(pooled.var3()) & !is.null(input$group3)){
 		if(!(input$group3!="None" & !length(input$colorpalettes3))){
-			varPlot(d=dat(), x=input$xvar, y=stats.colnames[which(stats.colnames %in% input$aggStats)], stat=stat(), around.mean=input$variability, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(),
+			varPlot(d=dat(), x=input$xvar, y=aggStatsID(), y.name=input$aggStats, stat=stat(), around.mean=input$variability, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(),
 				grp=input$group3, n.grp=n.groups3(), ingroup.subjects=subjectChoices3(),
 				panels=facet.panels3(), facet.by=input$facet3, vert.facet=input$vert.facet3,
 				fontsize=input$plotFontSize3, colpal=input$colorpalettes3, colseq=input$colorseq3,

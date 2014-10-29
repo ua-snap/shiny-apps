@@ -83,6 +83,7 @@ output$GoButton <- renderUI({
 	input$decades2periods
 	input$n_seasons
 	input$n_periods
+	input$aggStats
 	actionButton("goButton", "Subset Data", icon="ok icon-white", styleclass="primary", block=T)
 })
 

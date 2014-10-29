@@ -1,4 +1,4 @@
-function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
+function(d, d.grp, d.pool, x, y, y.name, panels, grp, n.grp, ingroup.subjects=NULL, facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
 	colpal, colseq, linePlot, barPlot, pts.alpha=0.5, bartype, bardirection, show.points=TRUE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
 	plot.title="", plot.subtitle="", show.panel.text=FALSE, show.title=FALSE, lgd.pos="Top", units=c("C","mm"),
 	yrange, clbootbar, clbootsmooth, pooled.var, plot.theme.dark=FALSE, show.logo=F, logo.mat=NULL){
@@ -23,8 +23,7 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, face
 			xdodge <- "xdodge"
 			d$xdodge <- dodge.pts$x.num + dodge.pts$grp.num
 		}
-		
-		if(d$Var[1]=="Temperature") ylb <- paste0("Temperature (",units[1],")") else ylb <- paste0("Precipitation (",units[2],")")
+		if(d$Var[1]=="Temperature") ylb <- paste0(y.name, " temperature (",units[1],")") else ylb <- paste0(y.name, " precipitation (",units[2],")")
 		main <- paste0("", tolower(d$Var[1]), ": ", plot.title)
 		if(jit) point.pos <- position_jitter(0.1,0.1) else point.pos <- "identity"
 		if(!is.null(bartype) & !is.null(barPlot)){
@@ -37,7 +36,9 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, face
 		scfm <- scaleColFillMan_prep(fill=fill, col=colpal)
 		fill <- scfm$fill
 		if(length(vert.facet)) if(vert.facet) facet.cols <- 1
+		print("pre-g1")
 		g <- ggplot(d, aes_string(x=x,y=y,group=wgl$subjects,order=grp,colour=color,fill=fill))
+		print("post-g1")
 		if(plot.theme.dark) g <- g + theme_black(base_size=fontsize) else g <- g + theme_bw(base_size=fontsize)
 		g <- g + ylab(ylb) + theme(legend.position=tolower(lgd.pos))
 		if(!show.logo && show.title) g <- g + ggtitle(bquote(atop(.(main))))

@@ -16,7 +16,7 @@ function(d, d2, x, y, z, panels, facet.cols=ceiling(sqrt(panels)), facet.by, fon
 		if(!length(lgd.pos)) lgd.pos="Top"
 		if(!length(fontsize)) fontsize <- 16
 		fontsize=as.numeric(fontsize)
-		main <- paste0("Code this title: ", plot.title)
+		main <- paste0("Code this title: ", plot.title) # agg stat metrics adjustment required
 		if(length(unique(d2[,z]))==1) g <- ggplot(d, aes_string(x=x, y=y, fill="Val")) else g <- ggplot(d2, aes_string(x=x, y=y, fill=z))
 		if(plot.theme.dark) g <- g + theme_black(base_size=fontsize) else g <- g + theme_bw(base_size=fontsize)
 		g <- g + geom_tile(colour=color.theme) + theme(legend.position=tolower(lgd.pos))

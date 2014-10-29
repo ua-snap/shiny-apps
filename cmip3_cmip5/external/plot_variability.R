@@ -1,4 +1,4 @@
-function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE, panels, grp, n.grp, ingroup.subjects=NULL,
+function(d, d.grp, d.pool, x, y, y.name, stat="SD", around.mean=FALSE, error.bars=FALSE, panels, grp, n.grp, ingroup.subjects=NULL,
 	facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
 	colpal, colseq, boxplots=FALSE, pts.alpha=0.5, bartype, bardirection, show.points=FALSE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
 	plot.title="", plot.subtitle="", show.panel.text=FALSE, show.title=FALSE, lgd.pos="Top", units=c("C","mm"),
@@ -34,7 +34,7 @@ function(d, d.grp, d.pool, x, y, stat="SD", around.mean=FALSE, error.bars=FALSE,
 		}
 		
 		if(around.mean) ylb.insert <- "" else ylb.insert <- paste0(stat, " ")
-		if(d$Var[1]=="Temperature") ylb <- paste0("Temperature ", ylb.insert, "(",units[1],")") else ylb <- paste0("Precipitation ", ylb.insert, "(",units[2],")")
+		if(d$Var[1]=="Temperature") ylb <- paste0(y.name, " temperature ", ylb.insert, "(",units[1],")") else ylb <- paste0(y.name, " precipitation ", ylb.insert, "(",units[2],")")
 		main <- paste0("", tolower(d$Var[1]), " variability: ", plot.title)
 		if(jit) point.pos <- position_jitter(0.1,0.1) else point.pos <- "identity"
 		if(!is.null(bartype)){

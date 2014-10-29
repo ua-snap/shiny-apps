@@ -10,7 +10,7 @@ function(d, form.string, panels, grp, n.grp, facet.cols=ceiling(sqrt(panels)), f
 		if(!length(fontsize)) fontsize <- 16
 		fontsize=as.numeric(fontsize)
 		if(is.null(pts.alpha)) pts.alpha <- 0.5
-		lab <- sp_xlabylab(units=units, form.string=form.string)
+		lab <- sp_xlabylab(units=units, form.string=form.string) # agg stat metrics adjustment required
 		if(substr(lab$xlb, 1, 1)=="P") { x <- "Precipitation"; y <- "Temperature" } else { x <- "Temperature"; y <- "Precipitation" }
 		main <- paste0("temperature and precipitation: ", plot.title)
 		if(jit) point.pos <- position_jitter(0.1,0.1) else point.pos <- "identity"

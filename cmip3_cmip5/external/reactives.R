@@ -90,6 +90,10 @@ PeriodLength <- reactive({
 	if(length(input$decs)<=1) NULL else periodLength(x=as.numeric(substr(input$decs,1,4))/10)
 })
 
+aggStatsID <- reactive({
+	agg.stat.colnames[which(agg.stat.names==input$aggStats)]
+})
+
 Locs <- reactive({ if(is.null(input$loctype) || input$loctype!="Cities")  input$locs_regions else if(input$loctype=="Cities") input$locs_cities else NULL })
 regionSelected <- reactive({ input$loctype!="Cities" & length(Locs())  })
 citySelected <- reactive({ input$loctype=="Cities" & length(Locs()) })
@@ -131,7 +135,7 @@ dat_master <- reactive({
 					if(i==1) region.dat.final <- gcm.stats.df else region.dat.final <- rbind(region.dat.final, gcm.stats.df)
 				}
 				prog_d_master$set(message="Calculating, please wait", detail="Subsetting GCM time series data...")
-				stat <- input$aggStats
+				stat <- aggStatsID()
 				cols.drop <- match(stats.colnames[which(!(stats.colnames %in% stat))], names(region.dat.final))
 				x <- subset(region.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
@@ -139,7 +143,7 @@ dat_master <- reactive({
 			}
 			if(!is.null(input$months2seasons) && input$months2seasons){
 				prog_d_master$set(message="Calculating, please wait", detail="GCM time series: aggregating months...")
-				x <- collapseMonths(x, input$aggStats, as.numeric(input$n_seasons), Months_original())
+				x <- collapseMonths(x, aggStatsID(), as.numeric(input$n_seasons), Months_original())
 			}
 			if(!is.null(input$decades2periods) && input$decades2periods){
 				prog_d_master$set(message="Calculating, please wait", detail="GCM time series: aggregating decades...")
@@ -218,7 +222,7 @@ dat_heatmap <- reactive({
 		if(!is.null(input$heatmap_x) & !is.null(input$heatmap_y)){
 			x <- c(input$heatmap_x, input$heatmap_y)
 			if(!(is.null(input$facetHeatmap) || input$facetHeatmap=="None")) x <- c(x, input$facetHeatmap)
-			stat <- input$aggStats
+			stat <- aggStatsID()
 			if(dat()$Var[1]=="Temperature") d <- ddply(d, x, here(summarise), Mean=round(mean(eval(parse(text=stat))), 1), SD=round(sd(eval(parse(text=stat))), 1))
 			if(dat()$Var[1]=="Precipitation") d <- ddply(d, x, here(summarise), Mean=round(mean(eval(parse(text=stat)))), Total=round(sum(eval(parse(text=stat)))), SD=round(sd(eval(parse(text=stat)))))
 			if(all(is.na(d$SD))) d <- d[, -ncol(d)]
@@ -230,7 +234,7 @@ dat_heatmap <- reactive({
 dat2 <- reactive({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	isolate(
-		if(!is.null(dat_master()) && length(input$vars)>1) dcast(dat_master(), Phase + Model + Scenario + Location + Month + Year + Decade ~ Var, value.var=input$aggStats) else NULL
+		if(!is.null(dat_master()) && length(input$vars)>1) dcast(dat_master(), Phase + Model + Scenario + Location + Month + Year + Decade ~ Var, value.var=aggStatsID()) else NULL
 	)
 })
 
@@ -267,7 +271,7 @@ CRU_master <- reactive({
 					if(i==1) region.cru.dat.final <- region.cru.dat else region.cru.dat.final <- rbind(region.cru.dat.final, region.cru.dat)
 				}
 				prog_d_cru_master$set(message="Calculating, please wait", detail="Subsetting CRU 3.1 time series data...")
-				stat <- input$aggStats
+				stat <- aggStatsID()
 				cols.drop <- match(stats.colnames[which(!(stats.colnames %in% stat))], names(region.cru.dat.final))
 				x <- subset(region.cru.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4), select=-cols.drop)
@@ -275,7 +279,7 @@ CRU_master <- reactive({
 			if(nrow(x)==0) return()
 			if(!is.null(input$months2seasons) && input$months2seasons){
 				prog_d_cru_master$set(message="Calculating, please wait", detail="CRU 3.1 time series: aggregating months...")
-				x <- collapseMonths(x, input$aggStats, as.numeric(input$n_seasons), Months_original())
+				x <- collapseMonths(x, aggStatsID(), as.numeric(input$n_seasons), Months_original())
 			}
 			if(!is.null(input$decades2periods) && input$decades2periods){
 				prog_d_cru_master$set(message="Calculating, please wait", detail="CRU 3.1 time series: aggregating decades...")
@@ -315,7 +319,7 @@ CRU <- reactive({
 CRU2 <- reactive({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	isolate(
-		if(!is.null(CRU_master()) && length(input$vars)>1) dcast(CRU_master(), Phase + Model + Scenario + Location + Month + Year + Decade ~ Var, value.var=input$aggStats) else NULL
+		if(!is.null(CRU_master()) && length(input$vars)>1) dcast(CRU_master(), Phase + Model + Scenario + Location + Month + Year + Decade ~ Var, value.var=aggStatsID()) else NULL
 	)
 })
 
