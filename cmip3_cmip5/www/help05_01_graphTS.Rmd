@@ -1,5 +1,5 @@
 ### Graphing: Time Series Plots <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotTS_example_1_black.png" width="1000"/>
-There are four classes of plots available: `Time Series Plots`, `Scatter Plots`, `Heat Mpas` and other assorted plots more specifically designed for looking at `Variability`.
+There are five classes of plots available: `Time Series Plots`, `Scatter Plots`, `Heat Maps` assorted plots more specifically designed for looking at `Variability`, and `Distributions`.
 These classes are not mutually exclusive. For instance, it is easy enough on the `Variability` plot tab for the user to select plot options to generate a time series plot
 that specifically highlights variability through time, in ways not fully available on the general `Time Series` plot tab.
 
@@ -13,7 +13,7 @@ Since these are time series plots, the x-axis is always time. The user may selec
 This is a good place to point out the importance of thinking about what we want to graph.
 For example, if the user selects only January data across a number of years, it doesn't make sense to use `Month` as the x-axis variable,
 unless they really want to see the vertical spread of all their years' January values clustered at a single x-axis tick mark.
-But the app *will* allow the user to do this is so desired!
+But the app *will* allow the user to do this if so desired!
 
 #### Grouping
 Now things get more interesting. The grouping variable. This is a factor (categorical variable) with multiple levels.
@@ -26,7 +26,7 @@ In such a case the `Group/color by:` menu will not appear.
 
 #### Faceting <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotTS_group_white.png"/>
 To facet is to break out different classes of data into multiple panels in a plot. The `Facet/panel by:` title of this menu hints at this purpose.
-Like grouping, the faceting variable must be categorical with multipel levels present in the data.
+Like grouping, the faceting variable must be categorical with multiple levels present in the data.
 The default is no faceting and as with grouping, if no multi-level factors are present in the user's data subset, this menu will not appear.
 All the same options available to group by are available to facet by, less any variable currently selected as a grouping variable (this last part is subject to change).
 As a result, an update to the `Group/color by:` by the user will force a reset/update to `Facet/panel by:`
@@ -85,7 +85,7 @@ If grouping by a factor, the `Barplot style` menu appears to the right.
 The options are to `Dodge` (adjacent groupings), `Stack` (into a single bar), or `Fill` (show as relative proportions contributed by each group).
 When stacking or filling, it no longer makes sense to overlay points or lines because the scale has changes.
 Of course, the app will let the user do this is they really want to.
-But it will become apparent by the strech of the graph axis that it is not very helpful to look at the data in this way.
+But it will become apparent by the stretch of the graph axis that it is not very helpful to look at the data in this way.
 The app is very flexible. It will allow the user to plot many things which are clear and insightful, and many things which are not.
 Think before you plot.
 
@@ -93,4 +93,4 @@ Think before you plot.
 To plot, press the `Generate Plot` button. To download a currently displayed plot, press the `Download Plot` button.
 It's that simple. To make changes to a plot, you can alter values in the plot options panel at any time.
 Due to natural dependencies, changing some options will force resets and updates of other options.
-Note that if you reopen the data selections menu and change anythng you will be required to restart by completing a new data subset and making a new plot.
+Note that if you reopen the data selections menu and change anything you will be required to restart by completing a new data subset and making a new plot.
