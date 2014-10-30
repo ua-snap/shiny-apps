@@ -74,7 +74,7 @@ theme_black=function(base_size=12,base_family="") {
     )
 }
 
-colorsHCL <- function(n) hcl(h=seq(0,(n-1)/(n),length=n)*360,c=100,l=65,fixup=TRUE) # evenly spaced HCL colors when too many levels present
+colorsHCL <- function(n) hcl(h=seq(0,(n-1)/(n),length=n)*360,c=100,l=65,fixup=TRUE) # evenly spaced colors
 cbpalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999") # colorblind-friendly palette option
 
 logo <- readPNG("www/img/SNAP_acronym_100px.png")
@@ -329,11 +329,17 @@ scaleColFillMan_prep <- function(fill=NULL, col){
 	list(scfm=scfm, fill=fill)
 }
 
-scaleColFillMan <- function(g, default, colseq, colpal, n.grp, cbpalette){
+scaleColFillMan <- function(g, default, colpal, n.grp, cbpalette){
+	nominal.abb <- substr(c("CB-friendly", "Accent","Dark2","Pastel1","Pastel2","Paired","Set1","Set2","Set3"), 1, 4)
+	if(substr(colpal, 1, 4) %in% nominal.abb) colseq <- "Nominal" else colseq <- "Not nominal"
 	if(colseq=="Nominal" & default) g <- g + scale_colour_manual(values=cbpalette) + scale_fill_manual(values=cbpalette)
 	if(!default){
 		if(substr(colpal,1,3)=="HCL"){
-			g <- g + scale_color_manual(values=colorsHCL(n.grp)) + scale_fill_manual(values=colorsHCL(n.grp))
+			clr <- colorsHCL(n.grp)
+			g <- g + scale_color_manual(values=clr) + scale_fill_manual(values=clr)
+		} else if(substr(colpal, 1, 3)=="Rai"){
+			clr <- rainbow(n.grp, s=1, v=1, start=0, end=max(1, n.grp-1)/n.grp, alpha=1)
+			g <- g + scale_color_manual(values=clr) + scale_fill_manual(values=clr)
 		} else if(colpal!="none"){
 			g <- g + scale_color_brewer(palette=strsplit(colpal," ")[[1]][1]) + scale_fill_brewer(palette=strsplit(colpal," ")[[1]][1])
 		}
@@ -356,13 +362,13 @@ pooledVarsCaption <- function(pv, permit, ingrp=NULL){
 	}
 }
 
-getColorSeq <- function(id, d, grp=NULL, n.grp=NULL, heat=FALSE, overlay=FALSE){
-	if(!is.null(d) && heat) return( selectInput(id, "Color levels", c("Increasing","Centered"), selected="Increasing", width="100%") )
+getColorSeq <- function(d, grp=NULL, n.grp=NULL, heat=FALSE, overlay=FALSE){
+	if(!is.null(d) && heat) return( c("Increasing","Centered") )
 	if(is.null(grp) || grp=="None") return()
 	if(overlay) n.grp <- n.grp + 1
 	x <- "Nominal"
 	if(n.grp>=8) x <- c("Increasing","Centered", "Cyclic") else if(!(grp %in% c("Phase", "Model", "Location"))) x <- c("Nominal","Increasing","Centered","Cyclic")
-	if(!is.null(d)) selectInput(id, "Color levels", x, selected=x[1], width="100%") else NULL
+	if(!is.null(d)) x else NULL
 }
 
 getColorPalettes <- function(id, colseq, grp=NULL, n.grp=NULL, fill.vs.border=NULL, fill.vs.border2=TRUE, heat=FALSE, overlay=FALSE){
@@ -370,23 +376,32 @@ getColorPalettes <- function(id, colseq, grp=NULL, n.grp=NULL, fill.vs.border=NU
 		pal.inc <- c("Blues","BuGn","BuPu","GnBu","Greens","Greys","Oranges","OrRd","PuBu","PuBuGn","PuRd","Purples","RdPu","Reds","YlGn","YlGnBu","YlOrBr","YlOrRd")
 		pal.cen <- c("BrBG","PiYG","PRGn","PuOr","RdBu","RdGy","RdYlBu","RdYlGn","Spectral")
 		pal.nom <- c("Accent","Dark2","Pastel1","Pastel2","Paired","Set1","Set2","Set3")
-		if(heat & colseq=="Increasing") return( selectInput(id, "Color palette", pal.inc, selected=pal.inc[1], width="100%") )
-		if(heat & colseq=="Centered") return( selectInput(id, "Color palette", pal.cen, selected=pal.cen[1], width="100%") )
-		if(is.null(grp) || grp=="None") return()
-		if(overlay) n.grp <- n.grp + 1
-		if(colseq=="Nominal"){
-			pal <- pal.nom
-			if(n.grp<=8) pal <- c("CB-friendly",pal)
-			if(length(fill.vs.border) & length(fill.vs.border2)) pal <- paste(rep(pal,each=2),c("fill","border")) 
-		} else if(colseq=="Cyclic"){
-			pal <- "HCL"
-			if(length(fill.vs.border) & length(fill.vs.border2)) pal <- paste(rep(pal,each=2),c("fill","border")) 
-		} else if(colseq=="Increasing"){
-			pal <- pal.inc
-		} else if(colseq=="Centered"){
-			pal <- pal.cen
+		pal.cyc <- c("HCL", "Rainbow")
+		x <- vector("list", length(colseq))
+		if(!heat) if(is.null(grp) || grp=="None") return()
+		if(!heat && overlay) n.grp <- n.grp + 1
+		for(i in 1:length(x)){
+			if(heat & colseq[i]=="Increasing") x[[i]] <- pal.inc
+			if(heat & colseq[i]=="Centered") x[[i]] <- pal.cen
+			if(!heat){
+				if(colseq[i]=="Nominal"){
+					pal <- pal.nom
+					if(n.grp<=8) pal <- c("CB-friendly",pal)
+					if(length(fill.vs.border) && fill.vs.border && fill.vs.border2) pal <- paste(rep(pal,each=2),c("fill","border")) 
+				} else if(colseq[i]=="Cyclic"){
+					pal <- pal.cyc
+					if(length(fill.vs.border) && fill.vs.border && fill.vs.border2) pal <- paste(rep(pal,each=2),c("fill","border")) 
+				} else if(colseq[i]=="Increasing"){
+					pal <- pal.inc
+				} else if(colseq[i]=="Centered"){
+					pal <- pal.cen
+				}
+				if(exists("pal")) x[[i]] <- pal
+			}
 		}
-		if(exists("pal")) return(selectInput(id, "Color palette", pal, selected=pal[1], width="100%")) else return()
+		if(any(unlist(lapply(x, is.null)))) return()
+		names(x) <- colseq
+		return( selectizeInput(id, "Color palette", choices=x, selected=x[[1]][1], width="100%") )
 	} else NULL
 }
 

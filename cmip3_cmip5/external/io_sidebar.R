@@ -272,13 +272,12 @@ output$PooledVarSpatial <- renderUI({
 	if(length(pooledVarSpatial())) HTML(paste('<div>Pooled variable(s): ', paste(pooledVarSpatial(), collapse=", "), '</div>', sep=""))
 })
 
-# Conditional inputs (tabset panel tab: time series plot)
-output$Colorseq <- renderUI({
-	getColorSeq(id="colorseq", d=dat(), grp=input$group, n.grp=n.groups())
+colorseq_ts <- reactive({
+	getColorSeq(d=dat(), grp=input$group, n.grp=n.groups())
 })
 
-output$Colorpalettes <- renderUI({
-	getColorPalettes(id="colorpalettes", colseq=input$colorseq, grp=input$group, n.grp=n.groups(),
+output$Colorpalettes_ts <- renderUI({
+	getColorPalettes(id="colorpalettes_ts", colseq=colorseq_ts(), grp=input$group, n.grp=n.groups(),
 		fill.vs.border=input$barPlot, fill.vs.border2=dat()$Var[1]=="Precipitation")
 })
 
@@ -306,12 +305,12 @@ output$Bardirection <- renderUI({
 })
 
 # Conditional inputs (tabset panel tab: scatter plot)
-output$Colorseq2 <- renderUI({
-	getColorSeq(id="colorseq2", d=dat2(), grp=input$group2, n.grp=n.groups2())
+colorseq_sc <- reactive({
+	getColorSeq(d=dat2(), grp=input$group2, n.grp=n.groups2())
 })
 
-output$Colorpalettes2 <- renderUI({
-	getColorPalettes(id="colorpalettes2", colseq=input$colorseq2, grp=input$group2, n.grp=n.groups2())
+output$Colorpalettes_sc <- renderUI({
+	getColorPalettes(id="colorpalettes_sc", colseq=colorseq_sc(), grp=input$group2, n.grp=n.groups2())
 })
 
 output$Alpha2 <- renderUI({
@@ -323,12 +322,12 @@ output$PlotFontSize2 <- renderUI({
 })
 
 # Conditional inputs (tabset panel tab: heatmap)
-output$ColorseqHeatmap <- renderUI({
-	getColorSeq(id="colorseqHeatmap", d=dat_heatmap(), heat=TRUE)
+colorseq_hm <- reactive({
+	getColorSeq(d=dat_heatmap(), heat=TRUE)
 })
 
-output$ColorpalettesHeatmap <- renderUI({
-	getColorPalettes(id="colorpalettesHeatmap", colseq=input$colorseqHeatmap, heat=TRUE)
+output$Colorpalettes_hm <- renderUI({
+	getColorPalettes(id="colorpalettes_hm", colseq=colorseq_hm(), heat=TRUE)
 })
 
 output$PlotFontSizeHeatmap <- renderUI({
@@ -336,12 +335,12 @@ output$PlotFontSizeHeatmap <- renderUI({
 })
 
 # Conditional inputs (tabset panel tab: variability plots)
-output$Colorseq3 <- renderUI({
-	getColorSeq(id="colorseq3", d=dat(), grp=input$group3, n.grp=n.groups3(), overlay=input$showCRU)
+colorseq_vr <- reactive({
+	getColorSeq(d=dat(), grp=input$group3, n.grp=n.groups3(), overlay=input$vr_showCRU)
 })
 
-output$Colorpalettes3 <- renderUI({
-	getColorPalettes(id="colorpalettes3", colseq=input$colorseq3, grp=input$group3, n.grp=n.groups3(), fill.vs.border=Variability(), overlay=input$showCRU)
+output$Colorpalettes_vr <- renderUI({
+	getColorPalettes(id="colorpalettes_vr", colseq=colorseq_vr(), grp=input$group3, n.grp=n.groups3(), fill.vs.border=Variability(), overlay=input$vr_showCRU)
 })
 
 output$Alpha3 <- renderUI({
@@ -390,12 +389,12 @@ output$Variability <- renderUI({
 #})
 
 # Conditional inputs (tabset panel tab: spatial plots)
-output$ColorseqSpatial <- renderUI({
-	getColorSeq(id="colorseqSpatial", d=dat_spatial(), grp=input$groupSpatial, n.grp=nGroupsSpatial(), overlay=input$showCRU)
+colorseq_sp <- renderUI({
+	getColorSeq(d=dat_spatial(), grp=input$groupSpatial, n.grp=nGroupsSpatial(), overlay=input$sp_showCRU)
 })
 
-output$ColorpalettesSpatial <- renderUI({
-	getColorPalettes(id="colorpalettesSpatial", colseq=input$colorseqSpatial, grp=input$groupSpatial, n.grp=nGroupsSpatial(), overlay=input$showCRU)
+output$Colorpalettes_sp <- renderUI({
+	getColorPalettes(id="colorpalettes_sp", colseq=colorseq_sp(), grp=input$groupSpatial, n.grp=nGroupsSpatial(), overlay=input$sp_showCRU)
 })
 
 output$AlphaSpatial <- renderUI({

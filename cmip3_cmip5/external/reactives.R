@@ -177,7 +177,7 @@ dat_master <- reactive({
 				x[[stat]][x$Var=="Temperature"] <- round(x[[stat]][x$Var=="Temperature"],1)
 				x[[stat]][x$Var=="Precipitation"] <- round(x[[stat]][x$Var=="Precipitation"])
 			}
-			if(input$units=="F, in"){
+			if(input$convert_units){
 			prog_d_master$set(message="Calculating, please wait", detail="Unit conversion...")
 				x[[stat]][x$Var=="Temperature"] <- round((9/5)*x[[stat]][x$Var=="Temperature"] + 32,1)
 				x[[stat]][x$Var=="Precipitation"] <- round(x[[stat]][x$Var=="Precipitation"]/25.4,3)
@@ -243,7 +243,7 @@ CRU_master <- reactive({
 	prog_d_cru_master <- Progress$new(session, min=1, max=10)
 	on.exit(prog_d_cru_master$close())
 	isolate(
-		if(is.null(Months_original()) | is.null(input$vars) | is.null(input$units) | locSelected()==FALSE){
+		if(is.null(Months_original()) | is.null(input$vars) | is.null(input$convert_units) | locSelected()==FALSE){
 			x <- NULL
 		} else {
 			prog_d_cru_master$set(message="Calculating, please wait", detail="Loading CRU 3.1 aggregate time series statistics...")
@@ -289,7 +289,7 @@ CRU_master <- reactive({
 			#print(input$map_shape_click$id)
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
 			# Otherwise compositing prohibited.
-			if(input$units=="F, in"){
+			if(input$convert_units){
 				prog_d_cru_master$set(message="Calculating, please wait", detail="Unit conversion...")
 				x[[stat]][x$Var=="Temperature"] <- round((9/5)*x[[stat]][x$Var=="Temperature"] + 32,1)
 				x[[stat]][x$Var=="Precipitation"] <- round(x[[stat]][x$Var=="Precipitation"]/25.4,3)
@@ -403,7 +403,7 @@ dat_spatial <- reactive({
 				x$Val[x$Var=="Temperature"] <- round(x$Val[x$Var=="Temperature"],1)
 				x$Val[x$Var=="Precipitation"] <- round(x$Val[x$Var=="Precipitation"])
 			}
-			if(input$units=="F, in"){
+			if(input$convert_units){
 				prog_d_spatial$set(message="Calculating, please wait", detail="Unit conversion...")
 				x$Val[x$Var=="Temperature"] <- round((9/5)*x$Val[x$Var=="Temperature"] + 32,1)
 				x$Val[x$Var=="Precipitation"] <- round(x$Val[x$Var=="Precipitation"]/25.4,3)
@@ -420,7 +420,7 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 	prog_d_cru_spatial <- Progress$new(session, min=1, max=10)
 	on.exit(prog_d_cru_spatial$close())
 	isolate(
-		if(is.null(Months_original()) | is.null(input$vars) | is.null(input$units) | locSelected()==FALSE){
+		if(is.null(Months_original()) | is.null(input$vars) | is.null(input$convert_units) | locSelected()==FALSE){
 			x <- NULL
 		} else {
 			if(input$loctype=="Cities" && length(input$locs_cities) && input$locs_cities[1]!="") {
@@ -456,7 +456,7 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 			#print(input$map_shape_click$id)
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
 			# Otherwise compositing prohibited.
-			if(input$units=="F, in"){
+			if(input$convert_units){
 				prog_d_cru_spatial$set(message="Calculating, please wait", detail="Unit conversion...")
 				x$Val[x$Var=="Temperature"] <- round((9/5)*x$Val[x$Var=="Temperature"] + 32,1)
 				x$Val[x$Var=="Precipitation"] <- round(x$Val[x$Var=="Precipitation"]/25.4,3)
@@ -718,7 +718,7 @@ plot_spatial_subtitle <- reactive({ getPlotSubTitle(pooled=pooledVarSpatial(), y
 
 permitPlot <- reactive({
 	if(!( is.null(Months()) | is.null(currentYears()) | is.null(Decades()) | is.null(input$vars) |
-		is.null(input$units) | is.null(scenarios()) | is.null(models()) | (!length(Locs()) && !length(input$locs_cities)) )){
+		is.null(input$convert_units) | is.null(scenarios()) | is.null(models()) | (!length(Locs()) && !length(input$locs_cities)) )){
 		if(input$vars[1]!="" & anyModelScenPair()){
 			x <- TRUE
 		} else {

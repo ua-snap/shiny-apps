@@ -65,11 +65,11 @@ column(4,
 			fluidRow(column(4, checkboxInput("hm_plotThemeDark", "Dark theme", FALSE))),
 			fluidRow(
 				column(6,
-					uiOutput("ColorseqHeatmap"),
+					#uiOutput("ColorseqHeatmap"),
 					conditionalPanel(condition="input.heatmap_x !== null && input.heatmap_y !== null",
 						selectInput("legendPosHeatmap","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
 				),
-				column(6, uiOutput("ColorpalettesHeatmap"), uiOutput("PlotFontSizeHeatmap"))
+				column(6, uiOutput("Colorpalettes_hm"), uiOutput("PlotFontSizeHeatmap"))
 			)
 		),
 		conditionalPanel(condition="input.tsp == 'plot_ts'",
@@ -87,11 +87,12 @@ column(4,
 			fluidRow(column(4, checkboxInput("ts_plotThemeDark", "Dark theme", FALSE))),
 			fluidRow(
 				column(6,
-					uiOutput("Colorseq"), uiOutput("Alpha1"), uiOutput("Bardirection"),
+					#uiOutput("Colorseq"), 
+					uiOutput("Alpha1"), uiOutput("Bardirection"),
 					conditionalPanel(condition="input.group !== null && input.group !== 'None'",
 						selectInput("legendPos1","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
 					),
-				column(6, uiOutput("Colorpalettes"), uiOutput("PlotFontSize"), uiOutput("Bartype"))
+				column(6, uiOutput("Colorpalettes_ts"), uiOutput("PlotFontSize"), uiOutput("Bartype"))
 			)
 		),
 		conditionalPanel(condition="input.tsp == 'plot_scatter'",
@@ -103,11 +104,13 @@ column(4,
 			fluidRow(column(4, uiOutput("Hexbin"))),
 			fluidRow(column(4, checkboxInput("sc_plotThemeDark", "Dark theme", FALSE))),
 			fluidRow(
-				column(6, uiOutput("Colorseq2"), uiOutput("Alpha2"), 
+				column(6, 
+				#uiOutput("Colorseq2"), 
+				uiOutput("Alpha2"), 
 					conditionalPanel(condition="input.group2 !== null && input.group2 !== 'None'",
 						selectInput("legendPos2","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
 				),
-				column(6, uiOutput("Colorpalettes2"), uiOutput("PlotFontSize2"))
+				column(6, uiOutput("Colorpalettes_sc"), uiOutput("PlotFontSize2"))
 			)
 		),
 		conditionalPanel(condition="input.tsp == 'plot_variability'",
@@ -130,11 +133,12 @@ column(4,
 			fluidRow(column(4, checkboxInput("vr_plotThemeDark", "Dark theme", FALSE))),
 			fluidRow(
 				column(6,
-					uiOutput("Colorseq3"), uiOutput("Alpha3"), uiOutput("Bardirection3"),
+					#uiOutput("Colorseq3"), 
+					uiOutput("Alpha3"), uiOutput("Bardirection3"),
 					conditionalPanel(condition="input.group3 !== null && input.group3 !== 'None'",
 						selectInput("legendPos3","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
 				),
-				column(6, uiOutput("Colorpalettes3"), uiOutput("PlotFontSize3"), uiOutput("Bartype3"))
+				column(6, uiOutput("Colorpalettes_vr"), uiOutput("PlotFontSize3"), uiOutput("Bartype3"))
 			)
 		),
 		conditionalPanel(condition="input.tsp == 'plot_spatial'",
@@ -157,11 +161,12 @@ column(4,
 			fluidRow(column(4, checkboxInput("sp_plotThemeDark", "Dark theme", FALSE))),
 			fluidRow(
 				column(6,
-					uiOutput("ColorseqSpatial"), uiOutput("AlphaSpatial"), uiOutput("DensityTypeSpatial"), uiOutput("StripDirectionSpatial"),
+					#uiOutput("ColorseqSpatial"), 
+					uiOutput("AlphaSpatial"), uiOutput("DensityTypeSpatial"), uiOutput("StripDirectionSpatial"),
 					conditionalPanel(condition="input.groupSpatial !== null && input.groupSpatial !== 'None'",
 						selectInput("legendPosSpatial","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
 				),
-				column(6, uiOutput("ColorpalettesSpatial"), uiOutput("PlotFontSizeSpatial"))
+				column(6, uiOutput("Colorpalettes_sp"), uiOutput("PlotFontSizeSpatial"))
 			)
 		)
 		),

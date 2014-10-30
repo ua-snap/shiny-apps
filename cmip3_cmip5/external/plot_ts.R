@@ -1,5 +1,5 @@
 function(d, d.grp, d.pool, x, y, y.name, panels, grp, n.grp, ingroup.subjects=NULL, facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
-	colpal, colseq, linePlot, barPlot, pts.alpha=0.5, bartype, bardirection, show.points=TRUE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
+	colpal, linePlot, barPlot, pts.alpha=0.5, bartype, bardirection, show.points=TRUE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
 	plot.title="", plot.subtitle="", show.panel.text=FALSE, show.title=FALSE, lgd.pos="Top", units=c("C","mm"),
 	yrange, clbootbar, clbootsmooth, pooled.var, plot.theme.dark=FALSE, show.logo=F, logo.mat=NULL){
 		if(is.null(d)) return(plot(0,0,type="n",axes=F,xlab="",ylab=""))
@@ -36,13 +36,11 @@ function(d, d.grp, d.pool, x, y, y.name, panels, grp, n.grp, ingroup.subjects=NU
 		scfm <- scaleColFillMan_prep(fill=fill, col=colpal)
 		fill <- scfm$fill
 		if(length(vert.facet)) if(vert.facet) facet.cols <- 1
-		print("pre-g1")
 		g <- ggplot(d, aes_string(x=x,y=y,group=wgl$subjects,order=grp,colour=color,fill=fill))
-		print("post-g1")
 		if(plot.theme.dark) g <- g + theme_black(base_size=fontsize) else g <- g + theme_bw(base_size=fontsize)
 		g <- g + ylab(ylb) + theme(legend.position=tolower(lgd.pos))
 		if(!show.logo && show.title) g <- g + ggtitle(bquote(atop(.(main))))
-		if(length(colpal) & length(colseq)) g <- scaleColFillMan(g=g, default=scfm$scfm, colseq=colseq, colpal=colpal, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
+		if(length(colpal)) g <- scaleColFillMan(g=g, default=scfm$scfm, colpal=colpal, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
 		if(!is.null(facet.by)) if(facet.by!="None") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)
 		if(!is.null(barPlot) && barPlot){
 			if(is.null(fill)){

@@ -1,20 +1,6 @@
-
-# Density when grouping:
-# position: identity, dodge, fill (Do not allow stack)
-# stat: bin or density for geom_histogram
-# stat: density for geom_line
-# histogram border color only with stat="bin", otherwise acts as fill
-
-#if(grp==1) histogram color and fill are black or white (opposite each other regardless of background color)
-#if(grp!=1) fill or colour histogram (not both) by group if stat is bin; color by group if stat is density
-#if(grp==1) lines are black or white (opposite background color)
-#if(grp!=1) lines remain black or white (opposite background color) with hist/density present; otherwise color by group
-
-#Two classes of plots: (Break out) boxplots/points along categorical x-axis or (Pool/aggregate) histograms/density curves along continuous x-axis (may still group, facet, or draw subject curves)
-
 function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, plottype, thin.sample=NULL,
 	facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
-	colpal, colseq, boxplots=FALSE, linePlot, pts.alpha=0.5, density.type, strip.direction, show.points=FALSE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
+	colpal, boxplots=FALSE, linePlot, pts.alpha=0.5, density.type, strip.direction, show.points=FALSE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
 	plot.title="", plot.subtitle="", show.panel.text=FALSE, show.title=FALSE, lgd.pos="Top", units=c("C","mm"),
 	plot.theme.dark=FALSE, show.logo=F, logo.mat=NULL){
 		if(is.null(d)) return(plot(0,0,type="n",axes=F,xlab="",ylab=""))
@@ -115,7 +101,7 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, plot
 		g <- g + ylab(ylb) + theme(legend.position=tolower(lgd.pos))
 		if(x==y) g <- g + xlab(xlb)
 		if(!show.logo && show.title) g <- g + ggtitle(bquote(atop(.(main))))
-		if(length(colpal) & length(colseq)) g <- scaleColFillMan(g=g, default=scfm$scfm, colseq=colseq, colpal=colpal, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
+		if(length(colpal)) g <- scaleColFillMan(g=g, default=scfm$scfm, colpal=colpal, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
 		if(!is.null(facet.by)) if(facet.by!="None") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)
 
 		if(plottype=="Stripchart" && !is.null(strip.direction) && strip.direction=="Horizontal strips") g <- g + coord_flip()

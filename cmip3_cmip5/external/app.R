@@ -13,10 +13,10 @@ spatialPlot <- source("external/plot_spatial.R",local=T)$value
 # Specific plot function setup
 doPlot_ts <- function(...){
 	if(permitPlot() & !is.null(input$group)){
-		if(!(input$group!="None" & !length(input$colorpalettes))){
+		if(!(input$group!="None" & !length(input$colorpalettes_ts))){
 			tsPlot(d=dat(), x=input$xtime, y=aggStatsID(), y.name=input$aggStats, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(), grp=input$group, n.grp=n.groups(), ingroup.subjects=subjectChoices(),
 				panels=facet.panels(), facet.by=input$facet, vert.facet=input$vert.facet,
-				fontsize=input$plotFontSize, colpal=input$colorpalettes, colseq=input$colorseq,
+				fontsize=input$plotFontSize, colpal=input$colorpalettes_ts,
 				linePlot=input$linePlot, barPlot=input$barPlot, pts.alpha=input$alpha1, bartype=input$bartype, bardirection=input$bardirection,
 				show.points=input$ts_showpts, show.lines=input$ts_showlines, show.overlay=input$ts_showCRU, overlay=CRU(), jit=input$ts_jitterXY,
 				plot.title=plot_ts_title(), plot.subtitle=plot_ts_subtitle(), show.panel.text=input$ts_showPanelText, show.title=input$ts_showTitle, lgd.pos=input$legendPos1,
@@ -28,10 +28,10 @@ doPlot_ts <- function(...){
 
 doPlot_scatter <- function(...){
 	if(permitPlot() & !is.null(input$group2)){
-		if(!(input$group2!="None" & !length(input$colorpalettes2))){
+		if(!(input$group2!="None" & !length(input$colorpalettes_sc))){
 			scatterPlot(d=dat2(), form.string=input$xy, grp=input$group2, n.grp=n.groups2(),
 				panels=facet.panels2(), facet.by=input$facet2, vert.facet=input$vert.facet2,
-				fontsize=input$plotFontSize2, colpal=input$colorpalettes2, colseq=input$colorseq2,
+				fontsize=input$plotFontSize2, colpal=input$colorpalettes_sc,
 				show.points=input$sc_showpts, contourlines=input$sc_showlines, hexbin=input$hexbin, pts.alpha=input$alpha2, show.overlay=input$sc_showCRU, overlay=CRU2(), jit=input$sc_jitterXY,
 				plot.title=plot_sp_title(), plot.subtitle=plot_sp_subtitle(), show.panel.text=input$sc_showPanelText, show.title=input$sc_showTitle,
 				lgd.pos=input$legendPos2, units=currentUnits(),	pooled.var=pooled.var2(), plot.theme.dark=input$sc_plotThemeDark, logo.mat=logo.mat, ...)
@@ -40,10 +40,10 @@ doPlot_scatter <- function(...){
 }
 
 doPlot_heatmap <- function(...){
-	if(permitPlot() & !is.null(input$heatmap_x) & !is.null(input$heatmap_y) & length(input$colorpalettesHeatmap)){
+	if(permitPlot() & !is.null(input$heatmap_x) & !is.null(input$heatmap_y) & length(input$colorpalettes_hm)){
 		heatPlot(d=dat(), d2=dat_heatmap(), x=input$heatmap_x, y=input$heatmap_y, z=input$statHeatmap,
 			panels=facetPanelsHeatmap(), facet.by=input$facetHeatmap,
-			fontsize=input$plotFontSizeHeatmap, colpal=input$colorpalettesHeatmap, reverse.colors=input$revHeatmapColors, aspect_1to1=input$aspect1to1, show.values=input$showHeatmapVals,
+			fontsize=input$plotFontSizeHeatmap, colpal=input$colorpalettes_hm, reverse.colors=input$revHeatmapColors, aspect_1to1=input$aspect1to1, show.values=input$showHeatmapVals,
 			show.overlay=input$hm_showCRU, overlay=CRU(),
 			plot.title=plot_hm_title(), plot.subtitle=plot_hm_subtitle(), show.panel.text=input$hm_showPanelText, show.title=input$hm_showTitle,
 			lgd.pos=input$legendPosHeatmap, units=currentUnits(), pooled.var=pooledVarHeatmap(), plot.theme.dark=input$hm_plotThemeDark, logo.mat=logo.mat, ...)
@@ -52,11 +52,11 @@ doPlot_heatmap <- function(...){
 
 doPlot_var <- function(...){
 	if(permitPlot() & !is.null(pooled.var3()) & !is.null(input$group3)){
-		if(!(input$group3!="None" & !length(input$colorpalettes3))){
+		if(!(input$group3!="None" & !length(input$colorpalettes_vr))){
 			varPlot(d=dat(), x=input$xvar, y=aggStatsID(), y.name=input$aggStats, stat=stat(), around.mean=input$variability, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(),
 				grp=input$group3, n.grp=n.groups3(), ingroup.subjects=subjectChoices3(),
 				panels=facet.panels3(), facet.by=input$facet3, vert.facet=input$vert.facet3,
-				fontsize=input$plotFontSize3, colpal=input$colorpalettes3, colseq=input$colorseq3,
+				fontsize=input$plotFontSize3, colpal=input$colorpalettes_vr,
 				boxplots=input$boxplots, pts.alpha=input$alpha3, bartype=input$bartype3, bardirection=input$bardirection3,
 				show.points=input$vr_showpts, show.lines=input$vr_showlines, show.overlay=input$vr_showCRU, overlay=CRU(),
 				jit=input$vr_jitterXY, plot.title=plot_var_title(), plot.subtitle=plot_var_subtitle(), show.panel.text=input$vr_showPanelText, show.title=input$vr_showTitle, lgd.pos=input$legendPos3,
@@ -68,10 +68,10 @@ doPlot_var <- function(...){
 
 doPlot_spatial <- function(...){
 	if(permitPlot() & !is.null(pooledVarSpatial()) & !is.null(input$groupSpatial)){
-		if(!(input$groupSpatial!="None" & !length(input$colorpalettesSpatial))){
+		if(!(input$groupSpatial!="None" & !length(input$colorpalettes_sp))){
 			spatialPlot(d=dat_spatial(), x=input$spatial_x, y="Val", grp=input$groupSpatial, n.grp=nGroupsSpatial(), ingroup.subjects=subjectChoicesSpatial(), plottype=input$plotTypeSpatial,
 				thin.sample=as.numeric(input$thinSpatialSample), panels=facetPanelsSpatial(), facet.by=input$facetSpatial, vert.facet=input$vertFacetSpatial,
-				fontsize=input$plotFontSizeSpatial, colpal=input$colorpalettesSpatial, colseq=input$colorseqSpatial,
+				fontsize=input$plotFontSizeSpatial, colpal=input$colorpalettes_sp,
 				linePlot=input$linePlotSpatial, boxplots=input$boxplotsSpatial, pts.alpha=input$alphaSpatial, density.type=input$densityTypeSpatial, strip.direction=input$stripDirectionSpatial,
 				show.points=input$sp_showpts, show.lines=input$sp_showlines, show.overlay=input$sp_showCRU, overlay=CRU_spatial(),
 				jit=input$sp_jitterXY, plot.title=plot_spatial_title(), plot.subtitle=plot_spatial_subtitle(), show.panel.text=input$sp_showPanelText, show.title=input$sp_showTitle, lgd.pos=input$legendPosSpatial,
