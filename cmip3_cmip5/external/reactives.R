@@ -9,7 +9,7 @@ limitedYears <- reactive({
 	yrs
 })
 
-currentUnits <- reactive({ if(!is.null(input$units)) c(substr(input$units,1,1), substr(input$units,4,5)) })
+currentUnits <- reactive({ if(input$convert_units) c("F", "in") else c("C", "mm") })
 
 scenarios <- reactive({
 	x <- c()

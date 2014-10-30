@@ -5,12 +5,14 @@ column(4,
 		checkboxInput("showDataPanel1", h5("Data Selection"), TRUE),
 		conditionalPanel(condition="input.showDataPanel1",
 			fluidRow(
-				column(6, selectInput("vars", "Climate variable:", c("", varnames), selected="", multiple=T, width="100%")),
-				column(6, 
-					selectInput("aggStats", "Stat:", stats.colnames, selected=stats.colnames[1], width="100%"),
-					selectInput("units", "Units:", c("C, mm","F, in"), selected="C, mm", width="100%")
-				)
+				column(6, selectInput("loctype", "Spatial scale:", region.names, selected=region.names[1], multiple=FALSE, width="100%")), # May use multiple=TRUE later
+				column(6, uiOutput("Location"))
 			),
+			fluidRow(
+				column(6, selectInput("vars", "Climate variable:", c("", varnames), selected="", multiple=T, width="100%")),
+				column(6, selectInput("aggStats", "Stat:", stats.colnames, selected=stats.colnames[1], width="100%"))
+			),
+			checkboxInput("convert_units", "Convert units to F, in", FALSE),
 			fluidRow(
 				column(6, selectInput("cmip3scens", "CMIP3 emissions scenarios:", choices=c("", scennames[[1]]), selected="", multiple=T, width="100%")),
 				column(6, selectInput("cmip5scens", "CMIP5 emissions scenarios:", choices=c("", scennames[[2]]), selected="", multiple=T, width="100%"))
@@ -30,10 +32,6 @@ column(4,
 			fluidRow(
 				column(6, uiOutput("Months2Seasons"), uiOutput("N_Seasons")),
 				column(6, uiOutput("Decades2Periods"), uiOutput("N_Periods"))
-			),
-			fluidRow(
-				column(6, selectInput("loctype", "Spatial scale:", region.names, selected=region.names[1], multiple=FALSE, width="100%")), # May use multiple=TRUE later
-				column(6, uiOutput("Location"))
 			)
 		),
 		fluidRow(
