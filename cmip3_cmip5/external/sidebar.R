@@ -79,10 +79,15 @@ column(4,
 			fluidRow(column(4, checkboxInput("ts_showpts", "Show points", TRUE)), column(4, checkboxInput("ts_jitterXY", "Jitter points", FALSE)), column(4, checkboxInput("ts_showlines", "Show lines", FALSE))),
 			fluidRow(
 				column(4, checkboxInput("linePlot", "Trend lines", FALSE)),
-				column(4, checkboxInput("yrange", "Group range", FALSE), conditionalPanel(condition="input.vars !== null && input.vars[0] == 'Precipitation'", checkboxInput("barPlot", "Barplot", FALSE))),
+				column(4, checkboxInput("yrange", "Group range", FALSE)),
 				column(4, checkboxInput("clbootsmooth", "Confidence band", FALSE), uiOutput("VertFacet"))
 			),
-			fluidRow(column(4, uiOutput("Yrange")), column(4,""), column(4, uiOutput("CLbootsmooth"))),
+			fluidRow(
+				column(4, conditionalPanel(condition="input.vars !== null && input.vars[0] == 'Precipitation'", checkboxInput("barPlot", "Barplot", FALSE))),
+				column(4, conditionalPanel(condition="input.vars !== null && input.vars[0] == 'Precipitation'", checkboxInput("log_ts", "Log transform", FALSE))),
+				column(4, "")
+			),
+			fluidRow(column(4, uiOutput("Yrange")), column(4, ""), column(4, uiOutput("CLbootsmooth"))),
 			fluidRow(column(4, checkboxInput("ts_plotThemeDark", "Dark theme", FALSE))),
 			fluidRow(
 				column(6,

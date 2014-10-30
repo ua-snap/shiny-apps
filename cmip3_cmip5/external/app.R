@@ -14,7 +14,7 @@ spatialPlot <- source("external/plot_spatial.R",local=T)$value
 doPlot_ts <- function(...){
 	if(permitPlot() & !is.null(input$group)){
 		if(!(input$group!="None" & !length(input$colorpalettes_ts))){
-			tsPlot(d=dat(), x=input$xtime, y=aggStatsID(), y.name=input$aggStats, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(), grp=input$group, n.grp=n.groups(), ingroup.subjects=subjectChoices(),
+			tsPlot(d=dat(), x=input$xtime, y=aggStatsID(), y.name=input$aggStats, Log=input$log_ts, d.grp=datCollapseGroups(), d.pool=datCollapsePooled(), grp=input$group, n.grp=n.groups(), ingroup.subjects=subjectChoices(),
 				panels=facet.panels(), facet.by=input$facet, vert.facet=input$vert.facet,
 				fontsize=input$plotFontSize, colpal=input$colorpalettes_ts,
 				linePlot=input$linePlot, barPlot=input$barPlot, pts.alpha=input$alpha1, bartype=input$bartype, bardirection=input$bardirection,

@@ -1,10 +1,10 @@
-function(d, d.grp, d.pool, x, y, y.name, panels, grp, n.grp, ingroup.subjects=NULL, facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
+function(d, d.grp, d.pool, x, y, y.name, Log=FALSE, panels, grp, n.grp, ingroup.subjects=NULL, facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
 	colpal, linePlot, barPlot, pts.alpha=0.5, bartype, bardirection, show.points=TRUE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
 	plot.title="", plot.subtitle="", show.panel.text=FALSE, show.title=FALSE, lgd.pos="Top", units=c("C","mm"),
 	yrange, clbootbar, clbootsmooth, pooled.var, plot.theme.dark=FALSE, show.logo=F, logo.mat=NULL){
 		if(is.null(d)) return(plot(0,0,type="n",axes=F,xlab="",ylab=""))
 		if(plot.theme.dark) { bg.theme <- "black"; color.theme <- "white" } else { bg.theme <- "white"; color.theme <- "black" }
-		if(d$Var[1]=="Temperature") { bartype <- barPlot <- NULL }
+		if(d$Var[1]=="Temperature") { bartype <- barPlot <- NULL; Log <- FALSE }
 		if(!show.lines) ingroup.subjects <- NULL
 		if(show.overlay && !is.null(overlay)) show.overlay <- TRUE else show.overlay <- FALSE
 		if(show.overlay) overlay$Observed <- "CRU 3.1"
@@ -22,6 +22,11 @@ function(d, d.grp, d.pool, x, y, y.name, panels, grp, n.grp, ingroup.subjects=NU
 			dodge.pts <- dodgePoints(d, x, grp, n.grp, facet.by, width=wid)
 			xdodge <- "xdodge"
 			d$xdodge <- dodge.pts$x.num + dodge.pts$grp.num
+		}
+		if(Log){
+			units[2] <- paste("log", units[2])
+			d[y] <- round(log(d[y] + 1), 1); d.pool[y] <- round(log(d.pool[y] + 1), 1); d.grp[y] <- round(log(d.grp[y] + 1), 1)
+			if(show.overlay) overlay[y] <- round(log(overlay[y] + 1), 1)
 		}
 		if(d$Var[1]=="Temperature") ylb <- paste0(y.name, " temperature (",units[1],")") else ylb <- paste0(y.name, " precipitation (",units[2],")")
 		main <- paste0("", tolower(d$Var[1]), ": ", plot.title)
