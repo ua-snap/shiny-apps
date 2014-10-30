@@ -65,7 +65,6 @@ column(4,
 			fluidRow(column(4, checkboxInput("hm_plotThemeDark", "Dark theme", FALSE))),
 			fluidRow(
 				column(6,
-					#uiOutput("ColorseqHeatmap"),
 					conditionalPanel(condition="input.heatmap_x !== null && input.heatmap_y !== null",
 						selectInput("legendPosHeatmap","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
 				),
@@ -87,7 +86,6 @@ column(4,
 			fluidRow(column(4, checkboxInput("ts_plotThemeDark", "Dark theme", FALSE))),
 			fluidRow(
 				column(6,
-					#uiOutput("Colorseq"), 
 					uiOutput("Alpha1"), uiOutput("Bardirection"),
 					conditionalPanel(condition="input.group !== null && input.group !== 'None'",
 						selectInput("legendPos1","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
@@ -105,7 +103,6 @@ column(4,
 			fluidRow(column(4, checkboxInput("sc_plotThemeDark", "Dark theme", FALSE))),
 			fluidRow(
 				column(6, 
-				#uiOutput("Colorseq2"), 
 				uiOutput("Alpha2"), 
 					conditionalPanel(condition="input.group2 !== null && input.group2 !== 'None'",
 						selectInput("legendPos2","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
@@ -133,7 +130,6 @@ column(4,
 			fluidRow(column(4, checkboxInput("vr_plotThemeDark", "Dark theme", FALSE))),
 			fluidRow(
 				column(6,
-					#uiOutput("Colorseq3"), 
 					uiOutput("Alpha3"), uiOutput("Bardirection3"),
 					conditionalPanel(condition="input.group3 !== null && input.group3 !== 'None'",
 						selectInput("legendPos3","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
@@ -161,7 +157,6 @@ column(4,
 			fluidRow(column(4, checkboxInput("sp_plotThemeDark", "Dark theme", FALSE))),
 			fluidRow(
 				column(6,
-					#uiOutput("ColorseqSpatial"), 
 					uiOutput("AlphaSpatial"), uiOutput("DensityTypeSpatial"), uiOutput("StripDirectionSpatial"),
 					conditionalPanel(condition="input.groupSpatial !== null && input.groupSpatial !== 'None'",
 						selectInput("legendPosSpatial","Legend",c("Bottom", "Right", "Top", "Left"),selected="Bottom", width="100%"))
