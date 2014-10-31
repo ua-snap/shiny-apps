@@ -68,6 +68,7 @@ column(4,
 			fluidRow(uiOutput("PooledVarHeatmap")),
 			fluidRow(column(4, checkboxInput("hm_showTitle", "Title", TRUE)), column(4, checkboxInput("hm_showPanelText", "Panel text", TRUE)), column(4, checkboxInput("hm_showCRU","Show CRU 3.1", FALSE))),
 			fluidRow(column(4, checkboxInput("aspect1to1", "1:1 Aspect", FALSE)), column(4, checkboxInput("revHeatmapColors", "Reverse colors", FALSE)), column(4, checkboxInput("showHeatmapVals", "Cell values", FALSE))),
+			fluidRow(column(4, conditionalPanel(condition="input.vars !== null && input.vars[0] !== 'Temperature'", checkboxInput("log_hm", "Log transform", FALSE))), column(4, ""), column(4, "")),
 			fluidRow(column(4, checkboxInput("hm_plotThemeDark", "Dark theme", FALSE))),
 			fluidRow(
 				column(6,
@@ -89,8 +90,8 @@ column(4,
 				column(4, checkboxInput("clbootsmooth", "Confidence band", FALSE), uiOutput("VertFacet"))
 			),
 			fluidRow(
-				column(4, conditionalPanel(condition="input.vars !== null && input.vars[0] == 'Precipitation'", checkboxInput("barPlot", "Barplot", FALSE))),
-				column(4, conditionalPanel(condition="input.vars !== null && input.vars[0] == 'Precipitation'", checkboxInput("log_ts", "Log transform", FALSE))),
+				column(4, conditionalPanel(condition="input.vars !== null && input.vars[0] !== 'Temperature'", checkboxInput("barPlot", "Barplot", FALSE))),
+				column(4, conditionalPanel(condition="input.vars !== null && input.vars[0] !== 'Temperature'", checkboxInput("log_ts", "Log transform", FALSE))),
 				column(4, "")
 			),
 			fluidRow(column(4, uiOutput("Yrange")), column(4, ""), column(4, uiOutput("CLbootsmooth"))),

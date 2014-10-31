@@ -41,7 +41,7 @@ doPlot_scatter <- function(...){
 
 doPlot_heatmap <- function(...){
 	if(permitPlot() & !is.null(input$heatmap_x) & !is.null(input$heatmap_y) & length(input$colorpalettes_hm)){
-		heatPlot(d=dat(), d2=dat_heatmap(), x=input$heatmap_x, y=input$heatmap_y, z=input$statHeatmap,
+		heatPlot(d=dat(), d.stat=input$aggStats, d2=dat_heatmap(), x=input$heatmap_x, y=input$heatmap_y, z=input$statHeatmap, Log=input$log_hm,
 			panels=facetPanelsHeatmap(), facet.by=input$facetHeatmap,
 			fontsize=input$plotFontSizeHeatmap, colpal=input$colorpalettes_hm, reverse.colors=input$revHeatmapColors, aspect_1to1=input$aspect1to1, show.values=input$showHeatmapVals,
 			show.overlay=input$hm_showCRU, overlay=CRU(),

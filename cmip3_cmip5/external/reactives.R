@@ -221,10 +221,10 @@ dat_heatmap <- reactive({
 	input$heatmap_x
 	input$heatmap_y
 	input$facetHeatmap
-	input$showCRU
+	input$hm_showCRU
 	isolate({
 		d <- dat()
-		if(input$showCRU & !is.null(CRU())){
+		if(input$hm_showCRU & !is.null(CRU())){
 			n.d <- nrow(d)
 			mods.d <- unique(d$Model)
 			yrs.tmp <- as.numeric(c(as.character(d$Year), as.character(CRU()$Year)))
@@ -237,8 +237,9 @@ dat_heatmap <- reactive({
 			x <- c(input$heatmap_x, input$heatmap_y)
 			if(!(is.null(input$facetHeatmap) || input$facetHeatmap=="None")) x <- c(x, input$facetHeatmap)
 			stat <- aggStatsID()
-			if(dat()$Var[1]=="Temperature") d <- ddply(d, x, here(summarise), Mean=round(mean(eval(parse(text=stat))), 1), SD=round(sd(eval(parse(text=stat))), 1))
-			if(dat()$Var[1]=="Precipitation") d <- ddply(d, x, here(summarise), Mean=round(mean(eval(parse(text=stat)))), Total=round(sum(eval(parse(text=stat)))), SD=round(sd(eval(parse(text=stat)))))
+			if(input$vars=="Temperature") d <- ddply(d, x, here(summarise), XMean=round(mean(eval(parse(text=stat))), 1), XSD=round(sd(eval(parse(text=stat))), 1))
+			if(input$vars=="Precipitation") d <- ddply(d, x, here(summarise), XMean=round(mean(eval(parse(text=stat)))), XTotal=round(sum(eval(parse(text=stat)))), XSD=round(sd(eval(parse(text=stat)))))
+			names(d) <- gsub("X", "", names(d))
 			if(all(is.na(d$SD))) d <- d[, -ncol(d)]
 		}
 	})
