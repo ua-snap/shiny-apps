@@ -113,9 +113,13 @@ output$Facet <- renderUI({
 #	)
 #})
 
+output$Sc_X <- renderUI({
+	if(is.null(input$goButton) || input$goButton==0) return()
+	selectInput("sc_x", "X-axis", choices=c(input$vars, input$vars2), selected=input$vars, width="100%")
+})
+
 output$Group2 <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
-	input$xy
 	isolate(
 		if(!is.null(groupFacetChoicesScatter())) selectInput("group2", "Group/color by:", choices=groupFacetChoicesScatter(), selected=groupFacetChoicesScatter()[1], width="100%")
 	)
@@ -123,7 +127,6 @@ output$Group2 <- renderUI({
 
 output$Facet2 <- renderUI({
 	if(is.null(input$goButton) || input$goButton==0) return()
-	input$xy
 	isolate(
 		if(!is.null(groupFacetChoicesScatter())) selectInput("facet2","Facet/panel by:", choices=groupFacetChoicesScatter(), selected=groupFacetChoicesScatter()[1], width="100%")
 	)

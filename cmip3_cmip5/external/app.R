@@ -29,7 +29,7 @@ doPlot_ts <- function(...){
 doPlot_scatter <- function(...){
 	if(permitPlot() & !is.null(input$group2)){
 		if(!(input$group2!="None" & !length(input$colorpalettes_sc))){
-			scatterPlot(d=dat2(), form.string=input$xy, grp=input$group2, n.grp=n.groups2(),
+			scatterPlot(d=dat2(), x=input$vars, y=input$vars2, x.name=input$aggStats, y.name=input$aggStats2, Logx=input$log_sc_x, Logy=input$log_sc_y, flip.axes=sc_flip_xy(), grp=input$group2, n.grp=n.groups2(),
 				panels=facet.panels2(), facet.by=input$facet2, vert.facet=input$vert.facet2,
 				fontsize=input$plotFontSize2, colpal=input$colorpalettes_sc,
 				show.points=input$sc_showpts, contourlines=input$sc_showlines, hexbin=input$hexbin, pts.alpha=input$alpha2, show.overlay=input$sc_showCRU, overlay=CRU2(), jit=input$sc_jitterXY,

@@ -1,4 +1,4 @@
-function(d, form.string, panels, grp, n.grp, facet.cols=ceiling(sqrt(panels)), facet.by, vert.facet=FALSE, fontsize=16,
+function(d, x, y, x.name, y.name, Logx=FALSE, Logy=FALSE, flip.axes=FALSE, panels, grp, n.grp, facet.cols=ceiling(sqrt(panels)), facet.by, vert.facet=FALSE, fontsize=16,
 	colpal, show.points=TRUE, contourlines=FALSE, hexbin=FALSE, pts.alpha=0.5, show.overlay=FALSE, overlay=NULL, jit=FALSE,
 	plot.title="", plot.subtitle="", show.panel.text=FALSE, show.title=FALSE, lgd.pos="Top", units=c("C","mm"),
 	pooled.var, plot.theme.dark=FALSE, show.logo=F, logo.mat=NULL){
@@ -10,8 +10,23 @@ function(d, form.string, panels, grp, n.grp, facet.cols=ceiling(sqrt(panels)), f
 		if(!length(fontsize)) fontsize <- 16
 		fontsize=as.numeric(fontsize)
 		if(is.null(pts.alpha)) pts.alpha <- 0.5
-		lab <- sp_xlabylab(units=units, form.string=form.string) # agg stat metrics adjustment required
-		if(substr(lab$xlb, 1, 1)=="P") { x <- "Precipitation"; y <- "Temperature" } else { x <- "Temperature"; y <- "Precipitation" }
+		if(flip.axes) { y2 <- x; y.name2 <- x.name; x <- y; x.name <- y.name; y <- y2; y.name <- y.name2 }
+		if(x=="Temperature") Logx <- FALSE
+		if(y=="Temperature") Logy <- FALSE
+		if(Logx){
+			units[2] <- paste("log", units[2])
+			d[x] <- round(log(d[x] + 1), 1)
+			if(show.overlay) overlay[x] <- round(log(overlay[x] + 1), 1)
+		}
+		if(Logy){
+			units[2] <- paste("log", units[2])
+			d[y] <- round(log(d[y] + 1), 1)
+			if(show.overlay) overlay[y] <- round(log(overlay[y] + 1), 1)
+		}
+		if(x=="Temperature") xlb <- paste0(x.name, " temperature (",units[1],")")
+		if(x=="Precipitation") xlb <- paste0(x.name, " precipitation (",units[2],")")
+		if(y=="Temperature") ylb <- paste0(y.name, " temperature (",units[1],")")
+		if(y=="Precipitation") ylb <- paste0(y.name, " precipitation (",units[2],")")
 		main <- paste0("temperature and precipitation: ", plot.title)
 		if(jit) point.pos <- position_jitter(0.1,0.1) else point.pos <- "identity"
 		grp <- adjustGroup(grp=grp, n.grp=n.grp)
@@ -21,7 +36,7 @@ function(d, form.string, panels, grp, n.grp, facet.cols=ceiling(sqrt(panels)), f
 		if(length(vert.facet)) if(vert.facet) facet.cols <- 1
 		g <- ggplot(d, aes_string(x=x,y=y,group=grp,order=grp,colour=color,fill=fill))
 		if(plot.theme.dark) g <- g + theme_black(base_size=fontsize) else g <- g + theme_bw(base_size=fontsize)
-		g <- g + xlab(lab$xlb) + ylab(lab$ylb) + theme(legend.position=tolower(lgd.pos))
+		g <- g + xlab(xlb) + ylab(ylb) + theme(legend.position=tolower(lgd.pos))
 		if(!show.logo && show.title) g <- g + ggtitle(bquote(atop(.(main))))
 		if(length(colpal)) g <- scaleColFillMan(g=g, default=scfm$scfm, colpal=colpal, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
 		if(!is.null(facet.by)) if(facet.by!="None") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)

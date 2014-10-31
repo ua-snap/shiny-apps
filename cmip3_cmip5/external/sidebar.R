@@ -9,8 +9,14 @@ column(4,
 				column(6, uiOutput("Location"))
 			),
 			fluidRow(
-				column(6, selectInput("vars", "Climate variable:", c("", varnames), selected="", multiple=T, width="100%")),
-				column(6, selectInput("aggStats", "Stat:", stats.colnames, selected=stats.colnames[1], width="100%"))
+				column(6,
+					selectInput("vars", "Variable:", varnames, selected=varnames[1], width="100%"),
+					conditionalPanel(condition="input.tsp == 'plot_scatter'", selectInput("vars2", "Variable 2:", varnames, selected=varnames[2], width="100%"))
+				),
+				column(6,
+					selectInput("aggStats", "Stat:", stats.colnames, selected=stats.colnames[1], width="100%"),
+					conditionalPanel(condition="input.tsp == 'plot_scatter'", selectInput("aggStats2", "Stat:", stats.colnames, selected=stats.colnames[1], width="100%"))
+				)
 			),
 			checkboxInput("convert_units", "Convert units to F, in", FALSE),
 			fluidRow(
@@ -99,12 +105,12 @@ column(4,
 			)
 		),
 		conditionalPanel(condition="input.tsp == 'plot_scatter'",
-			fluidRow(column(6, selectInput("xy", "X & Y axes", choices=c("P ~ T", "T ~ P"), selected="P ~ T", width="100%")), column(6, uiOutput("Group2"))),
+			fluidRow(column(6, uiOutput("Sc_X")), column(6, uiOutput("Group2"))),
 			fluidRow(column(6,uiOutput("Facet2"))),
 			fluidRow(uiOutput("PooledVar2")),
 			fluidRow(column(4, checkboxInput("sc_showTitle", "Title", TRUE)), column(4, checkboxInput("sc_showPanelText", "Panel text", TRUE)), column(4, checkboxInput("sc_showCRU","Show CRU 3.1", FALSE))),
 			fluidRow(column(4, checkboxInput("sc_showpts", "Show points", TRUE)), column(4, checkboxInput("sc_jitterXY", "Jitter points", FALSE)), column(4, checkboxInput("sc_showlines", "Show lines", FALSE))),
-			fluidRow(column(4, uiOutput("Hexbin"))),
+			fluidRow(column(4, uiOutput("Hexbin")), column(4, checkboxInput("log_sc_x", "Log transform X", FALSE)), column(4, checkboxInput("log_sc_y", "Log transform Y", FALSE))),
 			fluidRow(column(4, checkboxInput("sc_plotThemeDark", "Dark theme", FALSE))),
 			fluidRow(
 				column(6, 

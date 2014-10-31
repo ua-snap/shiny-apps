@@ -115,20 +115,25 @@ collapseMonths <- function(d, variable, n.s, mos, n.samples=1){
 	p <- length(mos)/n.s
 	ind.keep <- rep(seq(1, nrx, by=p*n.samples), each=n.samples) + 0:(n.samples-1)
 	m <- length(ind.keep)
-	print(paste("input nrow(d) =", nrx))
-	print(paste("length(ind.keep) =", m))
+	#print(paste("input nrow(d) =", nrx))
+	#print(paste("length(ind.keep) =", m))
 	id.seasons <- sapply(split(mos, rep(1:n.s, each=p)), function(x) paste(c(x[1], tail(x,1)), collapse="-"))
 	id.seasons <- rep(rep(factor(id.seasons, levels=id.seasons), each=n.samples) , length=m)
-	print(paste("p =",p))
-	print(paste("n.samples =",n.samples))
-	if(n.samples>1) v <- round(unlist(tapply(d[[variable]], rep(1:(nrx/(p*n.samples)), each=p*n.samples), FUN=function(x, nc) rowMeans(matrix(x, ncol=nc)), nc=p)), 1)
-	if(n.samples==1) v <- round(tapply(d[[variable]], rep(1:(nrx/p), each=p), FUN=mean), 1)
+	#print(paste("p =",p))
+	#print(paste("n.samples =",n.samples))
+	v <- list()
+	for(k in 1:length(variable)){
+		if(n.samples>1) v[[k]] <- round(unlist(tapply(d[[variable[k]]], rep(1:(nrx/(p*n.samples)), each=p*n.samples), FUN=function(x, nc) rowMeans(matrix(x, ncol=nc)), nc=p)), 1)
+		if(n.samples==1) v[[k]] <- round(tapply(d[[variable[k]]], rep(1:(nrx/p), each=p), FUN=mean), 1)
+	}
 	d <- d[ind.keep,]
 	d$Month <- id.seasons
-	d[[variable]] <- v
-	if(any(d$Var=="Precipitation")) d[[variable]][d$Var=="Precipitation"] <- round(p*d[[variable]][d$Var=="Precipitation"])
-	print(paste("length(v) =", length(v)))
-	print(paste("output nrow(d) =", nrow(d)))
+	for(k in 1:lenth(variable)){
+		d[[variable[k]]] <- v[[k]]
+		if(any(d$Var=="Precipitation")) d[[variable[k]]][d$Var=="Precipitation"] <- round(p*d[[variable[k]]][d$Var=="Precipitation"])
+	}
+	#print(paste("length(v) =", length(v)))
+	#print(paste("output nrow(d) =", nrow(d)))
 	d
 }
 
@@ -290,13 +295,6 @@ getSubjectChoices <- function(inx, ingrp, pooled.vars){
 		if(length(x)==1) x <- NULL
 	} else x <- NULL
 	x
-}
-
-sp_xlabylab <- function(units, form.string){
-	tlb <- paste0("Temperature (",units[1],")")
-	plb <- paste0("Precipitation (",units[2],")")
-	if(substr(form.string,1,1)=="T"){ xlb <- plb; ylb <- tlb } else { xlb <- tlb; ylb <- plb }
-	list(xlb=xlb, ylb=ylb)
 }
 
 adjustGroup <- function(grp, n.grp){

@@ -94,6 +94,10 @@ aggStatsID <- reactive({
 	agg.stat.colnames[which(agg.stat.names==input$aggStats)]
 })
 
+aggStatsID2 <- reactive({
+	agg.stat.colnames[which(agg.stat.names==input$aggStats2)]
+})
+
 Locs <- reactive({ if(is.null(input$loctype) || input$loctype!="Cities")  input$locs_regions else if(input$loctype=="Cities") input$locs_cities else NULL })
 regionSelected <- reactive({ input$loctype!="Cities" & length(Locs())  })
 citySelected <- reactive({ input$loctype=="Cities" & length(Locs()) })
@@ -135,7 +139,7 @@ dat_master <- reactive({
 					if(i==1) region.dat.final <- gcm.stats.df else region.dat.final <- rbind(region.dat.final, gcm.stats.df)
 				}
 				prog_d_master$set(message="Calculating, please wait", detail="Subsetting GCM time series data...")
-				stat <- aggStatsID()
+				stat <- c(aggStatsID(), aggStatsID2())
 				cols.drop <- match(stats.colnames[which(!(stats.colnames %in% stat))], names(region.dat.final))
 				x <- subset(region.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
@@ -158,29 +162,39 @@ dat_master <- reactive({
 				x <- split(x, x$Phase)
 				x1 <- split(x[[1]], x[[1]]$Model)
 				x2 <- split(x[[2]], x[[2]]$Model)
-				v1 <- Reduce("+", lapply( x1, "[", stat ))[,1]/n
-				v2 <- Reduce("+", lapply( x2, "[", stat ))[,1]/n
+				v1 <- v2 <- list()
+				for(k in 1:length(stat)){
+					v1[[k]] <- Reduce("+", lapply( x1, "[", stat[k] ))[,1]/n
+					v2[[k]] <- Reduce("+", lapply( x2, "[", stat[k] ))[,1]/n
+				}
 				x1[[1]]$Model <- paste0("CMIP3 ",n,"-Model Avg")
 				x2[[1]]$Model <- paste0("CMIP5 ",n,"-Model Avg")
 				x <- rbind(x1[[1]], x2[[1]])
-				x[[stat]] <- c(v1,v2)
-				x[[stat]][x$Var=="Temperature"] <- round(x[[stat]][x$Var=="Temperature"],1)
-				x[[stat]][x$Var=="Precipitation"] <- round(x[[stat]][x$Var=="Precipitation"])
+				for(k in 1:length(stat)){
+					x[[stat[k]]] <- c(v1[[k]],v2[[k]])
+					x[[stat[k]]][x$Var=="Temperature"] <- round(x[[stat[k]]][x$Var=="Temperature"],1)
+					x[[stat[k]]][x$Var=="Precipitation"] <- round(x[[stat[k]]][x$Var=="Precipitation"])
+				}
 			} else if(composite()==1) {
 				prog_d_master$set(message="Calculating, please wait", detail="Averaging model statistics...")
 				if(modelScenPair1()) n <- length(input$cmip3models) else if(modelScenPair2()) n <- length(input$cmip5models)
 				x1 <- split(x, x$Model)
-				v1 <- Reduce("+", lapply( x1, "[", c("Val") ))[,1]/n
+				v1 <- list()
+				for(k in 1:length(stat)) v1[[k]] <- Reduce("+", lapply( x1, "[", stat[k] ))[,1]/n
 				x1[[1]]$Model <- paste0(n,"-Model Avg")
 				x <- x1[[1]]
-				x[[stat]] <- v1
-				x[[stat]][x$Var=="Temperature"] <- round(x[[stat]][x$Var=="Temperature"],1)
-				x[[stat]][x$Var=="Precipitation"] <- round(x[[stat]][x$Var=="Precipitation"])
+				for(k in 1:length(stat)){
+					x[[stat[k]]] <- v1[[k]]
+					x[[stat[k]]][x$Var=="Temperature"] <- round(x[[stat[k]]][x$Var=="Temperature"],1)
+					x[[stat[k]]][x$Var=="Precipitation"] <- round(x[[stat[k]]][x$Var=="Precipitation"])
+				}
 			}
 			if(input$convert_units){
 			prog_d_master$set(message="Calculating, please wait", detail="Unit conversion...")
-				x[[stat]][x$Var=="Temperature"] <- round((9/5)*x[[stat]][x$Var=="Temperature"] + 32,1)
-				x[[stat]][x$Var=="Precipitation"] <- round(x[[stat]][x$Var=="Precipitation"]/25.4,3)
+				for(k in 1:length(stat)){
+					x[[stat[k]]][x$Var=="Temperature"] <- round((9/5)*x[[stat[k]]][x$Var=="Temperature"] + 32,1)
+					x[[stat[k]]][x$Var=="Precipitation"] <- round(x[[stat[k]]][x$Var=="Precipitation"]/25.4,3)
+				}
 			}
 			prog_d_master$set(message="Calculating, please wait", detail="GCM statistics complete.")
 			rownames(x) <- NULL
@@ -233,9 +247,11 @@ dat_heatmap <- reactive({
 
 dat2 <- reactive({
 	if(is.null(input$goButton) || input$goButton==0) return()
-	isolate(
-		if(!is.null(dat_master()) && length(input$vars)>1) dcast(dat_master(), Phase + Model + Scenario + Location + Month + Year + Decade ~ Var, value.var=aggStatsID()) else NULL
-	)
+	isolate({
+		if(!is.null(dat_master()) && length(input$vars) && length(input$vars2)) x <- dcast(dat_master(), Phase + Model + Scenario + Location + Month + Year + Decade ~ Var, value.var=aggStatsID()) else x <- NULL
+		if(!is.null(x) && aggStatsID()!=aggStatsID2()) x[input$vars2] <- dat_master()[dat_master()$Var==input$vars2, aggStatsID2()]
+	})
+	x
 })
 
 CRU_master <- reactive({
@@ -507,6 +523,11 @@ pooled.var <- reactive({
 
 subjectChoices <- reactive({ getSubjectChoices(inx=input$xtime, ingrp=input$group, pooled.vars=pooled.var()) })
 
+sc_flip_xy <- reactive({
+	if(is.null(c(input$vars, input$vars2))) return(FALSE)
+	if(input$sc_x==input$vars) FALSE else TRUE
+})
+
 groupFacetChoicesScatter <- reactive({
 	ind <- which(unlist(lapply(list(phases, models(), scenarios(), Months(), Decades(), Locs()), length))>1)
 	choices <- c("None", c("Phase","Model","Scenario","Month","Decade","Location")[ind])
@@ -525,7 +546,7 @@ n.groups2 <- reactive({ nGroups(input$group2, scenarios(), models(), input$mos, 
 facet.panels2 <- reactive({ getFacetPanels(input$facet2, models(), scenarios(), input$mos, input$decs, Locs()) })
 
 pooled.var2 <- reactive({
-	x <- getPooledVars(inx=input$xy, ingrp=input$group2, infct=input$facet2, grp.fct.choices=groupFacetChoicesScatter(),
+	x <- getPooledVars(inx=c(input$vars, input$vars2), ingrp=input$group2, infct=input$facet2, grp.fct.choices=groupFacetChoicesScatter(),
 			choices=c("Phase","Scenario","Model","Month","Year","Decade","Location"),
 			mos=Months(), years=currentYears(), decades=Decades(), locs=Locs(), scenarios=scenarios(), models=models(),
 			cmip3scens=input$cmip3scens, cmip5scens=input$cmip5scens, cmip3mods=input$cmip3models, cmip5mods=input$cmip5models)
