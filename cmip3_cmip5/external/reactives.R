@@ -249,6 +249,7 @@ dat_heatmap <- reactive({
 dat2 <- reactive({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	isolate({
+		x <- NULL
 		if(!is.null(dat_master()) && length(input$vars) && length(input$vars2)) x <- dcast(dat_master(), Phase + Model + Scenario + Location + Month + Year + Decade ~ Var, value.var=aggStatsID()) else x <- NULL
 		if(!is.null(x) && aggStatsID()!=aggStatsID2()) x[input$vars2] <- dat_master()[dat_master()$Var==input$vars2, aggStatsID2()]
 	})
@@ -338,6 +339,7 @@ CRU <- reactive({
 CRU2 <- reactive({
 	if(is.null(input$goButton) || input$goButton==0) return()
 	isolate({
+		x <- NULL
 		if(!is.null(CRU_master()) && length(input$vars) && length(input$vars2)) x <- dcast(CRU_master(), Phase + Model + Scenario + Location + Month + Year + Decade ~ Var, value.var=aggStatsID()) else NULL
 		if(!is.null(x) && aggStatsID()!=aggStatsID2()) x[input$vars2] <- CRU_master()[CRU_master()$Var==input$vars2, aggStatsID2()]
 	})
