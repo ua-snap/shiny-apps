@@ -14,8 +14,8 @@ column(4,
 					conditionalPanel(condition="input.tsp == 'plot_scatter'", selectInput("vars2", "Variable 2:", varnames, selected=varnames[2], width="100%"))
 				),
 				column(6,
-					selectInput("aggStats", "Stat:", stats.colnames, selected=stats.colnames[1], width="100%"),
-					conditionalPanel(condition="input.tsp == 'plot_scatter'", selectInput("aggStats2", "Stat:", stats.colnames, selected=stats.colnames[1], width="100%"))
+					selectInput("aggStats", "Stat:", agg.stat.names, selected=agg.stat.names[1], width="100%"),
+					conditionalPanel(condition="input.tsp == 'plot_scatter'", selectInput("aggStats2", "Stat:", agg.stat.names, selected=agg.stat.names[1], width="100%"))
 				)
 			),
 			checkboxInput("convert_units", "Convert units to F, in", FALSE),

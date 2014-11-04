@@ -140,7 +140,7 @@ dat_master <- reactive({
 				}
 				prog_d_master$set(message="Calculating, please wait", detail="Subsetting GCM time series data...")
 				stat <- c(aggStatsID(), aggStatsID2())
-				cols.drop <- match(stats.colnames[which(!(stats.colnames %in% stat))], names(region.dat.final))
+				cols.drop <- match(agg.stat.colnames[which(!(agg.stat.colnames %in% stat))], names(region.dat.final))
 				x <- subset(region.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original(), select=-cols.drop)
@@ -288,8 +288,8 @@ CRU_master <- reactive({
 					if(i==1) region.cru.dat.final <- region.cru.dat else region.cru.dat.final <- rbind(region.cru.dat.final, region.cru.dat)
 				}
 				prog_d_cru_master$set(message="Calculating, please wait", detail="Subsetting CRU 3.1 time series data...")
-				stat <- aggStatsID()
-				cols.drop <- match(stats.colnames[which(!(stats.colnames %in% stat))], names(region.cru.dat.final))
+				stat <- c(aggStatsID(), aggStatsID2())
+				cols.drop <- match(agg.stat.colnames[which(!(agg.stat.colnames %in% stat))], names(region.cru.dat.final))
 				x <- subset(region.cru.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4), select=-cols.drop)
 			}
@@ -308,8 +308,10 @@ CRU_master <- reactive({
 			# Otherwise compositing prohibited.
 			if(input$convert_units){
 				prog_d_cru_master$set(message="Calculating, please wait", detail="Unit conversion...")
-				x[[stat]][x$Var=="Temperature"] <- round((9/5)*x[[stat]][x$Var=="Temperature"] + 32,1)
-				x[[stat]][x$Var=="Precipitation"] <- round(x[[stat]][x$Var=="Precipitation"]/25.4,3)
+				for(k in 1:length(stat)){
+					x[[stat[k]]][x$Var=="Temperature"] <- round((9/5)*x[[stat[k]]][x$Var=="Temperature"] + 32,1)
+					x[[stat[k]]][x$Var=="Precipitation"] <- round(x[[stat[k]]][x$Var=="Precipitation"]/25.4,3)
+				}
 			}
 			rownames(x) <- NULL
 			x$Model <- x$Scenario <- x$Phase <- "CRU 3.1"
@@ -335,9 +337,11 @@ CRU <- reactive({
 
 CRU2 <- reactive({
 	if(is.null(input$goButton) || input$goButton==0) return()
-	isolate(
-		if(!is.null(CRU_master()) && length(input$vars)>1) dcast(CRU_master(), Phase + Model + Scenario + Location + Month + Year + Decade ~ Var, value.var=aggStatsID()) else NULL
-	)
+	isolate({
+		if(!is.null(CRU_master()) && length(input$vars) && length(input$vars2)) x <- dcast(CRU_master(), Phase + Model + Scenario + Location + Month + Year + Decade ~ Var, value.var=aggStatsID()) else NULL
+		if(!is.null(x) && aggStatsID()!=aggStatsID2()) x[input$vars2] <- CRU_master()[CRU_master()$Var==input$vars2, aggStatsID2()]
+	})
+	x
 })
 
 # Keep first climate variables only
