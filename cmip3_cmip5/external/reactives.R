@@ -551,7 +551,7 @@ n.groups2 <- reactive({ nGroups(input$group2, scenarios(), models(), input$mos, 
 facet.panels2 <- reactive({ getFacetPanels(input$facet2, models(), scenarios(), input$mos, input$decs, Locs()) })
 
 pooled.var2 <- reactive({
-	x <- getPooledVars(inx=c(input$vars, input$vars2), ingrp=input$group2, infct=input$facet2, grp.fct.choices=groupFacetChoicesScatter(),
+	x <- getPooledVars(inx=input$sc_x, ingrp=input$group2, infct=input$facet2, grp.fct.choices=groupFacetChoicesScatter(),
 			choices=c("Phase","Scenario","Model","Month","Year","Decade","Location"),
 			mos=Months(), years=currentYears(), decades=Decades(), locs=Locs(), scenarios=scenarios(), models=models(),
 			cmip3scens=input$cmip3scens, cmip5scens=input$cmip5scens, cmip3mods=input$cmip3models, cmip5mods=input$cmip5models)

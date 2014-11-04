@@ -67,6 +67,7 @@ outputOptions(output, "N_Periods", suspendWhenHidden=FALSE)
 
 output$GoButton <- renderUI({
 	input$vars
+	input$vars2
 	input$units
 	input$cmip3scens
 	input$cmip5scens
@@ -84,6 +85,7 @@ output$GoButton <- renderUI({
 	input$n_seasons
 	input$n_periods
 	input$aggStats
+	input$aggStats2
 	actionButton("goButton", "Subset Data", icon="ok icon-white", styleclass="primary", block=T)
 })
 
@@ -392,7 +394,7 @@ output$Variability <- renderUI({
 #})
 
 # Conditional inputs (tabset panel tab: spatial plots)
-colorseq_sp <- renderUI({
+colorseq_sp <- reactive({
 	getColorSeq(d=dat_spatial(), grp=input$groupSpatial, n.grp=nGroupsSpatial(), overlay=input$sp_showCRU)
 })
 
