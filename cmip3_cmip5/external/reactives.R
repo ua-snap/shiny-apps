@@ -133,7 +133,8 @@ dat_master <- reactive({
 			} else if(input$loctype!="Cities"){
 				region.ind <- which(sort(region.names.out[[input$loctype]]) %in% Locs())
 				for(i in 1:length(region.ind)) {
-					load(region.gcm.stats.files[[input$loctype]][region.ind[i]], envir=environment())
+					filename <- switch(input$vars[1], Temperature="stats_climate", Precipitation="stats_climate")
+					load(paste0(region.gcm.stats.files[[input$loctype]][region.ind[i]], "/", filename, ".RData"), envir=environment()) # Still can only load onevariable file, okay as long as app only contains T & P
 					gcm.stats.df[,stats.columns] <- region.dat
 					gcm.stats.df$Location <- Locs()[i]
 					if(i==1) region.dat.final <- gcm.stats.df else region.dat.final <- rbind(region.dat.final, gcm.stats.df)
@@ -285,7 +286,8 @@ CRU_master <- reactive({
 			} else if(input$loctype!="Cities"){
 				region.ind <- which(sort(region.names.out[[input$loctype]]) %in% Locs())
 				for(i in 1:length(region.ind)) {
-					load(region.cru.stats.files[[input$loctype]][region.ind[i]], envir=environment())
+					filename <- switch(input$vars[1], Temperature="stats_climate", Precipitation="stats_climate") # Still can only load onevariable file, okay as long as app only contains T & P
+					load(paste0(region.cru.stats.files[[input$loctype]][region.ind[i]], "/", filename, ".RData"), envir=environment())
 					if(i==1) region.cru.dat.final <- region.cru.dat else region.cru.dat.final <- rbind(region.cru.dat.final, region.cru.dat)
 				}
 				prog_d_cru_master$set(message="Calculating, please wait", detail="Subsetting CRU 3.1 time series data...")
@@ -376,7 +378,7 @@ dat_spatial <- reactive({
 			} else if(input$loctype!="Cities"){ #### Regions: only this is under development for now
 				region.ind <- which(sort(region.names.out[[input$loctype]]) %in% Locs())
 				for(i in 1:length(region.ind)) {
-					load(paste0(region.gcm.samples.files[[input$loctype]][region.ind[i]], "/", tolower(input$vars[1]), ".RData"), envir=environment()) # Store list of file locations in metadata workspace
+					load(paste0(region.gcm.samples.files[[input$loctype]][region.ind[i]], "/", tolower(input$vars[1]), ".RData"), envir=environment()) # Still can only load onevariable file, okay as long as app only contains T & P
 					gcm.samples.df[,samples.columns] <- rsd/rep(samples.multipliers, each=length(rsd)/2)
 					gcm.samples.df$Var <- input$vars[1]
 					gcm.samples.df$Location <- Locs()[i]
@@ -455,7 +457,7 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 			} else if(input$loctype!="Cities"){
 				region.ind <- which(sort(region.names.out[[input$loctype]]) %in% Locs())
 				for(i in 1:length(region.ind)) {
-					load(paste0(region.cru.samples.files[[input$loctype]][region.ind[i]], "/", tolower(input$vars[1]), ".RData"), envir=environment()) # Store list of file locations in metadata workspace
+					load(paste0(region.cru.samples.files[[input$loctype]][region.ind[i]], "/", tolower(input$vars[1]), ".RData"), envir=environment()) # Still can only load onevariable file, okay as long as app only contains T & P
 					cru.samples.df[,samples.columns.cru] <- rsd.cru/rep(samples.multipliers.cru, each=length(rsd.cru)/2)
 					cru.samples.df$Var <- input$vars[1]
 					cru.samples.df$Location <- Locs()[i]
