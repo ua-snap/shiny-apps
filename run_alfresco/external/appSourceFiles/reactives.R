@@ -136,16 +136,19 @@ Obs_updateFiles <- reactive({
 			
 			# system calls begin here
 			# Create Alfresco run-specific output directories and give shiny group write permissions
-			system(paste("ssh", server, "rm -rf", outDir))
-			system(paste("ssh", server, "mkdir -p", outDir))
-			system(paste("ssh", server, "chmod 2775", outDir))
-			
-			system(paste("ssh", server, "Rscript", "/big_scratch/mfleonawicz/Alf_Files_20121129/make_sensitivity_ignition_maps.R", alf_ig, alf_fs, outDir, alf.domain))
+			if(!input$skipAlf){
+				system(paste("ssh", server, "rm -rf", outDir))
+				system(paste("ssh", server, "mkdir -p", outDir))
+				system(paste("ssh", server, "chmod 2775", outDir))
+				system(paste("ssh", server, "Rscript", "/big_scratch/mfleonawicz/Alf_Files_20121129/make_sensitivity_ignition_maps.R", alf_ig, alf_fs, outDir, alf.domain))
+			}
 			system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco.slurm"), file.path(outDir,"RunAlfresco.slurm")))
 			system(paste("ssh", server, "cp", file.path(mainDir,"CompileData.slurm"), file.path(outDir,"CompileData.slurm")))
 			#system(paste("ssh", server, "cp", file.path(mainDir,"mailPNGs.sh"), file.path(outDir,"mailPNGs.sh")))
-			system(paste0("scp ", input$json_files, " ", server, ":", file.path(outDir,input$json_files)))
-			system(paste0("scp ", file.path("pts",input$frp_pts), " ", server, ":", file.path(outDir,input$frp_pts)))
+			if(!input$skipAlf){
+				system(paste0("scp ", input$json_files, " ", server, ":", file.path(outDir,input$json_files)))
+				system(paste0("scp ", file.path("pts",input$frp_pts), " ", server, ":", file.path(outDir,input$frp_pts)))
+			}
 			
 			slurm_arguments <- paste("-D", outDir)
 			buffers <- paste(1000*as.numeric(unlist(strsplit(input$frp_buffers,","))), collapse=",")
@@ -159,7 +162,7 @@ Obs_updateFiles <- reactive({
 			}
 			frp_arguments <- paste0("pts=", input$frp_pts, " ", "'buffers=", buffers, "' group.name=", group.name, " run.name=", run.name, " emp.fire.cause=", input$fire_cause, collapse=" ")
 			if(input$skipAlf) postprocOnly <- 0 else postprocOnly <- 1
-			arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$json_files, postprocOnly, frp_arguments), collapse=" ")
+			arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$json_files, postprocOnly, frp_arguments, alf_yr1), collapse=" ")
 			sbatch_string <- paste("ssh", server, exec, slurm_arguments, file.path(outDir,slurmfile), arguments)
 			system(sbatch_string)
 			x <- paste("Alfresco job started on Atlas:\n", gsub(" ", " \n", sbatch_string))
