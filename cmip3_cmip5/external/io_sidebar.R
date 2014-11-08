@@ -1,7 +1,7 @@
 # x-axis variable (TS plot, Variability plot), x/y axes variables (scatter plot), grouping variable, faceting variable
 # x and y variables have no reactive dependencies for plot tabs 1 and 2, see sidebar.R
 output$ShowPlotOptionsPanel <- reactive({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	isolate({
 		x <- TRUE
 	})
@@ -90,7 +90,7 @@ output$GoButton <- renderUI({
 })
 
 output$Group <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	input$xtime
 	isolate(
 		if(!is.null(groupFacetChoicesTS())) selectInput("group", "Group/color by:", choices=groupFacetChoicesTS(), selected=groupFacetChoicesTS()[1], width="100%")
@@ -98,7 +98,7 @@ output$Group <- renderUI({
 })
 
 output$Facet <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	input$xtime
 	isolate(
 		if(!is.null(groupFacetChoicesTS())) selectInput("facet","Facet/panel by:", choices=groupFacetChoicesTS(), selected=groupFacetChoicesTS()[1], width="100%")
@@ -106,7 +106,7 @@ output$Facet <- renderUI({
 })
 
 #output$Subjects <- renderUI({
-#	if(is.null(input$goButton) || input$goButton==0) return()
+#	if(goBtnNullOrZero()) return()
 #	input$xtime
 #	input$group
 #	input$facet
@@ -116,19 +116,19 @@ output$Facet <- renderUI({
 #})
 
 output$Sc_X <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	selectInput("sc_x", "X-axis", choices=c(input$vars, input$vars2), selected=input$vars, width="100%")
 })
 
 output$Group2 <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	isolate(
 		if(!is.null(groupFacetChoicesScatter())) selectInput("group2", "Group/color by:", choices=groupFacetChoicesScatter(), selected=groupFacetChoicesScatter()[1], width="100%")
 	)
 })
 
 output$Facet2 <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	isolate(
 		if(!is.null(groupFacetChoicesScatter())) selectInput("facet2","Facet/panel by:", choices=groupFacetChoicesScatter(), selected=groupFacetChoicesScatter()[1], width="100%")
 	)
@@ -143,7 +143,7 @@ output$Heatmap_y <- renderUI({
 })
 
 output$FacetHeatmap <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	input$heatmap_x
 	input$heatmap_y
 	isolate(
@@ -152,7 +152,7 @@ output$FacetHeatmap <- renderUI({
 })
 
 output$StatHeatmap <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	input$heatmap_x
 	input$heatmap_y
 	input$facetHeatmap
@@ -168,7 +168,7 @@ output$Xvar <- renderUI({
 })
 
 output$Group3 <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	input$xvar
 	isolate(
 		if(!is.null(groupFacetChoicesVar())) selectInput("group3", "Group/color by:", choices=groupFacetChoicesVar(), selected=groupFacetChoicesVar()[1], width="100%")
@@ -176,7 +176,7 @@ output$Group3 <- renderUI({
 })
 
 output$Facet3 <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	input$xvar
 	isolate(
 		if(!is.null(groupFacetChoicesVar())) selectInput("facet3","Facet/panel by:", choices=groupFacetChoicesVar(), selected=groupFacetChoicesVar()[1], width="100%")
@@ -184,7 +184,7 @@ output$Facet3 <- renderUI({
 })
 
 #output$Subjects3 <- renderUI({
-#	if(is.null(input$goButton) || input$goButton==0) return()
+#	if(goBtnNullOrZero()) return()
 #	input$xvar
 #	input$group3
 #	input$facet3
@@ -202,7 +202,7 @@ output$Spatial_x <- renderUI({
 })
 
 output$GroupSpatial <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	input$spatial_x
 	isolate(
 		if(!is.null(groupFacetChoicesSpatial())) selectInput("groupSpatial", "Group/color by:", choices=groupFacetChoicesSpatial(), selected=groupFacetChoicesSpatial()[1], width="100%")
@@ -210,7 +210,7 @@ output$GroupSpatial <- renderUI({
 })
 
 output$FacetSpatial <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	input$spatial_x
 	isolate(
 		if(!is.null(groupFacetChoicesSpatial())) selectInput("facetSpatial","Facet/panel by:", choices=groupFacetChoicesSpatial(), selected=groupFacetChoicesSpatial()[1], width="100%")
@@ -218,7 +218,7 @@ output$FacetSpatial <- renderUI({
 })
 
 output$PlotTypeSpatial <- renderUI({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	input$spatial_x
 	isolate(
 		if(!is.null(input$spatial_x)) selectInput("plotTypeSpatial","Plot type:", choices=plotTypeChoicesSpatial(), selected=plotTypeChoicesSpatial()[1], width="100%")
@@ -226,7 +226,7 @@ output$PlotTypeSpatial <- renderUI({
 })
 
 #output$SubjectsSpatial <- renderUI({
-#	if(is.null(input$goButton) || input$goButton==0) return()
+#	if(goBtnNullOrZero()) return()
 #	input$spatial_x
 #	input$groupSpatial
 #	input$facetSpatial
@@ -433,7 +433,23 @@ output$StripDirectionSpatial <- renderUI({ #### Consider swapping this out for a
 # Options for summarizing data in scatter plot (hexbin)
 output$Hexbin <- renderUI({ checkboxInput("hexbin", "Hex bins", FALSE) })
 
-# Plot button
-output$PlotButton <- renderUI({
-	if(permitPlot() & !is.null(dat()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat())>0) actionButton("plotButton", "Generate Plot", icon="ok icon-white", styleclass="primary", block=T)
+# Plot buttons
+output$PlotButton_ts <- renderUI({
+	if(permitPlot() & !is.null(dat()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat())>0) actionButton("plotButton_ts", "Generate Plot", icon="ok icon-white", styleclass="primary", block=T)
+})
+
+output$PlotButton_sc <- renderUI({
+	if(permitPlot() & !is.null(dat2()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat2())>0) actionButton("plotButton_sc", "Generate Plot", icon="ok icon-white", styleclass="primary", block=T)
+})
+
+output$PlotButton_hm <- renderUI({
+	if(permitPlot() & !is.null(dat()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat())>0) actionButton("plotButton_hm", "Generate Plot", icon="ok icon-white", styleclass="primary", block=T)
+})
+
+output$PlotButton_vr <- renderUI({
+	if(permitPlot() & !is.null(dat()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat())>0) actionButton("plotButton_vr", "Generate Plot", icon="ok icon-white", styleclass="primary", block=T)
+})
+
+output$PlotButton_sp <- renderUI({
+	if(permitPlot() & !is.null(dat_spatial()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat_spatial())>0) actionButton("plotButton_sp", "Generate Plot", icon="ok icon-white", styleclass="primary", block=T)
 })

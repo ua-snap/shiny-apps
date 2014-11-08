@@ -82,6 +82,8 @@ logo.alpha <- 1
 logo.mat <- matrix(rgb(logo[,,1],logo[,,2],logo[,,3],logo[,,4]*logo.alpha), nrow=dim(logo)[1])
 
 # These functions are written with the structure of the app in mind. They are intended to avoid code duplication.
+nullOrZero <- function(x) is.null(x) || x==0
+
 density2bootstrap <- function(d, n.density, n.boot=10000, interp=FALSE, n.interp=1000, ...){
 	n.fact <- n.boot/n.density
 	n.grp <- nrow(d)/n.density

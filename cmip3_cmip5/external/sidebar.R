@@ -178,14 +178,16 @@ column(4,
 		)
 		),
 		fluidRow(
-			column(6, uiOutput("PlotButton")),
-			column(6,
-				conditionalPanel(condition="input.tsp == 'plot_heatmap' && input.plotButton > 0", downloadButton("dlCurPlotHeatmap", "Download Plot", class="btn-success btn-block")),
-				conditionalPanel(condition="input.tsp == 'plot_ts' && input.plotButton > 0", downloadButton("dlCurPlotTS", "Download Plot", class="btn-success btn-block")),
-				conditionalPanel(condition="input.tsp == 'plot_scatter' && input.plotButton > 0", downloadButton("dlCurPlotScatter", "Download Plot", class="btn-success btn-block")),
-				conditionalPanel(condition="input.tsp == 'plot_variability' && input.plotButton > 0", downloadButton("dlCurPlotVariability", "Download Plot", class="btn-success btn-block")),
-				conditionalPanel(condition="input.tsp == 'plot_spatial' && input.plotButton > 0", downloadButton("dlCurPlotSpatial", "Download Plot", class="btn-success btn-block"))
-			)
+			conditionalPanel(condition="input.tsp == 'plot_heatmap'", column(6, uiOutput("PlotButton_hm")),
+				column(6, conditionalPanel(condition="input.plotButton_hm > 0", downloadButton("dlCurPlotHeatmap", "Download Plot", class="btn-success btn-block")))),
+			conditionalPanel(condition="input.tsp == 'plot_ts'", column(6, uiOutput("PlotButton_ts")), 
+				column(6, conditionalPanel(condition="input.plotButton_ts > 0", downloadButton("dlCurPlotTS", "Download Plot", class="btn-success btn-block")))),
+			conditionalPanel(condition="input.tsp == 'plot_scatter'", column(6, uiOutput("PlotButton_sc")),
+				column(6, conditionalPanel(condition="input.plotButton_sc > 0", downloadButton("dlCurPlotScatter", "Download Plot", class="btn-success btn-block")))),
+			conditionalPanel(condition="input.tsp == 'plot_variability'", column(6, uiOutput("PlotButton_vr")), 
+				column(6, conditionalPanel(condition="input.plotButton_vr > 0", downloadButton("dlCurPlotVariability", "Download Plot", class="btn-success btn-block")))),
+			conditionalPanel(condition="input.tsp == 'plot_spatial'", column(6, uiOutput("PlotButton_sp")), 
+				column(6, conditionalPanel(condition="input.plotButton_sp > 0", downloadButton("dlCurPlotSpatial", "Download Plot", class="btn-success btn-block"))))
 		)
 	)
 	)

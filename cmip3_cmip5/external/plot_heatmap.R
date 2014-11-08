@@ -3,16 +3,16 @@ function(d, d.stat, d2, x, y, z, Log=FALSE, panels, facet.cols=ceiling(sqrt(pane
 	pooled.var, plot.theme.dark=FALSE, show.logo=F, logo.mat=NULL){
 		if(is.null(d)) return(plot(0,0,type="n",axes=F,xlab="",ylab=""))
 		if(plot.theme.dark) { bg.theme <- "black"; color.theme <- "white" } else { bg.theme <- "white"; color.theme <- "black" }
-		if(show.overlay & !is.null(overlay)) show.overlay <- TRUE else show.overlay <- FALSE
-		if(show.overlay){
-			n.d <- nrow(d)
-			mods.d <- unique(d$Model)
-			yrs.tmp <- as.numeric(c(as.character(d$Year), as.character(overlay$Year)))
-			d <- data.frame(rbind(d[1:7], overlay[1:7]), Year=yrs.tmp, rbind(d[9:ncol(d)], overlay[9:ncol(overlay)]))
-			d$Year <- yrs.tmp
-			d$Source <- factor(c(rep("Modeled", n.d), rep("Observed", nrow(overlay))))
-			d$Model <- factor(d$Model, levels=c(overlay$Model[1], mods.d))
-		}
+		#if(show.overlay & !is.null(overlay)) show.overlay <- TRUE else show.overlay <- FALSE
+		#if(show.overlay){
+		#	n.d <- nrow(d)
+		#	mods.d <- unique(d$Model)
+		#	yrs.tmp <- as.numeric(c(as.character(d$Year), as.character(overlay$Year)))
+		#	d <- data.frame(rbind(d[1:7], overlay[1:7]), Year=yrs.tmp, rbind(d[9:ncol(d)], overlay[9:ncol(overlay)]))
+		#	d$Year <- yrs.tmp
+		#	d$Source <- factor(c(rep("Modeled", n.d), rep("Observed", nrow(overlay))))
+		#	d$Model <- factor(d$Model, levels=c(overlay$Model[1], mods.d))
+		#}
 		if(!length(lgd.pos)) lgd.pos="Top"
 		if(!length(fontsize)) fontsize <- 16
 		fontsize=as.numeric(fontsize)
@@ -20,7 +20,7 @@ function(d, d.stat, d2, x, y, z, Log=FALSE, panels, facet.cols=ceiling(sqrt(pane
 		if(Log){
 			units[2] <- paste("log", units[2])
 			d[d.stat] <- round(log(d[d.stat] + 1), 1); d2[z] <- round(log(d2[z] + 1), 1)
-			if(show.overlay) overlay[d.stat] <- round(log(overlay[d.stat] + 1), 1)
+			#if(show.overlay) overlay[d.stat] <- round(log(overlay[d.stat] + 1), 1)
 		}
 		#if(d$Var[1]=="Temperature") ylb <- paste0(y.name, " temperature (",units[1],")") else ylb <- paste0(y.name, " precipitation (",units[2],")") #### Need to alter key title rather than axes titles
 		main <- paste0("Code this title: ", plot.title) # agg stat metrics adjustment required
@@ -36,5 +36,5 @@ function(d, d.stat, d2, x, y, z, Log=FALSE, panels, facet.cols=ceiling(sqrt(pane
 		if(show.panel.text) g <- annotatePlot(g, data=d, x=x, y=y, text=plot.subtitle, col=color.theme)
 		if(show.values) g <- g + geom_text(data=d2, aes_string(fill=z, label=z))
 		g <- addLogo(g, show.logo, logo.mat, show.title, main, fontsize)
-		print(g)
+		if(length(unique(d2[,z])) > 1) print(g) else NULL
 }

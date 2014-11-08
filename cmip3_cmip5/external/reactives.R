@@ -1,5 +1,11 @@
 # Datasets, scenarios, models, years, decades
-anyBtnNullOrZero <- reactive({ is.null(input$goButton) || input$goButton==0 || is.null(input$plotButton) || input$plotButton==0 })
+goBtnNullOrZero <- reactive({ nullOrZero(input$goButton) })
+twoBtnNullOrZero_ts <- reactive({ goBtnNullOrZero() || nullOrZero(input$plotButton_ts) })
+twoBtnNullOrZero_sc <- reactive({ goBtnNullOrZero() || nullOrZero(input$plotButton_sc) })
+twoBtnNullOrZero_hm <- reactive({ goBtnNullOrZero() || nullOrZero(input$plotButton_hm) })
+twoBtnNullOrZero_vr <- reactive({ goBtnNullOrZero() || nullOrZero(input$plotButton_vr) })
+twoBtnNullOrZero_sp <- reactive({ goBtnNullOrZero() || nullOrZero(input$plotButton_sp) })
+#anyBtnNullOrZero <- reactive({ any(c(goBtnNullOrZero(), twoBtnNullOrZero_ts(), twoBtnNullOrZero_ts(), twoBtnNullOrZero_ts(), twoBtnNullOrZero_ts(), twoBtnNullOrZero_ts())) })
 
 currentYears <- reactive({ if(!is.null(input$yrs)) as.numeric(input$yrs[1]):as.numeric(input$yrs[2]) })
 
@@ -105,7 +111,7 @@ locSelected <- reactive({ length(Locs()) })
 	
 # Initially retain all climate variables regardless of user's selection
 dat_master <- reactive({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	prog_d_master <- Progress$new(session, min=1, max=10)
 	on.exit(prog_d_master$close())
 	isolate(
@@ -205,12 +211,13 @@ dat_master <- reactive({
 })
 
 dat <- reactive({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	isolate({
 		if(is.null(dat_master())){
 			x <- NULL
 		} else {
-			x <- subset(dat_master(), Var %in% input$vars[1]) # only one (first) climate variable permitted for use in TS plot, even if user selects multiple
+			if(aggStatsID()==aggStatsID2()) keep.cols <- 1:ncol(dat_master()) else keep.cols <- which(!(names(dat_master()) %in% aggStatsID2()))
+			x <- subset(dat_master(), Var %in% input$vars, keep.cols) # only one (first) climate variable permitted for use in TS plot
 			rownames(x) <- NULL
 		}
 	})
@@ -218,7 +225,7 @@ dat <- reactive({
 })
 
 dat_heatmap <- reactive({
-	if(is.null(input$goButton) || input$goButton==0 || is.null(dat())) return()
+	if(goBtnNullOrZero() || is.null(dat())) return()
 	input$heatmap_x
 	input$heatmap_y
 	input$facetHeatmap
@@ -248,17 +255,17 @@ dat_heatmap <- reactive({
 })
 
 dat2 <- reactive({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	isolate({
 		x <- NULL
-		if(!is.null(dat_master()) && length(input$vars) && length(input$vars2)) x <- dcast(dat_master(), Phase + Model + Scenario + Location + Month + Year + Decade ~ Var, value.var=aggStatsID()) else x <- NULL
+		if(!is.null(dat_master()) && length(input$vars) && length(input$vars2)) x <- dcast(dat_master(), Phase + Model + Scenario + Location + Year + Month + Decade ~ Var, value.var=aggStatsID()) else x <- NULL
 		if(!is.null(x) && aggStatsID()!=aggStatsID2()) x[input$vars2] <- dat_master()[dat_master()$Var==input$vars2, aggStatsID2()]
 	})
 	x
 })
 
 CRU_master <- reactive({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	prog_d_cru_master <- Progress$new(session, min=1, max=10)
 	on.exit(prog_d_cru_master$close())
 	isolate(
@@ -326,12 +333,13 @@ CRU_master <- reactive({
 })
 
 CRU <- reactive({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	isolate(
 		if(is.null(CRU_master())){
 			x <- NULL
 		} else {
-			x <- subset(CRU_master(), Var %in% input$vars[1]) # only one (first) climate variable permitted for use in TS plot, even if user selects multiple
+			if(aggStatsID()==aggStatsID2()) keep.cols <- 1:ncol(CRU_master()) else keep.cols <- which(!(names(CRU_master()) %in% aggStatsID2()))
+			x <- subset(CRU_master(), Var %in% input$vars, keep.cols) # only one (first) climate variable permitted for use in TS plot
 			rownames(x) <- NULL
 		}
 	)
@@ -339,10 +347,10 @@ CRU <- reactive({
 })
 
 CRU2 <- reactive({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	isolate({
 		x <- NULL
-		if(!is.null(CRU_master()) && length(input$vars) && length(input$vars2)) x <- dcast(CRU_master(), Phase + Model + Scenario + Location + Month + Year + Decade ~ Var, value.var=aggStatsID()) else NULL
+		if(!is.null(CRU_master()) && length(input$vars) && length(input$vars2)) x <- dcast(CRU_master(), Phase + Model + Scenario + Location + Year + Month + Decade ~ Var, value.var=aggStatsID()) else NULL
 		if(!is.null(x) && aggStatsID()!=aggStatsID2()) x[input$vars2] <- CRU_master()[CRU_master()$Var==input$vars2, aggStatsID2()]
 	})
 	x
@@ -350,7 +358,7 @@ CRU2 <- reactive({
 
 # Keep first climate variables only
 dat_spatial <- reactive({
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	prog_d_spatial <- Progress$new(session, min=1, max=10)
 	on.exit(prog_d_spatial$close())
 	isolate(
@@ -441,7 +449,7 @@ dat_spatial <- reactive({
 })
 
 CRU_spatial <- reactive({ #### All CRU datasets require recoding for externalization
-	if(is.null(input$goButton) || input$goButton==0) return()
+	if(goBtnNullOrZero()) return()
 	prog_d_cru_spatial <- Progress$new(session, min=1, max=10)
 	on.exit(prog_d_cru_spatial$close())
 	isolate(
