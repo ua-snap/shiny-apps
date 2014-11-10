@@ -9,11 +9,11 @@ shinyServer(function(input,output){
 
 	output$distName <- renderUI({
 		if(input$disttype=="Discrete"){
-			radioButtons("dist","Distribution:",selected="Bernoulli",
+			radioButtons("dist","Distribution:",selected="bern",
 				list("Bernoulli"="bern","Binomial"="bin","Discrete Uniform"="dunif","Geometric"="geom","Hypergeometric"="hgeom","Negative Binomial"="nbin","Poisson"="poi") # discrete
 			)
 		} else if(input$disttype=="Continuous"){
-			radioButtons("dist","Distribution:",selected="Beta",
+			radioButtons("dist","Distribution:",selected="beta",
 				list("Beta"="beta","Cauchy"="cauchy","Chi-squared"="chisq","Exponential"="exp","F"="F","Gamma"="gam","Laplace (Double Exponential)"="lap", # continuous
 					"Logistic"="logi","Log-Normal"="lognorm","Normal"="norm","Pareto"="pareto","t"="t","Uniform"="unif","Weibull"="weib")
 			)
