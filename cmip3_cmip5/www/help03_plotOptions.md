@@ -17,16 +17,9 @@ However, the next menu for selecting a grouping variable, is dependent
 on the data subset. Grouping is for factors and it's only sensible if
 there are at least two levels of a factor in the data table. The menu,
 among others, must be updated when the data changes. Some options are
-hierarchically dependent. For example, the faceting variable has the
-same requirements as the grouping variable, which depends on the data,
-but of the candidate factors one could facet by, it is important to
-consider if we need to drop one from the list because it has been chosen
-for grouping.
-
-Aside: I may change this requirement, as there is nothing necessarily
-bad about grouping and faceting by the same variable. But for reasons
-beyond the scope of this document complexities of the app may suggest I
-leave the restriction in place.
+hierarchically dependent. For example, the color options dpened on the
+grouping variable which, for some plots, depends on the axis
+variable(s).
 
 #### Plot Options are Plot-Dependent <img style="float: right" src="screenshots/plotOptionsPanel_1_white.png"/>
 
@@ -84,10 +77,10 @@ rather than a strict, uniquely colored overlay.
 When seeing but through a glass darkly, we just need to know the best
 angle at which to hold the glass to the light. The plots available in
 the app cannot display absolutely anything the user wants, but certainly
-more ways than I like to think about. As a result, there are many ways
-to look at the same thing, and some are far better than others. This app
-will allow the user to plot some things that don't really even make
-sense to look at or think about. It requires that you think clearly
+in more ways than I like to think about. As a result, there are many
+ways to look at the same thing, and some are far better than others.
+This app will allow the user to plot some things that don't really even
+make sense to look at or think about. It requires that you think clearly
 about what you are doing and what you aim to do. With great power comes
 great responsibility.
 

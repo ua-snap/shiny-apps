@@ -50,15 +50,17 @@ Just below the x-axis, grouping, and faceting menus text will appear to help the
 
 #### Checkbox Options <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotTS_colors_white.png"/>
 Each plot type offers a number of additional options.
-The first few options, `Title`, `Panel text`, and `Show CRU 3.1` are common to the plot options panels under all four plot tabs.
+The first few options, `Title`, `Panel text`, and `Show CRU 3.1` are common available for all plots.
 When checked, the plot displays with a title, any in-panel text annotations (if applicable to the plot and/or data), and includes CRU data, respectively.
 
 Next are the `Show points`, `Jitter points`, and `Show lines` checkboxes. Showing points and lines is clear.
 Jittering the point data is useful for when several points lie directly on top of one another given a discrete x-axis variable.
-Random jitter occurs in the x direction only so as to avoid altering the y values and the amount is limited to minimize interference with points at adjacent x levels.
 
-The `Trend lines` checkbox is distinct from the `Show lines` checkbox. The latter is for each observations and essentially connects points.
-The former shows a single line representing the mean of all the pooled data, or a set of colored lines in the case of grouping where each line is the average for a specific group.
+The `Trend lines` checkbox is distinct from the `Show lines` checkbox. The latter is for each observation and essentially connects points.
+The former shows a single line representing the mean of all the pooled data, or a set of differently colored lines in the case of grouping where each line is the average for a specific group.
+
+Log transformations are also available for non-negative valued variables.
+A value of one is added prior to taking the log so as to avoid taking the log of zero or obtaining negative values.
 
 The `Dark theme` checkbox is unchecked by default. When checked the plot will take on a black background and previously black colors such as text or lines will switch to white.
 
@@ -66,12 +68,13 @@ There are also checkboxes showing the data range by group, `Group range`, and co
 
 After all of these checkboxes, the user has some additional drop down menus. First are `Transparency` and `Font size`.
 Depending on user data selections, this may be all that appears.
-If a grouping variable is present, there will also be `Color levels` and `Color palette` menus. The latter is dependent on the selection in the former.
-First a type of color leveling is chosen. The options are nominal, increasing or centered.
-If the grouping level is nominal (unordered, e.g., `Model`) only this option is available.
+If a grouping variable is present, there will also be a `Color palette` menu.
+Color palette selections are grouped by type of color leveling subheadings: nominal, increasing, centered, and cyclic.
+Depending on characteristics of the grouping variable such as type of factor and number of levels, not all may be shown.
+If the grouping variable is nominal (unordered, e.g., `Model`) only this option is available.
 If the grouping variable has too many levels, only certain options will appear as well.
-With enough levels the color becomes restricted to evenly spaced values of the HSV spectrum.
-For each color level type chosen, a corresponding set of color palettes appears in `Color palette` to the right.
+With enough levels the color becomes restricted to evenly spaced values of a given color spectrum to try to maintain as much visual distinction as possible.
+My suggestion is that if this is a problem, you should use any of the plethora of other options available to distinguish so many factor levels.
 
 When using a grouping variable, this is also the only time when the `Legend` positioning menu appears.
 

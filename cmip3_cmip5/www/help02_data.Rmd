@@ -3,24 +3,33 @@ Returning to the data selection panel, how do we use it?
 
 #### Variables
 Several of the variables are categorical (climate models, emissions scenarios, geographic locations, etc.). Some are discrete numerical (months, years, decades).
-All of these serve in subsetting the two main continuous numerical variables (temperature and precipitation) by way of selecting factor levels and ranges, respectively.
-Going row by row, first are the climate variables, temperature and precipitation. To the right, units of measurement, metric selected by default.
+All of these serve in subsetting the primary data variables (temperature, precipitation) by way of selecting factor levels and ranges, respectively.
+
+Going row by row, first is spatial scale, which is either cities/communities or different groups of broader geographic regions.
+To the right, specific geographic locations propagate.
+Next are the data variables, climate or ecological, currently climate only (temperature and precipitation) but to be expanded to include vegetation and fire data.
+To the right, a statistic is selected for the chosen variable.
+The statistic may summarize data for the variable across space when the variable is spatially explicit, e.g., temperature or precipitation;
+across simulations for already spatially aggregated data, e.g., fire frequency, burn area, vegetated area; or across both geographic space and simulation/modeling space, e.g., vegetation age.
+Just below is a checkbox for switching units of measurement. Metric is used by default.
+
 Next emissions scenarios from CMIP3 and CMIP5, and below those, corresponding GCMs which SNAP has downscaled over Alaska and Western Canada.
 Then there is a checkbox for making composite models. If checked, the models chosen are averaged together.
+
 Next is a slider allowing the user to restrict the years of the data subset.
-Months and decades follow. Finally, in the last row of inputs the user can choose a spatial scale on the left.
-On the right, geographic locations propagate.
+Months and decades follow. See Options Settings below for a description of the seasonal and multi-decade period options related to month and decade selection.
 
 #### Data Requirements <img style="float: right" src="screenshots/dataSelectionPanel_1_white.png"/>
 This brings us to a discussion of requirements. What can and can't be done with the data selection?
 Geographic locations propagate based on the spatial scale chosen.
 I have generally excluded the ability to make comparison plots of multiple locations that span large differences in spatial scale.
 You can expect they would look different, for example in terms of variability, and this is not the purpose of the app.
+Ecological variables (those currently slated for inclusion at least) are available only for regional locations and not for single community locations.
 
 Months and decades are the only two menus which can be left blank. In all others, an empty menu means selections have not yet been made.
-Because months and decades are factors with a number of levels, and often all levels are selected, it is tedious to have to check (or remove) them all.
+Because months and decades are factors with a high number of levels, and often all levels are selected, it is tedious to have to check (or remove) them all.
 It also wastes space. For these two menus it is assumed the user wants all levels *unless* they specify a subset.
-The years of data actually returned by the app are represented by the intersection of the years implied by the decades selection and the years implied by the years slider.
+The years of data returned are represented by the intersection of the years implied by the decades selection and the years implied by the years slider.
 This allows the user to use whichever is most convenient to restrict the data to the years they want.
 If you are looking for specific, discontinuous decades, use the decades menu. This is very common.
 Alternatively, albeit very unlikely, if you don't want a full decade, cut into the ends of your decades selection with the years slider.

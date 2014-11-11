@@ -5,11 +5,12 @@
 This **R** Shiny web application compares downscaled outputs from CMIP3
 and CMIP5 global climate models (GCMs) in a variety of ways. Downscaled
 observation-based historical data from the Climatological Research Unit
-(CRU 3.1) can be included in comparisons as well. Four general plot
+(CRU 3.1) can be included in comparisons as well. Five general plot
 types are available: time series plots (not time series analysis),
-scatter plots, heat maps, and various plots designed more specifically
-to highlight variability. Below you can find more information regarding
-the data in this app, and how to manipulate and graph it.
+scatter plots, heat maps, various plots designed more specifically to
+highlight variability, and distributional plots. Below you can find more
+information regarding the data in this app, and how to manipulate and
+graph it.
 
 #### Explore Simpler Apps First (if you need to)
 
@@ -21,11 +22,13 @@ need to learn how to make them, but this app certainly shouldn't be the
 first one you use. But I'm a statistician; I like to urge caution. So
 you may take that suggestion lightly. Another likely possibility is that
 you are a colleague working in climate science who is well-versed in
-climate modelling and the types of data contained in this app, in which
+climate modeling and the types of data contained in this app, in which
 case you may be more at home just poking around the app until you figure
-things out. This is really the audience the app is intended for, so
-terms like `SRES A1B` or `RCP 6.0` should not seem so alien. If you are
-an **R** user and have not explored Shiny, here is a
+things out. This app is not for teaching purposes, so terms like
+`SRES A1B` or `RCP 6.0` which may seem alien to people not working with
+climate models are not expanded upon in any way.
+
+If you are an **R** user and have not explored Shiny, here is a
 <a href="http://shiny.rstudio.com/tutorial/" target="_blank">tutorial</a>
 if you wish to experiment with making your own apps. They are fun and as
 simple as you want them to be. If you already are comfortable with
@@ -47,6 +50,53 @@ complex so if you want instant gratification I suggest a chocolate chip
 cookie. The other method is to read the documentation. You are here.
 Good. Continue.
 
+### Audience
+
+The reason for all this preamble is straightforward. The primary
+audience for this app is myself. I use apps like this one to enhance my
+data QA/QC tasks at SNAP as well as to support various projects. It is
+first and foremost a tool of extreme convenience made to enhance a
+workflow I am already neck deep in.
+
+The secondary audience consists of other ***R*** Shiny users who are
+interested in exploring and developing similar apps. I enjoy sharing my
+work, the code is freely available, and networking with other useRs is
+fun.
+
+Mandatory caveats: I do not have time to teach you how to make apps. Nor
+will you be able to swap your data sets for mine and have this app work
+for you. It is far too complex to use so directly as a template, but
+various bits of code you may find useful in your own contexts. I have
+been developing it off and on when time permits among other duties since
+somewhere around February of 2014 although the exact date has become a
+hazy mystery to me, more obscured by the mind fog of ***R*** code I have
+written in general since then than the moment of my very birth. This is
+to say, if you want an app "just like this," a common sentiment I
+encounter, which is quite flattering and much appreciated, I must say it
+will not happen overnight no matter how much you borrow from this app.
+Even if I could write the code for this app without any planning,
+revision, or refactoring, just straight through as a
+stream-of-consciousness exercise in one sitting, it would still take
+quite some time to write it all out. And that doesn't even begin to get
+into the code written to parse and prep large amounts of data, which the
+app (among other projects) makes use of. In fact, even the help
+documentation verbosity that follows, I wrote out just for me because
+otherwise it would be impossible to recall all of what on earth I had
+done here.
+
+The tertiary audience would be other colleagues which do not use R but
+happen to be very interested in climate models and climate change in the
+Arctic.
+
+The quaternary audience would be the general public. I like to make apps
+that are simple, easy to use, and convey a straightforward message that
+does not require esoteric knowledge or the specialized interpretation
+skills of a statistician-priest. This app is not one of them. It was
+never meant to be. I'd prefer not to mention this fourth tier audience
+at all except that I don't want to give the impression of complete
+neglect. But ultimately, this app was made with me in mind, to assist my
+own complex and data-heavy workflow. It can't be all things.
+
 ### Exploratory Data Analysis
 
 The plots available in the app allow for an in-depth graphical analysis
@@ -66,7 +116,7 @@ it.
 
 ### App Layout
 
-This is not your grandmama's R Shiny app. So let's start simple.
+This is not your grandma's R Shiny app. So let's start simple.
 
 #### Navigation Bar
 

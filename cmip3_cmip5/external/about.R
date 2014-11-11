@@ -72,7 +72,7 @@ function(){
 						HTML('<li>'),a('gridExtra', href="http://cran.r-project.org/web/packages/gridExtra/index.html", target="_blank"),HTML('</li>'),
 						HTML('<li>'),a('png', href="http://cran.r-project.org/web/packages/png/index.html", target="_blank"),HTML('</li>'),
 						HTML('<li>'),a('Hmisc', href="http://cran.r-project.org/web/packages/Hmisc/index.html", target="_blank"),HTML('</li>'),
-					HTML('<ul>'),
+					HTML('</ul>'),
 					HTML('<li>Source code on <a href="https://github.com/ua-snap/shiny-apps/tree/master/cmip3_cmip5/" target="_blank">GitHub</a></li>'),
 				HTML('</ul>'))
 			)
