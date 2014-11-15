@@ -96,7 +96,7 @@ output$PlotTS <- renderPlot({
 output$dlCurPlotTS <- downloadHandler(
 	filename='timeseries.pdf',
 	content=function(file){
-		if(input$plotThemeDark) bg <- "black" else bg <- "white"
+		if(input$ts_plotThemeDark) bg <- "black" else bg <- "white"
 		pdf(file = file, width=1.5*12, height=1.5*7, pointsize=12, onefile=FALSE, bg=bg); doPlot_ts(show.logo=T); dev.off()
 	}
 )
@@ -130,7 +130,7 @@ output$PlotScatter <- renderPlot({
 output$dlCurPlotScatter <- downloadHandler(
 	filename='scatterplot.pdf',
 	content=function(file){
-		if(input$plotThemeDark) bg <- "black" else bg <- "white"
+		if(input$sc_plotThemeDark) bg <- "black" else bg <- "white"
 		pdf(file = file, width=1.5*12, height=1.5*12, pointsize=12, onefile=FALSE, bg=bg); doPlot_scatter(show.logo=T); dev.off()
 	}
 )
@@ -153,7 +153,7 @@ output$PlotVariability <- renderPlot({
 output$dlCurPlotVariability <- downloadHandler(
 	filename='variability.pdf',
 	content=function(file){
-		if(input$plotThemeDark) bg <- "black" else bg <- "white"
+		if(input$vr_plotThemeDark) bg <- "black" else bg <- "white"
 		pdf(file = file, width=1.5*12, height=1.5*7, pointsize=12, onefile=FALSE, bg=bg); doPlot_var(show.logo=T); dev.off()
 	}
 )
@@ -176,7 +176,7 @@ output$PlotHeatmap <- renderPlot({
 output$dlCurPlotHeatmap <- downloadHandler(
 	filename='heatmap.pdf',
 	content=function(file){
-		if(input$plotThemeDark) bg <- "black" else bg <- "white"
+		if(input$hm_plotThemeDark) bg <- "black" else bg <- "white"
 		pdf(file = file, width=1.5*12, height=1.5*7, pointsize=12, onefile=FALSE, bg=bg); doPlot_heatmap(show.logo=T); dev.off()
 	}
 )
@@ -199,7 +199,7 @@ output$PlotSpatial <- renderPlot({
 output$dlCurPlotSpatial <- downloadHandler(
 	filename='spatial.pdf',
 	content=function(file){
-		if(input$plotThemeDark) bg <- "black" else bg <- "white"
+		if(input$sp_plotThemeDark) bg <- "black" else bg <- "white"
 		pdf(file = file, width=1.5*12, height=1.5*7, pointsize=12, onefile=FALSE, bg=bg); doPlot_spatial(show.logo=T); dev.off()
 	}
 )
