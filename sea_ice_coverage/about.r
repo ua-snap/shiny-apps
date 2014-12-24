@@ -1,5 +1,6 @@
 function(){
-	tabPanel("About",value="ts",
+	tabPanel("About",
+		HTML('<div style="float: right; margin: 0 5px 5px 10px;"><iframe width="560" height="315" src="//www.youtube.com/embed/HqWJEmCPfUM" frameborder="0" allowfullscreen></iframe></div>'),
 		p(style="text-align:justify",'This web application shows sea ice coverage over the Arctic from 1860 and projected through 2099.
 		The first tab includes a time series plot of total sea ice extent by global climate model (GCM), including a five-model averaged composite. All GCMs are RCP 8.5.
 		Linear, quadratic, and locally weighted LOESS fitted trends are available for overlay.
@@ -13,7 +14,13 @@ function(){
 		p(style="text-align:justify",'The purpose of the app is to provide a relatively simple and convenient way of interactively exploring a subset of aggregated (across time and space) GCM sea ice outputs.
 		The goal is not to develop the perfect web tool, but rather to showcase some of the data.
 		As such, there are no plans for continued development or refinement of this particular app. However, future apps for other projects will be able to build upon what has been done here.'),
+		p(style="text-align:justify",em('This project is funded by the Alaska Ocean Observing System through its cooperative agreement ##NA11NOS0120020 with the National Oceanic and Atmospheric Administration (NOAA).
+		Work was performed by the Alaska Center for Climate Assessment and Policy(ACCAP) at the University of Alaska Fairbanks (UAF) in partnership with the Scenarios Network for Alaska and Arctic Planning (SNAP, UAF).')),
+		strong('Download source data'),
 		br(),
+		a('Historical and projected sea ice concentration', href="http://www.snap.uaf.edu/data.php#dataset=Historical_Estimates_and_Projections_of_Sea_Ice_Concentration", target="_blank"),
+		br(),
+		p(),
 
 		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),
 		strong('Author'),
@@ -60,6 +67,7 @@ function(){
 					HTML('<ul>'),
 				HTML('</ul>'))
 			)
-		)
+		),
+		value="about"
 	)
 }

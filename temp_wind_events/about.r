@@ -1,13 +1,14 @@
 function(){
 	tabPanel("About",
+		HTML('<div style="float: right; margin: 0 5px 5px 10px;"><iframe width="560" height="315" src="//www.youtube.com/embed/sxVPatuy0X0" frameborder="0" allowfullscreen></iframe></div>'),
 		p(style="text-align:justify",'This web application shows the frequency (days per month) of extreme daily temperature and wind events from 1958 and projected through 2100 using global climate model (GCM) values, 
 		which have been quantile mapped using the European Reanalysis (ERA-40) observation-based dataset as a historical baseline.
 		Frequencies of events are displayed using a time series barplot. A bar can be drawn for each of any subset of months per year.
 		Individual months can be highlighted by differently colored time series lines.'),
-		p(style="text-align:justify",'The key feature of the app is that the barplots are condititional barplots, such that a set of multiple time series barplots are displayed vertically for visual comparison,
+		p(style="text-align:justify",'The key feature of the app is that the bar plots are conditional bar plots, such that a set of multiple time series bar plots are displayed vertically for visual comparison,
 		conditional on levels or classes of a given categorical variable.
 		The user can view time series of extreme events for various specific climate variables, geographic locations, climate models, RCPs, and climate variable value thresholds.
-		The user can select any one of these variables as a conditional variable to generate a comparative visual display of extreme events barplots by factor levels of the chosen variable.'),
+		The user can select any one of these variables as a conditional variable to generate a comparative visual display of extreme events bar plots by factor levels of the chosen variable.'),
 		p(style="text-align:justify",strong('Notes:'),' Geographic locations are represented by the names of the largest population centers,
 		or other sensible region name in the case of no population (e.g, open ocean), for ease of reference, and do not represent point data.
 		Values for all GCMs are at a common 2.5 x 2.5 degree resolution after having been regridded for quantile mapping to ERA-40. Therefore the scale is much larger than the place names might suggest.'),
@@ -16,8 +17,8 @@ function(){
 		To clarify, the term, above thresholds, for wind velocity components means greater than the selected threshold value(s), as it does for wind speed and temperature. It does not mean further from zero.
 		Note that any time the Wind variable is selected, wind threshold options will be limited.
 		For example, if you are trying to place wind velocities and wind speed on the same plot, your velocity thresholds will be restricted to positive values due to the concurrent selection of wind speed.
-		This is not a "bug" in the program, but rather an opporutnity to point out that this web app is not meant to do it all.
-		The purpose of the app is to provide a relatively simple and convenient way of interactively exploring a subset of the quantile-mapped daily GCM outputs that I have compiled.
+		This is not a "bug" in the program, but rather an opportunity to point out that this web app is not meant to do it all.
+		The purpose of the app is to provide a convenient way of interactively exploring a subset of the quantile-mapped daily GCM outputs that I have compiled.
 		The goal is not to develop the perfect web tool, but rather to showcase the data that I have been working with.
 		As such, there are no plans for continued development or refinement of this particular app.'),
 		p(style="text-align:justify",strong('Suggestions:'),'You may download a graphic in pdf form for your convenience using the download button.
@@ -29,7 +30,19 @@ function(){
 		Lastly, there is no appreciable performance hit for selecting several variables, models, RCPs, or thresholds.
 		However, in the case of conditioning on locations, each location added to the plot will result in roughly a linear increase in plotting time required.
 		This should not be an issue since more than approximately four locations compared at one time will be too visually cluttered anyhow.'),
+		p(style="text-align:justify",em('This project is funded by the Alaska Ocean Observing System through its cooperative agreement ##NA11NOS0120020 with the National Oceanic and Atmospheric Administration (NOAA).
+		Work was performed by the Alaska Center for Climate Assessment and Policy(ACCAP) at the University of Alaska Fairbanks (UAF) in partnership with the Scenarios Network for Alaska and Arctic Planning (SNAP, UAF).')),
+		strong('Download source data'),
 		br(),
+		a('Quantile-mapped historical daily temperature', href="http://www.snap.uaf.edu/data.php#dataset=Historical_Daily_Mean_Quantile_Mapped_Temperatures", target="_blank"),
+		br(),
+		a('Quantile-mapped projected daily temperature', href="http://www.snap.uaf.edu/data.php#dataset=Projected_Daily_Mean_Quantile_Mapped_Temperatures", target="_blank"),
+		br(),
+		a('Quantile-mapped historical daily wind velocity', href="http://www.snap.uaf.edu/data.php#dataset=Historical_Daily_Quantile_Mapped_Near_Surface_Wind_Velocity", target="_blank"),
+		br(),
+		a('Quantile-mapped projected daily wind velocity', href="http://www.snap.uaf.edu/data.php#dataset=Projected_Daily_Quantile_Mapped_Near_Surface_Wind_Velocity", target="_blank"),
+		br(),
+		p(),
 
 		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),
 		strong('Author'),
@@ -76,6 +89,7 @@ function(){
 					HTML('<ul>'),
 				HTML('</ul>'))
 			)
-		)
+		),
+		value="about"
 	)
 }

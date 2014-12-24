@@ -1,3 +1,0 @@
-#!/bin/bash
-rscript=$1
-Rscript $rscript

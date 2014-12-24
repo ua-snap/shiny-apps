@@ -1,10 +1,10 @@
 library(shiny)
-pkgs <- c("raster","maps","mapproj","rasterVis")
+pkgs <- c("raster","maps","mapproj","grid", "rasterVis")
 pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
 if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
 
 load("Totals.RData", envir=.GlobalEnv)
-library(raster); library(maps); library(mapproj); library(rasterVis)
+library(raster); library(maps); library(mapproj); library(grid); library(rasterVis)
 
 mm <- map("world", proj="stereographic", xlim=c(-180,180), ylim=c(47,90), interior=FALSE, lwd=1,plot=F)
 clrs <- c("#8B2500","#000080","#FF8C00","#1E90FF","#FF1493","#000000") #"#CD9B1D"
@@ -15,27 +15,6 @@ files <- list.files(pattern=".tif$")
 for(i in 1:length(files)) assign(paste("b",tolower(substr(files[i],1,2)),sep="."), brick(files[i]))
 
 shinyServer(function(input,output){
-	# Siderbar elements: dataset(s), years, month/season, decade, time series points, lines, and transparency
-	output$Dataset <- renderUI({
-		selectInput("dataset","Choose RCP 8.5 sea ice model:",choices=modnames,selected=modnames[1],multiple=T)
-	})
-	
-	output$tsSlider <- renderUI({
-		sliderInput("yrs","Year range:",1860,2099,c(1979,2011),step=1,format="#")
-	})
-
-	output$Mo <- renderUI({
-		selectInput("mo","Seasonal period:",choices=c(mos,"Dec-Mar Avg","Jun-Sep Avg","Annual Avg"),selected="Jan")
-	})
-	
-	output$Mo2 <- renderUI({
-		selectInput("mo2","Month:",choices=mos,selected="Jan")
-	})
-	
-	output$Decade <- renderUI({
-		selectInput("decade","Decade:",choices=paste(seq(1860,2090,by=10),"s",sep=""),selected="2010s")
-	})
-	
 	output$regpoints <- renderUI({
 	if(length(input$dataset)){
 		checkboxInput("regpts","Show sample points",TRUE)
@@ -116,11 +95,6 @@ shinyServer(function(input,output){
 	
 	pch.vals <- reactive({
 		if(length(input$dataset)) pch.vals <- pch[match(input$dataset,modnames)]
-	})
-	
-	# Fix time series plot xlim and ylim with respect to full dataset even when plotting a subset
-	output$fixXY <- renderUI({
-		checkboxInput("fix.xy","Full fixed (x,y) limits",value=F)
 	})
 	
 	# List of numeric vectors of values, one per each model, by month or seasonal average
@@ -246,10 +220,6 @@ shinyServer(function(input,output){
 	if(length(input$dataset) & length(input$reglnslo)){
 		if(input$reglnslo) sliderInput("smoothing.fraction","Smoothing fraction:",0.15,1,0.75,0.05)
 	}
-	})
-	
-	output$showObs <- renderUI({
-		checkboxInput("showObs","Show Observations (1979 - 2011)",FALSE)
 	})
 	
 	# Time series plot and fitted trend lines

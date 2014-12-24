@@ -1,2 +1,0 @@
-# Random Forest meta-parameters
-

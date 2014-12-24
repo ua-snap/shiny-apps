@@ -1,14 +1,14 @@
 # x-axis variable, grouping variable, faceting variable
 output$xtime <- renderUI({
-	selectInput("xtime",paste(input$vars,"by:"),choices=c("Month","Decade"),selected="Month")
+	selectInput("xtime", paste(input$vars,"by:"), choices=c("Month","Decade"), selected="Month", width="100%")
 })
 
 output$group <- renderUI({
-	if(!is.null(group.choices())) selectInput("group","Group/color by:",choices=group.choices(),selected=group.choices()[1])
+	if(!is.null(group.choices())) selectInput("group", "Group/color by:", choices=group.choices(), selected=group.choices()[1], width="100%")
 })
 
 output$facet <- renderUI({
-	if(!is.null(facet.choices())) selectInput("facet","Facet/panel by:",choices=facet.choices(),selected=facet.choices()[1])
+	if(!is.null(facet.choices())) selectInput("facet", "Facet/panel by:", choices=facet.choices(), selected=facet.choices()[1], width="100%")
 })
 
 # Options for jittering, faceting, and pooling
@@ -26,7 +26,7 @@ output$jitterXY <- renderUI({
 
 # Switch to line plot (temperature data) or barplot (precipitation data)
 output$altplot <- renderUI({
-	if(input$goButton==0) return()
+	if(is.null(input$goButton) || input$goButton==0) return()
 	isolate(
 		if(!is.null(dat.sub())) if(dat.sub()$Variable[1]=="Temperature") checkboxInput("altplot","Line plot",FALSE) else checkboxInput("altplot","Barplot",FALSE)
 	)
@@ -40,3 +40,8 @@ output$yrange <- renderUI({ if(!is.null(input$group)) checkboxInput("yrange","Gr
 output$clbootbar <- renderUI({ if(!is.null(input$group)) checkboxInput("clbootbar","Group mean CI",FALSE) })
 
 output$clbootsmooth <- renderUI({ if(!is.null(input$group)) checkboxInput("clbootsmooth","Confidence band",FALSE) })
+
+# Plot button
+output$PlotButton <- renderUI({
+	if(permitPlot() & !is.null(dat.sub())) actionButton("plotButton", "Generate Plot")
+})

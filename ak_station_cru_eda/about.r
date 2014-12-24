@@ -1,8 +1,13 @@
 function(){
 	tabPanel("About",
-		p(style="text-align:justify",'This web application provides summary statistics, graphics, and basic exploratory data analysis of temeprature and precipitation data from interior Alaska weather stations
+		HTML('<div style="float: right; margin: 0 5px 5px 10px;"><iframe width="560" height="315" src="//www.youtube.com/embed/ilZUzn3XUC0" frameborder="0" allowfullscreen></iframe></div>'),
+		p(style="text-align:justify",'This web application provides summary statistics, graphics, and basic exploratory data analysis of temperature and precipitation data from interior Alaska weather stations
 		as well as station-based observations from CRU (Climatological Research Unit) data.
-		The app showcases some of the data inputs considered for use in a comparison of waeather station data with downscaled global climate model (GCM) historical values at corresponding grid cells.'),
+		The app showcases some of the data inputs considered for use in a comparison of weather station data with downscaled global climate model (GCM) historical values at corresponding grid cells.'),
+		p(style="text-align:justify",'This app represents one of my earliest Shiny apps, and fairly complex for an early app. Although I maintain this app, I do not support any continued development.
+		It has its limitations. The "user experience" is not what I would consider ideal, but good enough. The refresh (reactive flush) action of the app can sometimes be a bit annoying visually,
+		but it functions properly and displays data accurately, in the ways which are permitted. Shiny coding best practices that I have picked up since this app was created will not find there way here.
+		But it is still of interest.'),
 		br(),
 
 		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),
@@ -50,6 +55,7 @@ function(){
 					HTML('<ul>'),
 				HTML('</ul>'))
 			)
-		)
+		),
+		value="about"
 	)
 }

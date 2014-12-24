@@ -4,20 +4,23 @@ function(){
 		The app makes use of an example dataset of various attributes of the flags of different nations, as well as some additional country metadata. The dataset is somewhat dated, published in 1986.
 		For example, it still includes East and West Germany. Other information such as country population will similarly be quite out of date.
 		Nevertheless, it is an interesting dataset and this app is just for illustration purposes anyhow. More details on the data can be found below.
-		'),
+		The app still needs a lot of work but is worth sharing at this stage. Stay tuned for updates.'),
 		p(style="text-align:justify",'The app has sidebar inputs for choosing response and explanatory variables.
-		Currently, I have restricted the choices of response variables to categorical variables, until I have a chance to generalize the app to include regression. As of now it is only geared toward classification.
+		Currently, I have restricted the choices of response variables to categorical variables, until I have a chance to generalize the app to include regression. As of now it is geared only toward classification.
 		The other sidebar inputs are for random forest meta-parameters (arguments passed to randomForest in R). Right now I have limited this to the number of trees.'),
 		p(style="text-align:justify",'The main panel has tabs for each of a number of summary plots, which show and update only after a random forest model has been built.
-		I used ggplot2 to create these graphics. Each tab has a button for downloading the currently displayed plot as a pdf.
+		I used ggplot2 to create the graphical outputs. Each tab has a button for downloading the currently displayed plot as a pdf.
 		Formatting of the downloaded file will not be identical to that shown in the browser.'),
 		p(style="text-align:justify",strong('Notes:'),
 		'Use the "# of Variables" tab with caution! Due to the use of cross-validation, which is additionally both nested and replicated, the data for this plot can take a while to generate,
-		perhaps about one minute per replicate. I would love to parallelize this, but at this time I am restricted to serial processing. I am hopeful to see this change in the near future.
+		perhaps about one minute per replicate. I have partially parallelized this (parallelized across replicates) so that total time even for 10 replicates may take half a minute to two minutes roughly,
+		but the ability to do this with a Shiny app is dependent on the resources of the server on which it resides. Further, some aspects are inherently serial, e.g., the sequential variable reduction by nesting.
 		When this function is processing, you will be able to move around to other tabs, but nothing new will happen.
-		All other calls that would occur will be suspended until the replicates of the rfcv function have finished running.
-		I included this in the app for now only so that I could share it with others and to demonstrate a need and make a case for better solutions.
-		Otherwise I would certainly leave it out in its current form.'),
+		All other calls that would occur will be suspended until the replicates of the rfcv function have finished running.'),
+		p(style="text-align:justify","I included this final plot/processing task in the app for now only so that I could share it with others and to demonstrate a need and make a case for better solutions.
+		Otherwise I would certainly leave it out in its current form, as wrapping a Shiny app around long processing tasks gets away from their generally intended purpose in my opinion.
+		Without the commercial version of Shiny Server which allows for configuring up to one unique R instance per user, including slow processes like this one in an app can
+		negatively affect multiple concurrent users' experiences."),
 		br(),
 
 		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),
@@ -35,10 +38,21 @@ function(){
 		br(),
 		
 		div(class="row-fluid",
-			div(class="span4",strong('Related apps'),
+			div(class="span4",strong('Other apps'),
 				p(HTML('<ul>'),
-					HTML('<li>'),a("Stochastic gradient boosting example using gbm", href="http://shiny.snap.uaf.edu/gbm_example/", target="_blank"),HTML('</li>'),
-					HTML('<li>'),a("Alaska/ Western Canada climate data with ggplot", href="http://shiny.snap.uaf.edu/akcan_climate/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Random variables: App tutorial part 1", href="http://shiny.snap.uaf.edu/RV_distributions/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Random variables: App tutorial part 2", href="http://shiny.snap.uaf.edu/RV_distributionsV2/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Random variables: App tutorial part 3", href="http://shiny.snap.uaf.edu/RV_distributionsV3/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Random variables: App tutorial part 4", href="http://shiny.snap.uaf.edu/RV_distributionsV4/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Sea ice and extreme wind events", href="http://shiny.snap.uaf.edu/sea_ice_winds/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Arctic sea ice extents and concentrations", href="http://shiny.snap.uaf.edu/sea_ice_coverage/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Coastal Alaska extreme temperatures and winds", href="http://shiny.snap.uaf.edu/temp_wind_events/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Alaska weather station and CRU EDA", href="http://shiny.snap.uaf.edu/ak_station_cru_eda/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Alaska and western Canada communities and climate", href="http://shiny.snap.uaf.edu/akcan_climate/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Alaska  communities historical daily precipitation", href="http://shiny.snap.uaf.edu/ak_daily_precipitation/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Basic example app with image() plots", href="http://shiny.snap.uaf.edu/tree_rings/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Monty Hall gone wild", href="http://shiny.snap.uaf.edu/monty_hall/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Stochastic Gradient boosting example", href="http://shiny.snap.uaf.edu/gbm_example/", target="_blank"),HTML('</li>'),
 				HTML('</ul>')),
 				strong('Code'),
 				p('Source code available at',
@@ -47,8 +61,20 @@ function(){
 			),
 			div(class="span4", strong('Related blog posts'),
 				p(HTML('<ul>'),
-					HTML('<li>'),a("R Shiny app: Stochastic gradient boosting with gbm", href="http://blog.snap.uaf.edu/2013/06/20/r-shiny-app-stochastic-gradient-boosting-with-gbm/", target="_blank"),HTML('</li>'),
-					HTML('<li>'),a("R Shiny app: Alaska/western Canada communities and climate", href="http://blog.snap.uaf.edu/2013/07/16/r-shiny-app-alaskawestern-canada-communities-and-climate/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Random variables: App tutorial part 1", href="http://blog.snap.uaf.edu/2013/05/20/introducing-r-shiny-web-apps/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Random variables: App tutorial part 2", href="http://blog.snap.uaf.edu/2013/05/20/r-sampling-app-version-2/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Random variables: App tutorial part 3", href="http://blog.snap.uaf.edu/2013/05/20/r-sampling-app-version-3/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Random variables: App tutorial part 4", href="http://blog.snap.uaf.edu/2013/05/20/r-sampling-app-version-4/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Sea ice and extreme wind events", href="http://blog.snap.uaf.edu/2013/09/09/r-shiny-app-arctic-sea-ice-concentration-and-extreme-winds/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Arctic sea ice extents and concentrations", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-sea-ice/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Coastal Alaska extreme temperatures and winds", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-extreme-events/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Alaska weather station and CRU EDA", href="http://blog.snap.uaf.edu/2013/05/20/r-shiny-web-app-alaska-climate-data-eda/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Alaska and western Canada communities and climate", href="http://blog.snap.uaf.edu/2013/07/16/r-shiny-app-alaskawestern-canada-communities-and-climate/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Alaska  communities historical daily precipitation", href="http://blog.snap.uaf.edu/2013/09/17/customizable-charts-with-r-base-graphics-and-shiny/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Basic example app with image() plots", href="http://blog.snap.uaf.edu/2013/11/11/r-shiny-image-plots-no-frills-example/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Monty Hall gone wild", href="http://blog.snap.uaf.edu/2013/11/11/r-shiny-app-monty-hall-gone-wild/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Gradient boosting example", href="http://blog.snap.uaf.edu/2013/06/20/r-shiny-app-stochastic-gradient-boosting-with-gbm/", target="_blank"),HTML('</li>'),
+					HTML('<li>'),a("Random Forest example", href="http://blog.snap.uaf.edu/2014/03/25/r-shiny-randomforest-with-base-graphics-and-ggplot2/", target="_blank"),HTML('</li>'),
 				HTML('</ul>')),
 				br()
 			),
@@ -121,6 +147,7 @@ function(){
 				HTML('<li>'),'topleft: colour in the top-left corner (moving right to decide tie-breaks)',HTML('</li>'),
 				HTML('<li>'),'botright: colour in the bottom-left corner (moving left to decide tie-breaks)',HTML('</li>'),
 			HTML('</ol>'),
-		HTML('</ul>')
+		HTML('</ul>'),
+		value="about"
 	)
 }

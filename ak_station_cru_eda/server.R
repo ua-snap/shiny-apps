@@ -41,7 +41,7 @@ shinyServer(function(input,output){
 		})
 	
 	output$cityNames <- renderUI({
-		selectInput("city","Choose a city:",choices=city.names(),multiple=T)
+		selectInput("city","Choose a city:",choices=city.names(),selected=city.names()[1],multiple=T)
 	})
 
 	DATASET <- reactive({
@@ -400,10 +400,11 @@ shinyServer(function(input,output){
 		x <- reg.dat()[[1]][[input$regX]]
 		n <- length(x)
 		xr <- range(x)
-		if(input$regX=="Year") x <- seq(xr[1],xr[2],len=n)
+		if(input$regX=="Year") { x <- seq(xr[1],xr[2]+1,len=n+1); x <- x[-c(n+1)] }
+		print(x)
 		y <- reg.dat()[[1]][[input$regY]]
 		yr <- range(y)
-		if(input$regY=="Year") y <- seq(yr[1],yr[2],len=n)
+		if(input$regY=="Year") { y <- seq(yr[1],yr[2]+1,len=n+1); y <- y[-c(n+1)] }
 		if(!input$reg.ggplot){
 		plot(0,0,type="n",xlim=range(x),ylim=ylm,xlab=input$regX,ylab=input$regY,main=form()[1],cex.main=1.3,cex.axis=1.3,cex.lab=1.3)
 		for(i in 1:length(input$city)){
@@ -474,9 +475,16 @@ shinyServer(function(input,output){
 		} else if(input$dataset=="2-km downscaled CRU 3.1"){
 			txt <- paste("2-km downscaled CRU 3.1 historical time series climate data for",length(city.names()),"AK cities")
 		}
-		txt <- HTML(paste('<div id="stats_header">',txt,
+		txt <- HTML(paste('<script>
+		(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');
+		ga(\'create\', \'UA-46129458-2\', \'rstudio.com\');
+		ga(\'send\', \'pageview\');
+		</script><div id="stats_header">',txt,
 			'<a href="http://snap.uaf.edu" target="_blank">
-			<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/snap_sidebyside.png" />
+			<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" />
 			</a>
 			</div>',sep="",collapse=""))
 	})

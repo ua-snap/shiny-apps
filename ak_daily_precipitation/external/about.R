@@ -6,7 +6,7 @@ function(){
 		Aggregate summaries appear above both of these panel graphics, where the top left scatterplot and loess smoothing curve represent the average of daily obserrvations across the selected years.
 		To the right, the two bars also represent averages of the selected years. In both cases, the averages exclude data from the first and/or last year if either year is incomplete.'),
 		p(style="text-align:justify",'I plan to add more geographic locations, and possibly more variables, to this app when time permits.'),
-		p(style="text-align:justify",'Data were provided by Kevin Galloway at the',a("Alaska Climate Research Center", href="http://akclimate.org/", target="_blank"),'.'),
+		p(style="text-align:justify",'Data are downloaded in real-time using the',a("Applied Climate Information System", href="http://rcc-acis.unl.edu/", target="_blank"),'(ACIS) API.'),
 		p(style="text-align:justify","Inspiration for the plot format came from Stephen Von Worley's",a("Is California heading into a drought?", href="http://www.datapointed.net/2012/02/san-francisco-rain-year-before-after-valentines-day/", target="_blank"),'graphic.'),
 		br(),
 
@@ -62,6 +62,7 @@ function(){
 					HTML('<ul>'),
 				HTML('</ul>'))
 			)
-		)
+		),
+		value="about"
 	)
 }

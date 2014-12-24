@@ -1,5 +1,9 @@
 # Datasets, variables
-yrs <- reactive({ as.numeric(gsub("s","",input$yrs)) })
+yrs <- reactive({
+	x <- sort(as.numeric(gsub("s","",input$yrs)))
+	x <- seq(x[1], tail(x,1), by=10)
+	x
+})
 
 suffix <- reactive({
 	if(!is.null(input$coast)){

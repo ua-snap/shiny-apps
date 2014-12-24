@@ -1,6 +1,6 @@
 helpPopup <- function(title, content,
                       placement=c('right', 'top', 'left', 'bottom'),
-                      trigger=c('click', 'hover', 'focus', 'manual')) {
+                      trigger=c('focus', 'hover', 'click', 'manual')) {
   tagList(
     singleton(
       tags$head(
@@ -25,18 +25,4 @@ headerPanel_2 <- function(title, h, windowTitle=title) {
     tags$head(tags$title(windowTitle)),
       h(title)
     )
-}
-
-sidebarPanel_2 <- function(span,...) {
-  div(class=span,
-    tags$form(class="well",
-      ...
-    )
-  )
-}
-
-mainPanel_2 <- function(span,...) {
-  div(class=span,
-    ...
-  )
 }

@@ -1,32 +1,49 @@
 library(shiny)
 tabPanelAbout <- source("about.r")$value
-shinyUI(pageWithSidebar(
-	headerPanel(
+headerPanel_2 <- function(title, h, windowTitle=title) {    
+  tagList(
+    tags$head(tags$title(windowTitle)),
+      h(title)
+    )
+}
+
+mos <- c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
+modnames <- c("ACCESS-1.0","CESM1-CAM5","CMCC-CM","HADGEM2-AO","MIROC-5","Composite model")
+
+shinyUI(fluidPage(
+	headerPanel_2(
 		HTML(
-			'<div id="stats_header">
+			'<script>
+			(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');
+			ga(\'create\', \'UA-46129458-2\', \'rstudio.com\');
+			ga(\'send\', \'pageview\');
+			</script>
+			<div id="stats_header">
 			Modeled Arctic Sea Ice Coverage
 			<a href="http://accap.uaf.edu" target="_blank">
-			<img id="stats_logo" align="right" alt="ACCAP Logo" src="./img/accap_sidebyside.png" />
+			<img id="stats_logo" align="right" style="margin-left: 15px;" alt="ACCAP Logo" src="./img/ACCAP_acronym_100px.png" />
 			</a>
 			<a href="http://snap.uaf.edu" target="_blank">
-			<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/snap_sidebyside.png" />
+			<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" />
 			</a>
 			</div>'
-		),
-		"Modeled Arctic Sea Ice Coverage"
+		), h3, "Modeled Arctic Sea Ice Coverage"
 	),
-	sidebarPanel(
+	fluidRow(column(4,
 		wellPanel(
 			conditionalPanel( # Tab 1 only, part 1
 				condition="input.tsp=='ts'",
-				uiOutput("Dataset"),
-				uiOutput("tsSlider"),
-				uiOutput("Mo")
+				selectInput("dataset", "Choose RCP 8.5 sea ice model:", choices=modnames, selected=modnames[1], multiple=T, width="100%"),
+				sliderInput("yrs", "Year range:", 1860,2099, c(1979,2011), step=1, format="#", width="100%"),
+				selectInput("mo", "Seasonal period:", choices=c(mos,"Dec-Mar Avg","Jun-Sep Avg","Annual Avg"), selected="Jan")
 			),
 			conditionalPanel( # Tab 2 only, part 1
 				condition="input.tsp=='map'",
-				uiOutput("Decade"),
-				uiOutput("Mo2")
+				selectInput("decade", "Decade:", choices=paste(seq(1860,2090,by=10),"s",sep=""), selected="2010s"),
+				selectInput("mo2", "Month:", choices=mos, selected="Jan")
 			)
 		),
 		conditionalPanel( # Tab 1 only,  part 2
@@ -38,9 +55,9 @@ shinyUI(pageWithSidebar(
 				uiOutput("reglineslm2"),
 				uiOutput("reglineslo"),
 				uiOutput("loSpan"),
-				uiOutput("fixXY"),
+				checkboxInput("fix.xy", "Full fixed (x,y) limits", value=F),
 				uiOutput("semiTrans"),
-				uiOutput("showObs")
+				checkboxInput("showObs", "Show Observations (1979 - 2011)", FALSE)
 			)
 		),
 		wellPanel(
@@ -53,9 +70,9 @@ shinyUI(pageWithSidebar(
 				downloadButton("dlCurPlotMap", "Download Graphic")
 			)
 		),
-		h5(textOutput("pageviews"))
+		conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
 	),
-	mainPanel(
+	column(8,
 		tabsetPanel(
 			tabPanel(
 				"Extent Totals",
@@ -78,5 +95,5 @@ shinyUI(pageWithSidebar(
 			tabPanelAbout(),
 			id="tsp"
 		)
-	)
+	))
 ))

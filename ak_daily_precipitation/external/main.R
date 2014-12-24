@@ -1,11 +1,9 @@
-mainPanel_2(
-	span="span9",
+column(9,
 	tabsetPanel(
 		tabPanel("Daily Precipitation",
-			#uiOutput("debugging"),
 			div(class="row-fluid",
-				div(class="span8", uiOutput("tp.dailyTitle")),
-				conditionalPanel(condition="input.genPlotButton>0",
+				div(class="span8", uiOutput("TpDailyTitle")),
+				conditionalPanel(condition="input.genPlotButton>0 && input.loc!==''",
 					div(class="span2", downloadButton("dl_plotDailyPrecipPNG","Download PNG")),
 					div(class="span2", downloadButton("dl_plotDailyPrecipPDF","Download PDF"))
 				)

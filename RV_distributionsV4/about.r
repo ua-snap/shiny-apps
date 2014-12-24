@@ -1,5 +1,6 @@
 function(){
 	tabPanel("About",
+		HTML('<div style="float: right; margin: 0 5px 5px 10px;"><iframe width="560" height="315" src="//www.youtube.com/embed/guLDvQ8IPUA" frameborder="0" allowfullscreen></iframe></div>'),
 		p(style="text-align:justify",'This ',a("Shiny", href="http://www.rstudio.com/shiny/", target="_blank"),' application is version four of an expanding app intended for showing various ways of adding 
 		desired complexity to your apps, in small digestible doses.
 		The premise of this particular app is not complex. This sampling app simply draws random samples from a number of different probability distributions and plots the samples using
@@ -7,6 +8,8 @@ function(){
 		p(style="text-align:justify",'The utility is in seeing, from version to version, how we can enhance a Shiny app.
 		If you are new to Shiny, I hope you find this series helpful and/or inspirational in creating your own Shiny web applications. Shiny is new to me as well. I too am learning as I go.
 		I would be happy for any suggestions of ways to improve my code.'),
+		p(style="text-align:justify",'This app (and those before it) represents some of my earliest explorations with Shiny.
+		Although I have maintained the app as the Shiny package has continued to develop, the app is not meant to suggest all best practices, nor does it include usage of some Shiny coding preferences I picked up later.'),
 		br(),
 
 		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),
@@ -54,6 +57,7 @@ function(){
 					HTML('<li>'),a('VGAM', href="http://cran.r-project.org/web/packages/VGAM/index.html", target="_blank"),HTML('</li>'),
 				HTML('</ul>'))
 			)
-		)
+		),
+		value="about"
 	)
 }

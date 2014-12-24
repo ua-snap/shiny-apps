@@ -6,66 +6,65 @@ headerPanel_2 <- function(title, h, windowTitle=title) {
       h(title)
     )
 }
-shinyUI(pageWithSidebar(
+
+shinyUI(fluidPage(
 	headerPanel_2(
 		HTML(
-			'<div id="stats_header">
+			'<script>
+			(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');
+			ga(\'create\', \'UA-46129458-2\', \'rstudio.com\');
+			ga(\'send\', \'pageview\');
+			</script>
+			<div id="stats_header">
 			CMIP5 Quantile-mapped GCM Daily Data
 			<a href="http://accap.uaf.edu" target="_blank">
-			<img id="stats_logo" align="right" alt="ACCAP Logo" src="./img/accap_sidebyside.png" />
+			<img id="stats_logo" align="right" style="margin-left: 15px;" alt="ACCAP Logo" src="./img/ACCAP_acronym_100px.png" />
 			</a>
 			<a href="http://snap.uaf.edu" target="_blank">
-			<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/snap_sidebyside.png" />
+			<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" />
 			</a>
 			</div>'
 		), h3, "CMIP5 Quantile-mapped GCM Daily Data"
 	),
-	sidebarPanel(
-		tags$head(
-			tags$style(type="text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }"),
-			tags$style(type="text/css", "select { max-width: 150px; }"),
-			tags$style(type="text/css", "textarea { max-width: 150px; }"),
-			tags$style(type="text/css", ".jslider { max-width: 500px; }"),
-			tags$style(type='text/css', ".well { max-width: 500px; }"),
-			tags$style(type='text/css', ".span4 { max-width: 500px; }")
-		  ),
+	fluidRow(column(4,
 		uiOutput("showMapPlot"),
 		wellPanel(
 			h5("Time"),
-			sliderInput("yrs","",1958,2100,c(1981,2010),step=1,format="#"),
-			div(class="row-fluid", div(class="span6", uiOutput("Mo")), div(class="span6", uiOutput("MoHi"))),
-			tags$style(type="text/css", '#Mo {width: 150px}'),
-			tags$style(type="text/css", '#MoHi {width: 150px}')
+			sliderInput("yrs", "", 1958,2100, c(1981,2010), step=1, format="#", width="100%"),
+			div(class="row-fluid",
+				div(class="span6", selectInput("mo", "Show months:", choices=c("All",mos), selected="Jan", multiple=T, width="100%")),
+				div(class="span6", uiOutput("MoHi")))
 		),
 		wellPanel(
 			h5("Climate and Geography"),
-			div(class="row-fluid", div(class="span6", uiOutput("Var")), div(class="span6", uiOutput("Loc"))),
-			div(class="row-fluid", div(class="span6", uiOutput("Mod")),	div(class="span6", uiOutput("RCP"))),
-			tags$style(type="text/css", '#Var {width: 150px}'),
-			tags$style(type="text/css", '#Loc {width: 150px}'),
-			tags$style(type="text/css", '#Mod {width: 150px}'),
-			tags$style(type="text/css", '#RCP {width: 150px}')
+			div(class="row-fluid",
+				div(class="span6", selectInput("var", "Climate variable:", choices=var.nam, selected=var.nam[1], multiple=T, width="100%")),
+				div(class="span6", selectInput("loc", "Geographic location:", choices=sort(loc.nam), selected=sort(loc.nam)[3], multiple=T, width="100%"))),
+			div(class="row-fluid",
+				div(class="span6", selectInput("mod", "Climate model:", choices=mod.nam, selected=mod.nam[1], width="100%")),
+				div(class="span6", selectInput("rcp", "RCP:", choices=rcp.nam, selected=rcp.nam[1], width="100%")))
 		),
 		wellPanel(
 			h5("Thresholds and Conditionals"),
-			div(class="row-fluid", div(class="span6", uiOutput("CutT")), div(class="span6", uiOutput("CutW"))),
-			div(class="row-fluid", div(class="span6", uiOutput("Direction")), div(class="span6", uiOutput("Cond"))),
-			tags$style(type="text/css", '#CutT {width: 150px}'),
-			tags$style(type="text/css", '#CutW {width: 150px}'),
-			tags$style(type="text/css", '#Direction {width: 150px}'),
-			tags$style(type="text/css", '#Cond {width: 150px}'),
-			p("Positve values for directional wind components indicate West to East and South to North, like an X-Y graph.")
+			div(class="row-fluid",
+				div(class="span6", selectInput("cut.t", "Temp. threshold (C):", choices=temp.cut, selected=temp.cut[6], multiple=T, width="100%")),
+				div(class="span6", uiOutput("CutW"))),
+			div(class="row-fluid",
+				div(class="span6", selectInput("direct", "Days per month:", choices=c("Above threshold","Below threshold"), selected="Above threshold", width="100%")),
+				div(class="span6", selectInput("cond", "Conditional variable:", choices=c("Model","RCP","Location","Threshold","Variable"), selected="Model", width="100%"))),
+			p("Positive values for directional wind components indicate West to East and South to North, like an X-Y graph.")
 		),
-		wellPanel(div(class="row-fluid", div(class="span6", uiOutput("showMap")), div(class="span6", downloadButton("dlCurPlot", "Download Graphic"))),
-		tags$style(type="text/css", '#showMap {width: 150px}'),
-		tags$style(type="text/css", '#dlCurPlot {width: 120px}')),
-		h5(textOutput("pageviews"))
+		wellPanel(div(class="row-fluid", div(class="span6", checkboxInput("showmap","Show location grid",F)), div(class="span6", downloadButton("dlCurPlot", "Download Graphic")))),
+		conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
 	),
-	mainPanel(
+	column(8,
 		tabsetPanel(
 			tabPanel("Conditional Barplots",plotOutput("plot",height="auto"),value="barplots"),
 			tabPanelAbout(),
 			id="tsp"
 		)
-	)
+	))
 ))

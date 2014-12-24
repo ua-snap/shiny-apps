@@ -1,16 +1,7 @@
 # Source reactive expressions and other code
 source("external/appSourceFiles/reactives.R",local=T) # source reactive expressions
-
 source("external/appSourceFiles/io.sidebar.wp1.R",local=T) # source input/output objects associated with sidebar wellPanel 1
-
-source("external/appSourceFiles/io.sidebar.wp2.R",local=T) # source input/output objects associated with sidebar wellPanel 2
-
-source("external/appSourceFiles/io.sidebar.wp3.R",local=T) # source input/output objects associated with sidebar wellPanel 3
-
-source("external/appSourceFiles/io.sidebar.wp4.R",local=T) # source input/output objects associated with sidebar wellPanel 4
-
 source("external/appSourceFiles/io.mainPanel.tp1.R",local=T) # source input/output objects associated with mainPanel tabPanel 1
-
 source("external/appSourceFiles/plotFunctions.R",local=T) # source plotting functions
 
 # Setup master plotting function to be applied in browser, pdf, and png
@@ -38,7 +29,8 @@ plotHeight2 <- reactive({
 # Primary outputs
 # Plot class error and confusion matrix
 output$plotDailyPrecip <- renderPlot({ # render plot for mainPanel tabsetPanel tabPanel
-	input$genPlotButton
+	if(input$genPlotButton==0) { par(mar=c(0,0,0,0),bg="black"); plot(0,0,type="n",axes=F) }
+	if(input$genPlotButton==0) return()
 	isolate({
 		if(!is.null(colPal())) {
 			if(length(seq(input$yrs[1],input$yrs[2],by=1))>1) doPlot(filename=NULL, cex.master=1.8, cex.lab=1.8, cex.axis=1.5, show.title=F) else { par(mar=c(0,0,0,0),bg="black"); plot(0,0,type="n",axes=F) }
@@ -67,6 +59,3 @@ output$pageviews <-	renderText({
 	save(pageviews,file="pageviews.Rdata")
 	paste("Visits:",pageviews)
 })
-
-# Temporary debugging 
-output$debugging <- renderPrint({ "Tab not yet available." })

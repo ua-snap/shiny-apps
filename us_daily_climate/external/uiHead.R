@@ -1,6 +1,6 @@
 helpPopup <- function(title, content,
                       placement=c('right', 'top', 'left', 'bottom'),
-                      trigger=c('click', 'hover', 'focus', 'manual')) {
+                      trigger=c('focus', 'hover', 'click', 'manual')) {
   tagList(
     singleton(
       tags$head(

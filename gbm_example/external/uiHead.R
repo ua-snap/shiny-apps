@@ -1,4 +1,3 @@
-library(shinyIncubator)
 tabPanelAbout <- source("external/about.R",local=T)$value
 headerPanel_2 <- function(title, h, windowTitle=title) {    
   tagList(

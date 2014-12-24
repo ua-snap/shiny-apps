@@ -1,27 +1,49 @@
 # Datasets, variables
-d.all <- reactive({
+url.string <- reactive({
 	if(!is.null(input$loc)){
-		d <- get(gsub(", AK","",input$loc))
-		d <- subset(d,Year>=1950)
-		yr1 <- unique(d$Year)[1]
-		if(length(which(d$Year==yr1)) < 365) d <- subset(d,Year > yr1)
-	} else d <- NULL
+		x <- paste0("http://","data.rcc-acis.org/StnData?sid=",ID[gsub(", AK","",input$loc)],"&sdate=1950-01-01&edate=",Sys.Date()-1,"&elems=4&output=csv") # "&elems=1,2,43,4,10,11&output=csv"
+		print(x)
+	} else x <- NULL
+	x
+})
+
+d.all <- reactive({
+	if(is.null(input$loc) || input$loc=="") return()
+	d <- NULL
+	isolate(
+		if(!is.null(url.string())){
+			d <- read.csv(url.string(),header=F,skip=1)
+			print(head(d))
+			x <- t(sapply(strsplit(as.character(d[,1]),"-"),as.numeric))
+			d <- data.frame(x,d[-1])
+			names(d) <- c("Year","Month","Day","P_in") # "MinT","MaxT","AvgT","P_in","SnowF","SnowD"
+			yr1 <- d$Year[which(d$P_in!="M")[1]]
+			if(is.na(yr1)){
+				d <- NULL
+			} else {
+				d <- subset(d,Year>=yr1)
+				for(i in 4:ncol(d)){
+					d[,i] <- as.character(d[,i])
+					d[,i][d[,i]=="T"] <- "0" # "trace amounts" set to zero
+					d[,i] <- as.numeric(d[,i]) # allow coercion to NA, treat any non-coercible value as missing (most of them are)
+				}
+			}
+		} else d <- NULL
+	)
 	d
 })
 
 d <- reactive({
-	input$genPlotButton
+	if(is.null(input$yrs) || is.null(d.all())) return()
 	x <- NULL
-	isolate({
-		if(!is.null(d.all()) & !is.null(input$yrs)){
-			x <- subset(d.all(), Year>=input$yrs[1] & Year<=tail(input$yrs,1)) # locations (loc) currently not in use(Fairbanks only)
-		} else x <- NULL
-	})
+	isolate(
+		x <- subset(d.all(), Year>=input$yrs[1] & Year<=tail(input$yrs,1)) # locations (loc) currently not in use(Fairbanks only)
+	)
 	x
 })
 
 yrs <- reactive({
-	if(!is.null(d.all())) unique(d.all()$Year) else NULL
+	if(!is.null(d.all()) && nrow(d.all())>0) unique(d.all()$Year) else NULL
 })
 
 colPal <- reactive({

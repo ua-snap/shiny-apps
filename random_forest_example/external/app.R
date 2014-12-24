@@ -1,4 +1,6 @@
 # Source reactive expressions and other code
+tabPanelAbout <- source("external/about.R", local=T)$value
+
 source("external/appSourceFiles/reactives.R",local=T) # source reactive expressions
 
 source("external/appSourceFiles/io.sidebar.wp1.R",local=T) # source input/output objects associated with sidebar wellPanel 1
@@ -201,6 +203,3 @@ output$pageviews <-	renderText({
 	save(pageviews,file="pageviews.Rdata")
 	paste("Visits:",pageviews)
 })
-
-# Temporary debugging 
-output$debugging <- renderPrint({ "This tab and others not yet available." }) # levels(dat.sub()$Month) }) # 

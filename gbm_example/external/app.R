@@ -1,7 +1,3 @@
-output$dat.name <- renderUI({
-	selectInput("dat.name","Data:",choices="Simulated data",selected="Simulated data")
-})
-
 dat <- reactive({
 	if(!is.null(input$dat.name)){
 		if(input$dat.name=="Simulated data"){
@@ -12,35 +8,35 @@ dat <- reactive({
 })
 
 output$vars <- renderUI({
-	if(!is.null(dat()))	checkboxGroupInput("vars","Explanatory variables:",names(dat()[-1]),selected=names(dat()[2]))
+	if(!is.null(dat()))	checkboxGroupInput("vars","Explanatory variables:",names(dat()[-1]),selected=names(dat())[-1])
 })
 
 output$n.trees <- renderUI({
-	if(!is.null(dat()))	sliderInput("n.trees","Number of trees:",100,10000,100,step=100)
+	if(!is.null(dat()))	sliderInput("n.trees", "Number of trees:", 100, 10000, 100, step=100, width="100%")
 })
 
 output$bag.fraction <- renderUI({
-	if(!is.null(dat()))	sliderInput("bag.fraction","Bag fraction:",0.1,1,0.5,step=0.05)
+	if(!is.null(dat()))	sliderInput("bag.fraction", "Bag fraction:", 0.1, 1, 0.5, step=0.05, width="100%")
 })
 
 output$train.fraction <- renderUI({
-	if(!is.null(dat()))	sliderInput("train.fraction","Training fraction:",0.1,1,0.5,step=0.05)
+	if(!is.null(dat()))	sliderInput("train.fraction", "Training fraction:", 0.1, 1, 0.5, step=0.05, width="100%")
 })
 
 output$n.minobsinnode <- renderUI({
-	if(!is.null(dat()))	sliderInput("n.minobsinnode","Min. obs. in terminal nodes:",1,10,5,step=1)
+	if(!is.null(dat()))	sliderInput("n.minobsinnode", "Min. obs. in terminal nodes:", 1, 10, 5, step=1, width="100%")
 })
 
 output$cv.folds <- renderUI({
-	if(!is.null(dat()))	sliderInput("cv.folds","Cross-validation folds:",1,10,1,step=1)
+	if(!is.null(dat()))	sliderInput("cv.folds", "Cross-validation folds:", 1, 10, 1, step=1, width="100%")
 })
 
 output$shrinkage <- renderUI({
-	if(!is.null(dat()))	selectInput("shrinkage","Shrinkage rate:",choices=c(0.001,0.005,0.01,0.05,0.1),selected=0.05)
+	if(!is.null(dat()))	selectInput("shrinkage", "Shrinkage rate:", choices=c(0.001,0.005,0.01,0.05,0.1), selected=0.05, width="100%")
 })
 
 output$interaction.depth <- renderUI({
-	if(!is.null(dat()))	selectInput("interaction.depth","Interaction depth:",choices=1:length(input$vars),selected=1)
+	if(!is.null(dat()))	selectInput("interaction.depth", "Interaction depth:", choices=1:length(input$vars), selected=1, width="100%")
 })
 
 gbm1 <- reactive({
@@ -61,7 +57,7 @@ gbm1 <- reactive({
 					train.fraction=input$train.fraction,
 					n.minobsinnode=input$n.minobsinnode,
 					cv.folds=input$cv.folds,
-					n.cores=1
+					n.cores=min(input$cv.folds,4)
 				)
 			)
 		} else gbm1 <- NULL
@@ -85,7 +81,9 @@ best.iter <- reactive({
 			d1 <- unlist(d[1,])
 			d <- rbind(d, gbm1()$train.error[d1], gbm1()$valid.error[d1])
 			if(input$cv.folds>1) d <- rbind(d,gbm1()$cv.error[d1])
-			rownames(d) <- rnames
+			hold.names <- names(d)
+			d <- data.frame(rnames,d)
+			names(d) <- c("Measures",hold.names)
 			return(d)
 		} else return()
 	)
@@ -111,13 +109,15 @@ ri <- reactive({
 	)
 })
 
-output$best.iter.table <- renderTable({ if(!is.null(best.iter())) best.iter() })
+output$best.iter.table <- renderDataTable({ if(!is.null(best.iter())) best.iter() })
 
-output$ri.table.oob <- renderTable({ if(!is.null(ri())) ri()[ri()$Method=="OOB",] })
+output$ri.table <- renderDataTable({ if(!is.null(ri())) ri() })
 
-output$ri.table.test <- renderTable({ if(!is.null(ri())) ri()[ri()$Method=="Test",] })
+output$ri.table.oob <- renderDataTable({ if(!is.null(ri())) ri()[ri()$Method=="OOB",] })
 
-output$ri.table.cv <- renderTable({ if(!is.null(ri())) if("CV" %in% ri()$Method) ri()[ri()$Method=="CV",] })
+output$ri.table.test <- renderDataTable({ if(!is.null(ri())) ri()[ri()$Method=="Test",] })
+
+output$ri.table.cv <- renderDataTable({ if(!is.null(ri())) if("CV" %in% ri()$Method) ri()[ri()$Method=="CV",] })
 
 doPlot.best.iter <- function(...){
 	if(input$goButton==0) plot(0,0,type="n",axes=F,xlab="",ylab="")
@@ -159,5 +159,3 @@ output$pageviews <-	renderText({
 	save(pageviews,file="pageviews.Rdata")
 	paste("Visits:",pageviews)
 })
-
-output$show.gbm1.object.names.if.created.successfully <- renderPrint({ if(!is.null(gbm1())) names(gbm1()) })

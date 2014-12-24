@@ -1,4 +1,4 @@
-mainPanel(
+column(8,
 	tabsetPanel(
 		tabPanel("Communities",
 		plotOutput("plot1",height="auto"),
@@ -10,7 +10,7 @@ mainPanel(
 			div(class="span2", uiOutput("bartype")),
 			div(class="span2", uiOutput("bardirection"))
 		),
-		conditionalPanel(condition='input.goButton > 0',
+		conditionalPanel(condition='input.plotButton > 0',
 			div(class="row-fluid",
 				div(class="span2", downloadButton("dlCurPlot1","Download graphic")),
 				div(class="span2", downloadButton("dlCurTable1","Download table")),

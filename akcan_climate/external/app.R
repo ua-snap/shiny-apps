@@ -11,8 +11,9 @@ doPlot1 <- source("external/appSourceFiles/doPlot1.R",local=T)$value # this plot
 
 # Primary outputs
 output$plot1 <- renderPlot({ # render plot from doPlot1 for mainPanel tabsetPanel tabPanel 1
-		input$goButton
-		input$updateButton
+		if(!permitPlot()) return()
+		if(is.null(input$goButton) || input$goButton==0) return()
+		if(is.null(input$plotButton) || input$plotButton==0) return()
 		input$colorpalettes
 		#input$altplot
 		input$bartype
@@ -44,6 +45,3 @@ output$pageviews <-	renderText({
 	save(pageviews,file="pageviews.Rdata")
 	paste("Visits:",pageviews)
 })
-
-# Temporary debugging 
-output$debugging <- renderPrint({ "This tab and others not yet available." }) # levels(dat.sub()$Month) }) # 
