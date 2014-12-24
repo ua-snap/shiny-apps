@@ -130,7 +130,7 @@ collapseMonths <- function(d, variable, n.s, mos, n.samples=1){
 	}
 	d <- d[ind.keep,]
 	d$Month <- id.seasons
-	for(k in 1:lenth(variable)){
+	for(k in 1:length(variable)){
 		d[[variable[k]]] <- v[[k]]
 		if(any(d$Var=="Precipitation")) d[[variable[k]]][d$Var=="Precipitation"] <- round(p*d[[variable[k]]][d$Var=="Precipitation"])
 	}
