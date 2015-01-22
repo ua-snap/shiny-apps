@@ -36,6 +36,6 @@ column(4,
 					For any sea, you may focus on wind events and sea ice concentrations averaed over the entire sea or over a coastal segment of the sea only.')
 			)
 		)
-	),
-	conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
+	)#,
+	#conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
 )

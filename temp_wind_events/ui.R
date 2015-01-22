@@ -57,8 +57,8 @@ shinyUI(fluidPage(
 				div(class="span6", selectInput("cond", "Conditional variable:", choices=c("Model","RCP","Location","Threshold","Variable"), selected="Model", width="100%"))),
 			p("Positive values for directional wind components indicate West to East and South to North, like an X-Y graph.")
 		),
-		wellPanel(div(class="row-fluid", div(class="span6", checkboxInput("showmap","Show location grid",F)), div(class="span6", downloadButton("dlCurPlot", "Download Graphic")))),
-		conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
+		wellPanel(div(class="row-fluid", div(class="span6", checkboxInput("showmap","Show location grid",F)), div(class="span6", downloadButton("dlCurPlot", "Download Graphic"))))#,
+		#conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
 	),
 	column(8,
 		tabsetPanel(

@@ -69,8 +69,8 @@ shinyUI(fluidPage(
 				condition="input.tsp=='map'",
 				downloadButton("dlCurPlotMap", "Download Graphic")
 			)
-		),
-		conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
+		)#,
+		#conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
 	),
 	column(8,
 		tabsetPanel(
