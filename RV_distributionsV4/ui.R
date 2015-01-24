@@ -1,6 +1,7 @@
 library(shiny)
 tabPanelAbout <- source("about.r")$value
-shinyUI(pageWithSidebar(
+library(shinythemes)
+shinyUI(fluidPage(theme=shinytheme("united"),
 	headerPanel(
 		HTML(
 			'<script>
@@ -12,38 +13,39 @@ shinyUI(pageWithSidebar(
 			ga(\'send\', \'pageview\');
 			</script>
 			<div id="stats_header">
-			Distributions of Random Variables
-			<a href="http://snap.uaf.edu" target="_blank">
-			<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" />
-			</a>
+			Distributions of Random Variables v4
+			<a href="http://snap.uaf.edu" target="_blank"><img align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" /></a>
 			</div>'
 		),
 		"Distributions of Random Variables"
 	),
-	sidebarPanel(
-		wellPanel( radioButtons("disttype","Distribution type:",list("Discrete","Continuous"),selected="Discrete") ),
-		wellPanel(	uiOutput("distName") ),
-		wellPanel(
-			numericInput("n","Sample size:",10000),
-			uiOutput("dist1"),
-			uiOutput("dist2"),
-			uiOutput("dist3")
+	fluidRow(
+		column(4,
+			wellPanel( radioButtons("disttype","Distribution type:",list("Discrete","Continuous"),selected="Discrete") ),
+			wellPanel(	uiOutput("distName") ),
+			wellPanel(
+				numericInput("n","Sample size:",10000),
+				uiOutput("dist1"),
+				uiOutput("dist2"),
+				uiOutput("dist3")
+			),
+			wellPanel(
+				uiOutput("sampDens"),
+				uiOutput("BW"),
+				fluidRow(
+					column(6, downloadButton("dlCurPlot", "Download Graphic", class="btn-block btn-primary")),
+					column(6, downloadButton("dldat", "Download Sample", class="btn-block btn-warning"))
+				)
+			)
 		),
-		wellPanel(
-			uiOutput("sampDens"),
-			uiOutput("BW"),
-			downloadButton("dlCurPlot", "Download Graphic"),
-			downloadButton('dldat', 'Download Sample')
-		)#,
-		#conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
-	),
-	mainPanel(
-		tabsetPanel(
-			tabPanel("Plot",plotOutput("plot",height="auto")),
-			tabPanel("Summary",verbatimTextOutput("summary")),
-			tabPanel("Table",tableOutput("table")),
-			tabPanelAbout(),
-			id="tsp"
+		column(8,
+			tabsetPanel(
+				tabPanel("Plot",plotOutput("plot",height="auto")),
+				tabPanel("Summary",verbatimTextOutput("summary")),
+				tabPanel("Table",tableOutput("table")),
+				tabPanelAbout(),
+				id="tsp"
+			)
 		)
 	)
 ))

@@ -10,9 +10,7 @@ headerPanel_2(
 		</script>
 		<div id="stats_header">
 		Tree growth and climate: Bootstrapped moving average correlations
-		<a href="http://snap.uaf.edu" target="_blank">
-		<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" />
-		</a>
+		<a href="http://snap.uaf.edu" target="_blank"><img align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" /></a>
 		</div>'
 	), h3, "Tree growth and climate"
 )

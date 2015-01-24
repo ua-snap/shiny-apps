@@ -1,8 +1,6 @@
-mainPanel_2(
-	span="span9",
+column(9,
 	tabsetPanel(
 		tabPanel("Correlation Plots",
-			#uiOutput("debugging"),
 			plotOutput("macorplot",height="auto"),
 			br(), value="ts"),
 		tabPanelAbout(),

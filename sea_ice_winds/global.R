@@ -1,6 +1,4 @@
-pkgs <- c("Hmisc")
-pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
-if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
+library(shinythemes)
 library(Hmisc)
 
 load("external/wind_ice.RData",envir=.GlobalEnv)

@@ -1,7 +1,4 @@
 library(shiny)
-pkgs <- c("reshape2","raster","maps","maptools")
-pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
-if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
 library(reshape2); library(raster); library(maps); library(maptools)
 
 shinyServer(function(input,output){
@@ -161,12 +158,5 @@ shinyServer(function(input,output){
 			dev.off()
 		}
 	)
-	
-	#output$pageviews <-	renderText({
-	#	if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
-	#	pageviews <- pageviews + 1
-	#	save(pageviews,file="pageviews.Rdata")
-	#	paste("Visits:",pageviews)
-	#})
 
 })

@@ -1,6 +1,8 @@
-source("external/uiHead.R",local=T)
-shinyUI(pageWithSidebar(
-	source("external/header.R",local=T)$value,
-	source("external/sidebar.R",local=T)$value,
-	source("external/main.R",local=T)$value
+source("external/uiHead.R", local=T)
+shinyUI(fluidPage(theme=shinytheme("journal"),
+	source("external/header.R", local=T)$value,
+	fluidRow(
+		source("external/sidebar.R", local=T)$value,
+		source("external/main.R", local=T)$value
+	)
 ))

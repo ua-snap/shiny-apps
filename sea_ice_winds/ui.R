@@ -1,5 +1,5 @@
 source("external/uiHead.R",local=T)
-shinyUI(fluidPage(
+shinyUI(fluidPage(theme=shinytheme("spacelab"),
 	source("external/header.R",local=T)$value,
 	fluidRow(
 		source("external/sidebar.R",local=T)$value,

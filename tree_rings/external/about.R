@@ -1,25 +1,23 @@
 function(){
 	tabPanel("About",
-		p(style="text-align:justify",'This web application displays plots of bootstrapped, 50-year moving average correlations between tree growth and both temperature and precipitation at various sites.'),
-		p(style="text-align:justify",'Data provided by Jane Wolken and Angie Floyd. Plot style designed by Matt Leonawicz and Angie Floyd.'),
-		br(),
+		HTML('<p style="text-align:justify">This web application displays plots of bootstrapped, 50-year moving average correlations between tree growth and both temperature and precipitation at various sites.</p>
+		<p style="text-align:justify">Data provided by Jane Wolken and Angie Floyd. Plot style designed by Matt Leonawicz and Angie Floyd.</p>
+		<br/>'),
 
-		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),
-		strong('Author'),
-		p('Matthew Leonawicz',br(),
-			'Statistician | useR',br(),
-			a('Scenarios Network for Alaska and Arctic Planning', href="http://www.snap.uaf.edu/", target="_blank"),
-			'|',
-			a('Blog', href="http://blog.snap.uaf.edu/", target="_blank"),
-			'|',
-			a('Twitter', href="https://twitter.com/leonawicz/", target="_blank"),
-			'|',
-			a('LinkedIn', href="http://www.linkedin.com/in/leonawicz/", target="_blank")	
-		),
-		br(),
+		HTML('
+		<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>
+		<p>Matthew Leonawicz<br/>
+		Statistician | useR<br/>
+		<a href="http://leonawicz/github.io" target="_blank">Github.io</a> | 
+		<a href="http://blog.snap.uaf.edu" target="_blank">Blog</a> | 
+		<a href="https://twitter.com/leonawicz" target="_blank">Twitter</a> | 
+		<a href="http://www.linkedin.com/in/leonawicz" target="_blank">Linkedin</a> <br/>
+		<a href="http://www.snap.uaf.edu/", target="_blank">Scenarios Network for Alaska and Arctic Planning</a>
+		</p>'),
 		
-		div(class="row-fluid",
-			div(class="span4",strong('Other apps'),
+		fluidRow(
+			column(4,
+				strong('Other apps'),
 				p(HTML('<ul>'),
 					HTML('<li>'),a("Random variables: App tutorial part 1", href="http://shiny.snap.uaf.edu/RV_distributions/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Random variables: App tutorial part 2", href="http://shiny.snap.uaf.edu/RV_distributionsV2/", target="_blank"),HTML('</li>'),
@@ -39,7 +37,8 @@ function(){
 				a('GitHub', href="https://github.com/ua-snap/shiny-apps/tree/master/tree_rings/", target="_blank")),
 				br()
 			),
-			div(class="span4", strong('Related blog posts'),
+			column(4,
+				strong('Related blog posts'),
 				p(HTML('<ul>'),
 					HTML('<li>'),a("Random variables: App tutorial part 1", href="http://blog.snap.uaf.edu/2013/05/20/introducing-r-shiny-web-apps/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Random variables: App tutorial part 2", href="http://blog.snap.uaf.edu/2013/05/20/r-sampling-app-version-2/", target="_blank"),HTML('</li>'),
@@ -57,7 +56,7 @@ function(){
 				HTML('</ul>')),
 				br()
 			),
-			div(class="span4",
+			column(4,
 				strong('References'),
 				p(HTML('<ul>'),
 					HTML('<li>'),a('Coded in R', href="http://www.r-project.org/", target="_blank"),HTML('</li>'),

@@ -1,8 +1,6 @@
 # Datasets, variables
 yrs <- reactive({
-	x <- sort(as.numeric(gsub("s","",input$yrs)))
-	x <- seq(x[1], tail(x,1), by=10)
-	x
+	seq(input$yrs[1], input$yrs[2], by=10)
 })
 
 suffix <- reactive({
