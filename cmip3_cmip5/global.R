@@ -3,7 +3,7 @@ library(shinysky)
 library(markdown)
 load("external/meta.RData",envir=.GlobalEnv)
 
-#### If overriding these four objects from files_meta.RData ####
+#### If overriding these region and city file path objects from files_meta.RData ####
 if(Sys.info()["sysname"]=="Windows"){ # for local devl/testing
 	topDir <- "Y:" #"/workspace/Shared"
 	subDir <- "Users/mfleonawicz/AR4_AR5_Comparisons"
@@ -18,11 +18,10 @@ if(Sys.info()["sysname"]=="Windows"){ # for local devl/testing
 	region.cru.samples.files <- lapply(region.cru.samples.path, list.files, full=T)
 	names(region.cru.stats.files) <- names(region.gcm.stats.files) <- names(region.cru.samples.files) <- names(region.gcm.samples.files) <- basename(region.gcm.stats.path)
 	
-	city.gcm.files.path <- file.path(topDir, subDir, "city_files_GCM")
-	city.gcm.files <- list.files(city.gcm.files.path, full=T)
-	city.cru.files.path <- file.path(topDir, subDir, "city_files_CRU")
+	city.cru.files.path <- file.path(topDir, "city_files_CRU")
 	city.cru.files <- list.files(city.cru.files.path, full=T)
-	city.names <- gsub("APOS", "\\'", gsub("--", ", ", sapply(strsplit(basename(city.gcm.files), "__"), "[[", 1)))
+	city.gcm.files.path <- file.path(topDir, "city_files_GCM")
+	city.gcm.files <- gsub("city_files_CRU", "city_files_GCM", city.cru.files)
 }
 ###############################################################
 
