@@ -137,12 +137,13 @@ dat_master <- reactive({
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Location %in% input$map_shape_click$id)
 			} else if(input$loctype!="Cities"){
-				region.ind <- which(sort(region.names.out[[input$loctype]]) %in% Locs())
+				reg.nam <- sort(region.names.out[[input$loctype]])
+				region.ind <- which(reg.nam %in% Locs())
 				for(i in 1:length(region.ind)) {
 					filename <- switch(input$vars[1], Temperature="stats_climate", Precipitation="stats_climate")
 					load(paste0(region.gcm.stats.files[[input$loctype]][region.ind[i]], "/", filename, ".RData"), envir=environment()) # Still can only load onevariable file, okay as long as app only contains T & P
 					gcm.stats.df[,stats.columns] <- region.dat
-					gcm.stats.df$Location <- Locs()[i]
+					gcm.stats.df$Location <- reg.nam[region.ind[[i]]
 					if(i==1) region.dat.final <- gcm.stats.df else region.dat.final <- rbind(region.dat.final, gcm.stats.df)
 				}
 				prog_d_master$set(message="Calculating, please wait", detail="Subsetting GCM time series data...")
@@ -291,7 +292,8 @@ CRU_master <- reactive({
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4))# & 
 					#Scenario %in% scenarios() & Model %in% models_original())# & Location %in% input$map_shape_click$id)	
 			} else if(input$loctype!="Cities"){
-				region.ind <- which(sort(region.names.out[[input$loctype]]) %in% Locs())
+				reg.nam <- sort(region.names.out[[input$loctype]])
+				region.ind <- which(reg.nam %in% Locs())
 				for(i in 1:length(region.ind)) {
 					filename <- switch(input$vars[1], Temperature="stats_climate", Precipitation="stats_climate") # Still can only load onevariable file, okay as long as app only contains T & P
 					load(paste0(region.cru.stats.files[[input$loctype]][region.ind[i]], "/", filename, ".RData"), envir=environment())
