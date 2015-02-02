@@ -143,7 +143,7 @@ dat_master <- reactive({
 					filename <- switch(input$vars[1], Temperature="stats_climate", Precipitation="stats_climate")
 					load(paste0(region.gcm.stats.files[[input$loctype]][region.ind[i]], "/", filename, ".RData"), envir=environment()) # Still can only load onevariable file, okay as long as app only contains T & P
 					gcm.stats.df[,stats.columns] <- region.dat
-					gcm.stats.df$Location <- reg.nam[region.ind[[i]]
+					gcm.stats.df$Location <- reg.nam[region.ind[i]]
 					if(i==1) region.dat.final <- gcm.stats.df else region.dat.final <- rbind(region.dat.final, gcm.stats.df)
 				}
 				prog_d_master$set(message="Calculating, please wait", detail="Subsetting GCM time series data...")
@@ -386,12 +386,13 @@ dat_spatial <- reactive({
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Location %in% input$map_shape_click$id)
 			} else if(input$loctype!="Cities"){ #### Regions: only this is under development for now
-				region.ind <- which(sort(region.names.out[[input$loctype]]) %in% Locs())
+				reg.nam <- sort(region.names.out[[input$loctype]])
+				region.ind <- which(reg.nam %in% Locs())
 				for(i in 1:length(region.ind)) {
 					load(paste0(region.gcm.samples.files[[input$loctype]][region.ind[i]], "/", tolower(input$vars[1]), ".RData"), envir=environment()) # Still can only load onevariable file, okay as long as app only contains T & P
 					gcm.samples.df[,samples.columns] <- rsd/rep(samples.multipliers, each=length(rsd)/2)
 					gcm.samples.df$Var <- input$vars[1]
-					gcm.samples.df$Location <- Locs()[i]
+					gcm.samples.df$Location <- reg.nam[region.ind[i]]
 					if(i==1) rsd.final <- gcm.samples.df else rsd.final <- rbind(rsd.final, gcm.samples.df)
 				}
 				prog_d_spatial$set(message="Calculating, please wait", detail="Subsetting GCM spatial samples...")
@@ -465,12 +466,13 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 				x <- subset(d.cities.cru31, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & Location %in% input$map_shape_click$id)
 			} else if(input$loctype!="Cities"){
-				region.ind <- which(sort(region.names.out[[input$loctype]]) %in% Locs())
+				reg.nam <- sort(region.names.out[[input$loctype]])
+				region.ind <- which(reg.nam %in% Locs())
 				for(i in 1:length(region.ind)) {
 					load(paste0(region.cru.samples.files[[input$loctype]][region.ind[i]], "/", tolower(input$vars[1]), ".RData"), envir=environment()) # Still can only load onevariable file, okay as long as app only contains T & P
 					cru.samples.df[,samples.columns.cru] <- rsd.cru/rep(samples.multipliers.cru, each=length(rsd.cru)/2)
 					cru.samples.df$Var <- input$vars[1]
-					cru.samples.df$Location <- Locs()[i]
+					cru.samples.df$Location <- reg.nam[region.ind[i]]
 					if(i==1) rsd.cru.final <- cru.samples.df else rsd.cru.final <- rbind(rsd.cru.final, cru.samples.df)
 				}
 				x <- subset(rsd.cru.final, Month %in% month.abb[match(Months_original(), month.abb)] & 

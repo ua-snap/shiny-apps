@@ -285,17 +285,12 @@ getPlotTitle <- function(grp, facet, pooled, yrs, mos, mod, scen, phase=c("CMIP3
 }
 
 getSubjectChoices <- function(inx, ingrp, pooled.vars){
-	if(!is.null(pooled.vars)){
-		x <- pooled.vars
-		if(inx!="Year") y <- "Year" else y <- ""
-		if(inx=="Decade"){
-			x <- NULL
-		} else {
-			x <- unique(c(ingrp, x[x!="Decade"], y))
-			x <- x[x!="" & x!="None"]
-		}
-		if(length(x)==1) x <- NULL
-	} else x <- NULL
+	if(inx=="Decade") return(NULL)
+	x <- c()
+	if(!is.null(pooled.vars)) x <- c(x, pooled.vars)
+	if(inx!="Year") x <- c(x, "Year")
+	x <- unique(c(ingrp, x[x!="Decade"]))
+	x <- x[x!="" & x!="None"]
 	x
 }
 
@@ -310,7 +305,7 @@ withinGroupLines <- function(x, subjects){
 	if(!length(subjects) || subjects[1] == "") subjects <- 1
 	if(subjects[1]!=1){
 		subjectlines <- TRUE
-		subjects <- sprintf("interaction(%s)", paste0(subjects, collapse = ", "))
+		if(length(subjects) > 1) subjects <- sprintf("interaction(%s)", paste0(subjects, collapse = ", "))
 	} else subjectlines <- FALSE
 	list(subjects=subjects, subjectlines=subjectlines)
 }
