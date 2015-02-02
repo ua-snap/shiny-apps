@@ -22,7 +22,7 @@ if(Sys.info()["sysname"]=="Windows"){ # for local devl/testing
 	city.gcm.files <- list.files(city.gcm.files.path, full=T)
 	city.cru.files.path <- file.path(topDir, subDir, "city_files_CRU")
 	city.cru.files <- list.files(city.cru.files.path, full=T)
-	city.names <- gsub("--", ", ", basename(city.gcm.files))
+	city.names <- gsub("APOS", "\\'", gsub("--", ", ", sapply(strsplit(basename(city.gcm.files), "__"), "[[", 1)))
 }
 ###############################################################
 
