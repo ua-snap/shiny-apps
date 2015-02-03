@@ -9,7 +9,7 @@ headerPanel_2 <- function(title, h, windowTitle=title) {
 #library(leaflet)
 #library(ShinyDash)
 
-shinyUI(fluidPage(
+shinyUI(fluidPage(theme=shinytheme("cosmo"),
 	#source("external/header.R",local=T)$value,
 	
 	#tags$head(HTML(
@@ -62,8 +62,7 @@ shinyUI(fluidPage(
 	#),
 	#hr(),
 	
-	progressInit(),
-	navbarPage(
+	navbarPage(theme=shinytheme("cosmo"),
 		title=div(a(img(src="./img/SNAP_acronym_100px.png", width="50%"), "", href="http://snap.uaf.edu", target="_blank")),
 		tabPanel("Home", h4("Alaska and western Canada downscaled CMIP3/CMIP5 GCM comparison"), value="home"),
 		tabPanel("Time Series", value="plot_ts"),
@@ -86,10 +85,11 @@ shinyUI(fluidPage(
 		),
 		tabPanelAbout(),
 		windowTitle="AKCAN CMIP3/CMIP5",
-		collapsable=TRUE,
+		collapsible=TRUE,
 		#inverse=TRUE,
 		id="tsp"
 	),
+	
     ##fluidRow(column(3,
     ##  #selectInput('year', 'Year', c(2000:2010), 2010),
     ##  selectInput('maxCities', 'Maximum cities to display', choices=c(
@@ -102,7 +102,7 @@ shinyUI(fluidPage(
 	##)),
 	################################################################
 	#tags$head(tags$link(rel="stylesheet", type="text/css", href="http://bootswatch.com/2/cyborg/bootstrap.css")),
-	tags$head(tags$link(rel="stylesheet", type="text/css", href="http://bootswatch.com/2/cosmo/bootstrap.css")),
+	#tags$head(tags$link(rel="stylesheet", type="text/css", href="http://bootswatch.com/2/cosmo/bootstrap.css")),
 	tags$head(tags$link(rel="stylesheet", type="text/css", href="styles.css")),
 	fluidRow(
 		source("external/sidebar.R",local=T)$value,
