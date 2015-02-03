@@ -2,13 +2,8 @@
 tabPanelAbout <- source("external/about.R", local=T)$value
 
 source("external/appSourceFiles/reactives.R",local=T) # source reactive expressions
-
-source("external/appSourceFiles/io.sidebar.wp1.R",local=T) # source input/output objects associated with sidebar wellPanel 1
-
-source("external/appSourceFiles/io.sidebar.wp2.R",local=T) # source input/output objects associated with sidebar wellPanel 2
-
-source("external/appSourceFiles/io.mainPanel.tp1.R",local=T) # source input/output objects associated with mainPanel tabPanel 1
-
+source("external/appSourceFiles/io.sb.R",local=T) # source input/output objects associated with sidebar
+source("external/appSourceFiles/io.mp.R",local=T) # source input/output objects associated with mainPanel
 source("external/appSourceFiles/plotFunctions.R",local=T) # source plotting functions
 
 fs <- 20 # temporarily hardcoded
@@ -21,7 +16,7 @@ cs.sub <- 3
 output$classErrorPlot <- renderPlot({ # render plot for mainPanel tabsetPanel tabPanel
 		input$goButton
 		isolate( if(!is.null(input$goButton)) if(input$goButton!=0) classErrorPlot(class.error=class.error(), confusion.melt=confusion.melt(), cs, fs) )
-}, height=1000, width=1600)
+}, height=function(){ w <- session$clientData$output_classErrorPlot_width; round((5/8)*w)	}, width="auto")
 
 output$dl_classErrorPlot <- downloadHandler( # render plot to pdf for download
 	filename = 'classErrorPlot.pdf',
@@ -36,7 +31,7 @@ output$dl_classErrorPlot <- downloadHandler( # render plot to pdf for download
 output$impAccPlot <- renderPlot({ # render plot for mainPanel tabsetPanel tabPanel
 		input$goButton
 		isolate( if(!is.null(input$goButton)) if(input$goButton!=0) importancePlot(d=predictor.acc(), ylb="mda", fs) )
-}, height=1000, width=1600)
+}, height=function(){ w <- session$clientData$output_impAccPlot_width; round((5/8)*w)	}, width="auto")
 
 output$dl_impAccPlot <- downloadHandler( # render plot to pdf for download
 	filename = 'meanDecreaseAccuracyPlot.pdf',
@@ -50,7 +45,7 @@ output$dl_impAccPlot <- downloadHandler( # render plot to pdf for download
 output$impGiniPlot <- renderPlot({ # render plot for mainPanel tabsetPanel tabPanel
 		input$goButton
 		isolate( if(!is.null(input$goButton)) if(input$goButton!=0) importancePlot(d=predictor.gini(), ylb="mdg", fs) )
-}, height=1000, width=1600)
+}, height=function(){ w <- session$clientData$output_impGiniPlot_width; round((5/8)*w)	}, width="auto")
 
 output$dl_impGiniPlot <- downloadHandler( # render plot to pdf for download
 	filename = 'meanDecreaseGiniPlot.pdf',
@@ -64,7 +59,7 @@ output$dl_impGiniPlot <- downloadHandler( # render plot to pdf for download
 output$impTablePlot <- renderPlot({ # render plot for mainPanel tabsetPanel tabPanel
 		input$goButton
 		isolate( if(!is.null(input$goButton)) if(input$goButton!=0) impTablePlot(importance.melt=importance.melt(), lab=importance.lab(), cs, fs) )
-}, height=1000, width=1600)
+}, height=function(){ w <- session$clientData$output_impTablePlot_width; round((5/8)*w)	}, width="auto")
 
 output$dl_impTablePlot <- downloadHandler( # render plot to pdf for download
 	filename = 'varImportanceTablePlot.pdf',
@@ -79,7 +74,7 @@ output$dl_impTablePlot <- downloadHandler( # render plot to pdf for download
 output$mdsPlot <- renderPlot({ # render plot for mainPanel tabsetPanel tabPanel
 		input$goButton
 		isolate( if(!is.null(input$goButton)) if(input$goButton!=0) mdsPlot(d=d.new(), fs) )
-}, height=1000, width=1600)
+}, height=function(){ w <- session$clientData$output_mdsPlot_width; round((5/8)*w)	}, width="auto")
 
 output$dl_mdsPlot <- downloadHandler( # render plot to pdf for download
 	filename = 'mdsPlot.pdf',
@@ -94,7 +89,7 @@ output$dl_mdsPlot <- downloadHandler( # render plot to pdf for download
 output$marginPlot <- renderPlot({ # render plot for mainPanel tabsetPanel tabPanel
 		input$goButton
 		isolate( if(!is.null(input$goButton)) if(input$goButton!=0) marginPlot(d=d.new(), extrema=margin.extrema(), clrs=clrs, cs, fs) )
-}, height=1000, width=1600)
+}, height=function(){ w <- session$clientData$output_marginPlot_width; round((5/8)*w)	}, width="auto")
 
 output$dl_marginPlot <- downloadHandler( # render plot to pdf for download
 	filename = 'marginPlot.pdf',
@@ -115,7 +110,7 @@ output$pdPlot <- renderPlot({ # render plot for mainPanel tabsetPanel tabPanel
 				if(input$goButton!=0) pdPlot(pd=pd(), clrs=clrs, fs)
 			}
 		)
-}, height=1000, width=1600)
+}, height=function(){ w <- session$clientData$output_pdPlot_width; round((5/8)*w)	}, width="auto")
 
 output$dl_pdPlot <- downloadHandler( # render plot to pdf for download
 	filename = 'pdPlot.pdf',
@@ -135,7 +130,7 @@ output$outlierPlot <- renderPlot({ # render plot for mainPanel tabsetPanel tabPa
 				if(input$goButton!=0) outlierPlot(d=d.new(), n=input$n.outliers, clrs=clrs, cs, fs)
 			}
 		)
-}, height=1000, width=1600)
+}, height=function(){ w <- session$clientData$output_outlierPlot_width; round((5/8)*w)	}, width="auto")
 
 output$dl_outlierPlot <- downloadHandler( # render plot to pdf for download
 	filename = 'outlierPlot.pdf',
@@ -152,7 +147,7 @@ output$errorRatePlot <- renderPlot({ # render plot for mainPanel tabsetPanel tab
 		isolate(
 			if(!is.null(input$goButton)) if(input$goButton!=0) errorRatePlot(err=rf1()$err.rate, clrs=clrs, fs)
 		)
-}, height=1000, width=1600)
+}, height=function(){ w <- session$clientData$output_errorRatePlot_width; round((5/8)*w)	}, width="auto")
 
 output$dl_errorRatePlot <- downloadHandler( # render plot to pdf for download
 	filename = 'errorRatePlot.pdf',
@@ -169,7 +164,7 @@ output$varsUsedPlot <- renderPlot({ # render plot for mainPanel tabsetPanel tabP
 		isolate(
 			if(!is.null(input$goButton)) if(input$goButton!=0) varsUsedPlot(d=d.sub2(), rf1=rf1(), fs)
 		)
-}, height=1000, width=1600)
+}, height=function(){ w <- session$clientData$output_varsUsedPlot_width; round((5/8)*w)	}, width="auto")
 
 output$dl_varsUsedPlot <- downloadHandler( # render plot to pdf for download
 	filename = 'varsUsedPlot.pdf',
@@ -186,7 +181,7 @@ output$numVarPlot <- renderPlot({ # render plot for mainPanel tabsetPanel tabPan
 		isolate(
 			if(!is.null(numVar())) numVarPlot(d=numVar(), fs)
 		)
-}, height=1000, width=1600)
+}, height=function(){ w <- session$clientData$output_numVarPlot_width; round((5/8)*w)	}, width="auto")
 
 output$dl_numVarPlot <- downloadHandler( # render plot to pdf for download
 	filename = 'numVarPlot.pdf',
@@ -196,10 +191,3 @@ output$dl_numVarPlot <- downloadHandler( # render plot to pdf for download
 		dev.off()
 	}
 )
-
-output$pageviews <-	renderText({
-	if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
-	pageviews <- pageviews + 1
-	save(pageviews,file="pageviews.Rdata")
-	paste("Visits:",pageviews)
-})

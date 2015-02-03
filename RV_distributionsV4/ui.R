@@ -40,7 +40,7 @@ shinyUI(fluidPage(theme=shinytheme("united"),
 		),
 		column(8,
 			tabsetPanel(
-				tabPanel("Plot",plotOutput("plot",height="auto")),
+				tabPanel("Plot",plotOutput("plot", width="100%", height="auto")),
 				tabPanel("Summary",verbatimTextOutput("summary")),
 				tabPanel("Table",tableOutput("table")),
 				tabPanelAbout(),

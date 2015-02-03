@@ -117,7 +117,7 @@ shinyServer(function(input, output, session){
 	output$plot <- renderPlot({
 		doPlot(col=1)
 	},
-	height=function(){ w <- session$clientData$output_plot_width; 0.8*w }, width="auto"
+	height=function(){ w <- session$clientData$output_plot_width; round(0.8*w) }, width="auto"
 	)
 	
 	cells.active <- reactive({

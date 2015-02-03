@@ -29,10 +29,3 @@ output$CodeDescription <- renderUI({
 		in the remaining <strong><span style="color:#3366ff;">R</span></strong> scripts.</p>'
 	))
 })
-
-#output$pageviews <-	renderText({
-#	if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
-#	pageviews <- pageviews + 1
-#	save(pageviews,file="pageviews.Rdata")
-#	paste("Visits:",pageviews)
-#})

@@ -1,11 +1,8 @@
 library(shiny)
-pkgs <- c("VGAM")
-pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
-if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
 library(VGAM)
 load("samplingApp.RData", envir=.GlobalEnv)
 
-shinyServer(function(input,output){
+shinyServer(function(input, output, session){
 
 	output$distName <- renderUI({
 		if(input$disttype=="Discrete"){
@@ -142,7 +139,7 @@ shinyServer(function(input,output){
 	output$plot <- renderPlot({
 		doPlot(margins=c(4,4,10,1))
 	},
-	height=750, width=1000
+	height=function(){ w <- session$clientData$output_plot_width; round((0.75*w)) }, width="auto"
 	)
 	
 	output$dlCurPlot <- downloadHandler(
