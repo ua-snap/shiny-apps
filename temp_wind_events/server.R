@@ -1,10 +1,10 @@
 library(shiny)
 library(reshape2); library(raster); library(maps); library(maptools)
 
-shinyServer(function(input,output){
+shinyServer(function(input, output, session){
 	
 	output$showMapPlot <- renderUI({
-		if(length(input$showmap)) if(input$showmap) { list(plotOutput("mapPlot",height="100%"), br()) }
+		if(length(input$showmap)) if(input$showmap) { list(plotOutput("mapPlot", width="100%", height="auto"), br()) }
 	})
 	
 	windMagCheck <- reactive({ input$var[1]=="Wind" | (any(input$var=="Wind") & (input$cond=="Threshold" | input$cond=="Variable")) })
@@ -115,9 +115,9 @@ shinyServer(function(input,output){
 	}
 	
 	output$plot <- renderPlot({
-	doPlot(col=1)
+		doPlot(col=1)
 	},
-	height=800, width=1000
+	height=function(){ w <- session$clientData$output_plot_width; 0.8*w }, width="auto"
 	)
 	
 	cells.active <- reactive({
@@ -147,7 +147,7 @@ shinyServer(function(input,output){
 		clrs[locs.active()] <- "black"
 		pointLabel(cells.lonlat[,1], cells.lonlat[,2], labels=loc.nam, col=clrs, cex=1)
 	},
-	height=300, width=480
+	height=300, width="auto"
 	)
 
 	output$dlCurPlot <- downloadHandler(

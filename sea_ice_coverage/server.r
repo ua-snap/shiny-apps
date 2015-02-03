@@ -1,7 +1,5 @@
 library(shiny)
 pkgs <- c("raster","maps","mapproj","grid", "rasterVis")
-pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
-if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
 
 load("Totals.RData", envir=.GlobalEnv)
 library(raster); library(maps); library(mapproj); library(grid); library(rasterVis)
@@ -9,12 +7,12 @@ library(raster); library(maps); library(mapproj); library(grid); library(rasterV
 mm <- map("world", proj="stereographic", xlim=c(-180,180), ylim=c(47,90), interior=FALSE, lwd=1,plot=F)
 clrs <- c("#8B2500","#000080","#FF8C00","#1E90FF","#FF1493","#000000") #"#CD9B1D"
 pch <- c(0:3,6:7)
-mos <- c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
+mos <- month.abb
 modnames <- c("ACCESS-1.0","CESM1-CAM5","CMCC-CM","HADGEM2-AO","MIROC-5","Composite model")
 files <- list.files(pattern=".tif$")
 for(i in 1:length(files)) assign(paste("b",tolower(substr(files[i],1,2)),sep="."), brick(files[i]))
 
-shinyServer(function(input,output){
+shinyServer(function(input, output, session){
 	output$regpoints <- renderUI({
 	if(length(input$dataset)){
 		checkboxInput("regpts","Show sample points",TRUE)
@@ -28,7 +26,7 @@ shinyServer(function(input,output){
 	})
 	
 	output$semiTrans <- renderUI({
-		if(length(transparency())) if(transparency()) sliderInput("semi.trans","Samples transparency",10,90,40,step=10,format="#")
+		if(length(transparency())) if(transparency()) sliderInput("semi.trans", "Samples transparency", 10, 90, 40, step=10, sep="")
 	})
 	
 	transparency <- reactive({
@@ -218,7 +216,7 @@ shinyServer(function(input,output){
 	
 	output$loSpan <- renderUI({
 	if(length(input$dataset) & length(input$reglnslo)){
-		if(input$reglnslo) sliderInput("smoothing.fraction","Smoothing fraction:",0.15,1,0.75,0.05)
+		if(input$reglnslo) sliderInput("smoothing.fraction", "Smoothing fraction:", 0.15, 1, 0.75, 0.05, sep="")
 	}
 	})
 	
@@ -231,13 +229,13 @@ shinyServer(function(input,output){
 			xlb <- "Year"
 			ylb <- bquote(.(input$mo)~" Arctic Sea Ice Extent "~(km^2)~"")
 			if(input$fix.xy){
-				plot(0,0,type="n",xlim=c(1860,2099),xlab=xlb,ylab=ylb,ylim=rng,cex.lab=cex.lb,cex.axis=cex.ax)
-				legend(1860,rng[2]+0.1*diff(rng),input$dataset,col=clr(),pch=pch.vals(),cex=cex.leg,bty="n",horiz=T,xpd=T)
-				if(input$showObs) legend(1860,rng[1]-0.1*diff(rng),"Observed Sea Ice Extent",col=1,lwd=3,cex=cex.leg,bty="n",horiz=T,xpd=T)
+				plot(0,0,type="n",xlim=c(1860,2099),xlab=xlb,ylab=ylb,ylim=rng + c(0, diff(rng)*0.1), cex.lab=cex.lb, cex.axis=cex.ax)
+				legend("topleft",input$dataset,col=clr(),pch=pch.vals(),cex=cex.leg,bty="n",horiz=T,xpd=T)
+				if(input$showObs) legend("bottomleft","Observed Sea Ice Extent",col=1,lwd=3,cex=cex.leg,bty="n",horiz=T,xpd=T)
 			} else {
-				plot(yrs()[1]:yrs()[2],type="n",xlim=yrs(),xlab=xlb,ylab=ylb,ylim=rng2,cex.lab=cex.lb,cex.axis=cex.ax)
-				legend(yrs()[1],rng2[2]+0.1*diff(rng2),input$dataset,col=clr(),pch=pch.vals(),cex=cex.leg,bty="n",horiz=T,xpd=T)
-				if(input$showObs) legend(yrs()[1],rng2[1]-0.1*diff(rng2),"Observed Sea Ice Extent",col=1,lwd=3,cex=cex.leg,bty="n",horiz=T,xpd=T)
+				plot(yrs()[1]:yrs()[2],type="n",xlim=yrs(),xlab=xlb,ylab=ylb,ylim=rng2 + c(0, diff(rng2)*0.1), cex.lab=cex.lb, cex.axis=cex.ax)
+				legend("topleft",input$dataset,col=clr(),pch=pch.vals(),cex=cex.leg,bty="n",horiz=T,xpd=T)
+				if(input$showObs) legend("bottomleft","Observed Sea Ice Extent",col=1,lwd=3,cex=cex.leg,bty="n",horiz=T,xpd=T)
 			}
 			for(i in 1:length(dat())){
 				d <- dat2()[[i]]
@@ -271,7 +269,7 @@ shinyServer(function(input,output){
 	output$plot <- renderPlot({
 		doPlotTS()
 	},
-	height=750, width=1000
+	height=function(){ w <- session$clientData$output_plot_width; round(0.75*w)	}, width="auto"
 	)
 	
 	# Reactive variables for map plot
@@ -341,7 +339,7 @@ shinyServer(function(input,output){
 	output$plot2 <- renderPlot({
 		doPlotMap()
 	},
-	height=750, width=1000
+	height=function(){ w <- session$clientData$output_plot2_width; round(0.75*w)	}, width="auto"
 	)
 	
 	output$dlCurPlotTS <- downloadHandler(
@@ -362,11 +360,4 @@ shinyServer(function(input,output){
 		}
 	)
 	
-	#output$pageviews <-	renderText({
-	#	if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
-	#	pageviews <- pageviews + 1
-	#	save(pageviews,file="pageviews.Rdata")
-	#	paste("Visits:",pageviews)
-	#})
-
 })

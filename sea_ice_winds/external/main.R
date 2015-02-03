@@ -1,8 +1,8 @@
 column(8,
 	tabsetPanel(
 		tabPanel("Time series plots",
-			plotOutput("plotByYear",height="auto"),
-			plotOutput("plotByDecade",height="auto"),
+			plotOutput("plotByYear", width="100%", height="auto"),
+			plotOutput("plotByDecade", width="100%", height="auto"),
 			value="ts"),
 		tabPanelAbout(),
 		id="tsp"

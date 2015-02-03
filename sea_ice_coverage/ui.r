@@ -1,4 +1,5 @@
-library(shiny)
+library(shinythemes)
+
 tabPanelAbout <- source("about.r")$value
 headerPanel_2 <- function(title, h, windowTitle=title) {    
   tagList(
@@ -7,10 +8,10 @@ headerPanel_2 <- function(title, h, windowTitle=title) {
     )
 }
 
-mos <- c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
+mos <- month.abb
 modnames <- c("ACCESS-1.0","CESM1-CAM5","CMCC-CM","HADGEM2-AO","MIROC-5","Composite model")
 
-shinyUI(fluidPage(
+shinyUI(fluidPage(theme=shinytheme("spacelab"),
 	headerPanel_2(
 		HTML(
 			'<script>
@@ -37,7 +38,7 @@ shinyUI(fluidPage(
 			conditionalPanel( # Tab 1 only, part 1
 				condition="input.tsp=='ts'",
 				selectInput("dataset", "Choose RCP 8.5 sea ice model:", choices=modnames, selected=modnames[1], multiple=T, width="100%"),
-				sliderInput("yrs", "Year range:", 1860,2099, c(1979,2011), step=1, format="#", width="100%"),
+				sliderInput("yrs", "Year range:", 1860,2099, c(1979,2011), step=1, sep="", width="100%"),
 				selectInput("mo", "Seasonal period:", choices=c(mos,"Dec-Mar Avg","Jun-Sep Avg","Annual Avg"), selected="Jan")
 			),
 			conditionalPanel( # Tab 2 only, part 1
@@ -63,21 +64,20 @@ shinyUI(fluidPage(
 		wellPanel(
 			conditionalPanel( # Tab 1 only,  part 3
 				condition="input.tsp=='ts'",
-				downloadButton("dlCurPlotTS", "Download Graphic")
+				downloadButton("dlCurPlotTS", "Download Graphic", class="btn-block btn-primary")
 			),
 			conditionalPanel( # Tab 2 only,  part 3
 				condition="input.tsp=='map'",
-				downloadButton("dlCurPlotMap", "Download Graphic")
+				downloadButton("dlCurPlotMap", "Download Graphic", class="btn-block btn-primary")
 			)
-		)#,
-		#conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
+		)
 	),
 	column(8,
 		tabsetPanel(
 			tabPanel(
 				"Extent Totals",
 				h4("RCP 8.5 Sea Ice Extent Totals"),
-				plotOutput("plot",height="auto"),
+				plotOutput("plot", width="100%", height="auto"),
 				conditionalPanel("input.reglnslm1==true",
 					p(strong("Linear Model")),
 					verbatimTextOutput("lm1_summary")
@@ -91,7 +91,7 @@ shinyUI(fluidPage(
 					verbatimTextOutput("lo_summary")
 				),
 			value="ts"),
-			tabPanel("Concentration Map",h4("RCP 8.5 Sea Ice Concentration"),plotOutput("plot2",height="auto"),value="map"),
+			tabPanel("Concentration Map",h4("RCP 8.5 Sea Ice Concentration"), plotOutput("plot2", width="100%", height="auto"), value="map"),
 			tabPanelAbout(),
 			id="tsp"
 		)

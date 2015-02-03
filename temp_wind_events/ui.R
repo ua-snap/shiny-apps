@@ -59,7 +59,7 @@ shinyUI(fluidPage(theme=shinytheme("spacelab"),
 	),
 	column(8,
 		tabsetPanel(
-			tabPanel("Conditional Barplots",plotOutput("plot",height="auto"),value="barplots"),
+			tabPanel("Conditional Barplots",plotOutput("plot", width="100%", height="auto"),value="barplots"),
 			tabPanelAbout(),
 			id="tsp"
 		)
