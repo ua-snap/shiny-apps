@@ -1,12 +1,7 @@
 # Source reactive expressions and other code
 source("external/appSourceFiles/reactives.R",local=T) # source reactive expressions
-
 source("external/appSourceFiles/io.sidebar.wp1.R",local=T) # source input/output objects associated with sidebar wellPanel 1
-
-#source("external/appSourceFiles/io.sidebar.wp2.R",local=T) # source input/output objects associated with sidebar wellPanel 2
-
 source("external/appSourceFiles/io.mainPanel.tp1.R",local=T) # source input/output objects associated with mainPanel tabPanel 1
-
 source("external/appSourceFiles/plotFunctions.R",local=T) # source plotting functions
 
 # Primary outputs
@@ -15,7 +10,7 @@ output$macorplot <- renderPlot({ # render plot for mainPanel tabsetPanel tabPane
 		if(!is.null(input$dataset)){
 			plotFun(m=get(input$dataset),file=NULL,colpal=colpal)
 		}
-}, height=875, width=1200)
+}, height=function(){ w <- session$clientData$output_macorplot_width; round((8.75/12)*w)	}, width="auto")
 
 output$dl_macorplotPDF <- downloadHandler( # render plot to pdf for download
 	filename = 'current_macorplot.pdf',

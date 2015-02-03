@@ -3,8 +3,7 @@ column(3,
 		checkboxInput("showWP1",h5("Data selection"),TRUE),
 		conditionalPanel(condition="input.showWP1",
 			fluidRow(
-				column(11, uiOutput("dataset")),
-				column(1, helpPopup('Choose dataset','Datasets are currently oddly named.'))
+				column(12, uiOutput("dataset"))
 			),
 			fluidRow(
 				column(6, downloadButton("dl_macorplotPDF","Download PDF", class="btn-block btn-primary")),
