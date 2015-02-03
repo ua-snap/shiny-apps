@@ -30,7 +30,7 @@ column(4,
 			fluidRow(
 				column(12, checkboxInput("compositeModel", "Make composite(s) of selected models", FALSE))
 			),
-			sliderInput("yrs","Years:", min=min(years), max=max(years), value=range(years), step=1, format="####", width="100%"),
+			sliderInput("yrs","Years:", min=min(years), max=max(years), value=range(years), step=1, sep="", width="100%"),
 			fluidRow(
 				column(6, selectInput("mos", "Months:", choices=c("", month.abb), selected="", multiple=T, width="100%")),
 				column(6,  selectInput("decs", "Decades:", choices=c("", paste0(decades,"s")), selected="", multiple=T, width="100%"))
