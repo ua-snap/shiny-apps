@@ -1,4 +1,3 @@
-library(shinythemes)
 shinyUI(fluidPage(theme="cyborg_bootstrap.css",
 
 HTML('
@@ -22,7 +21,7 @@ Statistician | useR<br/>
 
 
 fluidRow(
-	column(6,
+	column(3,
 		p(HTML('<ul>'),
 			HTML('<li>'),a("RV_distributions", href="http://shiny.snap.uaf.edu/RV_distributions/", target="_blank"),HTML('</li>'),
 			HTML('<li>'),a("RV_distributionsV2", href="http://shiny.snap.uaf.edu/RV_distributionsV2/", target="_blank"),HTML('</li>'),
@@ -30,17 +29,7 @@ fluidRow(
 			HTML('<li>'),a("RV_distributionsV4", href="http://shiny.snap.uaf.edu/RV_distributionsV4/", target="_blank"),HTML('</li>'),
 		HTML('</ul>'))
 	),
-	column(6,
-		p(HTML('<ul>'),
-			HTML('<li>'),a("sea_ice_winds", href="http://shiny.snap.uaf.edu/sea_ice_winds/", target="_blank"),HTML('</li>'),
-			HTML('<li>'),a("sea_ice_coverage", href="http://shiny.snap.uaf.edu/sea_ice_coverage/", target="_blank"),HTML('</li>'),
-			HTML('<li>'),a("temp_wind_events", href="http://shiny.snap.uaf.edu/temp_wind_events/", target="_blank"),HTML('</li>'),
-			HTML('<li>'),a("ak_ice_edge", href="http://shiny.snap.uaf.edu/ak_ice_edge/", target="_blank"),HTML('</li>'),
-		HTML('</ul>'))
-	)
-	),
-fluidRow(
-	column(6,
+	column(3,
 		p(HTML('<ul>'),
 			HTML('<li>'),a("gbm_example", href="http://shiny.snap.uaf.edu/gbm_example/", target="_blank"),HTML('</li>'),
 			HTML('<li>'),a("random_forest_example", href="http://shiny.snap.uaf.edu/random_forest_example/", target="_blank"),HTML('</li>'),
@@ -48,7 +37,15 @@ fluidRow(
 			HTML('<li>'),a("monty_hall", href="http://shiny.snap.uaf.edu/monty_hall/", target="_blank"),HTML('</li>'),
 		HTML('</ul>'))
 	),
-	column(6,
+	column(3,
+		p(HTML('<ul>'),
+			HTML('<li>'),a("sea_ice_winds", href="http://shiny.snap.uaf.edu/sea_ice_winds/", target="_blank"),HTML('</li>'),
+			HTML('<li>'),a("sea_ice_coverage", href="http://shiny.snap.uaf.edu/sea_ice_coverage/", target="_blank"),HTML('</li>'),
+			HTML('<li>'),a("temp_wind_events", href="http://shiny.snap.uaf.edu/temp_wind_events/", target="_blank"),HTML('</li>'),
+			HTML('<li>'),a("ak_ice_edge", href="http://shiny.snap.uaf.edu/ak_ice_edge/", target="_blank"),HTML('</li>'),
+		HTML('</ul>'))
+	),
+	column(3,
 		p(HTML('<ul>'),
 			HTML('<li>'),a("ak_station_cru_eda", href="http://shiny.snap.uaf.edu/ak_station_cru_eda/", target="_blank"),HTML('</li>'),
 			HTML('<li>'),a("akcan_climate", href="http://shiny.snap.uaf.edu/akcan_climate/", target="_blank"),HTML('</li>'),
