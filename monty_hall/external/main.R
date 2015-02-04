@@ -1,9 +1,7 @@
-mainPanel_2(
-	span="span9",
+column(10,
 	tabsetPanel(
 		tabPanel("Monty Hall probabilities",
-			#uiOutput("debugging"),
-			plotOutput("mhplot",height="auto"),
+			plotOutput("mhplot", width="100%", height="auto"),
 			br(), value="ts"),
 		tabPanelAbout(),
 		id="tsp"

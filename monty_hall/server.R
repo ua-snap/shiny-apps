@@ -1,2 +1,3 @@
-source("external/serverHead.R", local = TRUE)
-shinyServer(function(input, output) source("external/app.R", local = TRUE))
+library(shiny)
+load("external/data.RData",envir=.GlobalEnv)
+shinyServer(function(input, output, session) source("external/app.R", local=TRUE))

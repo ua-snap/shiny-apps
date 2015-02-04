@@ -1,27 +1,26 @@
 function(){
 	tabPanel("About",
-		p(style="text-align:justify",'This R Shiny web app allows the user to perform stochastic gradient boosting on a simulated dataset using the R gbm package.
-		The simulated data come directly from the gbm help file. Currently, features are limited.'),
-		p(style="text-align:justify",'I would like to continue enhancing this app with many additional features and graphics, not to mention switching over from the simulated dataset to something more real and relevant.
-		Stay tuned for updates.'),
-		br(),
-
-		HTML('<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>'),
-		strong('Author'),
-		p('Matthew Leonawicz',br(),
-			'Statistician | useR',br(),
-			a('Scenarios Network for Alaska and Arctic Planning', href="http://www.snap.uaf.edu/", target="_blank"),
-			'|',
-			a('Blog', href="http://blog.snap.uaf.edu/", target="_blank"),
-			'|',
-			a('Twitter', href="https://twitter.com/leonawicz/", target="_blank"),
-			'|',
-			a('LinkedIn', href="http://www.linkedin.com/in/leonawicz/", target="_blank")	
-		),
-		br(),
+		HTML('
+		<p style="text-align:justify">This R Shiny web app allows the user to perform stochastic gradient boosting on a simulated dataset using the R gbm package.
+		The simulated data come directly from the gbm help file. Currently, features are limited.</p>
 		
-		div(class="row-fluid",
-			div(class="span4",strong('Other apps'),
+		<p style="text-align:justify">I would like to continue enhancing this app with many additional features and graphics, not to mention switching over from the simulated dataset to something more real and relevant.
+		Stay tuned for updates.</p>'),
+
+		HTML('
+		<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>
+		<p>Matthew Leonawicz<br/>
+		Statistician | useR<br/>
+		<a href="http://leonawicz/github.io" target="_blank">Github.io</a> | 
+		<a href="http://blog.snap.uaf.edu" target="_blank">Blog</a> | 
+		<a href="https://twitter.com/leonawicz" target="_blank">Twitter</a> | 
+		<a href="http://www.linkedin.com/in/leonawicz" target="_blank">Linkedin</a> <br/>
+		<a href="http://www.snap.uaf.edu/", target="_blank">Scenarios Network for Alaska and Arctic Planning</a>
+		</p>'),
+		
+		fluidRow(
+			column(4,
+				strong('Other apps'),
 				p(HTML('<ul>'),
 					HTML('<li>'),a("Random variables: App tutorial part 1", href="http://shiny.snap.uaf.edu/RV_distributions/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Random variables: App tutorial part 2", href="http://shiny.snap.uaf.edu/RV_distributionsV2/", target="_blank"),HTML('</li>'),
@@ -41,7 +40,8 @@ function(){
 				a('GitHub', href="https://github.com/ua-snap/shiny-apps/tree/master/gbm_example/", target="_blank")),
 				br()
 			),
-			div(class="span4", strong('Related blog posts'),
+			column(4,
+				strong('Related blog posts'),
 				p(HTML('<ul>'),
 					HTML('<li>'),a("Random variables: App tutorial part 1", href="http://blog.snap.uaf.edu/2013/05/20/introducing-r-shiny-web-apps/", target="_blank"),HTML('</li>'),
 					HTML('<li>'),a("Random variables: App tutorial part 2", href="http://blog.snap.uaf.edu/2013/05/20/r-sampling-app-version-2/", target="_blank"),HTML('</li>'),
@@ -59,7 +59,7 @@ function(){
 				HTML('</ul>')),
 				br()
 			),
-			div(class="span4",
+			column(4,
 				strong('References'),
 				p(HTML('<ul>'),
 					HTML('<li>'),a('Coded in R', href="http://www.r-project.org/", target="_blank"),HTML('</li>'),

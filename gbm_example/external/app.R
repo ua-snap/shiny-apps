@@ -8,7 +8,7 @@ dat <- reactive({
 })
 
 output$vars <- renderUI({
-	if(!is.null(dat()))	checkboxGroupInput("vars","Explanatory variables:",names(dat()[-1]),selected=names(dat())[-1])
+	if(!is.null(dat()))	selectInput("vars", "Explanatory variables:", names(dat()[-1]), selected=names(dat())[-1], multiple=TRUE)
 })
 
 output$n.trees <- renderUI({
@@ -109,15 +109,15 @@ ri <- reactive({
 	)
 })
 
-output$best.iter.table <- renderDataTable({ if(!is.null(best.iter())) best.iter() })
+output$BestIterTable <- renderDataTable({ if(!is.null(best.iter())) best.iter() })
 
-output$ri.table <- renderDataTable({ if(!is.null(ri())) ri() })
+output$RITable <- renderDataTable({ if(!is.null(ri())) ri() })
 
-output$ri.table.oob <- renderDataTable({ if(!is.null(ri())) ri()[ri()$Method=="OOB",] })
+#output$RITableOOB <- renderDataTable({ if(!is.null(ri())) ri()[ri()$Method=="OOB",] })
 
-output$ri.table.test <- renderDataTable({ if(!is.null(ri())) ri()[ri()$Method=="Test",] })
+#output$RITableTest <- renderDataTable({ if(!is.null(ri())) ri()[ri()$Method=="Test",] })
 
-output$ri.table.cv <- renderDataTable({ if(!is.null(ri())) if("CV" %in% ri()$Method) ri()[ri()$Method=="CV",] })
+#output$RITableCV <- renderDataTable({ if(!is.null(ri())) if("CV" %in% ri()$Method) ri()[ri()$Method=="CV",] })
 
 doPlot.best.iter <- function(...){
 	if(input$goButton==0) plot(0,0,type="n",axes=F,xlab="",ylab="")
@@ -149,13 +149,8 @@ output$no.vars.selected <- renderUI({
 	HTML(paste('<div>','Select at least one explanatory variable to use gradient boosting to estimate the response.','</div>',sep="",collapse=""))
 })
 
-output$plot.best.iter <- renderPlot({ doPlot.best.iter() }, height=600, width=1000)
+output$PlotBestIter <- renderPlot({ doPlot.best.iter() },
+	height=function(){ w <- session$clientData$output_PlotBestIter_width; if(length(w)) return(round(0.6*w)) else return("auto") }, width="auto")
 
-output$plot.ri <- renderPlot({ doPlot.ri() }, height=400, width=1000)
-
-output$pageviews <-	renderText({
-	if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
-	pageviews <- pageviews + 1
-	save(pageviews,file="pageviews.Rdata")
-	paste("Visits:",pageviews)
-})
+output$PlotRI <- renderPlot({ doPlot.ri() },
+	height=function(){ w <- session$clientData$output_PlotRI_width; if(length(w)) return(round(0.4*w)) else return("auto") }, width="auto")

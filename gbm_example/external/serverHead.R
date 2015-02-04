@@ -1,8 +1,5 @@
 library(shiny)
-pkgs <- c("gbm","reshape2","plyr","ggplot2")
-pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
-if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
-library(gbm); library(reshape2); library(plyr); library(ggplot2)
+library(gbm); library(reshape2); library(plyr); library(ggplot2) # github version of gbm required
 
 ## Make data
 N <- 1000
