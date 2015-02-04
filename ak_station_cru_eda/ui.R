@@ -1,4 +1,4 @@
-library(shiny)
+library(shinythemes)
 tabPanelAbout <- source("about.r")$value
 mos <- c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
 headerPanel_2 <- function(title, h, windowTitle=title) {    
@@ -8,12 +8,11 @@ headerPanel_2 <- function(title, h, windowTitle=title) {
     )
 }
 
-shinyUI(pageWithSidebar(
-	#headerPanel(uiOutput("header")),
-	headerPanel_2( uiOutput("header"), h3, "CRU/Weather Station EDA" ),
-	#headerPanel(h4(textOutput("datname"))), # for debugging
-	sidebarPanel(
-		selectInput("dataset","Choose a dataset:",choices=c("Weather stations (w/ missing data)","Weather stations (CRU-substituted NAs)","2-km downscaled CRU 3.1"),selected="2-km downscaled CRU 3.1"),
+shinyUI(fluidPage(theme=shinytheme("united"),
+	headerPanel_2(uiOutput("header"), h3, "CRU/Weather Station EDA"),
+	column(4,
+	wellPanel(
+		selectInput("dataset", "Choose a dataset:", choices=c("Weather stations (w/ missing data)", "Weather stations (CRU-substituted NAs)", "2-km downscaled CRU 3.1"), selected="2-km downscaled CRU 3.1"),
 		uiOutput("cityNames"),
 		conditionalPanel( # Main tabs part 1
 			condition="input.tsp=='notmap'",
@@ -36,8 +35,7 @@ shinyUI(pageWithSidebar(
 			uiOutput("histIndObs"),
 			uiOutput("histDensCurve"),
 			uiOutput("histDensCurveBW"),
-			checkboxInput("showmap","Load Google map",FALSE),
-			downloadButton('dldat', 'Download Sample')
+			downloadButton("dldat", "Get Data", class="btn-block btn-primary")
 		),
 		conditionalPanel( # Regression tabs part 2
 			condition="input.tsp=='reg'",
@@ -47,17 +45,15 @@ shinyUI(pageWithSidebar(
 			uiOutput("regablines"),
 			uiOutput("regGGPLOTse"),
 			uiOutput("regGGPLOT")
-		),
-		conditionalPanel(condition="input.tsp==='about'", h5(textOutput("pageviews")))
+		)
+	)
 	),
-	mainPanel(
+	column(8,
 		tabsetPanel(
-			#tabPanel("Time Series",plotOutput("tsplot",height="1000px"),value="notmap"),
-			tabPanel("Distributions",plotOutput("plot",height="auto"),value="notmap"),
-			tabPanel("Summary Statistics",verbatimTextOutput("summary"),value="notmap"),
-			#tabPanel("Map",plotOutput("map"),value="map"),
-			tabPanel("Data",tableOutput("table"),value="notmap"),
-			tabPanel("Regression",plotOutput("regplot"),verbatimTextOutput("regsum"),value="reg"),
+			tabPanel("Distributions", plotOutput("plot", width="100%", height="auto"), value="notmap"),
+			tabPanel("Summary Statistics", verbatimTextOutput("summary"), value="notmap"),
+			tabPanel("Data", tableOutput("table"), value="notmap"),
+			tabPanel("Regression", plotOutput("regplot", width="100%", height="auto"), verbatimTextOutput("regsum"), value="reg"),
 			tabPanelAbout(),
 			id="tsp"
 		)

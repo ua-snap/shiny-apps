@@ -1,10 +1,5 @@
 library(shiny)
-pkgs <- c("reshape2","ggplot2","googleVis")
-pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
-if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
-library(reshape2)
-library(ggplot2)
-#library(googleVis)
+library(reshape2); library(ggplot2)
 
 cities.dat <- read.csv("dat1.csv",header=T,stringsAsFactors=F)
 cru.dat <- read.csv("dat2.csv",header=T,stringsAsFactors=F)
@@ -34,7 +29,7 @@ clrs <- paste(c("#000080","#CD3700","#ADFF2F","#8B4513","#006400","#2F4F4F","#CD
 				"#000080","#CD3700","#ADFF2F","#8B4513","#006400","#2F4F4F","#CD9B1D",
 				"#000080","#CD3700","#ADFF2F","#8B4513"))
 
-shinyServer(function(input,output){
+shinyServer(function(input, output, session){
 
 	city.names <- reactive({
 		if(input$dataset=="Weather stations (CRU-substituted NAs)" | input$dataset=="Weather stations (w/ missing data)") sta.names else if(input$dataset=="2-km downscaled CRU 3.1") cru.names
@@ -54,13 +49,6 @@ shinyServer(function(input,output){
 		}
 		d
 	})
-	
-	map.dat <- reactive({
-		ind <- match(city.names(),gsub("_"," ",cities.dat[,1]))
-		map.dat <- data.frame(cbind(city.names(),apply(cities.dat[ind,2:3],1,paste,sep="",collapse=":")))
-		names(map.dat) <- c("City","latlon")
-		map.dat
-	})
 
 	output$yearSlider <- renderUI({
 		if(length(input$city)){
@@ -73,10 +61,8 @@ shinyServer(function(input,output){
 			}
 			mn <- r[1]
 			mx <- r[2]
-			sliderInput("yrs","Year range:",mn,mx,c(max(mn,1950),mx),step=1,format="#")
-		}# else {
-		#	sliderInput("yrs","Year range:",1901,2009,c(1950,2009),step=1,format="#")
-		#}
+			sliderInput("yrs", "Year range:" ,mn, mx, c(max(mn,1950),mx), step=1, sep="")
+		}
 	})
 	
 	output$Var <- renderUI({
@@ -186,7 +172,7 @@ shinyServer(function(input,output){
 	output$multMo <- renderUI({
 		if(length(input$mo)){
 			if(input$mo=="Choose multiple"){
-				checkboxGroupInput("mo2","Select consecutive months:",mos)
+				selectInput("mo2","Select CONSECUTIVE months:", mos, multiple=TRUE)
 			}
 		}
 	})
@@ -209,7 +195,7 @@ shinyServer(function(input,output){
 	})
 	
 	output$dldat <- downloadHandler(
-		filename = function() { paste(input$dat, '.csv', sep='') },
+		filename = function() { "data.csv" },
 		content = function(file) {
 			write.csv(dat(), file)
 		}
@@ -285,7 +271,7 @@ shinyServer(function(input,output){
 			}
 		}
 	},
-	height=htfun
+	height=htfun, width="auto"
 	)
 
 	output$summary <- renderPrint({
@@ -401,7 +387,6 @@ shinyServer(function(input,output){
 		n <- length(x)
 		xr <- range(x)
 		if(input$regX=="Year") { x <- seq(xr[1],xr[2]+1,len=n+1); x <- x[-c(n+1)] }
-		print(x)
 		y <- reg.dat()[[1]][[input$regY]]
 		yr <- range(y)
 		if(input$regY=="Year") { y <- seq(yr[1],yr[2]+1,len=n+1); y <- y[-c(n+1)] }
@@ -452,7 +437,7 @@ shinyServer(function(input,output){
 			print(p)
 		}
 	}
-	}
+	}, height=function(){ w <- session$clientData$output_regplot_width; if(length(w)) return(round(0.5*w)) else return("auto") }, width="auto"
 	)
 	
 	output$regsum <- renderPrint({
@@ -460,14 +445,6 @@ shinyServer(function(input,output){
 		lapply(lm1(),summary)
 	}
 	})
-	
-	#output$map <- reactive({
-	#	if(input$showmap){
-	#		selected <- map.dat()
-	#		sites<-gvisMap(selected,locationvar="latlon",tipvar="City", options=list(useMapTypeControl=T))
-	#		plot(sites)
-	#	}
-	#})
 	
 	output$header <- renderUI({
 		if(input$dataset=="Weather stations (CRU-substituted NAs)" | input$dataset=="Weather stations (w/ missing data)"){
@@ -489,16 +466,4 @@ shinyServer(function(input,output){
 			</div>',sep="",collapse=""))
 	})
 	
-	output$pageviews <-	renderText({
-		if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
-		pageviews <- pageviews + 1
-		save(pageviews,file="pageviews.Rdata")
-		paste("Visits:",pageviews)
-	})
-
-	output$datname <- renderPrint({ # this is used for lazy debugging by printing specific information to the headerPanel
-		x <- "cru31"
-		#x<-length(input$city) & length(input$yrs) & length(input$regbymo)
-		x
-	})
 })
