@@ -10,7 +10,11 @@ headerPanel_2 <- function(title, h, windowTitle=title) {
 #library(ShinyDash)
 
 shinyUI(fluidPage(theme=shinytheme("cosmo"),
-	#source("external/header.R",local=T)$value,
+	#headerPanel_2(
+	#	HTML('Alaska and western Canada downscaled CMIP3/CMIP5 GCM comparison
+	#		<a href="http://snap.uaf.edu" target="_blank"><img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" /></a>'
+	#	), h3, "AKCAN CMIP3/CMIP5"
+	#),
 	
 	#tags$head(HTML(
 	#	'<script>

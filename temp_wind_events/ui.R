@@ -11,20 +11,9 @@ headerPanel_2 <- function(title, h, windowTitle=title) {
 
 shinyUI(fluidPage(theme=shinytheme("spacelab"),
 	headerPanel_2(
-		HTML(
-			'<script>
-			(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){
-			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-			})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');
-			ga(\'create\', \'UA-46129458-2\', \'rstudio.com\');
-			ga(\'send\', \'pageview\');
-			</script>
-			<div id="stats_header">
-			CMIP5 Quantile-mapped GCM Daily Data
+		HTML('CMIP5 Quantile-mapped GCM Daily Data
 			<a href="http://accap.uaf.edu" target="_blank"><img id="stats_logo" align="right" style="margin-left: 15px;" alt="ACCAP Logo" src="./img/ACCAP_acronym_100px.png" /></a>
-			<a href="http://snap.uaf.edu" target="_blank"><img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" /></a>
-			</div>'
+			<a href="http://snap.uaf.edu" target="_blank"><img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" /></a>'
 		), h3, "CMIP5 Quantile-mapped GCM Daily Data"
 	),
 	wellPanel(

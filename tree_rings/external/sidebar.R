@@ -6,8 +6,8 @@ column(3,
 				column(12, uiOutput("dataset"))
 			),
 			fluidRow(
-				column(6, downloadButton("dl_macorplotPDF","Download PDF", class="btn-block btn-primary")),
-				column(6, downloadButton("dl_macorplotPNG","Download PNG", class="btn-block btn-success"))
+				column(6, downloadButton("dl_macorplotPDF","Get PDF", class="btn-block btn-primary")),
+				column(6, downloadButton("dl_macorplotPNG","Get PNG", class="btn-block btn-success"))
 			)
 		)
 	)
