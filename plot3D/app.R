@@ -34,15 +34,35 @@ plotStatic <- function(...){
 	}
 }
 
-output$plot_2D_contour <- renderPlot({ plotStatic(type="p2dCL") }, height=1000, width=1000)
+output$plot_2D_contour <- renderPlot({ plotStatic(type="p2dCL") },
+	height=function(){
+		w <- session$clientData$output_plot_2D_contour_width
+		if(is.null(w)) return("auto") else return(w)
+	}, width="auto")
 
-output$plot_2D_image <- renderPlot({ plotStatic(type="p2dIM") }, height=1000, width=1000)
+output$plot_2D_image <- renderPlot({ plotStatic(type="p2dIM") },
+	height=function(){
+		w <- session$clientData$output_plot_2D_image_width
+		if(is.null(w)) return("auto") else return(w)
+	}, width="auto")
 
-output$plot_3D_persp <- renderPlot({ plotStatic(type="p3dPP") }, height=1000, width=1000)
+output$plot_3D_persp <- renderPlot({ plotStatic(type="p3dPP") },
+	height=function(){
+		w <- session$clientData$output_plot_3D_persp_width
+		if(is.null(w)) return("auto") else return(w)
+	}, width="auto")
 
-output$plot_3D_ribbon <- renderPlot({ plotStatic(type="p3dRI") }, height=1000, width=1000)
+output$plot_3D_ribbon <- renderPlot({ plotStatic(type="p3dRI") },
+	height=function(){
+		w <- session$clientData$output_plot_3D_ribbon_width
+		if(is.null(w)) return("auto") else return(w)
+	}, width="auto")
 
-output$plot_3D_hist <- renderPlot({ plotStatic(type="p3dHI") }, height=1000, width=1000)
+output$plot_3D_hist <- renderPlot({ plotStatic(type="p3dHI") },
+	height=function(){
+		w <- session$clientData$output_plot_3D_hist_width
+		if(is.null(w)) return("auto") else return(w)
+	}, width="auto")
 
 output$plot_3D_rgl <- renderWebGL({
 	if(!is.null(d()) & !is.null(rgladjustrelief()) & !is.null(input$bgcol) & !is.null(rglcolors())){
@@ -68,10 +88,3 @@ output$dl_plotStaticPDF <- downloadHandler( # render plot to pdf for download
 		dev.off()
 	}
 )
-
-#output$pageviews <-	renderText({
-#	if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
-#	pageviews <- pageviews + 1
-#	save(pageviews,file="pageviews.Rdata")
-#	paste("Visits:",pageviews)
-#})

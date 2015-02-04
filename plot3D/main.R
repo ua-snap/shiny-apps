@@ -1,11 +1,11 @@
 column(8,
 	tabsetPanel(
-		tabPanel("2D Contour", conPan_LA, plotOutput("plot_2D_contour",height="auto"), value="p2Dcontour"),
-		tabPanel("2D Image", conPan_LA,	plotOutput("plot_2D_image",height="auto"), value="p2Dimage"),
-		tabPanel("3D Perspective", conPan_LA, plotOutput("plot_3D_persp",height="auto"), value="p3Dpersp"),
-		tabPanel("3D Ribbon", conPan_LA, plotOutput("plot_3D_ribbon",height="auto"), value="p3Dribbon"),
-		tabPanel("3D Histogram", conPan_LA, plotOutput("plot_3D_hist",height="auto"), value="p3Dhist"),
-		tabPanel("3D Interactive", webGLOutput("plot_3D_rgl",height="auto"), value="p3Drgl"),
+		tabPanel("2D Contour", conPan_LA, plotOutput("plot_2D_contour", width="100%", height="auto"), value="p2Dcontour"),
+		tabPanel("2D Image", conPan_LA,	plotOutput("plot_2D_image", width="100%", height="auto"), value="p2Dimage"),
+		tabPanel("3D Perspective", conPan_LA, plotOutput("plot_3D_persp", width="100%", height="auto"), value="p3Dpersp"),
+		tabPanel("3D Ribbon", conPan_LA, plotOutput("plot_3D_ribbon", width="100%", height="auto"), value="p3Dribbon"),
+		tabPanel("3D Histogram", conPan_LA, plotOutput("plot_3D_hist", width="100%", height="auto"), value="p3Dhist"),
+		tabPanel("3D Interactive", webGLOutput("plot_3D_rgl", width="100%", height="auto"), value="p3Drgl"),
 		tabPanelAbout(),
 		tabPanel("R Code",
 			HTML(

@@ -1,7 +1,6 @@
 # Source reactive expressions and other code
 source("external/appSourceFiles/reactives.R",local=T) # source reactive expressions
 source("external/appSourceFiles/io.sidebar.wp1.R",local=T) # source input/output objects associated with sidebar wellPanel 1
-source("external/appSourceFiles/io.mainPanel.tp1.R",local=T) # source input/output objects associated with mainPanel tabPanel 1
 source("external/appSourceFiles/plotFunctions.R",local=T) # source plotting functions
 
 # Primary outputs
