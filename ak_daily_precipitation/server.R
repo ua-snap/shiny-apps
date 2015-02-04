@@ -1,7 +1,4 @@
 library(shiny)
-pkgs <- c("png","grid")
-pkgs <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
-if(length(pkgs)) install.packages(pkgs,repos="http://cran.cs.wwu.edu/")
 library(png); library(grid)
 
 recursiveLog <- function(...,n=1,N=1){
@@ -12,4 +9,4 @@ recursiveLog <- function(...,n=1,N=1){
 
 logo <- paste0(getwd(),"/www/img/snap_acronym_fullcolor_transparent.png")
 
-shinyServer(function(input, output) source("external/app.R", local = TRUE))
+shinyServer(function(input, output, session) source("external/app.R", local=TRUE))

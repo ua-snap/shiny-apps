@@ -13,7 +13,6 @@ d.all <- reactive({
 	isolate(
 		if(!is.null(url.string())){
 			d <- read.csv(url.string(),header=F,skip=1)
-			print(head(d))
 			x <- t(sapply(strsplit(as.character(d[,1]),"-"),as.numeric))
 			d <- data.frame(x,d[-1])
 			names(d) <- c("Year","Month","Day","P_in") # "MinT","MaxT","AvgT","P_in","SnowF","SnowD"
@@ -34,11 +33,13 @@ d.all <- reactive({
 })
 
 d <- reactive({
+	print(is.null(input$yrs) || is.null(d.all()))
 	if(is.null(input$yrs) || is.null(d.all())) return()
 	x <- NULL
 	isolate(
-		x <- subset(d.all(), Year>=input$yrs[1] & Year<=tail(input$yrs,1)) # locations (loc) currently not in use(Fairbanks only)
+		x <- subset(d.all(), Year>=input$yrs[1] & Year<=tail(input$yrs,1))
 	)
+	print(class(x))
 	x
 })
 
@@ -48,12 +49,12 @@ yrs <- reactive({
 
 colPal <- reactive({
 	if(!is.null(input$dailyColPal)){
-		if(input$dailyColPal=="Wt-Yl-Gn") x <- c("white","yellow","green")
-		if(input$dailyColPal=="Orange-Blue") x <- c("orange","blue")
-		if(input$dailyColPal=="Wt-OrRd") x <- c("white","orange","orangered")
-		if(input$dailyColPal=="LightBlue-Purple") x <- c("deepskyblue","purple")
-		if(input$dailyColPal=="Brown-DkGn") x <- c("chocolate4","chocolate","chartreuse4","darkgreen")
-		if(input$dailyColPal=="Wt-MdBlue") x <- c("white","dodgerblue")
+		if(input$dailyColPal=="WtYlGn") x <- c("white","yellow","green")
+		if(input$dailyColPal=="OrgBl") x <- c("orange","blue")
+		if(input$dailyColPal=="WtOrRd") x <- c("white","orange","orangered")
+		if(input$dailyColPal=="BlPr") x <- c("deepskyblue","purple")
+		if(input$dailyColPal=="BnGn") x <- c("chocolate4","chocolate","chartreuse4","darkgreen")
+		if(input$dailyColPal=="WtBl") x <- c("white","dodgerblue")
 	} else x <- NULL
 	x
 })

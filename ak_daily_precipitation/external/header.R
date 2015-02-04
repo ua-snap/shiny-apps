@@ -14,5 +14,5 @@ headerPanel_2(
 		<img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_for-dark-bkgrnd_100px.png" />
 		</a>
 		</div>'
-	), h3, "AK daily precipitation"
+	), h4, "AK daily precipitation"
 )

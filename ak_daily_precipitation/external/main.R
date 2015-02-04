@@ -1,16 +1,17 @@
 column(9,
 	tabsetPanel(
 		tabPanel("Daily Precipitation",
-			div(class="row-fluid",
-				div(class="span8", uiOutput("TpDailyTitle")),
+			fluidRow(
+				column(8, uiOutput("TpDailyTitle")),
 				conditionalPanel(condition="input.genPlotButton>0 && input.loc!==''",
-					div(class="span2", downloadButton("dl_plotDailyPrecipPNG","Download PNG")),
-					div(class="span2", downloadButton("dl_plotDailyPrecipPDF","Download PDF"))
+					column(2, downloadButton("dl_plotDailyPrecipPNG", "Get PNG", class="btn-block btn-primary")),
+					column(2, downloadButton("dl_plotDailyPrecipPDF", "Get PDF", class="btn-block btn-primary"))
 				)
 			),
-			plotOutput("plotDailyPrecip",height="auto"),
+			plotOutput("plotDailyPrecip", width="100%", height="auto"),
 			br(), value="daily"),
 		tabPanelAbout(),
+		type="pills",
 		id="tsp"
 	)
 )

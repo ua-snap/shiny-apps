@@ -1,7 +1,7 @@
 # Source reactive expressions and other code
 source("external/appSourceFiles/reactives.R",local=T) # source reactive expressions
-source("external/appSourceFiles/io.sidebar.wp1.R",local=T) # source input/output objects associated with sidebar wellPanel 1
-source("external/appSourceFiles/io.mainPanel.tp1.R",local=T) # source input/output objects associated with mainPanel tabPanel 1
+source("external/appSourceFiles/io.sb.R",local=T) # source input/output objects associated with sidebar wellPanel 1
+source("external/appSourceFiles/io.mp.R",local=T) # source input/output objects associated with mainPanel tabPanel 1
 source("external/appSourceFiles/plotFunctions.R",local=T) # source plotting functions
 
 # Setup master plotting function to be applied in browser, pdf, and png
@@ -52,10 +52,3 @@ output$dl_plotDailyPrecipPNG <- downloadHandler( # render plot to pdf for downlo
 	content = function(filename){ doPlot(filename=filename, cex.master=1.8, cex.lab=1.8, cex.axis=1.5, addLogo=T) },
 	contentType = 'image/png'
 )
-
-output$pageviews <-	renderText({
-	if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
-	pageviews <- pageviews + 1
-	save(pageviews,file="pageviews.Rdata")
-	paste("Visits:",pageviews)
-})
