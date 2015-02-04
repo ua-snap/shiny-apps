@@ -33,13 +33,11 @@ d.all <- reactive({
 })
 
 d <- reactive({
-	print(is.null(input$yrs) || is.null(d.all()))
 	if(is.null(input$yrs) || is.null(d.all())) return()
 	x <- NULL
 	isolate(
 		x <- subset(d.all(), Year>=input$yrs[1] & Year<=tail(input$yrs,1))
 	)
-	print(class(x))
 	x
 })
 

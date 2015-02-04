@@ -175,14 +175,14 @@ plotMap <- function(r, nr, nc, key.text, key.title, sldf.names, sldf.annual.name
 output$PlotMap <- renderPlot({
 	if(input$plot_button == 0) return(NULL)
 	isolate({ doPlot_plotMap() })
-	}, height=800, width=1000)
+	}, height=function(){ w <- session$clientData$output_PlotMap_width; if(length(w)) return(round(0.8*w)) else return("auto") }, width="auto")
 
 output$dlCurPlot1_PDF <- downloadHandler(
 	filename='Estimated_15pct_SIC_Edges_Map.pdf',
 	content=function(file){ pdf(file=file, width=1*10, height=1*8, pointsize=12, onefile=FALSE); doPlot_plotMap(PDF=T, show.logo=T, logo.mat=logo.mat, verbose=F); dev.off() }
 )
 
-output$dlCurPlot1_PNG <- downloadHandler( # render plot to pdf for download
+output$dlCurPlot1_PNG <- downloadHandler(
 	filename = 'Estimated_15pct_SIC_Edges_Map.png',
 	content = function(filename){ doPlot_plotMap(filename=filename, PNG=T, show.logo=T, logo.mat=logo.mat, verbose=F) },
 	contentType = 'image/png'

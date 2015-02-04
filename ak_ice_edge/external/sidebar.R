@@ -9,8 +9,8 @@ column(4,
 			checkboxInput("include_annual", "Include annual edges:", FALSE),
 			conditionalPanel(condition="input.months_abb !== null && input.decades !== null",
 				fluidRow(
-					column(6, actionButton("plot_button", "Generate Plot", icon="ok icon-white", styleclass="primary", block=T)),
-					column(6, downloadButton("dlCurPlot1_PNG", "Download Plot", class="btn-success btn-block"))
+					column(6, actionButton("plot_button", "Generate Plot", icon=icon("check"), class="btn-block btn-primary")),
+					column(6, downloadButton("dlCurPlot1_PNG", "Download Plot", class="btn-block btn-success"))
 				)
 			)
 		),
