@@ -43,5 +43,5 @@ output$clbootsmooth <- renderUI({ if(!is.null(input$group)) checkboxInput("clboo
 
 # Plot button
 output$PlotButton <- renderUI({
-	if(permitPlot() & !is.null(dat.sub())) actionButton("plotButton", "Generate Plot")
+	if(permitPlot() & !is.null(dat.sub())) actionButton("plotButton", "Generate Plot", class="btn-block btn-info")
 })

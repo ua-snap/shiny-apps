@@ -1,12 +1,8 @@
 # Source reactive expressions and other code
 source("external/appSourceFiles/reactives.R",local=T) # source reactive expressions
-
 source("external/appSourceFiles/io.sidebar.wp1.R",local=T) # source input/output objects associated with sidebar wellPanel 1
-
 source("external/appSourceFiles/io.sidebar.wp2.R",local=T) # source input/output objects associated with sidebar wellPanel 2
-
 source("external/appSourceFiles/io.mainPanel.tp1.R",local=T) # source input/output objects associated with mainPanel tabPanel 1
-
 doPlot1 <- source("external/appSourceFiles/doPlot1.R",local=T)$value # this plotting function is not reactive but depends on reactive elements
 
 # Primary outputs
@@ -21,7 +17,7 @@ output$plot1 <- renderPlot({ # render plot from doPlot1 for mainPanel tabsetPane
 		input$legendPos1
 		input$plotFontSize
 		isolate( doPlot1(dat=dat.sub(), x=input$xtime, y="value") )
-}, height=700, width=1200)
+}, height=function(){ w <- session$clientData$output_plot1_width; if(length(w)) return(round((7/12)*w)) else return("auto") }, width="auto")
 
 output$dlCurPlot1 <- downloadHandler( # render plot from doPlot1 to pdf for download
 	filename = 'curPlot1.pdf',
@@ -38,10 +34,3 @@ output$dlCurTable1 <- downloadHandler( # render table of data subset to csv for 
 		write.csv(dat.sub(), file)
 	}
 )
-
-output$pageviews <-	renderText({
-	if (!file.exists("pageviews.Rdata")) pageviews <- 0 else load(file="pageviews.Rdata")
-	pageviews <- pageviews + 1
-	save(pageviews,file="pageviews.Rdata")
-	paste("Visits:",pageviews)
-})
