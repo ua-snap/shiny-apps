@@ -80,8 +80,6 @@ function(){
 				a('GitHub', href="https://github.com/ua-snap/shiny-apps/tree/master/system_call_test-devel/", target="_blank"))
 			)
 		),
-		br()
-	),
-	value="about"
+		value="about"
 	)
 }
