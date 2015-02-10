@@ -76,7 +76,7 @@ shinyUI(fluidPage(theme=shinytheme("spacelab"),
 					verbatimTextOutput("lo_summary")
 				),
 			value="ts"),
-			tabPanel("Concentration Map",h4("RCP 8.5 Sea Ice Concentration"), plotOutput("plot2", width="100%", height="auto"), value="map"),
+			tabPanel("Concentration Map [Experimental]",h4("RCP 8.5 Sea Ice Concentration"), plotOutput("plot2", width="100%", height="auto"), value="map"),
 			tabPanelAbout(),
 			id="tsp"
 		)
