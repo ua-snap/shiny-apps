@@ -40,7 +40,7 @@ shinyUI(fluidPage(theme=shinytheme("cosmo"),
 				<p style="text-align:justify;">See the <code>About</code> tab above for more details.</p>'
 			))
 		),
-		column(8, plotOutput("PlotMap", width="100%", height="auto"))
+		column(8, conditionalPanel("input.plot_button > 0", plotOutput("PlotMap", width="100%", height="auto")))
 	)
 	),
 	conditionalPanel("input.tsp=='about'", source("about.R",local=T)$value)
