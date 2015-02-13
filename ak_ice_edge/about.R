@@ -4,17 +4,17 @@ tabPanel("About",
 	It is a work in progress and may feed into other projects with an expanded scope.</p>
 	
 	<p style="text-align:justify;">Displaying annual ice edges shows variability around the mean.
-	Some plots reveal limitations of the estimator as averaged over a decadal timeframe,
+	Some plots reveal limitations of the estimator as averaged over a decadal time frame,
 	where the decadal mean line does not always look subjectively like it is in the "middle" of the annual estimated 15% concentration contours.
-	Annual edges use semi-transparent color so that interannual variability is visible without obstructing the decadal mean.</p>
+	Annual edges use semi-transparent color so that inter-annual variability is visible without obstructing the decadal mean.</p>
 	
 	<p style="text-align:justify;">Colors come from <code>RColorBrewer</code>. Sequential and divergent palettes are most appropriate.
 	Qualitative colors may be helpful when viewing few levels, so I have chosen to offer them. With too many levels the qualitative palette will repeat.
 	However, it would be difficult to view these data with a high number of colors from any palette.
-	I recommend reducing the number of levels of the coloring variable to something manageable and readable for a single plot.
-	When using sequential or divergent palettes, the app attempts to remove the whitest color level (middle or first, respectively) from the current palette to reduce competition from the white plot background.</p>
+	I recommend reducing the number of levels of the primary (coloring) variable to something manageable and readable for a single plot.
+	When using sequential or divergent palettes, the app attempts to remove the whitest color level (first or middle, respectively) from the current palette to reduce competition from the white plot background.</p>
 	
-	<p style="text-align:justify;">Due to the amount of layering required, plotting may take about ten seconds, higher quality downloads up to 30 seconds.
+	<p style="text-align:justify;">Due to the amount of layering required, plotting may take several seconds, higher quality downloads somewhat longer.
 	Generate a map in the browser and/or download a PNG using the buttons above.
 	PNG formatting differs slightly from browser formatting.</p>'),
 		

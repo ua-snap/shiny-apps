@@ -12,6 +12,10 @@ output$Compare <- renderUI({
 	selectInput("compare", "Secondary variable", choices=c("", vars), selected="", width="100%")
 })
 
+output$Alpha <- renderUI({
+	if(!is.null(input$include_annual) && input$include_annual) sliderInput("alpha", "Annual edge opacity", 0.1, 0.9, 0.5, 0.1)
+})
+
 Decades <- reactive({
 	decades <- input$decades
 	if(input$color_by=="Month"){
@@ -84,14 +88,16 @@ Colors <- reactive({
 	x
 })
 
+Alpha <- reactive({	if(is.null(input$alpha)) 0.5 else input$alpha })
+
 doPlot_plotMap <- function(...){
 	if(!(is.na(Mos()[1]) | !length(Decades()) | is.null(nrows()) | is.null(ncols()) | is.null(Key_text()) | is.null(Key_title()) | is.null(SLDF_names()) | is.null(input$include_annual))){
-		plotMap(r=r3, nr=nrows(), nc=ncols(), key.text=Key_text(), key.title=Key_title(), sldf.names=SLDF_names(), sldf.annual.names=SLDF_annual_names(), annual=input$include_annual, clrs=Colors(), main.title=Main_title(), ...)
+		plotMap(r=r3, nr=nrows(), nc=ncols(), key.text=Key_text(), key.title=Key_title(), sldf.names=SLDF_names(), sldf.annual.names=SLDF_annual_names(), annual=input$include_annual, clrs=Colors(), alpha=Alpha(), main.title=Main_title(), ...)
 	} else NULL
 }
 
 # Currently allowing download as PNG only
-plotMap <- function(r, nr, nc, key.text, key.title, sldf.names, sldf.annual.names, annual=FALSE, clrs, main.title="Plot", PDF=FALSE, PNG=FALSE, filename=NULL, show.logo=F, logo.mat=NULL, verbose=TRUE){
+plotMap <- function(r, nr, nc, key.text, key.title, sldf.names, sldf.annual.names, annual=FALSE, clrs, alpha=0.5, main.title="Plot", PDF=FALSE, PNG=FALSE, filename=NULL, show.logo=F, logo.mat=NULL, verbose=TRUE){
 	if(verbose){
 		prog.max <- 2+2*nr+1+3+3
 		progress <- Progress$new(session, min=1, max=prog.max)
@@ -120,16 +126,14 @@ plotMap <- function(r, nr, nc, key.text, key.title, sldf.names, sldf.annual.name
 	if(verbose) progress$set(message="Generating plot, please wait", detail="Adding layers: ice edges...", value=2)
 	if(annual){
 		for(i in 1:nr){ # Add annual lines
-			if(verbose)progress$set(message="Adding annual ice edges", detail=paste("decade(s)", i, "of", nr, "..."), value=2+i)
-			#Sys.sleep(0.2)
-			p <- p + layer(sp.lines(x, col=clrs[i], lwd=1, alpha=0.5), data=list(x=get(sldf.annual.names[i]), clrs=clrs, i=i))
-			if(nc>1) p <- p + layer(sp.lines(x, col=clrs[i], lwd=1, lty=5, alpha=0.5), data=list(x=get(sldf.annual.names[i+nr]), clrs=clrs, i=i))
+			if(verbose) progress$set(message="Adding annual ice edges", detail=paste("decade(s)", i, "of", nr, "..."), value=2+i)
+			p <- p + layer(sp.lines(x, col=clrs[i], lwd=1, alpha=alpha), data=list(x=get(sldf.annual.names[i]), clrs=clrs, i=i, alpha=alpha))
+			if(nc>1) p <- p + layer(sp.lines(x, col=clrs[i], lwd=1, lty=5, alpha=alpha), data=list(x=get(sldf.annual.names[i+nr]), clrs=clrs, i=i, alpha=alpha))
 		}
 	}
 	if(verbose) progress$set(message="Generating plot, please wait", detail="Adding layers: ice edges...", value=2+nr+1)
 	for(i in 1:nr){ # Add decadal lines
 		if(verbose) progress$set(message="Adding decadal ice edges", detail=paste("decade(s)", i, "of", nr, "..."), value=2+nr+1+i)
-		#Sys.sleep(0.2)
 		p <- p + layer(sp.lines(x, col=clrs[i], lwd=2), data=list(x=get(sldf.names[i]), clrs=clrs, i=i))
 		if(nc>1) p <- p + layer(sp.lines(x, col=clrs[i], lwd=2, lty=5), data=list(x=get(sldf.names[i+nr]), clrs=clrs, i=i))
 	}
