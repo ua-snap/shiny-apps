@@ -121,7 +121,7 @@ dat_master <- reactive({
 			prog_d_master$set(message="Calculating, please wait", detail="Loading GCM aggregate time series statistics...", value=1)
 			if(input$loctype=="Cities" && length(input$locs_cities) && input$locs_cities[1]!="") {
 				city.ind <- which(city.names %in% Locs())
-				for(i in 1:length(city.ind)) {
+				for(i in 1:length(city.ind)) { # still must subset city.gcm.files to specific resolution (2-km or 10-minute), and below for CRU, perhaps make a reactive variable to store the subset outside this reactive
 					load(city.gcm.files[city.ind[i]], envir=environment())
 					if(i==1) city.dat.final <- city.dat else city.dat.final <- rbind(city.dat.final, city.dat)
 				}
