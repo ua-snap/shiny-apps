@@ -85,10 +85,12 @@ Obs_updateFiles <- reactive({
 	if( !(is.null(user_email_address()) || is.null(all_email_addresses()) || user_email_address() == "" || all_email_addresses() == "" || 
 		!length(input$frp_pts)) || is.null(input$FireSensitivity) || is.null(input$IgnitionFactor) ){
 		
+		rand_seed <- as.numeric(input$randseed)
 		alf_fs <- as.numeric(input$FireSensitivity)
 		alf_ig <- as.numeric(input$IgnitionFactor)
 		alf_yr1 <- as.integer(input$year_start)
 		alf_yr2 <- as.integer(input$year_end)
+		c0 <- is.na(rand_seed)
 		c1 <- is.na(alf_fs)
 		c2 <- is.na(alf_ig)
 		c3 <- is.na(alf_yr1)
@@ -98,6 +100,7 @@ Obs_updateFiles <- reactive({
 			
 			for(i in JSON_current()){
 				alfJSON <- fromJSON(i, simplify=F)
+				alfJSON$Simulation$RandSeed <- rand_seed
 				alfJSON$Simulation$FirstYear <- alf_yr1
 				alfJSON$Simulation$LastYear <- alf_yr2
 				alfJSON$Fire$Sensitivity[[1]] <- alf_fs
