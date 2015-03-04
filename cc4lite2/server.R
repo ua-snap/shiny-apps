@@ -13,8 +13,11 @@ CRU_var <- reactive({ subset(CRU_loc(), Var==input$variable) })
 
 d0 <- reactive({ if(input$res=="10min") d.10min else d.2km })
 d1_loc <- reactive({ subset(d0(), Location==input$location) })
-d2_var <- reactive({ subset(d1_loc(), Var==input$variable) })
+NoData <- reactive({ all(is.na(d1_loc()$Mean)) })
+d2_var <- reactive({ if(NoData()) NULL else subset(d1_loc(), Var==input$variable) })
 d3_scen <- reactive({
+print(input$location)
+	if(is.null(d2_var())) return(NULL)
 	x <- subset(d2_var(), Scenario==substr(RCPLabel(), nchar(RCPLabel())-7, nchar(RCPLabel())-1))
 	if(input$baseline=="PRISM"){
 		gap <- if(input$errtype=="sd") min(x$SD)/5 else min(x$SD)/2
@@ -33,9 +36,13 @@ d3_scen <- reactive({
 	x
 })
 
+output$No2km <- renderUI({ if(input$location!="" & input$res=="2km" & NoData()) h4(paste("2-km resolution data not available for", input$location)) })
+output$No10min <- renderUI({ if(input$location!="" & input$res=="10min" & NoData()) h4(paste("10-minute resolution data not available for", input$location)) })
+
 observe({ lapply(c("variable", "units", "rcp", "err", "errtype", "baseline", "res"), function(x) updateButtonGroup(session, x, value=input[[x]])) })
 
 output$Chart1 <- renderChart2({
+	if(is.null(d3_scen())) return(Highcharts$new())
 	if(!length(input$location) || input$location=="") return(Highcharts$new())
 	p <- if(input$err=="exclusive") Highcharts$new() else hPlot(x="Month", y="Mean", data=d3_scen(), type="column", group="Decade")
 	p$colors(Colors())

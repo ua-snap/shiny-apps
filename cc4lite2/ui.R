@@ -25,7 +25,11 @@ shinyUI(navbarPage(theme=shinytheme("cerulean"),
 		bsButtonGroup("res", label="Spatial Resolution", toggle="radio", value="2km", style="primary", size="small", block=T,
 			bsButton("btn_2km", label="2-km", value="2km"), bsButton("btn_10min", label="10-minute", value="10min"))
 	)),
-	column(8, showOutput("Chart1", "highcharts"))
+	column(8,
+		conditionalPanel("input.res=='2km'", uiOutput("No2km")),
+		conditionalPanel("input.res=='10min'", uiOutput("No10min")),
+		showOutput("Chart1", "highcharts")
+	)
 	)
 	),
 	conditionalPanel("input.tsp=='about'", source("about.R",local=T)$value)
