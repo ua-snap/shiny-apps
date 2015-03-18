@@ -96,7 +96,14 @@ Obs_updateFiles <- reactive({
 		c3 <- is.na(alf_yr1)
 		c4 <- is.na(alf_yr2)
 		c5 <- is.na(as.numeric(unlist(strsplit(input$frp_buffers,","))))
-		if(!(any(c(c1, c2, c3, c4, c5)))){
+		c6 <- input$climMod %in% c("CRU31", "CCSM4", "GFDL-CM3", "GISS-E2-R", "IPSL-CM5A-LR", "MRI-CGCM3")) & input$climPeriod %in% c("historical", "RCP 4.5", "RCP 6.0", "RCP 8.5") & input$mapset %in% c("3-GBM (unified CAVM)", "5-GBM (diversified CAVM)")
+		c7 <- is.logical(input$useMultipliers)
+		if(!(any(c(c1, c2, c3, c4, c5, c6, c7)))){
+			
+			period <- gsub(" .", "", tolower(input$climPeriod))
+			mapset <- if(input$mapset=="3-GBM (unified CAVM)") "3models_tif" else if(input$mapset=="5-GBM (diversified CAVM)") "5models_tif"
+			if(input$useMultipliers) mapset <- paste0(mapset, "_scaled")
+			flamFile <- file.path("/big_scratch/mfleonawicz/Alf_Files_20121129/gbmFlamMaps", period, input$climMod, mapset, "gbm.flamm.tif")
 			
 			for(i in JSON_current()){
 				alfJSON <- fromJSON(i, simplify=F)
@@ -109,6 +116,8 @@ Obs_updateFiles <- reactive({
 				alfJSON$Fire$TypeTransitionYears[[1]] <- alf_yr1
 				alfJSON$Climate$TransitionYears[[1]] <- alf_yr1
 				alfJSON$MapOutput$MapYearStart[[6]] <- alf_yr1
+				
+				alfJSON$Climate$Values$Flammability.File <- flamFile
 				
 				alfJSON <- toJSON(alfJSON, pretty=T)
 				cat(alfJSON, file=i, sep="\n")

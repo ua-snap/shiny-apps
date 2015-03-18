@@ -6,20 +6,26 @@ column(4,
 	conditionalPanel(condition="input.tsp!=='rcode'",
 		wellPanel(
 			fluidRow(
-				column(6, textInput("useremail","Your email:")),
+				column(6, textInput("useremail","Your email:", value="paul.duffy@neptuneinc.org")),
 				#column(1, helpPopup('Enter your email address','Results from the Alfresco run will be emailed to you.')),
 				column(6, textInput("addemail","Also send results to:",value="mfleonawicz@alaska.edu"))#,
 				#column(1, helpPopup('Enter additional email addresses','Results from the Alfresco run will be emailed to each address. For the time being, you must separate each email address with a comma and/or space.'))
 			),
 			fluidRow(
-				column(12, selectInput("json_files", "Select JSON:", c("", JSON_files), "", width="100%"))#,
+				column(6, selectInput("json_files", "Select JSON:", c("", JSON_files), "", width="100%")),
+				column(6, selectInput("mapset", c("3-GBM (unified CAVM)", "5-GBM (diversified CAVM)"), ""))#,
 				#column(1, helpPopup('Choose .fif','Select a FIF from the list to use in your Alfresco run.'))
 			),
 			fluidRow(
-				column(6, textInput("year_start", "Start year:", value="1901")),
+				column(6, selectInput("climMod", "Climate model:", choices=c("CRU31", "CCSM4", "GFDL-CM3", "GISS-E2-R", "IPSL-CM5A-LR", "MRI-CGCM3"), selected="CRU31", width="100%")),
+				column(6, selectInput("climPeriod", "Time Period/RCP:", choices=c("historical", "RCP 4.5", "RCP 6.0", "RCP 8.5"), selected="historical", width="100%"))
+			),
+			fluidRow(
+				column(6, textInput("year_start", "Start year:", value="1")),
 				column(6, textInput("year_end", "End year:", value="2013"))
 				#column(1, helpPopup('Choose .fif','Select a FIF from the list to use in your Alfresco run.'))
-			)#,
+			)
+			#,
 			#uiOutput("goButton")
 		),
 		wellPanel(
