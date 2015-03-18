@@ -13,7 +13,7 @@ column(4,
 			),
 			fluidRow(
 				column(6, selectInput("json_files", "Select JSON:", c("", JSON_files), "", width="100%")),
-				column(6, selectInput("mapset", c("3-GBM (unified CAVM)", "5-GBM (diversified CAVM)"), ""))#,
+				column(6, selectInput("mapset", "Map set", c("3-GBM (unified CAVM)", "5-GBM (diversified CAVM)"), ""))#,
 				#column(1, helpPopup('Choose .fif','Select a FIF from the list to use in your Alfresco run.'))
 			),
 			fluidRow(
