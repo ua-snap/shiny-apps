@@ -49,8 +49,12 @@ column(4,
 				#	If checked, next time the app is launched, it will populate the parameter fields with your previous specifications.'))
 			),
 			fluidRow(
-				column(6, checkboxInput("group_runs", "Check if grouping runs", TRUE)),
+				column(6, checkboxInput("include_fseByVeg", "FSE by vegetation", FALSE)),
 				column(6, checkboxInput("include_frp", "Include FRP", FALSE))
+			),
+			fluidRow(
+				column(6, checkboxInput("group_runs", "Check if grouping runs", TRUE))#,
+				#column(6, checkboxInput("include_frp", "Include FRP", FALSE))
 			),
 			fluidRow(
 				column(6, textInput("group_name", "Group name for multiple runs:", value="myRuns")),
