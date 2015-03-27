@@ -7,7 +7,9 @@ Thresh <- reactive({ ifelse(input$variable=="Precipitation", 0, FreezePoint()) }
 Unit <- reactive({ if(input$variable=="Temperature") paste0("°", substr(input$units, 1, 1)) else substr(input$units, 2, 3) })
 PRISM <- reactive({ if(input$variable=="Temperature") return(prism.t[prism.cities==input$location,]) else return(prism.p[prism.cities==input$location,]) })
 
-CRU <- reactive({ if(input$res=="10min") d.cru.10min else d.cru.2km })
+CRU31 <- reactive({ if(input$res=="10min") d.cru31.10min else d.cru31.2km })
+CRU32 <- reactive({ if(input$res=="10min") d.cru32.10min else d.cru32.2km })
+CRU <- reactive({ if(input$baseline!="CRU 3.1") CRU32() else CRU31() })
 CRU_loc <- reactive({ subset(CRU(), Location==input$location) })
 CRU_var <- reactive({ subset(CRU_loc(), Var==input$variable) })
 
@@ -25,7 +27,7 @@ print(input$location)
 		x$Decade[1:12] <- "1961-1990"
 		x[1:12, 6:9] <- PRISM() + rep(c(-gap, 0, gap, gap), each=length(PRISM()))
 		if(input$err!="exclusive"){ x$Min[1:12] <- x$Max[1:12] <- x$SD[1:12] <- NA }
-	} else if(input$baseline=="CRU 3.1") {
+	} else if(input$baseline!="PRISM") {
 		x <- rbind(CRU_var(), x)
 	}
 	if(input$units=="Fin") { if(input$variable=="Temperature") { x[,6:8] <- x[,6:8]*(9/5) + 32; x[,9] <- x[,9]*(9/5) } else x[,6:9] <- x[,6:9]/25.4 }
