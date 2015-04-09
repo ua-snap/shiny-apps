@@ -144,7 +144,7 @@ Obs_updateFiles <- reactive({
 			domainDir <- paste0("Runs_", alf.domain)
 			userDir <- gsub("@", "_at_", user_email_address())
 			#outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/",format(Sys.time(), "%Y-%m-%d-%H-%M-%S"))
-			outDir <- paste0(mainDir,"/",domainDir,"/",userDir)
+			outDir <- file.path(mainDir, domainDir, userDir, gsub("[ -]", "", input$run_name))
 			relDir <- outDir # Still need this?
 			
 			for(i in JSON_current()){
