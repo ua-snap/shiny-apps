@@ -96,7 +96,9 @@ Obs_updateFiles <- reactive({
 		c3 <- is.na(alf_yr1)
 		c4 <- is.na(alf_yr2)
 		c5 <- is.na(as.numeric(unlist(strsplit(input$frp_buffers,","))))
-		c6 <- !(input$climMod %in% c("CRU31", "CCSM4", "GFDL-CM3", "GISS-E2-R", "IPSL-CM5A-LR", "MRI-CGCM3") & input$climPeriod %in% c("historical", "RCP 4.5", "RCP 6.0", "RCP 8.5") & input$mapset %in% c("3-GBM (unified CAVM)", "5-GBM (diversified CAVM)"))
+		c6 <- !(input$climMod %in% c("CRU31", "CCSM4", "GFDL-CM3", "GISS-E2-R", "IPSL-CM5A-LR", "MRI-CGCM3") &
+			input$climPeriod %in% c("historical", "RCP 4.5", "RCP 6.0", "RCP 8.5") &
+			input$mapset %in% c("3-GBM base 1901-2009", "5-GBM base 1901-2009", "3-GBM base 1901-1949", "5-GBM base 1901-1949", "3-GBM base 1950-2009", "5-GBM base 1950-2009"))
 		c7 <- !is.logical(input$useMultipliers)
 		if(!(any(c(c1, c2, c3, c4, c5, c6, c7)))){
 			
