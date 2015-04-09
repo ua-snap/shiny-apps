@@ -102,12 +102,12 @@ Obs_updateFiles <- reactive({
 			
 			period <- gsub(" .", "", tolower(input$climPeriod))
 			mapset <- switch(input$mapset,
-				"Unified CAVM 1901-2009 loop"="3models_loop1901to2009_tif",
-				"Diversified CAVM 1901-2009 loop"="5models_loop1901to2009_tif",
-				"Unified CAVM 1901-1949 loop"="3models_loop1901to1949_tif",
-				"Diversified CAVM 1901-1949 loop"="5models_loop1901to1949_tif",
-				"Unified CAVM 1950-2009 loop"="3models_loop1950to2009_tif",
-				"Diversified CAVM 1950-2009 loop"="5models_loop1950to2009_tif"
+				"3-GBM base 1901-2009"="3models_loop1901to2009_tif",
+				"5-GBM base 1901-2009"="5models_loop1901to2009_tif",
+				"3-GBM base 1901-1949"="3models_loop1901to1949_tif",
+				"5-GBM base 1901-1949"="5models_loop1901to1949_tif",
+				"3-GBM base 1950-2009"="3models_loop1950to2009_tif",
+				"5-GBM base 1950-2009"="5models_loop1950to2009_tif"
 			)
 			if(input$useMultipliers) mapset <- paste0(mapset, "_scaled")
 			flamFile <- file.path("/big_scratch/mfleonawicz/Alf_Files_20121129/gbmFlamMaps", period, input$climMod, mapset, "gbm.flamm.tif")

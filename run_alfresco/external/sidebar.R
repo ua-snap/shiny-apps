@@ -14,7 +14,7 @@ column(4,
 			fluidRow(
 				column(6, selectInput("json_files", "Select JSON:", c("", JSON_files), "", width="100%")),
 				column(6, selectInput("mapset", "Map set",
-					c("Unified CAVM 1901-2009 loop", "Diversified CAVM 1901-2009 loop", "Unified CAVM 1901-1949 loop", "Diversified CAVM 1901-1949 loop", "Unified CAVM 1950-2009 loop", "Diversified CAVM 1950-2009 loop"), ""))#,
+					c("3-GBM base 1901-2009", "5-GBM base 1901-2009", "3-GBM base 1901-1949", "5-GBM base 1901-1949", "3-GBM base 1950-2009", "5-GBM base 1950-2009"), ""))#,
 				#column(1, helpPopup('Choose .fif','Select a FIF from the list to use in your Alfresco run.'))
 			),
 			checkboxInput("useMultipliers", "Use time series scalar coefficients", TRUE),
