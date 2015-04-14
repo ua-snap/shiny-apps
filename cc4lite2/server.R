@@ -1,6 +1,12 @@
 shinyServer(function(input, output, session){
 
-Colors <- reactive({ if(input$variable=="Temperature") c("#666666", colorRampPalette(c("gold", "orange", "orangered", "darkred"))(4)) else c("#666666", colorRampPalette(c("aquamarine", "dodgerblue4"))(4)) })
+Dec <- reactive({
+	h <- if(input$baseline=="PRISM") "1961-1990" else "1960-1989"
+	x <- sort(as.numeric(substr(input$dec, 1, 4)))
+	if(any(is.na(x))) return(NULL) else return(c(h, paste(x, x+9, sep="-")))
+})
+nDec <- reactive({ length(Dec()) })
+Colors <- reactive({ if(input$variable=="Temperature" & nDec()) c("#666666", colorRampPalette(c("gold", "orange", "orangered", "darkred"))(nDec()-1)) else c("#666666", colorRampPalette(c("aquamarine", "dodgerblue4"))(nDec()-1)) })
 RCPLabel <- reactive({ switch(input$rcp, "r45"="Low-Range Emissions (RCP 4.5)", "r60"="Mid-Range Emissions (RCP 6.0)", "r85"="High-Range Emissions (RCP 8.5)") })
 FreezePoint <- reactive({ ifelse(input$units=="Fin", 32, 0) })
 Thresh <- reactive({ ifelse(input$variable=="Precipitation", 0, FreezePoint()) })
@@ -15,10 +21,9 @@ CRU_var <- reactive({ subset(CRU_loc(), Var==input$variable) })
 
 d0 <- reactive({ if(input$res=="10min") d.10min else d.2km })
 d1_loc <- reactive({ subset(d0(), Location==input$location) })
-NoData <- reactive({ all(is.na(d1_loc()$Mean)) })
+NoData <- reactive({ nrow(d1_loc())==0 || all(is.na(d1_loc()$Mean)) })
 d2_var <- reactive({ if(NoData()) NULL else subset(d1_loc(), Var==input$variable) })
 d3_scen <- reactive({
-print(input$location)
 	if(is.null(d2_var())) return(NULL)
 	x <- subset(d2_var(), Scenario==substr(RCPLabel(), nchar(RCPLabel())-7, nchar(RCPLabel())-1))
 	if(input$baseline=="PRISM"){
@@ -37,6 +42,7 @@ print(input$location)
 	}
 	x
 })
+d4_dec <- reactive({ if(is.null(d3_scen())) NULL else subset(d3_scen(), Decade %in% Dec()) })
 
 output$No2km <- renderUI({ if(input$location!="" & input$res=="2km" & NoData()) h4(paste("2-km resolution data not available for", input$location)) })
 output$No10min <- renderUI({ if(input$location!="" & input$res=="10min" & NoData()) h4(paste("10-minute resolution data not available for", input$location)) })
@@ -44,9 +50,10 @@ output$No10min <- renderUI({ if(input$location!="" & input$res=="10min" & NoData
 observe({ lapply(c("variable", "units", "rcp", "err", "errtype", "baseline", "res"), function(x) updateButtonGroup(session, x, value=input[[x]])) })
 
 output$Chart1 <- renderChart2({
-	if(is.null(d3_scen())) return(Highcharts$new())
+	if(is.null(d4_dec())) return(Highcharts$new())
 	if(!length(input$location) || input$location=="") return(Highcharts$new())
-	p <- if(input$err=="exclusive") Highcharts$new() else hPlot(x="Month", y="Mean", data=d3_scen(), type="column", group="Decade")
+	if(!length(input$dec) || input$dec=="") return(Highcharts$new())
+	p <- if(input$err=="exclusive") Highcharts$new() else hPlot(x="Month", y="Mean", data=d4_dec(), type="column", group="Decade")
 	p$colors(Colors())
 	p$title(text=paste("Average Monthly", input$variable, "for", input$location), style=list(color="#000000"))
 	p$subtitle(text=paste("Historical", input$baseline, "and 5-Model Projected Average,", RCPLabel()), style=list(color="gray"))
@@ -55,8 +62,8 @@ output$Chart1 <- renderChart2({
 	p$yAxis(title=list(text=paste0(input$variable, " (", Unit(), ")"), style=list(color="gray")))
 	if(input$err!="exclusive") p$plotOptions(column=list(threshold=Thresh()))
 	if(input$err!="none"){
-		if(input$err=="overlay") for(k in 1:5) p$params$series[[k]]$id <- paste0("series", k)
-		d <- d3_scen()[c(5,6,8)]
+		if(input$err=="overlay") for(k in 1:nDec()) p$params$series[[k]]$id <- paste0("series", k)
+		d <- d4_dec()[c(5,6,8)]
 		ddply(d, .(Decade), function(x) {
 			g <- unique(x$Decade); x$Decade <- NULL; json <- toJSONArray2(x, json=F, names=F)
 			if(input$err=="overlay") p$series(data=json, name=g, type="errorbar", linkedTo=paste0("series", which(unique(d$Decade)==g))) else p$series(data=json, name=g, type="columnrange")
