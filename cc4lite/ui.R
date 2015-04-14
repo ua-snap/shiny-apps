@@ -10,7 +10,8 @@ shinyUI(navbarPage(theme=shinytheme("cerulean"),
 	conditionalPanel("input.tsp=='commChart'",
 	fluidRow(
 	column(4, wellPanel(
-		selectInput("location", "See the climate outlook for your community.", c("", locs), selected="", multiple=F, width="100%"),
+		selectInput("location", "See the climate outlook for your community.", c("", locs), selected="", multiple=FALSE, width="100%"),
+		selectInput("dec", "Decades", dec.lab, selected=dec.lab[c(1,4,6,9)], multiple=TRUE, width="100%"),
 		bsButtonGroup("variable", label="Climate Variable", toggle="radio", value="Temperature", style="primary", size="small", block=T,
 			bsButton("btn_T", label="Temperature", value="Temperature"), bsButton("btn_P", label="Precipitation", value="Precipitation")),
 		bsButtonGroup("units", label="Units", toggle="radio", value="Cmm", style="primary", size="small", block=T, bsButton("btn_U", label="C, mm", value="Cmm"), bsButton("btn_UT2", label="F, in", value="Fin")),
