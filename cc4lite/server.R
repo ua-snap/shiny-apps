@@ -1,5 +1,5 @@
 shinyServer(function(input, output, session){
-
+if(!exists("d.2km")) load(paste0("cc4lite_akcan2km.RData"), envir=.GlobalEnv)
 Dec <- reactive({
 	x <- sort(as.numeric(substr(input$dec, 1, 4)))
 	if(any(is.na(x))) return(NULL) else return(c("1961-1990", paste(x, x+9, sep="-")))
@@ -22,7 +22,7 @@ d3_scen <- reactive({
 	if(input$units=="Fin") { if(input$variable=="Temperature") { x[,6:8] <- x[,6:8]*(9/5) + 32; x[,9] <- x[,9]*(9/5) } else x[,6:9] <- x[,6:9]/25.4 }
 	x
 })
-d4_dec <- reactive({ x <- subset(d3_scen(), Decade %in% Dec()); print(head(x)); x })
+d4_dec <- reactive({ subset(d3_scen(), Decade %in% Dec()) })
 
 observe({ lapply(c("variable", "units", "rcp", "err"), function(x) updateButtonGroup(session, x, value=input[[x]])) })
 
