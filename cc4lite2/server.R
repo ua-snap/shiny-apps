@@ -13,13 +13,18 @@ Thresh <- reactive({ ifelse(input$variable=="Precipitation", 0, FreezePoint()) }
 Unit <- reactive({ if(input$variable=="Temperature") paste0("°", substr(input$units, 1, 1)) else substr(input$units, 2, 3) })
 PRISM <- reactive({ if(input$variable=="Temperature") return(prism.t[prism.cities==input$location,]) else return(prism.p[prism.cities==input$location,]) })
 
-CRU31 <- reactive({ if(input$res=="10min") d.cru31.10min else d.cru31.2km })
-CRU32 <- reactive({ if(input$res=="10min") d.cru32.10min else d.cru32.2km })
-CRU <- reactive({ if(input$baseline!="CRU 3.1") CRU32() else CRU31() })
+CRU <- reactive({ if(input$res=="10min") d.cru32.10min else d.cru32.2km })
 CRU_loc <- reactive({ subset(CRU(), Location==input$location) })
 CRU_var <- reactive({ subset(CRU_loc(), Var==input$variable) })
 
-d0 <- reactive({ if(input$res=="10min") d.10min else d.2km })
+d0 <- reactive({
+	if(input$res=="2km"){
+		if(!exists("d.2km")) load(paste0("cc4lite_2km.RData"), envir=.GlobalEnv)
+		return(d.2km)
+	}
+	if(!exists("d.10min")) load(paste0("cc4lite_10min.RData"), envir=.GlobalEnv)
+	return(d.10min)
+})
 d1_loc <- reactive({ subset(d0(), Location==input$location) })
 NoData <- reactive({ nrow(d1_loc())==0 || all(is.na(d1_loc()$Mean)) })
 d2_var <- reactive({ if(NoData()) NULL else subset(d1_loc(), Var==input$variable) })
