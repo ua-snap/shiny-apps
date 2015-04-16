@@ -1,4 +1,5 @@
 library(shinythemes)
+library(shinyIncubator)
 library(markdown)
 print(paste("metadata .RData file load time:"))
 print(system.time( load("meta.RData",envir=.GlobalEnv) ))
