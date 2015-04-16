@@ -1,7 +1,7 @@
 function(){
 	tabPanel("About",
 		HTML('<p style="text-align:justify">This R Shiny web app compares downscaled outputs from CMIP3 and CMIP5 global climate models (GCMs) in a variety of ways.
-		Downscaled observation-based historical data from the Climatological Research Unit (CRU 3.1) can be included in comparisons as well.</p>
+		Downscaled observation-based historical data from the Climatological Research Unit (CRU 3.2) can be included in comparisons as well.</p>
 		
 		<p style="text-align:justify">Currently, there are five main plot types focusing on exploratory data analysis:
 		basic time series plots (not time series analysis), scatter plots, heat maps, various plots designed to highlight variability, and distributional plots.

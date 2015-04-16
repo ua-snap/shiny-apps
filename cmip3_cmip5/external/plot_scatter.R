@@ -5,7 +5,7 @@ function(d, x, y, x.name, y.name, Logx=FALSE, Logy=FALSE, flip.axes=FALSE, panel
 		if(is.null(d)) return(plot(0,0,type="n",axes=F,xlab="",ylab=""))
 		if(plot.theme.dark) { bg.theme <- "black"; color.theme <- "white" } else { bg.theme <- "white"; color.theme <- "black" }
 		if(show.overlay & !is.null(overlay)) show.overlay <- TRUE else show.overlay <- FALSE
-		if(show.overlay) overlay$Observed <- "CRU 3.1"
+		if(show.overlay) overlay$Observed <- "CRU 3.2"
 		if(!length(lgd.pos)) lgd.pos="Top"
 		if(!length(fontsize)) fontsize <- 16
 		fontsize=as.numeric(fontsize)

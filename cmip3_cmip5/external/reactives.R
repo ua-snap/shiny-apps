@@ -273,21 +273,21 @@ CRU_master <- reactive({
 		if(is.null(Months_original()) | is.null(input$vars) | is.null(input$convert_units) | locSelected()==FALSE){
 			x <- NULL
 		} else {
-			prog_d_cru_master$set(message="Calculating, please wait", detail="Loading CRU 3.1 aggregate time series statistics...")
+			prog_d_cru_master$set(message="Calculating, please wait", detail="Loading CRU 3.2 aggregate time series statistics...")
 			if(input$loctype=="Cities" && length(input$locs_cities) && input$locs_cities[1]!="") {
 				city.ind <- which(city.names %in% Locs())
 				for(i in 1:length(city.ind)) {
 					load(city.cru.files[city.ind[i]], envir=environment())
 					if(i==1) city.cru.dat.final <- city.cru.dat else city.cru.dat.final <- rbind(city.cru.dat.final, city.cru.dat)
 				}
-				prog_d_cru_master$set(message="Calculating, please wait", detail="Subsetting CRU 3.1 time series data...")
+				prog_d_cru_master$set(message="Calculating, please wait", detail="Subsetting CRU 3.2 time series data...")
 				x <- subset(city.cru.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4))# & 
 					#Scenario %in% scenarios() & Model %in% models_original())# & Location %in% input$locs_cities)
 			} else if(is.character(input$map_shape_click$id) && input$map_shape_click$id[1]!="") {
 				city.ind <- which(city.names==input$map_shape_click$id)
 				load(city.cru.files[city.ind], envir=environment())
-				prog_d_cru_master$set(message="Calculating, please wait", detail="Subsetting CRU 3.1 time series data...")
+				prog_d_cru_master$set(message="Calculating, please wait", detail="Subsetting CRU 3.2 time series data...")
 				x <- subset(city.cru.dat, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4))# & 
 					#Scenario %in% scenarios() & Model %in% models_original())# & Location %in% input$map_shape_click$id)	
@@ -299,7 +299,7 @@ CRU_master <- reactive({
 					load(paste0(region.cru.stats.files[[input$loctype]][region.ind[i]], "/", filename, ".RData"), envir=environment())
 					if(i==1) region.cru.dat.final <- region.cru.dat else region.cru.dat.final <- rbind(region.cru.dat.final, region.cru.dat)
 				}
-				prog_d_cru_master$set(message="Calculating, please wait", detail="Subsetting CRU 3.1 time series data...")
+				prog_d_cru_master$set(message="Calculating, please wait", detail="Subsetting CRU 3.2 time series data...")
 				stat <- c(aggStatsID(), aggStatsID2())
 				cols.drop <- match(agg.stat.colnames[which(!(agg.stat.colnames %in% stat))], names(region.cru.dat.final))
 				x <- subset(region.cru.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
@@ -307,11 +307,11 @@ CRU_master <- reactive({
 			}
 			if(nrow(x)==0) return()
 			if(!is.null(input$months2seasons) && input$months2seasons){
-				prog_d_cru_master$set(message="Calculating, please wait", detail="CRU 3.1 time series: aggregating months...")
+				prog_d_cru_master$set(message="Calculating, please wait", detail="CRU 3.2 time series: aggregating months...")
 				x <- collapseMonths(x, aggStatsID(), as.numeric(input$n_seasons), Months_original())
 			}
 			if(!is.null(input$decades2periods) && input$decades2periods){
-				prog_d_cru_master$set(message="Calculating, please wait", detail="CRU 3.1 time series: aggregating decades...")
+				prog_d_cru_master$set(message="Calculating, please wait", detail="CRU 3.2 time series: aggregating decades...")
 				x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), check.years=TRUE)
 			}
 			if(is.null(x)) return()
@@ -326,8 +326,8 @@ CRU_master <- reactive({
 				}
 			}
 			rownames(x) <- NULL
-			x$Model <- x$Scenario <- x$Phase <- "CRU 3.1"
-			prog_d_cru_master$set(message="Calculating, please wait", detail="CRU 3.1 statistics complete.")
+			x$Model <- x$Scenario <- x$Phase <- "CRU 3.2"
+			prog_d_cru_master$set(message="Calculating, please wait", detail="CRU 3.2 statistics complete.")
 			x <- x[c(ncol(x) - c(2:0), 1:(ncol(x)-3))]
 		}
 	)
@@ -482,11 +482,11 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 			rnd <- if(input$vars[1]=="Precipitation") 0 else 1
 			x <- density2bootstrap(x, n.density=n.samples, n.boot=1000, interp=TRUE, n.interp=1000, digits=rnd) # n.boot and n.interp values tentative
 			if(!is.null(input$months2seasons) && input$months2seasons){
-				prog_d_cru_spatial$set(message="Calculating, please wait", detail="CRU 3.1 spatial distributions: aggregating months...")
+				prog_d_cru_spatial$set(message="Calculating, please wait", detail="CRU 3.2 spatial distributions: aggregating months...")
 				x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=1000)
 			}
 			if(!is.null(input$decades2periods) && input$decades2periods){
-				prog_d_cru_spatial$set(message="Calculating, please wait", detail="CRU 3.1 spatial distributions: aggregating months...")
+				prog_d_cru_spatial$set(message="Calculating, please wait", detail="CRU 3.2 spatial distributions: aggregating months...")
 				x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), check.years=TRUE, n.samples=1000)
 			}
 			if(is.null(x)) return()
@@ -499,8 +499,8 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 				x$Val[x$Var=="Precipitation"] <- round(x$Val[x$Var=="Precipitation"]/25.4,3)
 			}
 			rownames(x) <- NULL
-			x$Model <- x$Scenario <- x$Phase <- "CRU 3.1"
-			prog_d_cru_spatial$set(message="Calculating, please wait", detail="CRU 3.1 distributions complete.")
+			x$Model <- x$Scenario <- x$Phase <- "CRU 3.2"
+			prog_d_cru_spatial$set(message="Calculating, please wait", detail="CRU 3.2 distributions complete.")
 			x <- x[c(ncol(x) - c(2:0), 1:(ncol(x)-3))]
 		}
 	)

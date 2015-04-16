@@ -7,7 +7,7 @@ function(d, d.grp, d.pool, x, y, y.name, Log=FALSE, panels, grp, n.grp, ingroup.
 		if(d$Var[1]=="Temperature") { bartype <- barPlot <- NULL; Log <- FALSE }
 		if(!show.lines) ingroup.subjects <- NULL
 		if(show.overlay && !is.null(overlay)) show.overlay <- TRUE else show.overlay <- FALSE
-		if(show.overlay) overlay$Observed <- "CRU 3.1"
+		if(show.overlay) overlay$Observed <- "CRU 3.2"
 		bar.pos <- "dodge"
 		if(!length(lgd.pos)) lgd.pos="Top"
 		if(!length(fontsize)) fontsize <- 16
