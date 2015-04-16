@@ -1,7 +1,7 @@
 library(shinythemes)
 library(markdown)
 print(paste("metadata .RData file load time:"))
-print(system.time( load("external/meta.RData",envir=.GlobalEnv) ))
+print(system.time( load("meta.RData",envir=.GlobalEnv) ))
 
 #### If overriding these region and city file path objects from files_meta.RData ####
 print(paste("Local file path swap (devel testing only):"))
@@ -19,10 +19,10 @@ if(Sys.info()["sysname"]=="Windows"){ # for local devl/testing
 	region.cru.samples.files <- lapply(region.cru.samples.path, list.files, full=T)
 	names(region.cru.stats.files) <- names(region.gcm.stats.files) <- names(region.cru.samples.files) <- names(region.gcm.samples.files) <- basename(region.gcm.stats.path)
 	
-	city.cru.files.path <- file.path(topDir, "city_files_CRU")
+	city.cru.files.path <- file.path(topDir, "city_files_CRU32")
 	city.cru.files <- list.files(city.cru.files.path, full=T)
 	city.gcm.files.path <- file.path(topDir, "city_files_GCM")
-	city.gcm.files <- gsub("city_files_CRU", "city_files_GCM", city.cru.files)
+	city.gcm.files <- gsub("city_files_CRU32", "city_files_GCM", city.cru.files)
 }
 }))
 ###############################################################
