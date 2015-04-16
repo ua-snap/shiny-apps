@@ -22,7 +22,7 @@ shinyUI(navbarPage(theme=shinytheme("cerulean"),
 		bsButtonGroup("errtype", label="Variability Statistic", toggle="radio", value="range", style="primary", size="small", block=T,
 			bsButton("btn_errRange", label="Range", value="range"), bsButton("btn_errSD", label="Std. Dev.", value="sd")),
 		bsButtonGroup("baseline", label="Historical Baseline", toggle="radio", value="PRISM", style="primary", size="small", block=T,
-			bsButton("btn_prism", label="PRISM", value="PRISM"), bsButton("btn_cru31", label="CRU 3.1", value="CRU 3.1"), bsButton("btn_cru32", label="CRU 3.2", value="CRU 3.2")),
+			bsButton("btn_prism", label="PRISM", value="PRISM"), bsButton("btn_cru32", label="CRU 3.2", value="CRU 3.2")),
 		bsButtonGroup("res", label="Spatial Resolution", toggle="radio", value="2km", style="primary", size="small", block=T,
 			bsButton("btn_2km", label="2-km", value="2km"), bsButton("btn_10min", label="10-minute", value="10min"))
 	)),
