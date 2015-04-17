@@ -38,12 +38,14 @@ models_original <- reactive({
 })
 
 gcm_samples_files <- reactive({
-	s <- substr(scenarios(), 1, 3)
-	AR <- gsub("RCP", "AR5", gsub("SRE", "AR4", s))
-	x <- rep(paste(AR, gsub(" ", "", scenarios()), sep="_"), each=length(models_original()))
-	x.h <- rep(paste(c("AR4", "AR5"), "Hist", sep="_"), each=length(models_original()))
-	x <- c(paste(x.h, models_original(), sep="_"), paste(x, models_original(), sep="_"))
-	x <- paste0(rep(x, each=length(input$vars)), "_", input$vars, ".RData")
+	if(anyModelScenPair() & length(input$vars)){
+		s <- substr(scenarios(), 1, 3)
+		AR <- gsub("RCP", "AR5", gsub("SRE", "AR4", s))
+		x <- rep(paste(AR, gsub(" ", "", scenarios()), sep="_"), each=length(models_original()))
+		x.h <- rep(paste(c("AR4", "AR5"), "Hist", sep="_"), each=length(models_original()))
+		x <- c(paste(x.h, models_original(), sep="_"), paste(x, models_original(), sep="_"))
+		x <- paste0(rep(x, each=length(input$vars)), "_", input$vars, ".RData")
+	} else x <- NULL
 	x
 })
 
