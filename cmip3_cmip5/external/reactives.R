@@ -37,6 +37,16 @@ models_original <- reactive({
 	x
 })
 
+gcm_samples_files <- reactive({
+	s <- substr(scenarios(), 1, 3)
+	AR <- gsub("RCP", "AR5", gsub("SRE", "AR4", s))
+	x <- rep(paste(AR, gsub(" ", "", scenarios()), sep="_"), each=length(models_original()))
+	x.h <- rep(paste(c("AR4", "AR5"), "Hist", sep="_"), each=length(models_original()))
+	x <- c(paste(x.h, models_original(), sep="_"), paste(x, models_original(), sep="_"))
+	x <- paste0(rep(x, each=length(input$vars)), "_", input$vars, ".RData")
+	x
+})
+
 models <- reactive({
 	x <- models_original()
 	if(!is.null(input$compositeModel)){
@@ -389,7 +399,8 @@ dat_spatial <- reactive({
 				reg.nam <- sort(region.names.out[[input$loctype]])
 				region.ind <- which(reg.nam %in% Locs())
 				for(i in 1:length(region.ind)) {
-					load(paste0(region.gcm.samples.files[[input$loctype]][region.ind[i]], "/", tolower(input$vars[1]), ".RData"), envir=environment()) # Still can only load onevariable file, okay as long as app only contains T & P
+				
+					load(paste0(region.gcm.samples.files[[input$loctype]][region.ind[i]], "/climate/", tolower(input$vars[1]), ".RData"), envir=environment()) # Still can only load onevariable file, okay as long as app only contains T & P
 					gcm.samples.df[,samples.columns] <- rsd/rep(samples.multipliers, each=length(rsd)/2)
 					gcm.samples.df$Var <- input$vars[1]
 					gcm.samples.df$Location <- reg.nam[region.ind[i]]
