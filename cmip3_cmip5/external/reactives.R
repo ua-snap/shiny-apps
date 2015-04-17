@@ -37,14 +37,21 @@ models_original <- reactive({
 	x
 })
 
+mod2ar <- function(x){
+	if(x %in% c("CCCMAcgcm31", "GFDLcm21", "MIROC32m", "MPIecham5", "ukmoHADcm3")) return("AR4")
+	if(x %in% c("CCSM4", "GFDLcm3", "GISSe2-r", "IPSLcm5a-lr", "MRIcgcm3")) return("AR5")
+}
+
 gcm_samples_files <- reactive({
 	if(anyModelScenPair() & length(input$vars)){
 		s <- substr(scenarios(), 1, 3)
 		AR <- gsub("RCP", "AR5", gsub("SRE", "AR4", s))
-		x <- rep(paste(AR, gsub(" ", "", scenarios()), sep="_"), each=length(models_original()))
-		x.h <- rep(paste(c("AR4", "AR5"), "Hist", sep="_"), each=length(models_original()))
-		x <- c(paste(x.h, models_original(), sep="_"), paste(x, models_original(), sep="_"))
-		x <- paste0(rep(x, each=length(input$vars)), "_", input$vars, ".RData")
+		y <- sapply(models_original(), mod2ar)
+		x <- list()
+		for(i in 1:length(y)){
+			x[[i]] <- paste(y[i], c("Hist", gsub(" ", "", scenarios())[AR==y[i]]), models_original()[i], sep="_")
+			x[[i]] <- paste0(rep(x[[i]], each=length(input$vars)), "_", input$vars, ".RData")
+		}
 	} else x <- NULL
 	x
 })
@@ -401,7 +408,9 @@ dat_spatial <- reactive({
 				reg.nam <- sort(region.names.out[[input$loctype]])
 				region.ind <- which(reg.nam %in% Locs())
 				for(i in 1:length(region.ind)) {
-				
+					locDir <- file.path(region.gcm.samples.files[[input$loctype]][region.ind[i]], "climate")
+					loc.files <- list.files(locDir, pattern="\\.RData")
+					files <- intersect(gcm_samples_files(), loc.files)
 					load(paste0(region.gcm.samples.files[[input$loctype]][region.ind[i]], "/climate/", tolower(input$vars[1]), ".RData"), envir=environment()) # Still can only load onevariable file, okay as long as app only contains T & P
 					gcm.samples.df[,samples.columns] <- rsd/rep(samples.multipliers, each=length(rsd)/2)
 					gcm.samples.df$Var <- input$vars[1]
