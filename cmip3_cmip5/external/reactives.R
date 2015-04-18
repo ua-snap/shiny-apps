@@ -37,11 +37,6 @@ models_original <- reactive({
 	x
 })
 
-mod2ar <- function(x){
-	if(x %in% c("CCCMAcgcm31", "GFDLcm21", "MIROC32m", "MPIecham5", "ukmoHADcm3")) return("AR4")
-	if(x %in% c("CCSM4", "GFDLcm3", "GISSe2-r", "IPSLcm5a-lr", "MRIcgcm3")) return("AR5")
-}
-
 gcm_samples_files <- reactive({
 	if(anyModelScenPair() & length(input$vars)){
 		s <- substr(scenarios(), 1, 3)

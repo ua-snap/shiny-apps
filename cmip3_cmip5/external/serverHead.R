@@ -1,5 +1,5 @@
 library(shiny)
-library(Hmisc); library(png); library(RColorBrewer); library(ggplot2); library(plyr); library(reshape2); library(gridExtra)
+library(Hmisc); library(png); library(RColorBrewer); library(ggplot2); library(plyr); library(reshape2); library(data.table); library(gridExtra)
 
 #library(leaflet)
 #library(maps)
@@ -83,6 +83,11 @@ logo.mat <- matrix(rgb(logo[,,1],logo[,,2],logo[,,3],logo[,,4]*logo.alpha), nrow
 
 # These functions are written with the structure of the app in mind. They are intended to avoid code duplication.
 nullOrZero <- function(x) is.null(x) || x==0
+
+mod2ar <- function(x){
+	if(x %in% c("CCCMAcgcm31", "GFDLcm21", "MIROC32m", "MPIecham5", "ukmoHADcm3")) return("AR4")
+	if(x %in% c("CCSM4", "GFDLcm3", "GISSe2-r", "IPSLcm5a-lr", "MRIcgcm3")) return("AR5")
+}
 
 density2bootstrap <- function(d, n.density, n.boot=10000, interp=FALSE, n.interp=1000, ...){
 	n.fact <- n.boot/n.density
