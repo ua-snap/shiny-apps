@@ -407,20 +407,49 @@ dat_spatial <- reactive({
 			} else if(input$loctype!="Cities"){ #### Regions: only this is under development for now
 				reg.nam <- sort(region.names.out[[input$loctype]])
 				region.ind <- which(reg.nam %in% Locs())
-				for(i in 1:length(region.ind)) {
+				rsd.list <- vector("list", length(region.ind))
+				prog_d_spatial$set(message="Calculating, please wait", detail="Subsetting GCM spatial samples...")
+				for(i in 1:length(region.ind)) { # by region
 					locDir <- file.path(region.gcm.samples.files[[input$loctype]][region.ind[i]], "climate")
 					loc.files <- list.files(locDir, pattern="\\.RData")
-					files <- intersect(gcm_samples_files(), loc.files)
-					load(paste0(region.gcm.samples.files[[input$loctype]][region.ind[i]], "/climate/", tolower(input$vars[1]), ".RData"), envir=environment()) # Still can only load onevariable file, okay as long as app only contains T & P
-					gcm.samples.df[,samples.columns] <- rsd/rep(samples.multipliers, each=length(rsd)/2)
-					gcm.samples.df$Var <- input$vars[1]
-					gcm.samples.df$Location <- reg.nam[region.ind[i]]
-					if(i==1) rsd.final <- gcm.samples.df else rsd.final <- rbind(rsd.final, gcm.samples.df)
+					rsd.list1 <- vector("list", length(gcm_samples_files())
+					for(z in 1:length(gcm_samples_files()){ # by model
+						mod.files <- gcm_samples_files()[[z]]
+						mod.files.list <- split(mod.files, substr(mod.files, nchar(mod.files)-16, nchar(mod.files)-6)) # by variable
+						rsd.list2 <- vector("list", length(mod.files.list))
+						for(zz in 1:length(mod.files.list)){
+							var.files <- mod.files.list[[zz]]
+							rsd.list3 <- vector("list", length(var.files)-1)
+							for(zzz in 1:length(var.files)){
+								load(file.path(locDir, var.files[zzz]), envir=environment()) # Historical df always loaded first
+								if(zzz==1){
+									rsd.h <- subset(rsd.h, Month %in% month.abb[match(Months_original(), month.abb)] & Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4))
+									rsd.h[,samples.columns] <- rsd.h[,sample.columns]/rep(samples.multipliers, each=nrow(rsd.h)/2)
+								}
+								if(zzz > 1){
+									rsd.h$Phase <- rsd$Phase
+									rsd.h$Scenario <- rsd$Scenario
+									rsd.h$Model <- rsd$Model
+									rsd <- subset(rsd, Month %in% month.abb[match(Months_original(), month.abb)] & Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4))
+									rsd[,samples.columns] <- rsd[,sample.columns]/rep(samples.multipliers, each=nrow(rsd)/2)
+									rsd$Var <- input$vars[zz]
+									rsd$Location <- reg.nam[region.ind[i]]
+									rsd.list[[zzz-1]]] <- rbind(rsd.h, rsd)
+									
+								}
+							}
+							rsd.list2[[zz]] <- rbindlist(rsd.list3)
+							rm(rsd.list3)
+						}
+						rsd.list1[[z]] <- rbindlist(rsd.list2)
+						rm(rsd.list2)
+					}
+					rsd.list[[i]] <- rbindlist(rsd.list1)
+					rm(rsd.list1)
 				}
-				prog_d_spatial$set(message="Calculating, please wait", detail="Subsetting GCM spatial samples...")
-				x <- subset(rsd.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
-					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
-					Scenario %in% scenarios() & Model %in% models_original())# & Location %in% input$locs_regions)# & Var %in% input$vars[1])
+				x <- rbindlist(rsd.list)
+				rm(rsd.list, rsd, rsd.h)
+				gc()
 			}
 			prog_d_spatial$set(message="Calculating, please wait", detail="GCM bootstrap resampling...")
 			rnd <- if(input$vars[1]=="Precipitation") 0 else 1
