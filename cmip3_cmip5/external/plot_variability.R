@@ -52,12 +52,14 @@ function(d, d.grp, d.pool, x, y, y.name, stat="SD", around.mean=FALSE, error.bar
 		if(length(vert.facet)) if(vert.facet) facet.cols <- 1
 		if(grp==1) ply.vars <- x else ply.vars <- c(x,grp)
 		if(!is.null(facet.by) && facet.by!="None") ply.vars <- c(ply.vars, facet.by)
+		
 		d.sum <- ddply(d, ply.vars, here(summarise),
 			Mean1=mean(eval(parse(text=y))),
 			SD1=sd(eval(parse(text=y))),
 			SE=sd(eval(parse(text=y)))/sqrt(length(eval(parse(text=y)))),
 			tval95=qt(0.975, df=length(eval(parse(text=y)))), Min=min(eval(parse(text=y))), Max=max(eval(parse(text=y))))
 		names(d.sum)[length(ply.vars) + c(1:2)] <- c("Mean", "SD")
+		
 		if(around.mean){
 			if(is.null(boxplots) || boxplots==FALSE) { g <- ggplot(d, aes_string(x=x,y=y,order=grp,colour=color,fill=fill)) } else { d$Year <- factor(d$Year); g <- ggplot(d, aes_string(x=x,y=y)) }
 		} else g <- ggplot(d, aes_string(x=x,y=y,group=grp,order=grp,colour=color,fill=fill))
@@ -67,13 +69,12 @@ function(d, d.grp, d.pool, x, y, y.name, stat="SD", around.mean=FALSE, error.bar
 		if(length(colpal)) g <- scaleColFillMan(g=g, default=scfm$scfm, colpal=colpal, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
 		if(!is.null(facet.by)) if(facet.by!="None") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)
 		if(!around.mean & stat %in% c("SD", "SE", "Full Spread")){
-			f <- switch(stat, "SD" = sd, "SE" = function(x) sd(x)/sqrt(length(x)), "Full Spread" = function(x) diff(range(x)))
+			fsd <- function(x) { x <- sd(x); if(is.na(x)) return(0) else return(x) } # force zero when NA
+			f <- switch(stat, "SD" = fsd, "SE" = function(x) fsd(x)/sqrt(length(x)), "Full Spread" = function(x) diff(range(x)))
 			if(length(grep("border",colpal))){
 				g <- g + stat_summary(aes_string(group=grp), fun.y=f, geom="bar", position=bar.pos)
 			} else g <- g + stat_summary(aes_string(group=grp), colour=color.theme, fun.y=f, geom="bar", position=bar.pos)
 		}
-		#g <- g + geom_bar(stat=stat, position=bar.pos)
-		#g <- g + stat_summary(data=d.pool,aes_string(group=grp),fun.y=stat, geom="bar", position=bar.pos)
 		if(around.mean){
 			if(subject.lines){
 				if(grp==1) g <- g + geom_line(aes_string(group=ingroup.subjects), position="identity", colour=color.theme, alpha=pts.alpha) else g <- g + geom_line(aes_string(group=ingroup.subjects, colour=grp), position="identity", alpha=pts.alpha)
@@ -112,9 +113,9 @@ function(d, d.grp, d.pool, x, y, y.name, stat="SD", around.mean=FALSE, error.bar
 				g <- annotatePlot(g, data=d, x=x, y=y, text=plot.subtitle, col=color.theme, bp=FALSE, bp.position=bar.pos, n.groups=n.grp/2) #n.grp/2 is a rough estimate
 			} else {
 				max.val <- if(stat=="SD") max(d.sum[,"SD"]) else if(stat=="SE") max(d.sum[,"SE"]) else if(stat=="Full Spread") max(d.sum[,"Max"] - d.sum[,"Min"])
-				g <- annotatePlot(g, data=d, x=x, y=y, y.fixed=max.val, text=plot.subtitle, col=color.theme, bp=TRUE, bp.position=bar.pos, n.groups=n.grp) #n.grp is a rough estimate
+				if(!is.na(max.val)) g <- annotatePlot(g, data=d, x=x, y=y, y.fixed=max.val, text=plot.subtitle, col=color.theme, bp=TRUE, bp.position=bar.pos, n.groups=n.grp) #n.grp is a rough estimate
 			}
 		}
 		g <- addLogo(g, show.logo, logo.mat, show.title, main, fontsize)
-		print(g)
+		if(length(g$layers)) print(g)
 }
