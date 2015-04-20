@@ -1,4 +1,4 @@
-### Graphing: Heat Maps <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotTS_example_1_black.png" width="1000"/>
+### Graphing: Heat Maps <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotHM_example_1_black.png" width="1000"/>
 Heat maps are multivariate (X, Y, and Z).
 You can think of them as univariate like the time series plots in that you can plot one numeric variable (vs. a fixed index such as time), its intensity shown be cell color,
 and as opposed to the bivariate scatter plot which plots two numeric variables against one another.

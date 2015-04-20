@@ -1,4 +1,4 @@
-### Graphing: Scatter Plots <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotTS_example_1_black.png" width="1000"/>
+### Graphing: Scatter Plots <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotSC_example_1_black.png" width="1000"/>
 The scatter plot is the only bivariate plot in the app. Currently it plots temperature vs. precipitation.
 
 #### X-axis

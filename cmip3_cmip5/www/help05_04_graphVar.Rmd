@@ -1,4 +1,4 @@
-### Graphing: A Closer Look at Variability <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotTS_example_1_black.png" width="1000"/>
+### Graphing: A Closer Look at Variability <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotVR_example_1_black.png" width="1000"/>
 Variability plot options are somewhat more complex than those for other plots.
 
 #### X-axis
