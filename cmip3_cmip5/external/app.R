@@ -1,6 +1,5 @@
 # Source reactive expressions and other code
 source("external/reactives.R",local=T) # source reactive expressions
-#source("external/reactives_leaflet.R",local=T) # source reactive expressions for leaflet
 source("external/io_sidebar.R",local=T) # source input/output objects associated with sidebar
 source("external/io_mainPanel.R",local=T) # source input/output objects associated with mainPanel
 
@@ -88,10 +87,10 @@ output$PlotTS <- renderPlot({
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
-		progress$set(message="Plotting, please wait", detail="Generating plot...")
+		progress$set(message="Plotting, please wait", detail="Generating plot...", value=10)
 		doPlot_ts(show.logo=F)
 	})
-}, height=function(){ if(twoBtnNullOrZero_ts()) 0 else 700 }, width=1200)
+}, height=function(){ w <- if(twoBtnNullOrZero_ts()) 0 else session$clientData$output_PlotTS_width; round((7/12)*w)	}, width="auto")
 
 output$dlCurPlotTS <- downloadHandler(
 	filename='timeseries.pdf',
@@ -122,10 +121,10 @@ output$PlotScatter <- renderPlot({
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
-		progress$set(message="Plotting, please wait", detail="Generating plot...")
+		progress$set(message="Plotting, please wait", detail="Generating plot...", value=10)
 		doPlot_scatter(show.logo=F)
 		})
-}, height=plot_scatter_ht, width=700)
+}, height=function(){ w <- if(twoBtnNullOrZero_sc()) 0 else session$clientData$output_PlotScatter_width; w }, width="auto")
 
 output$dlCurPlotScatter <- downloadHandler(
 	filename='scatterplot.pdf',
@@ -145,10 +144,10 @@ output$PlotVariability <- renderPlot({
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
-		progress$set(message="Plotting, please wait", detail="Generating plot...")
+		progress$set(message="Plotting, please wait", detail="Generating plot...", value=10)
 		doPlot_var(show.logo=F)
 		})
-}, height=function(){ if(twoBtnNullOrZero_vr()) 0 else 700 }, width=1200)
+}, height=function(){ w <- if(twoBtnNullOrZero_vr()) 0 else session$clientData$output_PlotVariability_width; round((7/12)*w)	}, width="auto")
 
 output$dlCurPlotVariability <- downloadHandler(
 	filename='variability.pdf',
@@ -168,10 +167,10 @@ output$PlotHeatmap <- renderPlot({
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
-		progress$set(message="Plotting, please wait", detail="Generating plot...")
+		progress$set(message="Plotting, please wait", detail="Generating plot...", value=10)
 		doPlot_heatmap(show.logo=F)
 		})
-}, height=function(){ if(twoBtnNullOrZero_hm()) 0 else 700 }, width=1200)
+}, height=function(){ w <- if(twoBtnNullOrZero_hm()) 0 else session$clientData$output_PlotHeatmap_width; round((7/12)*w)	}, width="auto")
 
 output$dlCurPlotHeatmap <- downloadHandler(
 	filename='heatmap.pdf',
@@ -191,10 +190,10 @@ output$PlotSpatial <- renderPlot({
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
-		progress$set(message="Plotting, please wait", detail="Generating plot...")
+		progress$set(message="Plotting, please wait", detail="Generating plot...", value=10)
 		doPlot_spatial(show.logo=F)
 		})
-}, height=function(){ if(twoBtnNullOrZero_sp()) 0 else 700 }, width=1200)
+}, height=function(){ w <- if(twoBtnNullOrZero_sp()) 0 else session$clientData$output_PlotSpatial_width; round((7/12)*w)	}, width="auto")
 
 output$dlCurPlotSpatial <- downloadHandler(
 	filename='spatial.pdf',
