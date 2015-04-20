@@ -1,4 +1,4 @@
-### Working with Data
+### Working with Data <img style="float: right" src="screenshots/dataSelectionPanel.png"/>
 Returning to the data selection panel, how do we use it?
 
 #### Variables
@@ -19,7 +19,7 @@ Then there is a checkbox for making composite models. If checked, the models cho
 Next is a slider allowing the user to restrict the years of the data subset.
 Months and decades follow. See Options Settings below for a description of the seasonal and multi-decade period options related to month and decade selection.
 
-#### Data Requirements <img style="float: right" src="screenshots/dataSelectionPanel.png"/>
+#### Data Requirements
 This brings us to a discussion of requirements. What can and can't be done with the data selection?
 Geographic locations propagate based on the spatial scale chosen.
 I have generally excluded the ability to make comparison plots of multiple locations that span large differences in spatial scale.
