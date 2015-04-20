@@ -1,12 +1,11 @@
 library(shinythemes)
-library(shinyIncubator)
 library(markdown)
 load("meta.RData",envir=.GlobalEnv)
 
 #### If overriding these region and city file path objects from files_meta.RData ####
 if(Sys.info()["sysname"]=="Windows"){ # for local devl/testing
 	print(paste("Local file path swap (devel testing only)"))
-	topDir <- "C:/leonawicz/AR4_AR5_Comparisons"
+	topDir <- "C:/leonawicz/qaqcAppData"
 	region.gcm.stats.path <- list.files(file.path(topDir, "region_files_GCM/stats"), full=T)
 	region.gcm.stats.files <- lapply(region.gcm.stats.path, list.files, full=T)
 	region.cru.stats.path <- list.files(file.path(topDir, "region_files_CRU32/stats"), full=T)
