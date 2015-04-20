@@ -1,5 +1,5 @@
-.well {
-  border: 1px solid #cccccc;
+body {
+  background-color: #000000;
 }
 
 .shiny-progress .progress {
@@ -7,6 +7,6 @@
 }
 
 .shiny-progress .bar {
-  background-color: #9933cc;
+  background-color: #ff8800;
   opacity: 1.0;
 }
