@@ -12,7 +12,7 @@ Grouping is for factors and it's only sensible if there are at least two levels 
 The menu, among others, must be updated when the data changes.
 Some options are hierarchically dependent. For example, the color options dpened on the grouping variable which, for some plots, depends on the axis variable(s).
 
-#### Plot Options are Plot-Dependent <img style="float: right" src="screenshots/plotOptionsPanel_1_white.png"/>
+#### Plot Options are Plot-Dependent <img style="float: right" src="screenshots/plotOptionsPanel.png"/>
 Availability of plot options also depend on the type of plot. Some of this is obvious, such as not adding points to a heat map, or contour lines to a univariate time series plot.
 But others are more subtle. For example, in the time series plot CRU data can be directly overlaid on the selected GCMs by checking the `Show CRU 3.1` checkbox.
 In the heat map there is no way to overlay CRU on top of GCM(s) in the same fashion. The only option is to merge them by properly weighted averaging into one heat map,

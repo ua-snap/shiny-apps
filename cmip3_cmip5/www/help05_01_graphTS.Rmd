@@ -24,7 +24,7 @@ They remain hidden if they are not applicable.
 Note that it is possible to select such a minimal amount of data that there will be no factors with multiple levels.
 In such a case the `Group/color by:` menu will not appear.
 
-#### Faceting <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotTS_group_white.png"/>
+#### Faceting
 To facet is to break out different classes of data into multiple panels in a plot. The `Facet/panel by:` title of this menu hints at this purpose.
 Like grouping, the faceting variable must be categorical with multiple levels present in the data.
 The default is no faceting and as with grouping, if no multi-level factors are present in the user's data subset, this menu will not appear.
@@ -48,7 +48,7 @@ The side by side panels are for contrasting the two locations.
 Now there will be three points in the graph at each x-axis tick mark, and or lines for each.
 Just below the x-axis, grouping, and faceting menus text will appear to help the user keep track of any pooled variables.
 
-#### Checkbox Options <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotTS_colors_white.png"/>
+#### Checkbox Options
 Each plot type offers a number of additional options.
 The first few options, `Title`, `Panel text`, and `Show CRU 3.1` are common available for all plots.
 When checked, the plot displays with a title, any in-panel text annotations (if applicable to the plot and/or data), and includes CRU data, respectively.

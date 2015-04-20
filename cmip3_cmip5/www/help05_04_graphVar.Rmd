@@ -7,7 +7,7 @@ The x-axis variable may be temporal like in the time series plot or any categori
 #### Grouping
 This is similar to grouping for other plots.
 
-#### Faceting <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotTS_group_white.png"/>
+#### Faceting
 This is similar to faceting for other plots.
 
 #### Dispersion statistic
@@ -18,7 +18,7 @@ Otherwise this menu is replaced with the `Error bars` menu. In this case a line 
 Options for error bars include the standard deviation, the standard error, the range, or a 95% confidence interval.
 All but the confidence interval are equivalent to the three options available when showing magnitude only via bar plots.
 
-#### Checkbox Options <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotTS_colors_white.png"/>
+#### Checkbox Options
 Options unique to the variability plots include boxplots, which may or may not have points displayed over top.
 The `Show CRU 3.1` checkbox includes CRU among GCMs already selected, akin to the heat map, rather than a strict overlay as in the time series plot.
 Therefore, in the variability plots inclusion of CRU data is most beneficial when grouping or faceting by model, similar to the case with heat maps.

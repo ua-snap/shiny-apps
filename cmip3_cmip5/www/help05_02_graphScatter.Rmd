@@ -9,11 +9,11 @@ Both variables to be plotted are chosen during data selection and default to `X`
 This is similar to grouping for other plots, but applies to both variables.
 Grouping is restricted to factors common to both variables.
 
-#### Faceting <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotTS_group_white.png"/>
+#### Faceting
 This is similar to faceting for other plots, but applies to both variables.
 Faceting is restricted to factors common to both variables.
 
-#### Checkbox Options <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotTS_colors_white.png"/>
+#### Checkbox Options
 The `Show CRU 3.1` option overlays CRU in the same manner as in the time series plots.
 For the scatter plot, `Show lines` refers to contour lines.
 `Hex bins` are also available for the scatter plot. These can assist in visualizing patterns.

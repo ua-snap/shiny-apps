@@ -25,31 +25,31 @@ This will also give you a sense for how relatively complex this particular app i
 
 This app is quite complex. There are two ways to learn how to use it properly and successfully.
 One is the brute force method. You can click on every button in every conceivable permutation until you figure out what is going on.
-This is unlikely to work for you with an app this complex so if you want instant gratification I suggest a chocolate chip cookie.
-The other method is to read the documentation. You are here. Good. Continue.
+This preferred method is to read the documentation. You are here. Good. Continue.
 
 ### Audience
-The reason for all this preamble is straightforward. The primary audience for this app is myself.
+The primary audience for this app is myself.
 I use apps like this one to enhance my data QA/QC tasks at SNAP as well as to support various projects.
-It is first and foremost a tool of extreme convenience made to enhance a workflow I am already neck deep in.
+It is first and foremost a convenient workflow-enhancing tool made specific to my needs.
 
-The secondary audience consists of other ***R*** Shiny users who are interested in exploring and developing similar apps.
+The secondary audience consists of other **R** Shiny users who are interested in exploring and developing similar apps.
 I enjoy sharing my work, the code is freely available, and networking with other useRs is fun.
 
 Mandatory caveats: I do not have time to teach you how to make apps.
 Nor will you be able to swap your data sets for mine and have this app work for you. It is far too complex to use so directly as a template, but various bits of code you may find useful in your own contexts.
 I have been developing it off and on when time permits among other duties since somewhere around February of 2014 although the exact date has become a hazy mystery to me,
-more obscured by the mind fog of ***R*** code I have written in general since then than the moment of my very birth.
+obscured by the mind fog of **R** code I have written in general since then.
+
 This is to say, if you want an app "just like this," a common sentiment I encounter, which is quite flattering and much appreciated, I must say it will not happen overnight no matter how much you borrow from this app.
 Even if I could write the code for this app without any planning, revision, or refactoring, just straight through as a stream-of-consciousness exercise in one sitting, it would still take quite some time to write it all out.
 And that doesn't even begin to get into the code written to parse and prep large amounts of data, which the app (among other projects) makes use of.
-In fact, even the help documentation verbosity that follows, I wrote out just for me because otherwise it would be impossible to recall all of what on earth I had done here.
+In fact, even the help documentation verbosity that follows, I wrote out just for me because otherwise it would be impossible to recall all of what I had done here.
 
-The tertiary audience would be other colleagues which do not use R but happen to be very interested in climate models and climate change in the Arctic.
+The tertiary audience would be other colleagues which do not use **R** but happen to be very interested in climate models and climate change in the Arctic.
 
 The quaternary audience would be the general public. I like to make apps that are simple, easy to use, and convey a straightforward message that does not require esoteric knowledge or the specialized interpretation skills of a statistician-priest.
 This app is not one of them. It was never meant to be. I'd prefer not to mention this fourth tier audience at all except that I don't want to give the impression of complete neglect.
-But ultimately, this app was made with me in mind, to assist my own complex and data-heavy workflow. It can't be all things.
+But ultimately, this app was made to assist my own complex and data-heavy workflow. It can't be all things.
 
 ### Exploratory Data Analysis
 The plots available in the app allow for an in-depth graphical analysis of the included downscaled climate model outputs and CRU data.

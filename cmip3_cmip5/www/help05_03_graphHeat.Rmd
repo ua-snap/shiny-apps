@@ -9,7 +9,7 @@ Though univariate in the the above sense, two categorical variables must still b
 #### Grouping
 Coloring by factor levels does not apply to heat maps. Color refers to the level of the numeric variable.
 
-#### Faceting <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotTS_group_white.png"/>
+#### Faceting
 This is similar to faceting for other plots.
 
 #### Statistics
@@ -26,7 +26,7 @@ It is important to pay attention to the meaning of what is being displayed in th
 or a standard deviation across factors of a spatial mean, and other equally strange sounding combinations like mean of means and standard deviation of standard deviations.
 If not careful, it is easy to neglect altogether that there are two characteristically different levels of aggregation going on, one across space and one across other variables.
 
-#### Checkbox Options <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotTS_colors_white.png"/>
+#### Checkbox Options
 Options unique to the heat map include forcing a 1:1 aspect ratio, reversing the color gradient, and displaying values inside cells.
 The `Show CRU 3.1` checkbox integrates CRU into any GCMs already selected.
 This is not very useful and generally not advisable unless faceting by model in which CRU data appears it its own panel.
