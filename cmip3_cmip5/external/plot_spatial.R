@@ -37,7 +37,7 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, plot
 		
 		if(d$Var[1]=="Temperature") ylb <- paste0("Temperature (",units[1],")") else ylb <- paste0("Precipitation (",units[2],")")
 		if(x==y) { xlb <- ylb; ylb <- "Density" }
-		main <- paste0("", tolower(d$Var[1]), " variability: ", plot.title)
+		main <- paste0("", tolower(d$Var[1]), " distribution: ", plot.title)
 		if(jit) point.pos <- position_jitter(0.1,0.1) else point.pos <- "identity"
 		if(!is.null(density.type)){
 			if(density.type=="Overlay") den.pos <- "identity" else if(density.type=="Fill/Relative") den.pos <- "fill"
