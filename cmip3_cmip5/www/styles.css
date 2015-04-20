@@ -14,7 +14,10 @@
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
-.shiny-progress {
-  margin-top: 25px !important;
-  margin-right: 15px !important;
+.shiny-progress .bar {
+*background-color: #FF0000;
+.opacity = 1.0;
+}
+.shiny-progress .progress {
+height:10px;
 }
