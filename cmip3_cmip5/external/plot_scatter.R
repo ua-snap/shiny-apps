@@ -49,7 +49,7 @@ function(d, x, y, x.name, y.name, Logx=FALSE, Logy=FALSE, flip.axes=FALSE, panel
 			if(!is.null(contourlines) && contourlines) g <- g + stat_density2d(data=overlay, aes_string(x=x, y=y, group=grp, colour=NULL, fill=NULL, size="Observed"), colour=observed.col) + guides(size=guide_legend(title="Observed"))
 			if(hexbin) g <- g + stat_binhex(data=overlay, aes_string(x=x, y=y, colour=NULL, fill=NULL, alpha="..count..", size="Observed"), colour=observed.col, bins=30)
 		}
-		g <- g + annotate("text", y=max(d[[y]]), x=min(d[[x]]), label=bquote(.(plot.subtitle)), hjust=0, vjust=1, fontface=3, colour=color.theme)
+		if(show.panel.text) g <- g + annotate("text", y=max(d[[y]]), x=min(d[[x]]), label=bquote(.(plot.subtitle)), hjust=0, vjust=1, fontface=3, colour=color.theme)
 		g <- addLogo(g, show.logo, logo.mat, show.title, main, fontsize)
 		print(g)
 }
