@@ -87,7 +87,7 @@ output$PlotTS <- renderPlot({
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
-		progress$set(message="Plotting, please wait", detail="Generating plot...", value=10)
+		progress$set(message="Generating plot...", value=10)
 		doPlot_ts(show.logo=F)
 	})
 }, height=function(){ w <- if(twoBtnNullOrZero_ts()) 0 else session$clientData$output_PlotTS_width; round((7/12)*w)	}, width="auto")
@@ -121,7 +121,7 @@ output$PlotScatter <- renderPlot({
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
-		progress$set(message="Plotting, please wait", detail="Generating plot...", value=10)
+		progress$set(message="Generating plot...", value=10)
 		doPlot_scatter(show.logo=F)
 		})
 }, height=function(){ w <- if(twoBtnNullOrZero_sc()) 0 else session$clientData$output_PlotScatter_width; w }, width="auto")
@@ -144,7 +144,7 @@ output$PlotVariability <- renderPlot({
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
-		progress$set(message="Plotting, please wait", detail="Generating plot...", value=10)
+		progress$set(message="Generating plot...", value=10)
 		doPlot_var(show.logo=F)
 		})
 }, height=function(){ w <- if(twoBtnNullOrZero_vr()) 0 else session$clientData$output_PlotVariability_width; round((7/12)*w)	}, width="auto")
@@ -167,7 +167,7 @@ output$PlotHeatmap <- renderPlot({
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
-		progress$set(message="Plotting, please wait", detail="Generating plot...", value=10)
+		progress$set(message="Generating plot...", value=10)
 		doPlot_heatmap(show.logo=F)
 		})
 }, height=function(){ w <- if(twoBtnNullOrZero_hm()) 0 else session$clientData$output_PlotHeatmap_width; round((7/12)*w)	}, width="auto")
@@ -190,7 +190,7 @@ output$PlotSpatial <- renderPlot({
 	isolate({
 		progress <- Progress$new(session, min=1, max=10)
 		on.exit(progress$close())
-		progress$set(message="Plotting, please wait", detail="Generating plot...", value=10)
+		progress$set(message="Generating plot...", value=10)
 		doPlot_spatial(show.logo=F)
 		})
 }, height=function(){ w <- if(twoBtnNullOrZero_sp()) 0 else session$clientData$output_PlotSpatial_width; round((7/12)*w)	}, width="auto")

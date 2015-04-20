@@ -132,14 +132,14 @@ dat_master <- reactive({
 		if(is.null(Months_original()) | is.null(input$vars) | is.null(scenarios()) | is.null(models_original()) | locSelected()==FALSE){
 			x <- NULL
 		} else {
-			prog_d_master$set(message="Calculating, please wait", detail="Loading GCM aggregate time series statistics...", value=1)
+			prog_d_master$set(message="Loading GCM aggregate time series statistics...", value=1)
 			if(input$loctype=="Cities" && length(input$locs_cities) && input$locs_cities[1]!="") {
 				city.ind <- which(city.names %in% Locs())
 				for(i in 1:length(city.ind)) { # still must subset city.gcm.files to specific resolution (2-km or 10-minute), and below for CRU, perhaps make a reactive variable to store the subset outside this reactive
 					load(city.gcm.files[city.ind[i]], envir=environment())
 					if(i==1) city.dat.final <- city.dat else city.dat.final <- rbind(city.dat.final, city.dat)
 				}
-				prog_d_master$set(message="Calculating, please wait", detail="Subsetting GCM time series data...", value=2.5)
+				prog_d_master$set(message="Subsetting GCM time series data...", value=2.5)
 				x <- subset(city.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Location %in% input$locs_cities)
@@ -153,7 +153,7 @@ dat_master <- reactive({
 					gcm.stats.df$Location <- reg.nam[region.ind[i]]
 					if(i==1) region.dat.final <- gcm.stats.df else region.dat.final <- rbind(region.dat.final, gcm.stats.df)
 				}
-				prog_d_master$set(message="Calculating, please wait", detail="Subsetting GCM time series data...", value=2.5)
+				prog_d_master$set(message="Subsetting GCM time series data...", value=2.5)
 				stat <- c(aggStatsID(), aggStatsID2())
 				cols.drop <- match(agg.stat.colnames[which(!(agg.stat.colnames %in% stat))], names(region.dat.final))
 				x <- subset(region.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
@@ -161,17 +161,17 @@ dat_master <- reactive({
 					Scenario %in% scenarios() & Model %in% models_original(), select=-cols.drop)
 			}
 			if(!is.null(input$months2seasons) && input$months2seasons){
-				prog_d_master$set(message="Calculating, please wait", detail="GCM time series: aggregating months...", value=4)
+				prog_d_master$set(message="GCM time series: aggregating months...", value=4)
 				x <- collapseMonths(x, aggStatsID(), as.numeric(input$n_seasons), Months_original())
 			}
 			if(!is.null(input$decades2periods) && input$decades2periods){
-				prog_d_master$set(message="Calculating, please wait", detail="GCM time series: aggregating decades...", value=6)
+				prog_d_master$set(message="GCM time series: aggregating decades...", value=6)
 				x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original())
 			}
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
 			# Otherwise compositing prohibited.
 			if(composite()==2){ # can assume both phases have multiple models, so split always works nicely
-				prog_d_master$set(message="Calculating, please wait", detail="Averaging model statistics...", value=8)
+				prog_d_master$set(message="Averaging model statistics...", value=8)
 				n <- length(input$cmip3models) # will match length(input$cmip5models)
 				x <- split(x, x$Phase)
 				x1 <- split(x[[1]], x[[1]]$Model)
@@ -190,7 +190,7 @@ dat_master <- reactive({
 					x[[stat[k]]][x$Var=="Precipitation"] <- round(x[[stat[k]]][x$Var=="Precipitation"])
 				}
 			} else if(composite()==1) {
-				prog_d_master$set(message="Calculating, please wait", detail="Averaging model statistics...", value=8)
+				prog_d_master$set(message="Averaging model statistics...", value=8)
 				if(modelScenPair1()) n <- length(input$cmip3models) else if(modelScenPair2()) n <- length(input$cmip5models)
 				x1 <- split(x, x$Model)
 				v1 <- list()
@@ -204,13 +204,13 @@ dat_master <- reactive({
 				}
 			}
 			if(input$convert_units){
-			prog_d_master$set(message="Calculating, please wait", detail="Unit conversion...", value=9)
+			prog_d_master$set(message="Unit conversion...", value=9)
 				for(k in 1:length(stat)){
 					x[[stat[k]]][x$Var=="Temperature"] <- round((9/5)*x[[stat[k]]][x$Var=="Temperature"] + 32,1)
 					x[[stat[k]]][x$Var=="Precipitation"] <- round(x[[stat[k]]][x$Var=="Precipitation"]/25.4,3)
 				}
 			}
-			prog_d_master$set(message="Calculating, please wait", detail="GCM statistics complete.", value=10)
+			prog_d_master$set(message="GCM statistics complete.", value=10)
 			rownames(x) <- NULL
 		}
 	)
@@ -273,20 +273,20 @@ dat2 <- reactive({
 
 CRU_master <- reactive({
 	if(goBtnNullOrZero()) return()
-	prog_d_cru_master <- Progress$new(session, min=1, max=10)
-	on.exit(prog_d_cru_master$close())
+	#prog_d_cru_master <- Progress$new(session, min=1, max=10)
+	#on.exit(prog_d_cru_master$close())
 	isolate(
 		if(is.null(Months_original()) | is.null(input$vars) | is.null(input$convert_units) | locSelected()==FALSE){
 			x <- NULL
 		} else {
-			prog_d_cru_master$set(message="Calculating, please wait", detail="Loading CRU 3.2 aggregate time series statistics...")
+			#prog_d_cru_master$set(message="Loading CRU 3.2 aggregate time series statistics...")
 			if(input$loctype=="Cities" && length(input$locs_cities) && input$locs_cities[1]!="") {
 				city.ind <- which(city.names %in% Locs())
 				for(i in 1:length(city.ind)) {
 					load(city.cru.files[city.ind[i]], envir=environment())
 					if(i==1) city.cru.dat.final <- city.cru.dat else city.cru.dat.final <- rbind(city.cru.dat.final, city.cru.dat)
 				}
-				prog_d_cru_master$set(message="Calculating, please wait", detail="Subsetting CRU 3.2 time series data...")
+				#prog_d_cru_master$set(message="Subsetting CRU 3.2 time series data...")
 				x <- subset(city.cru.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4))# & 
 					#Scenario %in% scenarios() & Model %in% models_original())# & Location %in% input$locs_cities)
@@ -298,7 +298,7 @@ CRU_master <- reactive({
 					load(paste0(region.cru.stats.files[[input$loctype]][region.ind[i]], "/", filename, ".RData"), envir=environment())
 					if(i==1) region.cru.dat.final <- region.cru.dat else region.cru.dat.final <- rbind(region.cru.dat.final, region.cru.dat)
 				}
-				prog_d_cru_master$set(message="Calculating, please wait", detail="Subsetting CRU 3.2 time series data...")
+				#prog_d_cru_master$set(message="Subsetting CRU 3.2 time series data...")
 				stat <- c(aggStatsID(), aggStatsID2())
 				cols.drop <- match(agg.stat.colnames[which(!(agg.stat.colnames %in% stat))], names(region.cru.dat.final))
 				x <- subset(region.cru.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
@@ -306,18 +306,18 @@ CRU_master <- reactive({
 			}
 			if(nrow(x)==0) return()
 			if(!is.null(input$months2seasons) && input$months2seasons){
-				prog_d_cru_master$set(message="Calculating, please wait", detail="CRU 3.2 time series: aggregating months...")
+				#prog_d_cru_master$set(message="CRU 3.2 time series: aggregating months...")
 				x <- collapseMonths(x, aggStatsID(), as.numeric(input$n_seasons), Months_original())
 			}
 			if(!is.null(input$decades2periods) && input$decades2periods){
-				prog_d_cru_master$set(message="Calculating, please wait", detail="CRU 3.2 time series: aggregating decades...")
+				#prog_d_cru_master$set(message="CRU 3.2 time series: aggregating decades...")
 				x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), check.years=TRUE)
 			}
 			if(is.null(x)) return()
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
 			# Otherwise compositing prohibited.
 			if(input$convert_units){
-				prog_d_cru_master$set(message="Calculating, please wait", detail="Unit conversion...")
+				#prog_d_cru_master$set(message="Unit conversion...")
 				for(k in 1:length(stat)){
 					x[[stat[k]]][x$Var=="Temperature"] <- round((9/5)*x[[stat[k]]][x$Var=="Temperature"] + 32,1)
 					x[[stat[k]]][x$Var=="Precipitation"] <- round(x[[stat[k]]][x$Var=="Precipitation"]/25.4,3)
@@ -325,7 +325,7 @@ CRU_master <- reactive({
 			}
 			rownames(x) <- NULL
 			x$Model <- x$Scenario <- x$Phase <- "CRU 3.2"
-			prog_d_cru_master$set(message="Calculating, please wait", detail="CRU 3.2 statistics complete.")
+			#prog_d_cru_master$set(message="CRU 3.2 statistics complete.")
 			x <- x[c(ncol(x) - c(2:0), 1:(ncol(x)-3))]
 		}
 	)
@@ -368,16 +368,16 @@ dat_spatial <- reactive({
 			if(input$loctype=="Cities" && length(input$locs_cities) && input$locs_cities[1]!="") { #### Deal with cities under spatial data conditions later
 				city.ind <- which(city.names %in% Locs())
 				for(i in 1:length(city.ind)) {
-					prog_d_spatial$set(message="Calculating, please wait", detail="Loading GCM spatial distributions...", value=1+2*i/length(city.ind))
+					prog_d_spatial$set(message="Loading GCM spatial distributions...", value=1+2*i/length(city.ind))
 					load(city.gcm.files[city.ind[i]], envir=environment())
 					if(i==1) city.dat.final <- city.dat else city.dat.final <- rbind(city.dat.final, city.dat)
 				}
-				prog_d_spatial$set(message="Calculating, please wait", detail="Subsetting GCM spatial samples...", value=4)
+				prog_d_spatial$set(message="Subsetting GCM spatial samples...", value=4)
 				x <- subset(city.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original() & Location %in% input$locs_cities)
 			} else if(input$loctype!="Cities"){ #### Regions: only this is under development for now
-				prog_d_spatial$set(message="Calculating, please wait", detail="Loading and subsetting GCM spatial samples...", value=1)
+				prog_d_spatial$set(message="GCM spatial samples...", value=1)
 				reg.nam <- sort(region.names.out[[input$loctype]])
 				region.ind <- which(reg.nam %in% Locs())
 				rsd.list <- vector("list", length(region.ind))
@@ -428,21 +428,21 @@ dat_spatial <- reactive({
 				rm(rsd.list, rsd, rsd.h)
 				gc()
 			}
-			prog_d_spatial$set(message="Calculating, please wait", detail="GCM bootstrap resampling...", value=5)
+			prog_d_spatial$set(message="Bootstrap resampling...", value=5)
 			rnd <- if(input$vars[1]=="Precipitation") 0 else 1
 			x <- density2bootstrap(x, n.density=n.samples, n.boot=10000, interp=TRUE, n.interp=1000, digits=rnd) # n.boot and n.interp values tentative
 			if(!is.null(input$months2seasons) && input$months2seasons){
-				prog_d_spatial$set(message="Calculating, please wait", detail="GCM spatial distributions: aggregating months...", value=6)
+				prog_d_spatial$set(message="Aggregating months...", value=6)
 				x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=1000)
 			}
 			if(!is.null(input$decades2periods) && input$decades2periods){
-				prog_d_spatial$set(message="Calculating, please wait", detail="GCM spatial distributions: aggregating decades...", value=7)
+				prog_d_spatial$set(message="Aggregating decades...", value=7)
 				x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), n.samples=1000)
 			}
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
 			# Otherwise compositing prohibited.
 			if(composite()==2){ # can assume both phases have multiple models, so split always works nicely
-				prog_d_spatial$set(message="Calculating, please wait", detail="Averaging model samples...", value=7.5)
+				prog_d_spatial$set(message="Averaging samples...", value=7.5)
 				n <- length(input$cmip3models) # will match length(input$cmip5models)
 				x <- split(x, x$Phase)
 				x1 <- split(x[[1]], x[[1]]$Model)
@@ -456,7 +456,7 @@ dat_spatial <- reactive({
 				x$Val[x$Var=="Temperature"] <- round(x$Val[x$Var=="Temperature"],1)
 				x$Val[x$Var=="Precipitation"] <- round(x$Val[x$Var=="Precipitation"])
 			} else if(composite()==1) {
-				prog_d_spatial$set(message="Calculating, please wait", detail="Averaging model samples...", value=8.5)
+				prog_d_spatial$set(message="Averaging samples...", value=8.5)
 				if(modelScenPair1()) n <- length(input$cmip3models) else if(modelScenPair2()) n <- length(input$cmip5models)
 				x1 <- split(x, x$Model)
 				v1 <- Reduce("+", lapply( x1, "[", c("Val") ))[,1]/n
@@ -467,11 +467,11 @@ dat_spatial <- reactive({
 				x$Val[x$Var=="Precipitation"] <- round(x$Val[x$Var=="Precipitation"])
 			}
 			if(input$convert_units){
-				prog_d_spatial$set(message="Calculating, please wait", detail="Unit conversion...", value=9.5)
+				prog_d_spatial$set(message="Unit conversion...", value=9.5)
 				x$Val[x$Var=="Temperature"] <- round((9/5)*x$Val[x$Var=="Temperature"] + 32,1)
 				x$Val[x$Var=="Precipitation"] <- round(x$Val[x$Var=="Precipitation"]/25.4,3)
 			}
-			prog_d_spatial$set(message="Calculating, please wait", detail="GCM distributions complete.", value=10)
+			prog_d_spatial$set(message="GCM distributions complete.", value=10)
 			rownames(x) <- NULL
 		}
 	)
@@ -480,13 +480,13 @@ dat_spatial <- reactive({
 
 CRU_spatial <- reactive({ #### All CRU datasets require recoding for externalization
 	if(goBtnNullOrZero()) return()
-	prog_d_cru_spatial <- Progress$new(session, min=1, max=10)
-	on.exit(prog_d_cru_spatial$close())
+	#prog_d_cru_spatial <- Progress$new(session, min=1, max=10)
+	#on.exit(prog_d_cru_spatial$close())
 	isolate(
 		if(is.null(Months_original()) | is.null(input$vars) | is.null(input$convert_units) | locSelected()==FALSE){
 			x <- NULL
 		} else {
-			prog_d_cru_spatial$set(message="Calculating, please wait", detail="Subsetting CRU 3.2 spatial distributions...", value=1)
+			#prog_d_cru_spatial$set(message="Subsetting CRU 3.2 spatial distributions...", value=1)
 			if(input$loctype=="Cities" && length(input$locs_cities) && input$locs_cities[1]!="") {
 				x <- subset(d.cities.cru31, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & Location %in% input$locs_cities)
@@ -505,27 +505,27 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 			}
 			if(nrow(x)==0) return()
 			rnd <- if(input$vars[1]=="Precipitation") 0 else 1
-			prog_d_cru_spatial$set(message="Calculating, please wait", detail="CRU 3.2 bootstrap resampling...", value=3)
+			#prog_d_cru_spatial$set(message="CRU 3.2 bootstrap resampling...", value=3)
 			x <- density2bootstrap(x, n.density=n.samples, n.boot=10000, interp=TRUE, n.interp=1000, digits=rnd) # n.boot and n.interp values tentative
 			if(!is.null(input$months2seasons) && input$months2seasons){
-				prog_d_cru_spatial$set(message="Calculating, please wait", detail="CRU 3.2 spatial distributions: aggregating months...", value=7)
+				#prog_d_cru_spatial$set(message="CRU 3.2 spatial distributions: aggregating months...", value=7)
 				x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=1000)
 			}
 			if(!is.null(input$decades2periods) && input$decades2periods){
-				prog_d_cru_spatial$set(message="Calculating, please wait", detail="CRU 3.2 spatial distributions: aggregating decades...", value=8)
+				#prog_d_cru_spatial$set(message="CRU 3.2 spatial distributions: aggregating decades...", value=8)
 				x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), check.years=TRUE, n.samples=1000)
 			}
 			if(is.null(x)) return()
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
 			# Otherwise compositing prohibited.
 			if(input$convert_units){
-				prog_d_cru_spatial$set(message="Calculating, please wait", detail="Unit conversion...", value=9)
+				#prog_d_cru_spatial$set(message="Unit conversion...", value=9)
 				x$Val[x$Var=="Temperature"] <- round((9/5)*x$Val[x$Var=="Temperature"] + 32,1)
 				x$Val[x$Var=="Precipitation"] <- round(x$Val[x$Var=="Precipitation"]/25.4,3)
 			}
 			rownames(x) <- NULL
 			x$Model <- x$Scenario <- x$Phase <- "CRU 3.2"
-			prog_d_cru_spatial$set(message="Calculating, please wait", detail="CRU 3.2 distributions complete.", value=10)
+			#prog_d_cru_spatial$set(message="CRU 3.2 distributions complete.", value=10)
 			x <- x[c(ncol(x) - c(2:0), 1:(ncol(x)-3))]
 		}
 	)
