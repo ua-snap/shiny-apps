@@ -65,8 +65,8 @@ but that has nothing to do with what this app does with the data provided to it.
 This is not your grandma's R Shiny app. So let's start simple.
 
 #### Navigation Bar
-The navigation bar at the top has the typical `Home` tab, followed by a tab for each type of plot available in the app, labelled
-`Time Series`, `Scatter Plot`, `Heat Map`, and `Variability`, and finally an `About` tab.
+The navigation bar at the top has the typical `Home` tab, followed by a tab for each type of plot available in the app, labeled
+`Time Series`, `Scatter Plot`, `Heat Map`, and `Variability`, `Spatial Distributions`, and finally an `About` tab.
 The tabs which have to do with the actual graphical EDA are split into left and right panels.
 Data selection and plot formatting occurs on the left. Graphs and tables appear on the right.
 
