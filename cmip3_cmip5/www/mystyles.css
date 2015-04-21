@@ -10,3 +10,13 @@ body {
   background-color: #ff8800;
   opacity: 1.0;
 }
+
+/* Workaround for Qt, which doesn't use font fallbacks */
+code {
+  background-color: #000000;
+  color: #ff8800;
+}
+
+p {
+  text-align: justify;
+}
