@@ -7,7 +7,7 @@ shinyUI(fluidPage(
 	tags$head(tags$link(rel="stylesheet", type="text/css", href="mystyles.css")),
 	navbarPage(
 		title=div(a(img(src="./img/SNAP_acronym_100px.png", width="50%"), "", href="http://snap.uaf.edu", target="_blank")),
-		tabPanel("Home", h4("Alaska and western Canada downscaled CMIP3/CMIP5 GCM comparison"), value="home"),
+		tabPanel("Home", includeMarkdown("www/home.md"), value="home"),
 		tabPanel("Time Series", value="plot_ts"),
 		tabPanel("Scatter Plot", value="plot_scatter"),
 		tabPanel("Heat Map", value="plot_heatmap"),
