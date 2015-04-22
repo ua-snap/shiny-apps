@@ -11,7 +11,10 @@ RCPLabel <- reactive({ switch(input$rcp, "r45"="Low-Range Emissions (RCP 4.5)", 
 FreezePoint <- reactive({ ifelse(input$units=="Fin", 32, 0) })
 Thresh <- reactive({ ifelse(input$variable=="Precipitation", 0, FreezePoint()) })
 Unit <- reactive({ if(input$variable=="Temperature") paste0("°", substr(input$units, 1, 1)) else substr(input$units, 2, 3) })
-PRISM <- reactive({ if(input$variable=="Temperature") return(prism.t[prism.cities==input$location,]) else return(prism.p[prism.cities==input$location,]) })
+PRISM <- reactive({
+	x <- input$location
+	if(substr(x, nchar(x)-2, nchar(x))=="NWT") return(NULL)
+	if(input$variable=="Temperature") return(prism.t[prism.cities==x,]) else return(prism.p[prism.cities==x,]) })
 
 CRU <- reactive({ if(input$res=="10min") d.cru32.10min else d.cru32.2km })
 CRU_loc <- reactive({ subset(CRU(), Location==input$location) })
@@ -32,6 +35,7 @@ d3_scen <- reactive({
 	if(is.null(d2_var())) return(NULL)
 	x <- subset(d2_var(), Scenario==substr(RCPLabel(), nchar(RCPLabel())-7, nchar(RCPLabel())-1))
 	if(input$baseline=="PRISM"){
+		if(is.null(PRISM())) return(NULL)
 		gap <- if(input$errtype=="sd") min(x$SD)/5 else min(x$SD)/2
 		x <- rbind(x[1:12,], x)
 		x$Decade[1:12] <- "1961-1990"
@@ -49,6 +53,7 @@ d3_scen <- reactive({
 })
 d4_dec <- reactive({ if(is.null(d3_scen())) NULL else subset(d3_scen(), Decade %in% Dec()) })
 
+output$NoPRISM <- renderUI({ if(is.null(PRISM())) h4(paste("PRISM baseline period not available for", input$location)) })
 output$No2km <- renderUI({ if(input$location!="" & input$res=="2km" & NoData()) h4(paste("2-km resolution data not available for", input$location)) })
 output$No10min <- renderUI({ if(input$location!="" & input$res=="10min" & NoData()) h4(paste("10-minute resolution data not available for", input$location)) })
 

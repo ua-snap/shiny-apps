@@ -29,6 +29,7 @@ shinyUI(navbarPage(theme=shinytheme("cerulean"),
 	column(8,
 		conditionalPanel("input.res=='2km'", uiOutput("No2km")),
 		conditionalPanel("input.res=='10min'", uiOutput("No10min")),
+		conditionalPanel("input.baseline=='PRISM'", uiOutput("NoPRISM")),
 		showOutput("Chart1", "highcharts")
 	)
 	)
