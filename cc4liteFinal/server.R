@@ -16,7 +16,12 @@ CRU_var <- reactive({ subset(CRU_loc(), Var==input$variable) })
 
 d0 <- reactive({
 	if(input$variable=="Temperature" | input$variable=="Precipitation" ){
-		if(!exists("d")) load(paste0("cc4lite_2km_plus_NWT10min.RData"), envir=.GlobalEnv)
+		if(!exists("d")){
+			prog <- Progress$new(session, min=0, max=1)
+			on.exit(prog$close())
+			prog$set(message="Loading data...", value=1)
+			load(paste0("cc4lite_2km_plus_NWT10min.RData"), envir=.GlobalEnv)
+		}
 		return(d)
 	}
 })
