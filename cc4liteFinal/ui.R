@@ -5,7 +5,7 @@ shinyUI(navbarPage(theme=shinytheme("cerulean"),
 	windowTitle="CC4L Gamma",
 	collapsible=TRUE,
 	id="tsp",
-	
+	tags$head(tags$link(rel="stylesheet", type="text/css", href="styles.css")),
 	h4("Community Charts v4 Lite [Gamma]"),
 	conditionalPanel("input.tsp=='commChart'",
 	fluidRow(
