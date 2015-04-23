@@ -20,12 +20,12 @@ column(4,
 			),
 			checkboxInput("convert_units", "Convert units to F, in", FALSE),
 			fluidRow(
-				column(6, selectInput("cmip3scens", "CMIP3 emissions scenarios:", choices=c("", scennames[[1]]), selected="", multiple=T, width="100%")),
-				column(6, selectInput("cmip5scens", "CMIP5 emissions scenarios:", choices=c("", scennames[[2]]), selected="", multiple=T, width="100%"))
+				column(6, selectInput("cmip3scens", "AR4 emissions scenarios:", choices=c("", scennames[[1]]), selected="", multiple=T, width="100%")),
+				column(6, selectInput("cmip5scens", "AR5 emissions scenarios:", choices=c("", scennames[[2]]), selected="", multiple=T, width="100%"))
 			),
 			fluidRow(
-				column(6, selectInput("cmip3models", "CMIP3 climate models:", choices=c("", modnames[[1]]), selected="", multiple=T, width="100%")),
-				column(6, selectInput("cmip5models", "CMIP5 climate models:", choices=c("", modnames[[2]]), selected="", multiple=T, width="100%"))
+				column(6, selectInput("cmip3models", "AR4 climate models:", choices=c("", modnames[[1]]), selected="", multiple=T, width="100%")),
+				column(6, selectInput("cmip5models", "AR5 climate models:", choices=c("", modnames[[2]]), selected="", multiple=T, width="100%"))
 			),
 			fluidRow(
 				column(12, checkboxInput("compositeModel", "Make composite(s) of selected models", FALSE))

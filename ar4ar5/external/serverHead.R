@@ -263,7 +263,7 @@ getPooledVars <- function(inx, iny=NULL, ingrp=NULL, infct, grp.fct.choices=NULL
 	} else return()
 }
 
-getPlotSubTitle <- function(pooled, yrs, mos, mod, scen, phase=c("CMIP3", "CMIP5"), loc){
+getPlotSubTitle <- function(pooled, yrs, mos, mod, scen, phase=c("AR4", "AR5"), loc){
 	if(!length(mos)) mos <- "Jan - Dec"
 	yrs.lab <- ifelse("Year" %in% pooled, paste("Years: ", paste(yrs[1], "-", tail(yrs,1)), "\n", collapse=""), "")
 	mos.lab <- ifelse("Month" %in% pooled, paste("Months: ", paste(mos, collapse=", "), "\n", collapse=""), "")
@@ -276,7 +276,7 @@ getPlotSubTitle <- function(pooled, yrs, mos, mod, scen, phase=c("CMIP3", "CMIP5
 	x
 }
 
-getPlotTitle <- function(grp, facet, pooled, yrs, mos, mod, scen, phase=c("CMIP3", "CMIP5"), loc){
+getPlotTitle <- function(grp, facet, pooled, yrs, mos, mod, scen, phase=c("AR4", "AR5"), loc){
 	gfp <- c(grp, facet, pooled)
 	if(!length(mos)) mos <- "Jan - Dec"
 	yrs.lab <- ifelse("Year" %in% gfp, "", paste(yrs[1], "-", tail(yrs,1)))
