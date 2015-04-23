@@ -93,7 +93,7 @@ density2bootstrap <- function(d, n.density, n.boot=10000, interp=FALSE, n.interp
 	n.fact <- n.boot/n.density
 	n.grp <- nrow(d)/n.density
 	d$Index <- rep(1:n.grp, each=n.density)
-	d2 <- data.frame(lapply(d, rep, n.fact), stringsAsFactors=FALSE)
+	d2 <- data.frame(lapply(d, rep, length=n.fact*nrow(d)), stringsAsFactors=FALSE)
 	prob.col <- which(names(d2) %in% c("Prob","Index"))
 	d2 <- d2[order(d2$Index), -prob.col]
 	d2$Val <- as.numeric(vapply(X=1:n.grp,
