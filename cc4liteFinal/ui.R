@@ -18,7 +18,10 @@ shinyUI(navbarPage(theme=shinytheme("cerulean"),
 		bsButtonGroup("rcp", label="Emissions", toggle="radio", value="r60", style="primary", size="small", block=T,
 			bsButton("btn_r45", label="Low (RCP 4.5)", value="r45"), bsButton("btn_r60", label="Medium (RCP 6.0)", value="r60"), bsButton("btn_r85", label="High (RCP 8.5)", value="r85"))
 	)),
-	column(8, showOutput("Chart1", "highcharts"))
+	column(8,
+		showOutput("Chart1", "highcharts"),
+		HTML('<style>.rChart {width: 100%; height: "auto"}</style>')
+	)
 	)
 	),
 	conditionalPanel("input.tsp=='about'", source("about.R",local=T)$value)

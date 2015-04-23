@@ -54,7 +54,8 @@ output$Chart1 <- renderChart2({
 		return(NULL)
 	})
 	p$exporting(enabled=F, scale=4)
-	p$chart(width=1000, height=600)
+	p$set(height=600)
+	#p$chart(width=1000, height=600)
 	p
 })
 
