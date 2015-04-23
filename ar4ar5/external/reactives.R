@@ -181,8 +181,8 @@ dat_master <- reactive({
 					v1[[k]] <- Reduce("+", lapply( x1, "[", stat[k] ))[,1]/n
 					v2[[k]] <- Reduce("+", lapply( x2, "[", stat[k] ))[,1]/n
 				}
-				x1[[1]]$Model <- paste0("CMIP3 ",n,"-Model Avg")
-				x2[[1]]$Model <- paste0("CMIP5 ",n,"-Model Avg")
+				x1[[1]]$Model <- paste0("AR4 ",n,"-Model Avg")
+				x2[[1]]$Model <- paste0("AR5 ",n,"-Model Avg")
 				x <- rbind(x1[[1]], x2[[1]])
 				for(k in 1:length(stat)){
 					x[[stat[k]]] <- c(v1[[k]],v2[[k]])
@@ -396,6 +396,7 @@ dat_spatial <- reactive({
 								load(file.path(locDir, var.files[zzz]), envir=environment()) # Historical df loaded first (*alphabetical*)
 								if(zzz==1){
 									rsd.h <- subset(rsd.h, Month %in% month.abb[match(Months_original(), month.abb)] & Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4))
+									rsd.h <- data.frame(rsd.h)
 									if(nrow(rsd.h) > 0) rsd.h[,samples.columns] <- rsd.h[,samples.columns]/rep(samples.multipliers, each=nrow(rsd.h))
 								}
 								if(zzz > 1){
@@ -406,6 +407,7 @@ dat_spatial <- reactive({
 									}
 									rsd <- subset(rsd, Month %in% month.abb[match(Months_original(), month.abb)] & Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4))
 									if(nrow(rsd.h) > 0 & nrow(rsd) > 0){
+										rsd <- data.frame(rsd)
 										rsd[,samples.columns] <- rsd[,samples.columns]/rep(samples.multipliers, each=nrow(rsd))
 										rsd.list3[[zzz-1]] <- rbind(rsd.h, rsd)
 									} else if(nrow(rsd.h) > 0) {
@@ -449,8 +451,8 @@ dat_spatial <- reactive({
 				x2 <- split(x[[2]], x[[2]]$Model)
 				v1 <- Reduce("+", lapply( x1, "[", c("Val") ))[,1]/n #### Compositing definitely will not work with samples as defined (Should I produce new samples and dispense with Prob column here?)
 				v2 <- Reduce("+", lapply( x2, "[", c("Val") ))[,1]/n #### See code snippet at top of spatial plot script for possibly early integration of bootstrap resampling.
-				x1[[1]]$Model <- paste0("CMIP3 ",n,"-Model Avg") #### Probably also better to integrate here because it removes data manip from plotting stage and also offers user a more useful dataset to download
-				x2[[1]]$Model <- paste0("CMIP5 ",n,"-Model Avg")
+				x1[[1]]$Model <- paste0("AR4 ",n,"-Model Avg") #### Probably also better to integrate here because it removes data manip from plotting stage and also offers user a more useful dataset to download
+				x2[[1]]$Model <- paste0("AR5 ",n,"-Model Avg")
 				x <- rbind(x1[[1]], x2[[1]])
 				x$Val <- c(v1,v2)
 				x$Val[x$Var=="Temperature"] <- round(x$Val[x$Var=="Temperature"],1)
