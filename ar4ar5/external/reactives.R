@@ -118,6 +118,12 @@ aggStatsID2 <- reactive({
 	agg.stat.colnames[which(agg.stat.names==input$aggStats2)]
 })
 
+BootSamples <- reactive({
+	x <- as.numeric(input$bootSamples)
+	if(is.na(x) || x > 10000) x <- 50
+	x
+})
+
 Locs <- reactive({ if(is.null(input$loctype) || input$loctype!="Cities")  input$locs_regions else if(input$loctype=="Cities") input$locs_cities else NULL })
 regionSelected <- reactive({ input$loctype!="Cities" & length(Locs())  })
 citySelected <- reactive({ input$loctype=="Cities" & length(Locs()) })
@@ -126,7 +132,7 @@ locSelected <- reactive({ length(Locs()) })
 # Initially retain all climate variables regardless of user's selection
 dat_master <- reactive({
 	if(goBtnNullOrZero()) return()
-	prog_d_master <- Progress$new(session, min=0, max=7)
+	prog_d_master <- Progress$new(session, min=0, max=10)
 	on.exit(prog_d_master$close())
 	isolate(
 		if(is.null(Months_original()) | is.null(input$vars) | is.null(scenarios()) | is.null(models_original()) | locSelected()==FALSE){
@@ -359,7 +365,7 @@ CRU2 <- reactive({
 # Keep first climate variables only
 dat_spatial <- reactive({
 	if(goBtnNullOrZero()) return()
-	prog_d_spatial <- Progress$new(session, min=1, max=10)
+	prog_d_spatial <- Progress$new(session, min=0, max=10)
 	on.exit(prog_d_spatial$close())
 	isolate(
 		if(is.null(Months_original()) | is.null(input$vars) | is.null(scenarios()) | is.null(models_original()) | locSelected()==FALSE){
@@ -432,7 +438,7 @@ dat_spatial <- reactive({
 			}
 			prog_d_spatial$set(message="Bootstrap resampling...", value=5)
 			rnd <- if(input$vars[1]=="Precipitation") 0 else 1
-			x <- density2bootstrap(x, n.density=n.samples, n.boot=10000, interp=TRUE, n.interp=1000, digits=rnd) # n.boot and n.interp values tentative
+			x <- density2bootstrap(x, n.density=n.samples, n.boot=BootSamples(), interp=TRUE, n.interp=1000, digits=rnd) # n.boot and n.interp values tentative
 			if(!is.null(input$months2seasons) && input$months2seasons){
 				prog_d_spatial$set(message="Aggregating months...", value=6)
 				x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=1000)
@@ -508,7 +514,7 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 			if(nrow(x)==0) return()
 			rnd <- if(input$vars[1]=="Precipitation") 0 else 1
 			#prog_d_cru_spatial$set(message="CRU 3.2 bootstrap resampling...", value=3)
-			x <- density2bootstrap(x, n.density=n.samples, n.boot=10000, interp=TRUE, n.interp=1000, digits=rnd) # n.boot and n.interp values tentative
+			x <- density2bootstrap(x, n.density=n.samples, n.boot=BootSamples(), interp=TRUE, n.interp=1000, digits=rnd) # n.boot and n.interp values tentative
 			if(!is.null(input$months2seasons) && input$months2seasons){
 				#prog_d_cru_spatial$set(message="CRU 3.2 spatial distributions: aggregating months...", value=7)
 				x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=1000)
