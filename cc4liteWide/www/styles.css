@@ -1,0 +1,8 @@
+.shiny-progress .progress {
+  height: 12px;
+}
+
+.shiny-progress .bar {
+  background-color: #9933cc;
+  opacity: 1.0;
+}
