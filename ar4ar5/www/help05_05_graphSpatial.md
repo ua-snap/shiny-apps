@@ -1,4 +1,4 @@
-### Graphing: Spatial Distributions <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotSP_example_1_black.png" width="1000"/>
+### Graphing: Spatial Distributions <img style="float: right; padding-left: 10px; padding-right: 10px" src="img/plotSP_example_1_black.png" width="1000"/>
 This group of plots is characteristically different from all previous plots which describe spatially aggregated data through time.
 The distributions plots show how data vary across space by way of histograms, density curves, and stripcharts (using boxplots and/or points).
 Similar to the variability plots, several options change dynamically based on the subtype of plot selected.

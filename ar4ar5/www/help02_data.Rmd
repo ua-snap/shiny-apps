@@ -1,4 +1,4 @@
-### Working with Data <img style="float: right" src="screenshots/dataSelectionPanel.png"/>
+### Working with Data <img style="float: right" src="img/dataSelectionPanel.png"/>
 Returning to the data selection panel, how do we use it?
 
 #### Variables
@@ -87,7 +87,7 @@ Also at this time,  now that the data subset is available, the plot options pane
 The data selection panel not being needed any longer, automatically minimizes, and this makes more room for the plot options panel and helps to keep it alongside the plot.
 The user can expand the data selection panel and make changes to their data at any time.
 
-#### Data Tables <img style="float: right" src="screenshots/dataTable.png"/>
+#### Data Tables <img style="float: right" src="img/dataTable.png"/>
 The data tables do not offer much direct use.
 They are also not very exciting when juxtaposed with aesthetically pleasing graphics that can also be remade in novel, seemingly endless, ways.
 One could argue that they are simply in the way.

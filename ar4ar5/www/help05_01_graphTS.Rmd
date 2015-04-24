@@ -1,4 +1,4 @@
-### Graphing: Time Series Plots <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotTS_example_1_black.png" width="1000"/>
+### Graphing: Time Series Plots <img style="float: right; padding-left: 10px; padding-right: 10px" src="img/plotTS_example_1_black.png" width="1000"/>
 There are five classes of plots available: `Time Series Plots`, `Scatter Plots`, `Heat Maps` assorted plots more specifically designed for looking at `Variability`, and `Distributions`.
 These classes are not mutually exclusive. For instance, it is easy enough on the `Variability` plot tab for the user to select plot options to generate a time series plot
 that specifically highlights variability through time, in ways not fully available on the general `Time Series` plot tab.
@@ -50,7 +50,7 @@ Just below the x-axis, grouping, and faceting menus text will appear to help the
 
 #### Checkbox Options
 Each plot type offers a number of additional options.
-The first few options, `Title`, `Panel text`, and `Show CRU 3.1` are common available for all plots.
+The first few options, `Title`, `Panel text`, and `Show CRU 3.2` are common available for all plots.
 When checked, the plot displays with a title, any in-panel text annotations (if applicable to the plot and/or data), and includes CRU data, respectively.
 
 Next are the `Show points`, `Jitter points`, and `Show lines` checkboxes. Showing points and lines is clear.

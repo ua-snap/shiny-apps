@@ -1,4 +1,4 @@
-### Graphing: Heat Maps <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotHM_example_1_black.png" width="1000"/>
+### Graphing: Heat Maps <img style="float: right; padding-left: 10px; padding-right: 10px" src="img/plotHM_example_1_black.png" width="1000"/>
 Heat maps are multivariate (X, Y, and Z).
 You can think of them as univariate like the time series plots in that you can plot one numeric variable (vs. a fixed index such as time), its intensity shown be cell color,
 and as opposed to the bivariate scatter plot which plots two numeric variables against one another.
@@ -28,7 +28,7 @@ If not careful, it is easy to neglect altogether that there are two characterist
 
 #### Checkbox Options
 Options unique to the heat map include forcing a 1:1 aspect ratio, reversing the color gradient, and displaying values inside cells.
-The `Show CRU 3.1` checkbox integrates CRU into any GCMs already selected.
+The `Show CRU 3.2` checkbox integrates CRU into any GCMs already selected.
 This is not very useful and generally not advisable unless faceting by model in which CRU data appears it its own panel.
 
 Other options are similar to those found in other plots.
