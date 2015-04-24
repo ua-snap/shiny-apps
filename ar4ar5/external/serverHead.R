@@ -1,30 +1,6 @@
 library(shiny)
 library(Hmisc); library(png); library(RColorBrewer); library(ggplot2); library(plyr); library(reshape2); library(data.table); library(gridExtra)
 
-#library(leaflet)
-#library(maps)
-
-#load("external/data.RData",envir=.GlobalEnv)
-#load("external/data_CRU31.RData", envir=.GlobalEnv)
-############################## TESTING
-#load("external/data_cities.RData", envir=.GlobalEnv)
-#load("external/data_cities_CRU31.RData", envir=.GlobalEnv)
-
-# From a future version of Shiny
-bindEvent <- function(eventExpr, callback, env=parent.frame(), quoted=FALSE) {
-  eventFunc <- exprToFunction(eventExpr, env, quoted)
-  
-  initialized <- FALSE
-  invisible(observe({
-    eventVal <- eventFunc()
-    if (!initialized)
-      initialized <<- TRUE
-    else
-      isolate(callback())
-  }))
-}
-
-##############################
 theme_black=function(base_size=12,base_family="") {
   theme_grey(base_size=base_size,base_family=base_family) %+replace%
     theme(
@@ -122,12 +98,8 @@ collapseMonths <- function(d, variable, n.s, mos, n.samples=1){
 	p <- length(mos)/n.s
 	ind.keep <- rep(seq(1, nrx, by=p*n.samples), each=n.samples) + 0:(n.samples-1)
 	m <- length(ind.keep)
-	#print(paste("input nrow(d) =", nrx))
-	#print(paste("length(ind.keep) =", m))
 	id.seasons <- sapply(split(mos, rep(1:n.s, each=p)), function(x) paste(c(x[1], tail(x,1)), collapse="-"))
 	id.seasons <- rep(rep(factor(id.seasons, levels=id.seasons), each=n.samples) , length=m)
-	#print(paste("p =",p))
-	#print(paste("n.samples =",n.samples))
 	v <- list()
 	for(k in 1:length(variable)){
 		if(n.samples>1) v[[k]] <- round(unlist(tapply(d[[variable[k]]], rep(1:(nrx/(p*n.samples)), each=p*n.samples), FUN=function(x, nc) rowMeans(matrix(x, ncol=nc)), nc=p)), 1)
@@ -139,8 +111,6 @@ collapseMonths <- function(d, variable, n.s, mos, n.samples=1){
 		d[[variable[k]]] <- v[[k]]
 		if(any(d$Var=="Precipitation")) d[[variable[k]]][d$Var=="Precipitation"] <- round(p*d[[variable[k]]][d$Var=="Precipitation"])
 	}
-	#print(paste("length(v) =", length(v)))
-	#print(paste("output nrow(d) =", nrow(d)))
 	d
 }
 
@@ -283,7 +253,6 @@ getPlotTitle <- function(grp, facet, pooled, yrs, mos, mod, scen, phase=c("AR4",
 	mos.lab <- ifelse("Month" %in% gfp, "", paste(mos, collapse=", "))
 	mod.lab <- ifelse("Model" %in% gfp, "", paste(mod, collapse=", "))
 	scen.lab <- ifelse("Scenario" %in% gfp, "", paste(scen, collapse=", "))
-	#phase.lab <- ifelse("Phase" %in% gfp, "", paste(phase, collapse=", "))
 	loc.lab <- ifelse("Location" %in% gfp, "", paste(loc, collapse=", "))
 	x <- paste(loc.lab, scen.lab, mod.lab, mos.lab, yrs.lab)
 	x

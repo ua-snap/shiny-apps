@@ -1,5 +1,4 @@
-# x-axis variable (TS plot, Variability plot), x/y axes variables (scatter plot), grouping variable, faceting variable
-# x and y variables have no reactive dependencies for plot tabs 1 and 2, see sidebar.R
+
 output$ShowPlotOptionsPanel <- reactive({
 	if(goBtnNullOrZero()) return()
 	isolate({
