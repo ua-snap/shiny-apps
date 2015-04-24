@@ -1,7 +1,7 @@
 # Source reactive expressions and other code
 source("external/reactives.R",local=T) # source reactive expressions
 source("external/io_sidebar.R",local=T) # source input/output objects associated with sidebar
-source("external/io_mainPanel.R",local=T) # source input/output objects associated with mainPanel
+source("external/io_main.R",local=T) # source input/output objects associated with mainPanel
 
 tsPlot <- source("external/plot_ts.R",local=T)$value
 scatterPlot <- source("external/plot_scatter.R",local=T)$value
@@ -206,64 +206,3 @@ output$dlCurPlotSpatial <- downloadHandler(
 output$dlCurTableSpatial <- downloadHandler(
 	filename=function(){ 'spatial_data.csv' }, content=function(file){ write.csv(dat_spatial(), file) }
 )
-
-############################## Leaflet testing
-# Create the map; this is not the "real" map, but rather a proxy
-# object that lets us control the leaflet map on the page.
-#map <- createLeafletMap(session, 'map')
-
-#observe({
-#	if(is.null(input$map_click)) return()
-#	selectedCity <<- NULL
-#})
-
-#radiusFactor <- 1000
-#observe({
-#	map$clearShapes()
-#	cities <- topCitiesInBounds()
-#	if(nrow(cities) == 0) return()
-
-#	map$addCircle(
-#		cities$Lat,
-#		cities$Lon,
-#		sqrt(cities$Population)*radiusFactor/max(5, input$map_zoom)^2,
-#		cities$Location,
-#		list(weight=1.2, fill=TRUE, color='#8B008B')
-#	)
-#})
-
-#observe({
-#	event <- input$map_shape_click
-#	if(is.null(event)) return()
-#	map$clearPopups()
-    
-#	isolate({
-#		cities <- topCitiesInBounds()
-#		city <- cities[cities$Location == event$id,]
-#		selectedCity <<- city
-#		content <- as.character(tagList(
-#			tags$strong(city$Location),
-#			tags$br(),
-#			sprintf("Estimated population, %s:", 2010), #2010?
-#			tags$br(),
-#			prettyNum(city$Population, big.mark=',')
-#		))
-#		map$showPopup(event$lat, event$lng, content, event$id)
-#	})
-#})
-
-#output$desc <- reactive({
-#	if(is.null(input$map_bounds)) return(list())
-#	list(
-#		lat=mean(c(input$map_bounds$north, input$map_bounds$south)),
-#		lng=mean(c(input$map_bounds$east, input$map_bounds$west)),
-#		shownCities=nrow(topCitiesInBounds()),
-#		totalCities=nrow(citiesInBounds())
-#	)
-#})
-
-#output$citydata <- renderTable({
-#	if(nrow(topCitiesInBounds()) == 0) return(NULL)
-#	topCitiesInBounds()
-#}, include.rownames = FALSE)
-###################################################
