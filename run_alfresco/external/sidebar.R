@@ -12,9 +12,8 @@ column(4,
 				#column(1, helpPopup('Enter additional email addresses','Results from the Alfresco run will be emailed to each address. For the time being, you must separate each email address with a comma and/or space.'))
 			),
 			fluidRow(
-				column(6, selectInput("json_files", "Select JSON:", c("", JSON_files), "", width="100%")),
-				column(6, selectInput("mapset", "Map set",
-					c("3-GBM base 1901-2009", "5-GBM base 1901-2009", "3-GBM base 1901-1949", "5-GBM base 1901-1949", "3-GBM base 1950-2009", "5-GBM base 1950-2009"), ""))#,
+				column(6, selectInput("json_files", "Select JSON:", c("", JSON_files), width="100%")),
+				column(6, selectInput("mapset", "Map set", c("3-GBM base 1950-2009", "5-GBM base 1950-2009")))#,
 				#column(1, helpPopup('Choose .fif','Select a FIF from the list to use in your Alfresco run.'))
 			),
 			checkboxInput("useMultipliers", "Use time series scalar coefficients", TRUE),
