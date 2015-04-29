@@ -1,3 +1,4 @@
+# @knitr sidebar
 column(4,
 	#### Data selection panel
 	conditionalPanel(condition="input.tsp == 'plot_heatmap' || input.tsp == 'plot_ts' || input.tsp == 'plot_scatter' || input.tsp == 'plot_variability' || input.tsp == 'plot_spatial'",

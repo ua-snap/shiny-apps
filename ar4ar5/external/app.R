@@ -1,3 +1,4 @@
+# @knitr app_source
 # Source reactive expressions and other code
 source("external/reactives.R",local=T) # source reactive expressions
 source("external/io_sidebar.R",local=T) # source input/output objects associated with sidebar
@@ -9,6 +10,7 @@ varPlot <- source("external/plot_variability.R",local=T)$value
 heatPlot <- source("external/plot_heatmap.R",local=T)$value
 spatialPlot <- source("external/plot_spatial.R",local=T)$value
 
+# @knitr app_plotts
 # Specific plot function setup
 doPlot_ts <- function(...){
 	if(permitPlot() & !is.null(input$group)){
@@ -25,6 +27,7 @@ doPlot_ts <- function(...){
 	} else NULL
 }
 
+# @knitr app_plotsc
 doPlot_scatter <- function(...){
 	if(permitPlot() & !is.null(input$group2)){
 		if(!(input$group2!="None" & !length(input$colorpalettes_sc))){
@@ -38,6 +41,7 @@ doPlot_scatter <- function(...){
 	} else NULL
 }
 
+# @knitr app_plothm
 doPlot_heatmap <- function(...){
 	if(permitPlot() & !is.null(input$heatmap_x) & !is.null(input$heatmap_y) & length(input$colorpalettes_hm)){
 		heatPlot(d=dat(), d.stat=aggStatsID(), d2=dat_heatmap(), x=input$heatmap_x, y=input$heatmap_y, z=input$statHeatmap, Log=input$log_hm,
@@ -49,6 +53,7 @@ doPlot_heatmap <- function(...){
 	} else NULL
 }
 
+# @knitr app_plotvr
 doPlot_var <- function(...){
 	if(permitPlot() & !is.null(pooled.var3()) & !is.null(input$group3)){
 		if(!(input$group3!="None" & !length(input$colorpalettes_vr))){
@@ -65,6 +70,7 @@ doPlot_var <- function(...){
 	} else NULL
 }
 
+# @knitr app_plotsp
 doPlot_spatial <- function(...){
 	if(permitPlot() & !is.null(pooledVarSpatial()) & !is.null(input$groupSpatial)){
 		if(!(input$groupSpatial!="None" & !length(input$colorpalettes_sp))){
@@ -80,6 +86,7 @@ doPlot_spatial <- function(...){
 	} else NULL
 }
 
+# @knitr app_outts
 # Primary outputs
 # Time series plot
 output$PlotTS <- renderPlot({
@@ -104,6 +111,7 @@ output$dlCurTableTS <- downloadHandler(
 	filename=function(){ 'timeseries_data.csv' }, content=function(file){ write.csv(dat(), file) }
 )
 
+# @knitr app_outsc
 # Scatterplot
 plot_scatter_ht <- function(){
 	if(twoBtnNullOrZero_sc()) return(0)
@@ -138,6 +146,7 @@ output$dlCurTableScatter <- downloadHandler(
 	filename=function(){ 'scatterplot_data.csv' }, content=function(file){ write.csv(dat2(), file) }
 )
 
+# @knitr app_outvr
 # Variability plot
 output$PlotVariability <- renderPlot({
 	if(twoBtnNullOrZero_vr()) return()
@@ -161,6 +170,7 @@ output$dlCurTableVariability <- downloadHandler(
 	filename=function(){ 'variability_data.csv' }, content=function(file){ write.csv(dat(), file) }
 )
 
+# @knitr app_outhm
 # Heatmap plot
 output$PlotHeatmap <- renderPlot({
 	if(twoBtnNullOrZero_hm()) return()
@@ -184,6 +194,7 @@ output$dlCurTableHeatmap <- downloadHandler(
 	filename=function(){ 'heatmap_data.csv' }, content=function(file){ write.csv(dat(), file) }
 )
 
+# @knitr app_outsp
 # Spatial plot
 output$PlotSpatial <- renderPlot({
 	if(twoBtnNullOrZero_sp()) return()

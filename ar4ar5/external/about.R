@@ -1,3 +1,4 @@
+# @knitr about
 function(){
 	tabPanel("About",
 		HTML('<p style="text-align:justify">This R Shiny web app compares downscaled outputs from AR4 (CMIP3) and AR5 (CMIP5) global climate models (GCMs) in a variety of ways.

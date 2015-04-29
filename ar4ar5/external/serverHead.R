@@ -1,3 +1,4 @@
+# @knitr sh_setup
 library(shiny)
 library(Hmisc); library(png); library(RColorBrewer); library(ggplot2); library(plyr); library(reshape2); library(data.table); library(gridExtra)
 
@@ -57,14 +58,17 @@ logo <- readPNG("www/img/SNAP_acronym_100px.png")
 logo.alpha <- 1
 logo.mat <- matrix(rgb(logo[,,1],logo[,,2],logo[,,3],logo[,,4]*logo.alpha), nrow=dim(logo)[1])
 
+# @knitr sh_func01
 # These functions are written with the structure of the app in mind. They are intended to avoid code duplication.
 nullOrZero <- function(x) is.null(x) || x==0
 
+# @knitr sh_func02
 mod2ar <- function(x){
 	if(x %in% c("CCCMAcgcm31", "GFDLcm21", "MIROC32m", "MPIecham5", "ukmoHADcm3")) return("AR4")
 	if(x %in% c("CCSM4", "GFDLcm3", "GISSe2-r", "IPSLcm5a-lr", "MRIcgcm3")) return("AR5")
 }
 
+# @knitr sh_func03
 density2bootstrap <- function(d, n.density, n.boot=10000, interp=FALSE, n.interp=1000, ...){
 	n.fact <- n.boot/n.density
 	n.grp <- nrow(d)/n.density
@@ -83,8 +87,10 @@ density2bootstrap <- function(d, n.density, n.boot=10000, interp=FALSE, n.interp
 	d2
 }
 
+# @knitr sh_func04
 splitAt <- function(x, pos=NULL) if(is.null(pos)) list(x) else unname(split(x, cumsum(seq_along(x) %in% pos)))
 
+# @knitr sh_func05
 periodLength <- function(x){
 	x.diff <- diff(sort(x))
 	pos.split <- if(all(x.diff==1)) NULL else which(x.diff!=1)+1
@@ -93,6 +99,7 @@ periodLength <- function(x){
 	if(length(n)==1 || all(diff(n)==0)) n else NULL # Do not allow unequal length periods
 }
 
+# @knitr sh_func06
 collapseMonths <- function(d, variable, n.s, mos, n.samples=1){
 	nrx <- nrow(d)
 	p <- length(mos)/n.s
@@ -114,6 +121,7 @@ collapseMonths <- function(d, variable, n.s, mos, n.samples=1){
 	d
 }
 
+# @knitr sh_func07
 periodsFromDecades <- function(d, n.p, decs, check.years=FALSE, n.samples=1){
 	decs <- as.numeric(substr(decs,1,4))
 	n.mos <- length(unique(d$Month))
@@ -134,6 +142,7 @@ periodsFromDecades <- function(d, n.p, decs, check.years=FALSE, n.samples=1){
 	d
 }
 
+# @knitr sh_func08
 dodgePoints <- function(d, x, grp, n.grp, facet.by, width=0.9){
 	if(is.character(grp) & n.grp>1){
 		if(facet.by=="None"){
@@ -163,6 +172,7 @@ dodgePoints <- function(d, x, grp, n.grp, facet.by, width=0.9){
 	}
 }
 
+# @knitr sh_func09
 getHeatmapAxisChoices <- function(scens, mods, locs, mos, yrs, decs, cmip3scens, cmip5scens, cmip3models, cmip5models){
 	ind <- which(unlist(lapply(list(phases, scens, mods, locs, mos, yrs, decs), length))>0)
 		if(length(ind)) choices <- c("Phase","Scenario", "Model", "Location", "Month", "Year", "Decade")[ind] else choices <- NULL
@@ -175,6 +185,7 @@ getHeatmapAxisChoices <- function(scens, mods, locs, mos, yrs, decs, cmip3scens,
 	choices
 }
 
+# @knitr sh_func10
 nGroups <- function(grp, scenarios, models, mos, decs, locs){
 	if(is.null(grp) || grp=="None") return(1)
 	if(grp=="Phase") return(2)
@@ -185,6 +196,7 @@ nGroups <- function(grp, scenarios, models, mos, decs, locs){
 	if(grp=="Location") return(length(locs))
 }
 	
+	# @knitr sh_func11
 getFacetChoicesHeatmap <- function(inx, iny=NULL, x.choices=NULL){
 	if(!is.null(iny)){
 		choices <- x.choices[-which(x.choices==inx | x.choices==iny)]
@@ -192,6 +204,7 @@ getFacetChoicesHeatmap <- function(inx, iny=NULL, x.choices=NULL){
 	} else NULL
 }
 
+# @knitr sh_func12
 getFacetPanels <- function(fct, mods, scens, mos, decs, locs){
 	if(!is.null(fct) && fct!="None"){
 		if(fct=="Phase") return(2)
@@ -203,6 +216,7 @@ getFacetPanels <- function(fct, mods, scens, mos, decs, locs){
 	} else NULL
 }
 
+# @knitr sh_func13
 getPooledVars <- function(inx, iny=NULL, ingrp=NULL, infct, grp.fct.choices=NULL, choices, mos, years, decades, locs, scenarios, models, cmip3scens, cmip5scens, cmip3mods, cmip5mods){
 	if(!is.null(ingrp) & !is.null(infct)){
 		if(inx!="Year") grp.fct.choices <- union("Year", grp.fct.choices)
@@ -233,6 +247,7 @@ getPooledVars <- function(inx, iny=NULL, ingrp=NULL, infct, grp.fct.choices=NULL
 	} else return()
 }
 
+# @knitr sh_func14
 getPlotSubTitle <- function(pooled, yrs, mos, mod, scen, phase=c("AR4", "AR5"), loc){
 	if(!length(mos)) mos <- "Jan - Dec"
 	yrs.lab <- ifelse("Year" %in% pooled, paste("Years: ", paste(yrs[1], "-", tail(yrs,1)), "\n", collapse=""), "")
@@ -246,6 +261,7 @@ getPlotSubTitle <- function(pooled, yrs, mos, mod, scen, phase=c("AR4", "AR5"), 
 	x
 }
 
+# @knitr sh_func15
 getPlotTitle <- function(grp, facet, pooled, yrs, mos, mod, scen, phase=c("AR4", "AR5"), loc){
 	gfp <- c(grp, facet, pooled)
 	if(!length(mos)) mos <- "Jan - Dec"
@@ -258,6 +274,7 @@ getPlotTitle <- function(grp, facet, pooled, yrs, mos, mod, scen, phase=c("AR4",
 	x
 }
 
+# @knitr sh_func16
 getSubjectChoices <- function(inx, ingrp, pooled.vars){
 	if(inx=="Decade") return(NULL)
 	x <- c()
@@ -268,12 +285,14 @@ getSubjectChoices <- function(inx, ingrp, pooled.vars){
 	x
 }
 
+# @knitr sh_func17
 adjustGroup <- function(grp, n.grp){
 	if(is.null(grp) || grp=="None") grp <- 1
 	if(n.grp==1) grp <- 1
 	grp
 }
-	
+
+# @knitr sh_func18
 withinGroupLines <- function(x, subjects){
 	if(x=="Decade") subjects <- 1
 	if(!length(subjects) || subjects[1] == "") subjects <- 1
@@ -284,6 +303,7 @@ withinGroupLines <- function(x, subjects){
 	list(subjects=subjects, subjectlines=subjectlines)
 }
 
+# @knitr sh_func19
 scaleColFillMan_prep <- function(fill=NULL, col){
 	scfm <- FALSE
 	x1 <- !length(grep("friendly",col))
@@ -298,6 +318,7 @@ scaleColFillMan_prep <- function(fill=NULL, col){
 	list(scfm=scfm, fill=fill)
 }
 
+# @knitr sh_func20
 scaleColFillMan <- function(g, default, colpal, n.grp, cbpalette){
 	nominal.abb <- substr(c("CB-friendly", "Accent","Dark2","Pastel1","Pastel2","Paired","Set1","Set2","Set3"), 1, 4)
 	if(substr(colpal, 1, 4) %in% nominal.abb) colseq <- "Nominal" else colseq <- "Not nominal"
@@ -316,6 +337,7 @@ scaleColFillMan <- function(g, default, colpal, n.grp, cbpalette){
 	g
 }
 
+# @knitr sh_func21
 pooledVarsCaption <- function(pv, permit, ingrp=NULL){
 	if(length(pv)){
 		pv <- tolower(paste0(pv,"s"))
@@ -331,6 +353,7 @@ pooledVarsCaption <- function(pv, permit, ingrp=NULL){
 	}
 }
 
+# @knitr sh_func22
 getColorSeq <- function(d, grp=NULL, n.grp=NULL, heat=FALSE, overlay=FALSE){
 	if(!is.null(d) && heat) return( c("Increasing","Centered") )
 	if(is.null(grp) || grp=="None") return()
@@ -340,6 +363,7 @@ getColorSeq <- function(d, grp=NULL, n.grp=NULL, heat=FALSE, overlay=FALSE){
 	if(!is.null(d)) x else NULL
 }
 
+# @knitr sh_func23
 getColorPalettes <- function(id, colseq, grp=NULL, n.grp=NULL, fill.vs.border=NULL, fill.vs.border2=TRUE, heat=FALSE, overlay=FALSE){
 	if(!is.null(colseq)){
 		pal.inc <- c("Blues","BuGn","BuPu","GnBu","Greens","Greys","Oranges","OrRd","PuBu","PuBuGn","PuRd","Purples","RdPu","Reds","YlGn","YlGnBu","YlOrBr","YlOrRd")
@@ -374,6 +398,7 @@ getColorPalettes <- function(id, colseq, grp=NULL, n.grp=NULL, fill.vs.border=NU
 	} else NULL
 }
 
+# @knitr sh_func24
 annotatePlot <- function(g, data, x, y, y.fixed=NULL, text, col="black", bp=NULL, bp.position=NULL, n.groups=1){
 	if(is.factor(data[[y]])) y.coord <- 0.525 else if(is.null(y.fixed)) y.coord <- max(data[[y]]) else y.coord <- y.fixed
 	if(!is.null(bp) && bp) if(bp.position=="fill") y.coord <- 1 else if(bp.position=="stack") y.coord <- n.groups*y.coord
@@ -382,6 +407,7 @@ annotatePlot <- function(g, data, x, y, y.fixed=NULL, text, col="black", bp=NULL
 	g
 }
 
+# @knitr sh_func25
 addLogo <- function(g, show.logo=FALSE, logo=NULL, show.title=FALSE, main="", fontsize=16){
 	if(show.logo){
 		if(!show.title) main <- ""

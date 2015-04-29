@@ -1,3 +1,4 @@
+# @knitr plot_heatmap
 function(d, d.stat, d2, x, y, z, Log=FALSE, panels, facet.cols=ceiling(sqrt(panels)), facet.by, fontsize=16, colpal, reverse.colors=FALSE, aspect_1to1=FALSE, show.values=FALSE,
 	show.overlay=FALSE, overlay=NULL, plot.title="", plot.subtitle="", show.panel.text=FALSE, show.title=FALSE, lgd.pos="Top", units=c("C","mm"),
 	pooled.var, plot.theme.dark=FALSE, show.logo=F, logo.mat=NULL){

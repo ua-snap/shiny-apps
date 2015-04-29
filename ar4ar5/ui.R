@@ -1,3 +1,4 @@
+# @knitr ui
 tabPanelAbout <- source("external/about.R",local=T)$value
 
 shinyUI(fluidPage(

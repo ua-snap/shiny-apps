@@ -1,3 +1,4 @@
+# @knitr main_out_01_05
 output$tsTextSub <- renderUI({
 	if(twoBtnNullOrZero_ts()) return()
 	isolate( pooledVarsCaption(pv=pooled.var(), permit=permitPlot(), ingrp=input$group) )
@@ -23,6 +24,7 @@ output$spatialTextSub <- renderUI({
 	isolate( pooledVarsCaption(pv=pooledVarSpatial(), permit=permitPlot(), ingrp=input$groupSpatial) )
 })
 
+# @knitr main_out_06_07
 output$SubsetTableTS <- renderDataTable({ if(!is.null(dat())) dat()[-which(names(dat()) %in% c("Decade"))] }, options=list(orderClasses = TRUE, lengthMenu=c(5, 10, 25, 50), pageLength=5))
 
 output$TableTS <- renderUI({
@@ -32,6 +34,7 @@ output$TableTS <- renderUI({
 	)
 })
 
+# @knitr main_out_08_09
 output$SubsetTableScatter <- renderDataTable({ if(!is.null(dat2())) dat2()[-which(names(dat2()) %in% c("Decade"))] }, options=list(orderClasses = TRUE, lengthMenu=c(5, 10, 25, 50), pageLength=5))
 
 output$TableScatter <- renderUI({
@@ -41,6 +44,7 @@ output$TableScatter <- renderUI({
 	)
 })
 
+# @knitr main_out_10_11
 output$SubsetTableHeatmap <- renderDataTable(
 	{ if(!is.null(dat_heatmap()) && nrow(dat_heatmap() > 0)){ if(ncol(dat_heatmap()) >= 9) dat_heatmap()[-9] else dat_heatmap() } },
 	options=list(orderClasses = TRUE, lengthMenu=c(5, 10, 25, 50), pageLength=5))
@@ -52,6 +56,7 @@ output$TableHeatmap <- renderUI({
 	)
 })
 
+# @knitr main_out_12_13
 output$SubsetTableVariability <- renderDataTable({ if(!is.null(dat())) dat()[-which(names(dat()) %in% c("Decade"))] }, options=list(orderClasses = TRUE, lengthMenu=c(5, 10, 25, 50), pageLength=5)) # same as table 1
 
 output$TableVariability <- renderUI({
@@ -61,6 +66,7 @@ output$TableVariability <- renderUI({
 	)
 })
 
+# @knitr main_out_14_15
 output$SubsetTableSpatial <- renderDataTable({ if(!is.null(dat_spatial())) dat_spatial()[-which(names(dat_spatial()) %in% c("Decade"))] }, options=list(orderClasses = TRUE, lengthMenu=c(5, 10, 25, 50), pageLength=5))
 
 output$TableSpatial <- renderUI({

@@ -1,13 +1,40 @@
-# Datasets, scenarios, models, years, decades
+# @knitr re_01_06
 goBtnNullOrZero <- reactive({ nullOrZero(input$goButton) })
+
 twoBtnNullOrZero_ts <- reactive({ goBtnNullOrZero() || nullOrZero(input$plotButton_ts) })
+
 twoBtnNullOrZero_sc <- reactive({ goBtnNullOrZero() || nullOrZero(input$plotButton_sc) })
+
 twoBtnNullOrZero_hm <- reactive({ goBtnNullOrZero() || nullOrZero(input$plotButton_hm) })
+
 twoBtnNullOrZero_vr <- reactive({ goBtnNullOrZero() || nullOrZero(input$plotButton_vr) })
+
 twoBtnNullOrZero_sp <- reactive({ goBtnNullOrZero() || nullOrZero(input$plotButton_sp) })
+
 #anyBtnNullOrZero <- reactive({ any(c(goBtnNullOrZero(), twoBtnNullOrZero_ts(), twoBtnNullOrZero_ts(), twoBtnNullOrZero_ts(), twoBtnNullOrZero_ts(), twoBtnNullOrZero_ts())) })
 
+# @knitr re_07_14
+Decades_original <- reactive({
+	x <- input$decs
+	if(!length(x)) x <- decades
+	x
+})
+
 currentYears <- reactive({ if(!is.null(input$yrs)) as.numeric(input$yrs[1]):as.numeric(input$yrs[2]) })
+
+Months_original <- reactive({
+	x <- input$mos
+	if(!length(x)) x <- month.abb
+	x
+})
+
+Decades <- reactive({
+	x <- Decades_original()
+	if(!is.null(input$decades2periods)){
+		if(input$decades2periods & !is.null(dat_master())) x <- unique(dat_master()$Decade)
+	}
+	x
+})
 
 limitedYears <- reactive({
 	rng <- range(as.numeric(substr(Decades(),1,4))) + c(0,9)
@@ -15,7 +42,39 @@ limitedYears <- reactive({
 	yrs
 })
 
-currentUnits <- reactive({ if(input$convert_units) c("F", "in") else c("C", "mm") })
+Months <- reactive({
+	x <- Months_original()
+	if(!is.null(input$months2seasons)){
+		if(input$months2seasons & !is.null(dat_master())) x <- unique(as.character(dat_master()$Month))
+	}
+	x
+})
+
+SeasonLength <- reactive({
+	if(length(input$mos)<=1) NULL else periodLength(x=match(input$mos, month.abb))
+})
+
+
+PeriodLength <- reactive({
+	if(length(input$decs)<=1) NULL else periodLength(x=as.numeric(substr(input$decs,1,4))/10)
+})
+
+# @knitr re_15_22
+modelScenPair1 <- reactive({
+	if(length(input$cmip3scens) & length(input$cmip3models)) TRUE else FALSE
+})
+
+modelScenPair2 <- reactive({
+	if(length(input$cmip5scens) & length(input$cmip5models)) TRUE else FALSE
+})
+
+allModelScenPair <- reactive({
+	if(modelScenPair1() & modelScenPair2()) TRUE else FALSE
+})
+
+anyModelScenPair <- reactive({
+	if(modelScenPair1() | modelScenPair2()) TRUE else FALSE
+})
 
 scenarios <- reactive({
 	x <- c()
@@ -34,20 +93,6 @@ models_original <- reactive({
 	ind <- which(x=="")
 	if(length(ind)) x <- x[-ind]
 	if(!length(x)) x <- NULL
-	x
-})
-
-gcm_samples_files <- reactive({
-	if(anyModelScenPair() & length(input$vars)){
-		s <- substr(scenarios(), 1, 3)
-		AR <- gsub("RCP", "AR5", gsub("SRE", "AR4", s))
-		y <- sapply(models_original(), mod2ar)
-		x <- list()
-		for(i in 1:length(y)){
-			x[[i]] <- paste(y[i], c("Hist", gsub(" ", "", scenarios())[AR==y[i]]), models_original()[i], sep="_")
-			x[[i]] <- paste0(rep(x[[i]], each=length(input$vars)), "_", input$vars, ".RData")
-		}
-	} else x <- NULL
 	x
 })
 
@@ -74,41 +119,8 @@ composite <- reactive({
 	x
 })
 
-Months_original <- reactive({
-	x <- input$mos
-	if(!length(x)) x <- month.abb
-	x
-})
-
-Months <- reactive({
-	x <- Months_original()
-	if(!is.null(input$months2seasons)){
-		if(input$months2seasons & !is.null(dat_master())) x <- unique(as.character(dat_master()$Month))
-	}
-	x
-})
-
-SeasonLength <- reactive({
-	if(length(input$mos)<=1) NULL else periodLength(x=match(input$mos, month.abb))
-})
-
-Decades_original <- reactive({
-	x <- input$decs
-	if(!length(x)) x <- decades
-	x
-})
-
-Decades <- reactive({
-	x <- Decades_original()
-	if(!is.null(input$decades2periods)){
-		if(input$decades2periods & !is.null(dat_master())) x <- unique(dat_master()$Decade)
-	}
-	x
-})
-
-PeriodLength <- reactive({
-	if(length(input$decs)<=1) NULL else periodLength(x=as.numeric(substr(input$decs,1,4))/10)
-})
+# @knitr re_23_26
+currentUnits <- reactive({ if(input$convert_units) c("F", "in") else c("C", "mm") })
 
 aggStatsID <- reactive({
 	agg.stat.colnames[which(agg.stat.names==input$aggStats)]
@@ -124,11 +136,41 @@ BootSamples <- reactive({
 	x
 })
 
+# @knitr re_27_30
 Locs <- reactive({ if(is.null(input$loctype) || input$loctype!="Cities")  input$locs_regions else if(input$loctype=="Cities") input$locs_cities else NULL })
+
 regionSelected <- reactive({ input$loctype!="Cities" & length(Locs())  })
+
 citySelected <- reactive({ input$loctype=="Cities" & length(Locs()) })
+
 locSelected <- reactive({ length(Locs()) })
-	
+
+# @knitr re_31_41
+plot_ts_title <- reactive({ getPlotTitle(grp=input$group, facet=input$facet, pooled=pooled.var(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
+plot_sp_title <- reactive({ getPlotTitle(grp=input$group2, facet=input$facet2, pooled=pooled.var2(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
+plot_hm_title <- reactive({ getPlotTitle(grp="", facet=input$facetHeatmap, pooled=pooledVarHeatmap(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
+plot_var_title <- reactive({ getPlotTitle(grp=input$group3, facet=input$facet3, pooled=pooled.var3(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
+plot_spatial_title <- reactive({ getPlotTitle(grp=input$groupSpatial, facet=input$facetSpatial, pooled=pooledVarSpatial(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
+
+plot_ts_subtitle <- reactive({ getPlotSubTitle(pooled=pooled.var(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
+plot_sp_subtitle <- reactive({ getPlotSubTitle(pooled=pooled.var2(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
+plot_hm_subtitle <- reactive({ getPlotSubTitle(pooled=pooledVarHeatmap(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
+plot_var_subtitle <- reactive({ getPlotSubTitle(pooled=pooled.var3(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
+plot_spatial_subtitle <- reactive({ getPlotSubTitle(pooled=pooledVarSpatial(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
+
+permitPlot <- reactive({
+	if(!( is.null(Months()) | is.null(currentYears()) | is.null(Decades()) | is.null(input$vars) |
+		is.null(input$convert_units) | is.null(scenarios()) | is.null(models()) | (!length(Locs()) && !length(input$locs_cities)) )){
+		if(input$vars[1]!="" & anyModelScenPair()){
+			x <- TRUE
+		} else {
+			x <- FALSE
+		}
+	} else x <- FALSE
+	x
+})
+
+# @knitr re_42
 # Initially retain all climate variables regardless of user's selection
 dat_master <- reactive({
 	if(goBtnNullOrZero()) return()
@@ -223,6 +265,7 @@ dat_master <- reactive({
 	x
 })
 
+# @knitr re_44_46
 dat <- reactive({
 	if(goBtnNullOrZero()) return()
 	isolate({
@@ -277,6 +320,7 @@ dat2 <- reactive({
 	x
 })
 
+# @knitr re_43
 CRU_master <- reactive({
 	if(goBtnNullOrZero()) return()
 	#prog_d_cru_master <- Progress$new(session, min=1, max=10)
@@ -338,6 +382,7 @@ CRU_master <- reactive({
 	x
 })
 
+# @knitr re_47_48
 CRU <- reactive({
 	if(goBtnNullOrZero()) return()
 	isolate(
@@ -362,6 +407,23 @@ CRU2 <- reactive({
 	x
 })
 
+
+# @knitr re_49
+gcm_samples_files <- reactive({
+	if(anyModelScenPair() & length(input$vars)){
+		s <- substr(scenarios(), 1, 3)
+		AR <- gsub("RCP", "AR5", gsub("SRE", "AR4", s))
+		y <- sapply(models_original(), mod2ar)
+		x <- list()
+		for(i in 1:length(y)){
+			x[[i]] <- paste(y[i], c("Hist", gsub(" ", "", scenarios())[AR==y[i]]), models_original()[i], sep="_")
+			x[[i]] <- paste0(rep(x[[i]], each=length(input$vars)), "_", input$vars, ".RData")
+		}
+	} else x <- NULL
+	x
+})
+
+# @knitr re_50
 # Keep first climate variables only
 dat_spatial <- reactive({
 	if(goBtnNullOrZero()) return()
@@ -486,6 +548,7 @@ dat_spatial <- reactive({
 	x
 })
 
+# @knitr re_51
 CRU_spatial <- reactive({ #### All CRU datasets require recoding for externalization
 	if(goBtnNullOrZero()) return()
 	#prog_d_cru_spatial <- Progress$new(session, min=1, max=10)
@@ -540,6 +603,7 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 	x
 })
 
+# @knitr re_52_56
 # ggplot2 grouping, faceting, pooling
 groupFacetChoicesTS <- reactive({
 	if(!is.null(input$xtime)){
@@ -577,6 +641,7 @@ pooled.var <- reactive({
 
 subjectChoices <- reactive({ getSubjectChoices(inx=input$xtime, ingrp=input$group, pooled.vars=pooled.var()) })
 
+# @knitr re_57_61
 sc_flip_xy <- reactive({
 	if(is.null(c(input$vars, input$vars2))) return(FALSE)
 	if(input$sc_x==input$vars) FALSE else TRUE
@@ -607,6 +672,7 @@ pooled.var2 <- reactive({
 	x
 })
 
+# @knitr re_62_66
 heatmap_x_choices <- reactive({
 	getHeatmapAxisChoices(scenarios(), models(), Locs(), Months(), currentYears(), Decades(),
 		input$cmip3scens, input$cmip5scens, input$cmip3models, input$cmip5models)
@@ -629,6 +695,7 @@ pooledVarHeatmap <- reactive({
 	x
 })
 
+# @knitr re_67_73
 xvarChoices <- reactive({
 		ind <- which(unlist(lapply(list(phases, scenarios(), models(), Locs(), Months(), currentYears(), Decades()), length))>1)
 		if(length(ind)) choices <- c("Phase","Scenario", "Model", "Location", "Month", "Year", "Decade")[ind] else choices <- NULL
@@ -673,6 +740,7 @@ subjectChoices3 <- reactive({ getSubjectChoices(inx=input$xvar, ingrp=input$grou
 
 Variability <- reactive({ if(!is.null(input$variability)) !input$variability else NULL })
 
+# @knitr re_74_80
 spatial_x_choices <- reactive({
 		ind <- which(unlist(lapply(list(phases, scenarios(), models(), Locs(), Months(), currentYears(), Decades()), length))>1)
 		if(length(ind)) choices <- c("Phase","Scenario", "Model", "Location", "Month", "Year", "Decade")[ind] else choices <- NULL
@@ -721,6 +789,7 @@ plotTypeChoicesSpatial <- reactive({
 	if(input$spatial_x=="Temperature" | input$spatial_x=="Precipitation") c("Histogram", "Density") else c("Stripchart")
 })
 
+# @knitr re_81_85
 # Data aggregation
 datCollapseGroups <- reactive({
 	if(!is.null(dat()) & !is.null(input$group)){
@@ -762,43 +831,24 @@ stat <- reactive({
 	stat
 })
 
-# Plotting/subsetting/staging
-allModelScenPair <- reactive({
-	if(modelScenPair1() & modelScenPair2()) TRUE else FALSE
+# @knitr re_86_90
+# Color sequences
+colorseq_ts <- reactive({
+	getColorSeq(d=dat(), grp=input$group, n.grp=n.groups())
 })
 
-anyModelScenPair <- reactive({
-	if(modelScenPair1() | modelScenPair2()) TRUE else FALSE
+colorseq_sc <- reactive({
+	getColorSeq(d=dat2(), grp=input$group2, n.grp=n.groups2())
 })
 
-modelScenPair1 <- reactive({
-	if(length(input$cmip3scens) & length(input$cmip3models)) TRUE else FALSE
+colorseq_hm <- reactive({
+	getColorSeq(d=dat_heatmap(), heat=TRUE)
 })
 
-modelScenPair2 <- reactive({
-	if(length(input$cmip5scens) & length(input$cmip5models)) TRUE else FALSE
+colorseq_vr <- reactive({
+	getColorSeq(d=dat(), grp=input$group3, n.grp=n.groups3(), overlay=input$vr_showCRU)
 })
 
-plot_ts_title <- reactive({ getPlotTitle(grp=input$group, facet=input$facet, pooled=pooled.var(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
-plot_sp_title <- reactive({ getPlotTitle(grp=input$group2, facet=input$facet2, pooled=pooled.var2(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
-plot_hm_title <- reactive({ getPlotTitle(grp="", facet=input$facetHeatmap, pooled=pooledVarHeatmap(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
-plot_var_title <- reactive({ getPlotTitle(grp=input$group3, facet=input$facet3, pooled=pooled.var3(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
-plot_spatial_title <- reactive({ getPlotTitle(grp=input$groupSpatial, facet=input$facetSpatial, pooled=pooledVarSpatial(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
-
-plot_ts_subtitle <- reactive({ getPlotSubTitle(pooled=pooled.var(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
-plot_sp_subtitle <- reactive({ getPlotSubTitle(pooled=pooled.var2(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
-plot_hm_subtitle <- reactive({ getPlotSubTitle(pooled=pooledVarHeatmap(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
-plot_var_subtitle <- reactive({ getPlotSubTitle(pooled=pooled.var3(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
-plot_spatial_subtitle <- reactive({ getPlotSubTitle(pooled=pooledVarSpatial(), yrs=limitedYears(), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
-
-permitPlot <- reactive({
-	if(!( is.null(Months()) | is.null(currentYears()) | is.null(Decades()) | is.null(input$vars) |
-		is.null(input$convert_units) | is.null(scenarios()) | is.null(models()) | (!length(Locs()) && !length(input$locs_cities)) )){
-		if(input$vars[1]!="" & anyModelScenPair()){
-			x <- TRUE
-		} else {
-			x <- FALSE
-		}
-	} else x <- FALSE
-	x
+colorseq_sp <- reactive({
+	getColorSeq(d=dat_spatial(), grp=input$groupSpatial, n.grp=nGroupsSpatial(), overlay=input$sp_showCRU)
 })
