@@ -196,7 +196,7 @@ nGroups <- function(grp, scenarios, models, mos, decs, locs){
 	if(grp=="Location") return(length(locs))
 }
 	
-	# @knitr sh_func11
+# @knitr sh_func11
 getFacetChoicesHeatmap <- function(inx, iny=NULL, x.choices=NULL){
 	if(!is.null(iny)){
 		choices <- x.choices[-which(x.choices==inx | x.choices==iny)]
