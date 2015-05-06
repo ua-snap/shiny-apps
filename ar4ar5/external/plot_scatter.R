@@ -16,13 +16,15 @@ function(d, x, y, x.name, y.name, Logx=FALSE, Logy=FALSE, flip.axes=FALSE, panel
 		if(y=="Temperature") Logy <- FALSE
 		if(Logx){
 			units[2] <- paste("log", units[2])
-			d[, get(x)] <- round(log(d[, get(x)] + 1), 1)
-			if(show.overlay) overlay[, get(x)] <- round(log(overlay[, get(x)] + 1), 1)
+			logx <- paste0("Log_", x)
+			d[, c(logx) := round(log(get(x) + 1), 1)]
+			if(show.overlay) overlay[, c(logx) := round(log(get(x) + 1), 1)]
 		}
 		if(Logy){
 			units[2] <- paste("log", units[2])
-			d[, get(y)] <- round(log(d[, get(y)] + 1), 1)
-			if(show.overlay) overlay[, get(y)] <- round(log(overlay[, get(y)] + 1), 1)
+			logy <- paste0("Log_", y)
+			d[, c(logy) := round(log(get(y) + 1), 1)]
+			if(show.overlay) overlay[, c(logy) := round(log(get(y) + 1), 1)]
 		}
 		if(x=="Temperature") xlb <- paste0(x.name, " temperature (",units[1],")")
 		if(x=="Precipitation") xlb <- paste0(x.name, " precipitation (",units[2],")")
