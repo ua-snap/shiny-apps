@@ -425,21 +425,21 @@ output$StripDirectionSpatial <- renderUI({ #### Consider swapping this out for a
 # @knitr sb_out_56_60
 # Plot buttons
 output$PlotButton_ts <- renderUI({
-	if(permitPlot() & !is.null(dat()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat())>0) actionButton("plotButton_ts", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
+	if(permitPlot() & !is.null(dat()) & !goBtnNullOrZero()) if(nrow(dat())>0) actionButton("plotButton_ts", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
 })
 
 output$PlotButton_sc <- renderUI({
-	if(permitPlot() & !is.null(dat2()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat2())>0) actionButton("plotButton_sc", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
+	if(permitPlot() & !is.null(dat2()) & !goBtnNullOrZero()) if(nrow(dat2())>0) actionButton("plotButton_sc", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
 })
 
 output$PlotButton_hm <- renderUI({
-	if(permitPlot() & !is.null(dat()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat())>0) actionButton("plotButton_hm", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
+	if(permitPlot() & !is.null(dat()) & !goBtnNullOrZero()) if(nrow(dat())>0) actionButton("plotButton_hm", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
 })
 
 output$PlotButton_vr <- renderUI({
-	if(permitPlot() & !is.null(dat()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat())>0) actionButton("plotButton_vr", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
+	if(permitPlot() & !is.null(dat()) & !goBtnNullOrZero()) if(nrow(dat())>0) actionButton("plotButton_vr", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
 })
 
 output$PlotButton_sp <- renderUI({
-	if(permitPlot() & !is.null(dat_spatial()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat_spatial())>0) actionButton("plotButton_sp", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
+	if(permitPlot() & !is.null(dat_spatial()) & !goBtnNullOrZero()) if(nrow(dat_spatial())>0) actionButton("plotButton_sp", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
 })
