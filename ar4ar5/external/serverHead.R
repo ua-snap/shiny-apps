@@ -69,27 +69,9 @@ mod2ar <- function(x){
 }
 
 # @knitr sh_func03
-density2bootstrap <- function(d, n.density, n.boot=10000, interp=FALSE, n.interp=1000, ...){
-	nr <- nrow(d)
-	n.fact <- n.boot/n.density
-	n.grp <- nr/n.density
-	ind <- rep(1:n.grp, each=n.density)
-	ind2 <- match(1:n.grp, ind)
-	d[, Index := ind]
-	d2 <-d[rep(ind2, each=n.fact*nr/n.grp)]
-	setkey(d2, Index)
-	d2[, Prob := NULL]
-	v <- as.numeric(vapply(X=1:n.grp,
-		FUN=function(i, d, n, interp, n.interp, ...){
-			p <- list(x=d$Val[d$Index==i], y=d$Prob[d$Index==i])
-			if(interp) p <- approx(p$x, p$y, n=n.interp)
-			round(sample(p$x, n, prob=p$y, rep=T), ...)
-		},
-		FUN.VALUE=numeric(n.boot),
-		d=d, n=n.boot, interp=interp, n.interp=n.interp, ...))
-	d2[, Index := NULL]
-	d2[, Val := v]
-	d2
+density2bootstrap <- function(Val, Prob, n.boot=10000, interp=TRUE, n.interp=1000, ...){
+	if(interp){	p <- approx(Val, Prob, n=n.interp); Val <- p$x;	Prob <- p$y	}
+	round(sample(Val, n.boot, Prob, rep=T), ...)
 }
 
 # @knitr sh_func04
@@ -150,26 +132,29 @@ periodsFromDecades <- function(d, n.p, decs, check.years=FALSE, n.samples=1){
 # @knitr sh_func08
 dodgePoints <- function(d, x, grp, n.grp, facet.by, width=0.9){
 	if(is.character(grp) & n.grp>1){
+		x <- d[, get(x)]
+		d.grp <- d[, get(grp)]
 		if(facet.by=="None"){
-			x.names <- unique(as.character(d[,x]))
+			x.names <- unique(as.character(x))
 			x.num <- grp.n <- grp.num <- rep(NA, nrow(d))
 			for(m in 1:length(x.names)){
-				ind <- which(as.character(d[,x])==x.names[m])
-				grp.n[ind] <- length(unique(d[ind, grp]))
+				ind <- which(as.character(x)==x.names[m])
+				grp.n[ind] <- length(unique(d.grp[ind]))
 				x.num[ind] <- m
-				grp.num[ind] <- width*( (as.numeric(factor(d[ind ,grp]))/grp.n[ind])-(1/grp.n[ind] + ((grp.n[ind]-1)/2)/(grp.n[ind])) )
+				grp.num[ind] <- width*( (as.numeric(factor(d.grp[ind]))/grp.n[ind])-(1/grp.n[ind] + ((grp.n[ind]-1)/2)/(grp.n[ind])) )
 			}
 		} else if(facet.by!="None") {
-			x.names <- unique(as.character(d[,x]))
-			panel.names <- unique(as.character(d[,facet.by]))
+			x.names <- unique(as.character(x))
+			d.facet <- as.character(d[, get(facet.by)])
+			panel.names <- unique(d.facet)
 			n.panels <- length(panel.names)
 			x.num <- grp.n <- grp.num <- rep(NA, nrow(d))
 			for(m in 1:n.panels){
 				for(mm in 1:length(x.names)){
-					ind <- which(as.character(d[,facet.by])==panel.names[m] & as.character(d[,x])==x.names[mm])
-					grp.n[ind] <- length(unique(d[ind, grp]))
-					x.num[ind] <- mm - 1 + as.numeric(factor(d[ind, x]))
-					grp.num[ind] <- width*( (as.numeric(factor(d[ind ,grp]))/grp.n[ind])-(1/grp.n[ind] + ((grp.n[ind]-1)/2)/(grp.n[ind])) )
+					ind <- which(d.facet==panel.names[m] & as.character(x)==x.names[mm])
+					grp.n[ind] <- length(unique(d.grp[ind]))
+					x.num[ind] <- mm - 1 + as.numeric(factor(x[ind]))
+					grp.num[ind] <- width*( (as.numeric(factor(d.grp[ind]))/grp.n[ind])-(1/grp.n[ind] + ((grp.n[ind]-1)/2)/(grp.n[ind])) )
 				}
 			}
 		}
