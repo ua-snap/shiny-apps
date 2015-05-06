@@ -568,10 +568,8 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 				x[Var=="Precipitation", Val := round(Val/25.4, 3)]
 			}
 			#prog_d_cru_spatial$set(message="CRU 3.2 distributions complete.", value=10)
-			x <- x[c(ncol(x) - c(2:0), 1:(ncol(x)-3))]
 		}
 	)
-	print(x)
 	x
 })
 
