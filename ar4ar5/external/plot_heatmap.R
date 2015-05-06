@@ -20,7 +20,11 @@ function(d, d.stat, d2, x, y, z, Log=FALSE, panels, facet.cols=ceiling(sqrt(pane
 		if(d$Var[1]=="Temperature") Log <- FALSE
 		if(Log){
 			units[2] <- paste("log", units[2])
-			d[d.stat] <- round(log(d[d.stat] + 1), 1); d2[z] <- round(log(d2[z] + 1), 1)
+			logdstat <- paste0("Log_", d.stat)
+			d[, c(logdstat) := round(log(get(d.stat) + 1), 1)]
+			d2[, logz := round(log(get(z) + 1), 1)]
+			d.stat <- logdstat
+			z <- logz
 			#if(show.overlay) overlay[d.stat] <- round(log(overlay[d.stat] + 1), 1)
 		}
 		#if(d$Var[1]=="Temperature") ylb <- paste0(y.name, " temperature (",units[1],")") else ylb <- paste0(y.name, " precipitation (",units[2],")") #### Need to alter key title rather than axes titles
