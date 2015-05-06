@@ -28,9 +28,7 @@ function(d, d.grp, d.pool, x, y, y.name, Log=FALSE, panels, grp, n.grp, ingroup.
 			units[2] <- paste("log", units[2])
 			logy <- paste0("Log_", y)
 			d[, c(logy) := round(log(get(y) + 1), 1)]; d.pool[, c(logy) := round(log(get(y) + 1), 1)]; d.grp[, c(logy) := round(log(get(y) + 1), 1)]
-			print(d)
 			if(show.overlay) overlay[, c(logy) := round(log(get(y) + 1), 1)]
-			print(overlay)
 			y <- logy
 		}
 		if(d$Var[1]=="Temperature") ylb <- paste0(y.name, " temperature (",units[1],")") else ylb <- paste0(y.name, " precipitation (",units[2],")")
