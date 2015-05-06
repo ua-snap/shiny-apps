@@ -269,9 +269,7 @@ dat_heatmap <- reactive({
 		if(input$hm_showCRU & !is.null(CRU())){
 			n.d <- nrow(d)
 			mods.d <- unique(d$Model)
-			yrs.tmp <- as.numeric(c(as.character(d$Year), as.character(CRU()$Year)))
-			d <- data.frame(rbind(d[1:7], CRU()[1:7]), Year=yrs.tmp, rbind(d[9:ncol(d)], CRU()[9:ncol(CRU())]))
-			d$Year <- yrs.tmp
+			d <- rbind(dat(), CRU())
 			d$Source <- factor(c(rep("Modeled", n.d), rep("Observed", nrow(CRU()))))
 			d$Model <- factor(d$Model, levels=c(CRU()$Model[1], mods.d))
 		}
@@ -281,8 +279,9 @@ dat_heatmap <- reactive({
 			stat1 <- aggStatsID()
 			if(input$vars=="Temperature") d <- ddply(d, x, here(summarise), XMean=round(mean(eval(parse(text=stat1))), 1), XSD=round(sd(eval(parse(text=stat1))), 1))
 			if(input$vars=="Precipitation") d <- ddply(d, x, here(summarise), XMean=round(mean(eval(parse(text=stat1)))), XTotal=round(sum(eval(parse(text=stat1)))), XSD=round(sd(eval(parse(text=stat1)))))
-			names(d) <- gsub("X", "", names(d))
-			if(all(is.na(d$SD))) d <- d[, -ncol(d)]
+			d <- data.table(d)
+			setnames(d, gsub("X", "", names(d)))
+			if(all(is.na(d$SD))) d[, SD := NULL]
 		}
 	})
 	d
