@@ -207,6 +207,9 @@ dat_master <- reactive({
 				x <- subset(region.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original(), select=-cols.drop)
+				print(class(x))
+				x <- data.table(x) # make this a data table in the next round of processing the input workspaces and then remove from here
+				print(class(x))
 			}
 			if(!is.null(input$months2seasons) && input$months2seasons){
 				prog_d_master$set(message="GCM time series: aggregating months...", value=4)
@@ -218,38 +221,14 @@ dat_master <- reactive({
 			}
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
 			# Otherwise compositing prohibited.
-			if(composite()==2){ # can assume both phases have multiple models, so split always works nicely
+			if(composite() > 0){ # can assume both phases have multiple models, so split always works nicely
 				prog_d_master$set(message="Averaging model statistics...", value=8)
 				n <- length(input$cmip3models) # will match length(input$cmip5models)
-				x <- split(x, x$Phase)
-				x1 <- split(x[[1]], x[[1]]$Model)
-				x2 <- split(x[[2]], x[[2]]$Model)
-				v1 <- v2 <- list()
-				for(k in 1:length(stat)){
-					v1[[k]] <- Reduce("+", lapply( x1, "[", stat[k] ))[,1]/n
-					v2[[k]] <- Reduce("+", lapply( x2, "[", stat[k] ))[,1]/n
-				}
-				x1[[1]]$Model <- paste0("AR4 ",n,"-Model Avg")
-				x2[[1]]$Model <- paste0("AR5 ",n,"-Model Avg")
-				x <- rbind(x1[[1]], x2[[1]])
-				for(k in 1:length(stat)){
-					x[[stat[k]]] <- c(v1[[k]],v2[[k]])
-					x[[stat[k]]][x$Var=="Temperature"] <- round(x[[stat[k]]][x$Var=="Temperature"],1)
-					x[[stat[k]]][x$Var=="Precipitation"] <- round(x[[stat[k]]][x$Var=="Precipitation"])
-				}
-			} else if(composite()==1) {
-				prog_d_master$set(message="Averaging model statistics...", value=8)
-				if(modelScenPair1()) n <- length(input$cmip3models) else if(modelScenPair2()) n <- length(input$cmip5models)
-				x1 <- split(x, x$Model)
-				v1 <- list()
-				for(k in 1:length(stat)) v1[[k]] <- Reduce("+", lapply( x1, "[", stat[k] ))[,1]/n
-				x1[[1]]$Model <- paste0(n,"-Model Avg")
-				x <- x1[[1]]
-				for(k in 1:length(stat)){
-					x[[stat[k]]] <- v1[[k]]
-					x[[stat[k]]][x$Var=="Temperature"] <- round(x[[stat[k]]][x$Var=="Temperature"],1)
-					x[[stat[k]]][x$Var=="Precipitation"] <- round(x[[stat[k]]][x$Var=="Precipitation"])
-				}
+				x <- x[, lapply(1:length(stat), function(i) round(sum(get(stat[i]))/n, 1)), by=list(Phase, Scenario, Var, Location, Year, Month, Decade)]
+				setnames(x, paste0("V", 1:length(stat)), stat)
+				x[, Model := paste0(Phase, " ", n, "-Model Avg")]
+				setcolorder(x, c("Phase", "Scenario", "Model", "Var", "Location", stat, "Year", "Month", "Decade"))
+				if("Precipitation" %in% c(input$vars, input$vars2)) for(i in 1:length(stat)) x[Var=="Precipitation", stats.columns[i] := round(get(stat[i]))]
 			}
 			if(input$convert_units){
 			prog_d_master$set(message="Unit conversion...", value=9)
@@ -259,7 +238,6 @@ dat_master <- reactive({
 				}
 			}
 			prog_d_master$set(message="GCM statistics complete.", value=10)
-			rownames(x) <- NULL
 		}
 	)
 	x
@@ -274,7 +252,6 @@ dat <- reactive({
 		} else {
 			if(aggStatsID()==aggStatsID2()) keep.cols <- 1:ncol(dat_master()) else keep.cols <- which(!(names(dat_master()) %in% aggStatsID2()))
 			x <- subset(dat_master(), Var %in% input$vars, keep.cols) # only one (first) climate variable permitted for use in TS plot
-			rownames(x) <- NULL
 		}
 	})
 	x
@@ -314,9 +291,10 @@ dat2 <- reactive({
 	if(goBtnNullOrZero()) return()
 	isolate({
 		x <- NULL
-		if(!is.null(dat_master()) && length(input$vars) && length(input$vars2)) x <- dcast(dat_master(), Phase + Model + Scenario + Location + Year + Month + Decade ~ Var, value.var=aggStatsID()) else x <- NULL
-		if(!is.null(x) && aggStatsID()!=aggStatsID2()) x[input$vars2] <- dat_master()[dat_master()$Var==input$vars2, aggStatsID2()]
+		if(!is.null(dat_master()) && length(input$vars) && length(input$vars2)) x <- data.table(dcast(dat_master(), Phase + Model + Scenario + Location + Year + Month + Decade ~ Var, value.var=aggStatsID())) else x <- NULL
+		if(!is.null(x) && aggStatsID()!=aggStatsID2()) x[, input$vars2] <- dat_master()[Var==input$vars2, get(aggStatsID2())]
 	})
+	print(x)
 	x
 })
 
@@ -464,24 +442,24 @@ dat_spatial <- reactive({
 								load(file.path(locDir, var.files[zzz]), envir=environment()) # Historical df loaded first (*alphabetical*)
 								if(zzz==1){
 									rsd.h <- subset(rsd.h, Month %in% month.abb[match(Months_original(), month.abb)] & Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4))
-									rsd.h <- data.frame(rsd.h)
-									if(nrow(rsd.h) > 0) rsd.h[,samples.columns] <- rsd.h[,samples.columns]/rep(samples.multipliers, each=nrow(rsd.h))
+									if(nrow(rsd.h) > 0) {
+										rsd.h[, Val := Val/samples.multipliers[1]]
+										rsd.h[, Prob := Prob/samples.multipliers[2]] # <- rsd.h[,samples.columns]/rep(samples.multipliers, each=nrow(rsd.h))
+									}
 								}
 								if(zzz > 1){
 									if(nrow(rsd.h) > 0){
-										rsd.h$Phase <- rsd$Phase[1]
-										rsd.h$Scenario <- rsd$Scenario[1]
-										rsd.h$Model <- rsd$Model[1]
+										rsd.h[, Phase := rsd$Phase[1]]
+										rsd.h[, Scenario := rsd$Scenario[1]]
+										rsd.h[, Model := rsd$Model[1]]
 									}
 									rsd <- subset(rsd, Month %in% month.abb[match(Months_original(), month.abb)] & Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4))
-									if(nrow(rsd.h) > 0 & nrow(rsd) > 0){
-										rsd <- data.frame(rsd)
-										rsd[,samples.columns] <- rsd[,samples.columns]/rep(samples.multipliers, each=nrow(rsd))
-										rsd.list3[[zzz-1]] <- rbind(rsd.h, rsd)
+									if(nrow(rsd) > 0) {
+										rsd[, Val := Val/samples.multipliers[1]]
+										rsd[, Prob := Prob/samples.multipliers[2]]
+										if(nrow(rsd.h) > 0) rsd.list3[[zzz-1]] <- rbind(rsd.h, rsd) else rsd.list3[[zzz-1]] <- rsd
 									} else if(nrow(rsd.h) > 0) {
 										rsd.list3[[zzz-1]] <- rsd.h
-									} else if(nrow(rsd) > 0) {
-										rsd.list3[[zzz-1]] <- rsd
 									} else return(NULL)
 								}
 							}
@@ -511,38 +489,23 @@ dat_spatial <- reactive({
 			}
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
 			# Otherwise compositing prohibited.
-			if(composite()==2){ # can assume both phases have multiple models, so split always works nicely
+			if(composite() > 0){ # can assume both phases have multiple models, so split always works nicely
 				prog_d_spatial$set(message="Averaging samples...", value=7.5)
 				n <- length(input$cmip3models) # will match length(input$cmip5models)
-				x <- split(x, x$Phase)
-				x1 <- split(x[[1]], x[[1]]$Model)
-				x2 <- split(x[[2]], x[[2]]$Model)
-				v1 <- Reduce("+", lapply( x1, "[", c("Val") ))[,1]/n #### Compositing definitely will not work with samples as defined (Should I produce new samples and dispense with Prob column here?)
-				v2 <- Reduce("+", lapply( x2, "[", c("Val") ))[,1]/n #### See code snippet at top of spatial plot script for possibly early integration of bootstrap resampling.
-				x1[[1]]$Model <- paste0("AR4 ",n,"-Model Avg") #### Probably also better to integrate here because it removes data manip from plotting stage and also offers user a more useful dataset to download
-				x2[[1]]$Model <- paste0("AR5 ",n,"-Model Avg")
-				x <- rbind(x1[[1]], x2[[1]])
-				x$Val <- c(v1,v2)
-				x$Val[x$Var=="Temperature"] <- round(x$Val[x$Var=="Temperature"],1)
-				x$Val[x$Var=="Precipitation"] <- round(x$Val[x$Var=="Precipitation"])
-			} else if(composite()==1) {
-				prog_d_spatial$set(message="Averaging samples...", value=8.5)
-				if(modelScenPair1()) n <- length(input$cmip3models) else if(modelScenPair2()) n <- length(input$cmip5models)
-				x1 <- split(x, x$Model)
-				v1 <- Reduce("+", lapply( x1, "[", c("Val") ))[,1]/n
-				x1[[1]]$Model <- paste0(n,"-Model Avg")
-				x <- x1[[1]]
-				x$Val <- v1
-				x$Val[x$Var=="Temperature"] <- round(x$Val[x$Var=="Temperature"],1)
-				x$Val[x$Var=="Precipitation"] <- round(x$Val[x$Var=="Precipitation"])
+				x[, Index := rep(1:BootSamples(), length=nrow(x))]
+				x <- x[, round(sum(Val)/n, 1), by=list(Phase, Scenario, Var, Location, Year, Month, Decade, Index)]
+				x[, Index := NULL]
+				setnames(x, "V1", "Val")
+				x[, Model := paste0(Phase, " ", n, "-Model Avg")]
+				setcolorder(x, c("Phase", "Scenario", "Model", "Var", "Location", "Val", "Year", "Month", "Decade"))
+				if("Precipitation" %in% input$vars) x[Var=="Precipitation", Val := round(Val)]
 			}
 			if(input$convert_units){
 				prog_d_spatial$set(message="Unit conversion...", value=9.5)
-				x$Val[x$Var=="Temperature"] <- round((9/5)*x$Val[x$Var=="Temperature"] + 32,1)
-				x$Val[x$Var=="Precipitation"] <- round(x$Val[x$Var=="Precipitation"]/25.4,3)
+				x[Var=="Temperature", Val := round((9/5)*Val + 32, 1)]
+				x[Var=="Precipitation", Val := round(Val/25.4, 3)]
 			}
 			prog_d_spatial$set(message="GCM distributions complete.", value=10)
-			rownames(x) <- NULL
 		}
 	)
 	x
