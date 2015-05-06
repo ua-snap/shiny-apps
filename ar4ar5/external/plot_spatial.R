@@ -12,11 +12,10 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, plot
 		if(show.overlay){
 			n.d <- nrow(d)
 			mods.d <- unique(d$Model)
-			yrs.tmp <- as.numeric(c(as.character(d$Year), as.character(overlay$Year)))
-			d <- data.frame(rbind(d[1:6], overlay[1:6]), Year=yrs.tmp, rbind(d[8:ncol(d)], overlay[8:ncol(overlay)]))
+			d <- rbind(d, overlay)
 			if(x=="Year") d$Year <- factor(d$Year)
-			d$Source <- factor(c(rep("Modeled", n.d), rep("Observed", nrow(overlay))))
-			d$Model <- factor(d$Model, levels=c(overlay$Model[1], mods.d))
+			d[, Source := factor(c(rep("Modeled", n.d), rep("Observed", nrow(overlay))))]
+			d[, Model := factor(d$Model, levels=c(overlay$Model[1], mods.d))]
 		}
 		if(!is.null(thin.sample) && is.numeric(thin.sample)) d <- d[seq(1, nrow(d), by=round(1/thin.sample)),]
 		bar.pos <- "dodge"
@@ -34,7 +33,6 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, plot
 			xdodge <- "xdodge"
 			d$xdodge <- dodge.pts$x.num + dodge.pts$grp.num
 		}
-		
 		
 		if(d$Var[1]=="Temperature") ylb <- paste0("Temperature (",units[1],")") else ylb <- paste0("Precipitation (",units[2],")")
 		if(x==y) { xlb <- ylb; ylb <- "Density" }
