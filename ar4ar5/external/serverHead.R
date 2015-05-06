@@ -70,13 +70,16 @@ mod2ar <- function(x){
 
 # @knitr sh_func03
 density2bootstrap <- function(d, n.density, n.boot=10000, interp=FALSE, n.interp=1000, ...){
+	nr <- nrow(d)
 	n.fact <- n.boot/n.density
-	n.grp <- nrow(d)/n.density
-	d$Index <- rep(1:n.grp, each=n.density)
-	d2 <- data.frame(lapply(d, rep, length=n.fact*nrow(d)), stringsAsFactors=FALSE)
-	prob.col <- which(names(d2) %in% c("Prob","Index"))
-	d2 <- d2[order(d2$Index), -prob.col]
-	d2$Val <- as.numeric(vapply(X=1:n.grp,
+	n.grp <- nr/n.density
+	ind <- rep(1:n.grp, each=n.density)
+	ind2 <- match(1:n.grp, ind)
+	d[, Index := ind]
+	d2 <-d[rep(ind2, each=n.fact*nr/n.grp)]
+	setkey(d2, Index)
+	d2[, Prob := NULL]
+	v <- as.numeric(vapply(X=1:n.grp,
 		FUN=function(i, d, n, interp, n.interp, ...){
 			p <- list(x=d$Val[d$Index==i], y=d$Prob[d$Index==i])
 			if(interp) p <- approx(p$x, p$y, n=n.interp)
@@ -84,6 +87,8 @@ density2bootstrap <- function(d, n.density, n.boot=10000, interp=FALSE, n.interp
 		},
 		FUN.VALUE=numeric(n.boot),
 		d=d, n=n.boot, interp=interp, n.interp=n.interp, ...))
+	d2[, Index := NULL]
+	d2[, Val := v]
 	d2
 }
 
