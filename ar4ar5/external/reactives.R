@@ -119,7 +119,7 @@ composite <- reactive({
 	x
 })
 
-# @knitr re_23_26
+# @knitr re_23_28
 currentUnits <- reactive({ if(input$convert_units) c("F", "in") else c("C", "mm") })
 
 aggStatsID <- reactive({
@@ -130,13 +130,17 @@ aggStatsID2 <- reactive({
 	agg.stat.colnames[which(agg.stat.names==input$aggStats2)]
 })
 
+aggStats <- reactive({ unique(c(aggStatsID(), aggStatsID2())) })
+
+nstat <- reactive({ length(aggStats()) })
+
 BootSamples <- reactive({
 	x <- as.numeric(input$bootSamples)
 	if(is.na(x) || x > 10000) x <- 50
 	x
 })
 
-# @knitr re_27_30
+# @knitr re_29_32
 Locs <- reactive({ if(is.null(input$loctype) || input$loctype!="Cities")  input$locs_regions else if(input$loctype=="Cities") input$locs_cities else NULL })
 
 regionSelected <- reactive({ input$loctype!="Cities" & length(Locs())  })
@@ -145,7 +149,7 @@ citySelected <- reactive({ input$loctype=="Cities" & length(Locs()) })
 
 locSelected <- reactive({ length(Locs()) })
 
-# @knitr re_31_41
+# @knitr re_33_43
 plot_ts_title <- reactive({ getPlotTitle(grp=input$group, facet=input$facet, pooled=pooled.var(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
 plot_sp_title <- reactive({ getPlotTitle(grp=input$group2, facet=input$facet2, pooled=pooled.var2(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
 plot_hm_title <- reactive({ getPlotTitle(grp="", facet=input$facetHeatmap, pooled=pooledVarHeatmap(), yrs=range(limitedYears()), mos=input$mos, mod=models(), scen=scenarios(), loc=Locs()) })
@@ -170,7 +174,7 @@ permitPlot <- reactive({
 	x
 })
 
-# @knitr re_42
+# @knitr re_44
 # Initially retain all climate variables regardless of user's selection
 dat_master <- reactive({
 	if(goBtnNullOrZero()) return()
@@ -202,14 +206,11 @@ dat_master <- reactive({
 					if(i==1) region.dat.final <- gcm.stats.df else region.dat.final <- rbind(region.dat.final, gcm.stats.df)
 				}
 				prog_d_master$set(message="Subsetting GCM time series data...", value=2.5)
-				stat <- c(aggStatsID(), aggStatsID2())
-				cols.drop <- match(agg.stat.colnames[which(!(agg.stat.colnames %in% stat))], names(region.dat.final))
+				cols.drop <- match(agg.stat.colnames[which(!(agg.stat.colnames %in% aggStats()))], names(region.dat.final))
 				x <- subset(region.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4) & 
 					Scenario %in% scenarios() & Model %in% models_original(), select=-cols.drop)
-				print(class(x))
 				x <- data.table(x) # make this a data table in the next round of processing the input workspaces and then remove from here
-				print(class(x))
 			}
 			if(!is.null(input$months2seasons) && input$months2seasons){
 				prog_d_master$set(message="GCM time series: aggregating months...", value=4)
@@ -224,17 +225,17 @@ dat_master <- reactive({
 			if(composite() > 0){ # can assume both phases have multiple models, so split always works nicely
 				prog_d_master$set(message="Averaging model statistics...", value=8)
 				n <- length(input$cmip3models) # will match length(input$cmip5models)
-				x <- x[, lapply(1:length(stat), function(i) round(sum(get(stat[i]))/n, 1)), by=list(Phase, Scenario, Var, Location, Year, Month, Decade)]
-				setnames(x, paste0("V", 1:length(stat)), stat)
+				x <- x[, lapply(1:naggStats(), function(i) round(sum(get(aggStats()[i]))/n, 1)), by=list(Phase, Scenario, Var, Location, Year, Month, Decade)]
+				setnames(x, paste0("V", 1:naggStats()), aggStats())
 				x[, Model := paste0(Phase, " ", n, "-Model Avg")]
-				setcolorder(x, c("Phase", "Scenario", "Model", "Var", "Location", stat, "Year", "Month", "Decade"))
-				if("Precipitation" %in% c(input$vars, input$vars2)) for(i in 1:length(stat)) x[Var=="Precipitation", stats.columns[i] := round(get(stat[i]))]
+				setcolorder(x, c("Phase", "Scenario", "Model", "Var", "Location", aggStats(), "Year", "Month", "Decade"))
+				if("Precipitation" %in% c(input$vars, input$vars2)) for(i in 1:naggStats()) x[Var=="Precipitation", stats.columns[i] := round(get(aggStats()[i]))]
 			}
 			if(input$convert_units){
 			prog_d_master$set(message="Unit conversion...", value=9)
-				for(k in 1:length(stat)){
-					x[[stat[k]]][x$Var=="Temperature"] <- round((9/5)*x[[stat[k]]][x$Var=="Temperature"] + 32,1)
-					x[[stat[k]]][x$Var=="Precipitation"] <- round(x[[stat[k]]][x$Var=="Precipitation"]/25.4,3)
+				for(k in 1:naggStats()){
+					x[Var=="Temperature", c(aggStats()[k]) := round((9/5)*get(aggStats()[k]) + 32, 1)]
+					x[Var=="Precipitation", c(aggStats()[k]) := round(get(aggStats()[k])/25.4, 3)]
 				}
 			}
 			prog_d_master$set(message="GCM statistics complete.", value=10)
@@ -243,7 +244,7 @@ dat_master <- reactive({
 	x
 })
 
-# @knitr re_44_46
+# @knitr re_46_48
 dat <- reactive({
 	if(goBtnNullOrZero()) return()
 	isolate({
@@ -277,9 +278,9 @@ dat_heatmap <- reactive({
 		if(!is.null(input$heatmap_x) & !is.null(input$heatmap_y)){
 			x <- c(input$heatmap_x, input$heatmap_y)
 			if(!(is.null(input$facetHeatmap) || input$facetHeatmap=="None")) x <- c(x, input$facetHeatmap)
-			stat <- aggStatsID()
-			if(input$vars=="Temperature") d <- ddply(d, x, here(summarise), XMean=round(mean(eval(parse(text=stat))), 1), XSD=round(sd(eval(parse(text=stat))), 1))
-			if(input$vars=="Precipitation") d <- ddply(d, x, here(summarise), XMean=round(mean(eval(parse(text=stat)))), XTotal=round(sum(eval(parse(text=stat)))), XSD=round(sd(eval(parse(text=stat)))))
+			stat1 <- aggStatsID()
+			if(input$vars=="Temperature") d <- ddply(d, x, here(summarise), XMean=round(mean(eval(parse(text=stat1))), 1), XSD=round(sd(eval(parse(text=stat1))), 1))
+			if(input$vars=="Precipitation") d <- ddply(d, x, here(summarise), XMean=round(mean(eval(parse(text=stat1)))), XTotal=round(sum(eval(parse(text=stat1)))), XSD=round(sd(eval(parse(text=stat1)))))
 			names(d) <- gsub("X", "", names(d))
 			if(all(is.na(d$SD))) d <- d[, -ncol(d)]
 		}
@@ -298,7 +299,7 @@ dat2 <- reactive({
 	x
 })
 
-# @knitr re_43
+# @knitr re_45
 CRU_master <- reactive({
 	if(goBtnNullOrZero()) return()
 	#prog_d_cru_master <- Progress$new(session, min=1, max=10)
@@ -327,12 +328,14 @@ CRU_master <- reactive({
 					if(i==1) region.cru.dat.final <- region.cru.dat else region.cru.dat.final <- rbind(region.cru.dat.final, region.cru.dat)
 				}
 				#prog_d_cru_master$set(message="Subsetting CRU 3.2 time series data...")
-				stat <- c(aggStatsID(), aggStatsID2())
-				cols.drop <- match(agg.stat.colnames[which(!(agg.stat.colnames %in% stat))], names(region.cru.dat.final))
+				cols.drop <- match(agg.stat.colnames[which(!(agg.stat.colnames %in% aggStats()))], names(region.cru.dat.final))
 				x <- subset(region.cru.dat.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4), select=-cols.drop)
+				x <- data.table(x)
 			}
 			if(nrow(x)==0) return()
+			x$Model <- x$Scenario <- x$Phase <- "CRU 3.2"
+			setcolorder(x, c("Phase", "Scenario", "Model", "Var", "Location", aggStats(), "Year", "Month", "Decade"))
 			if(!is.null(input$months2seasons) && input$months2seasons){
 				#prog_d_cru_master$set(message="CRU 3.2 time series: aggregating months...")
 				x <- collapseMonths(x, aggStatsID(), as.numeric(input$n_seasons), Months_original())
@@ -346,21 +349,18 @@ CRU_master <- reactive({
 			# Otherwise compositing prohibited.
 			if(input$convert_units){
 				#prog_d_cru_master$set(message="Unit conversion...")
-				for(k in 1:length(stat)){
-					x[[stat[k]]][x$Var=="Temperature"] <- round((9/5)*x[[stat[k]]][x$Var=="Temperature"] + 32,1)
-					x[[stat[k]]][x$Var=="Precipitation"] <- round(x[[stat[k]]][x$Var=="Precipitation"]/25.4,3)
+				for(k in 1:naggStats()){
+					x[Var=="Temperature", c(aggStats()[k]) := round((9/5)*get(aggStats()[k]) + 32, 1)]
+					x[Var=="Precipitation", c(aggStats()[k]) := round(get(aggStats()[k])/25.4, 3)]
 				}
 			}
-			rownames(x) <- NULL
-			x$Model <- x$Scenario <- x$Phase <- "CRU 3.2"
 			#prog_d_cru_master$set(message="CRU 3.2 statistics complete.")
-			x <- x[c(ncol(x) - c(2:0), 1:(ncol(x)-3))]
 		}
 	)
 	x
 })
 
-# @knitr re_47_48
+# @knitr re_49_50
 CRU <- reactive({
 	if(goBtnNullOrZero()) return()
 	isolate(
@@ -386,7 +386,7 @@ CRU2 <- reactive({
 })
 
 
-# @knitr re_49
+# @knitr re_51
 gcm_samples_files <- reactive({
 	if(anyModelScenPair() & length(input$vars)){
 		s <- substr(scenarios(), 1, 3)
@@ -401,7 +401,7 @@ gcm_samples_files <- reactive({
 	x
 })
 
-# @knitr re_50
+# @knitr re_52
 # Keep first climate variables only
 dat_spatial <- reactive({
 	if(goBtnNullOrZero()) return()
@@ -516,7 +516,7 @@ dat_spatial <- reactive({
 	x
 })
 
-# @knitr re_51
+# @knitr re_53
 CRU_spatial <- reactive({ #### All CRU datasets require recoding for externalization
 	if(goBtnNullOrZero()) return()
 	#prog_d_cru_spatial <- Progress$new(session, min=1, max=10)
@@ -573,7 +573,7 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 	x
 })
 
-# @knitr re_52_56
+# @knitr re_54_58
 # ggplot2 grouping, faceting, pooling
 groupFacetChoicesTS <- reactive({
 	if(!is.null(input$xtime)){
@@ -611,7 +611,7 @@ pooled.var <- reactive({
 
 subjectChoices <- reactive({ getSubjectChoices(inx=input$xtime, ingrp=input$group, pooled.vars=pooled.var()) })
 
-# @knitr re_57_61
+# @knitr re_59_63
 sc_flip_xy <- reactive({
 	if(is.null(c(input$vars, input$vars2))) return(FALSE)
 	if(input$sc_x==input$vars) FALSE else TRUE
@@ -642,7 +642,7 @@ pooled.var2 <- reactive({
 	x
 })
 
-# @knitr re_62_66
+# @knitr re_64_68
 heatmap_x_choices <- reactive({
 	getHeatmapAxisChoices(scenarios(), models(), Locs(), Months(), currentYears(), Decades(),
 		input$cmip3scens, input$cmip5scens, input$cmip3models, input$cmip5models)
@@ -665,7 +665,7 @@ pooledVarHeatmap <- reactive({
 	x
 })
 
-# @knitr re_67_73
+# @knitr re_69_75
 xvarChoices <- reactive({
 		ind <- which(unlist(lapply(list(phases, scenarios(), models(), Locs(), Months(), currentYears(), Decades()), length))>1)
 		if(length(ind)) choices <- c("Phase","Scenario", "Model", "Location", "Month", "Year", "Decade")[ind] else choices <- NULL
@@ -710,7 +710,7 @@ subjectChoices3 <- reactive({ getSubjectChoices(inx=input$xvar, ingrp=input$grou
 
 Variability <- reactive({ if(!is.null(input$variability)) !input$variability else NULL })
 
-# @knitr re_74_80
+# @knitr re_76_82
 spatial_x_choices <- reactive({
 		ind <- which(unlist(lapply(list(phases, scenarios(), models(), Locs(), Months(), currentYears(), Decades()), length))>1)
 		if(length(ind)) choices <- c("Phase","Scenario", "Model", "Location", "Month", "Year", "Decade")[ind] else choices <- NULL
@@ -759,12 +759,12 @@ plotTypeChoicesSpatial <- reactive({
 	if(input$spatial_x=="Temperature" | input$spatial_x=="Precipitation") c("Histogram", "Density") else c("Stripchart")
 })
 
-# @knitr re_81_85
+# @knitr re_83_87
 # Data aggregation
 datCollapseGroups <- reactive({
 	if(!is.null(dat()) & !is.null(input$group)){
 		d <- dat()
-		d[input$group] <- rep("Average",nrow(dat()))
+		d[, c(input$group) := "Average"]
 		d
 	} else return()
 })
@@ -772,7 +772,7 @@ datCollapseGroups <- reactive({
 datCollapsePooled <- reactive({
 	if(!is.null(dat())){
 		d <- dat()
-		if(!is.null(pooled.var())) for(k in 1:length(pooled.var())) d[pooled.var()[k]] <- rep("Average",nrow(dat()))
+		if(!is.null(pooled.var())) d[, c(pooled.var()) := "Average"]
 		d
 	} else return()
 })
@@ -780,7 +780,7 @@ datCollapsePooled <- reactive({
 datCollapseGroups2 <- reactive({
 	if(!is.null(dat2()) & !is.null(input$group)){
 		d <- dat2()
-		d[input$group] <- rep("Average",nrow(dat2()))
+		d[, c(input$group) := "Average"]
 		d
 	} else return()
 })
@@ -788,7 +788,7 @@ datCollapseGroups2 <- reactive({
 datCollapsePooled2 <- reactive({
 	if(!is.null(dat2())){
 		d <- dat2()
-		if(!is.null(pooled.var())) for(k in 1:length(pooled.var())) d[pooled.var()[k]] <- rep("Average",nrow(dat2()))
+		if(!is.null(pooled.var())) d[, c(pooled.var()) := "Average"]
 		d
 	} else return()
 })
@@ -801,7 +801,7 @@ stat <- reactive({
 	stat
 })
 
-# @knitr re_86_90
+# @knitr re_89_92
 # Color sequences
 colorseq_ts <- reactive({
 	getColorSeq(d=dat(), grp=input$group, n.grp=n.groups())
