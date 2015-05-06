@@ -27,7 +27,7 @@ function(d, d.grp, d.pool, x, y, panels, grp, n.grp, ingroup.subjects=NULL, plot
 		#### Point dodging when using grouping variable
 		wid <- 0.9
 		dodge <- position_dodge(width=wid)
-		x.n <- length(unique(d[,x]))
+		x.n <- length(unique(d[, get(x)]))
 		if(x!=y & is.character(grp) & n.grp>1){
 			dodge.pts <- dodgePoints(d, x, grp, n.grp, facet.by, width=wid)
 			xdodge <- "xdodge"
