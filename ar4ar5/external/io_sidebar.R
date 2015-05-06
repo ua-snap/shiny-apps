@@ -422,7 +422,7 @@ output$StripDirectionSpatial <- renderUI({ #### Consider swapping this out for a
 	}
 })
 
-# @knitr sb_out_56_60
+# @knitr sb_out_56_61
 # Plot buttons
 output$PlotButton_ts <- renderUI({
 	if(permitPlot() & !is.null(dat()) & !goBtnNullOrZero()) if(nrow(dat())>0) actionButton("plotButton_ts", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
@@ -433,7 +433,13 @@ output$PlotButton_sc <- renderUI({
 })
 
 output$PlotButton_hm <- renderUI({
-	if(permitPlot() & !is.null(dat()) & !goBtnNullOrZero()) if(nrow(dat())>0) actionButton("plotButton_hm", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
+	if(permitPlot() && !goBtnNullOrZero() && input$heatmap_x!=input$heatmap_y && !is.null(dat_heatmap()) && nrow(dat_heatmap()) > 1) actionButton("plotButton_hm", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
+})
+outputOptions(output, "PlotButton_hm", suspendWhenHidden=FALSE)
+
+output$DlButton_hm <- renderUI({
+	if(!is.null(input$plotButton_hm) && input$plotButton_hm > 0 && 
+		input$heatmap_x!=input$heatmap_y && !is.null(dat_heatmap()) && nrow(dat_heatmap()) > 1) downloadButton("dlCurPlotHeatmap", "Download Plot", class="btn-success btn-block") else NULL
 })
 
 output$PlotButton_vr <- renderUI({

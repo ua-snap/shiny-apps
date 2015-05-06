@@ -180,7 +180,7 @@ output$PlotHeatmap <- renderPlot({
 		progress$set(message="Generating plot...", value=10)
 		doPlot_heatmap(show.logo=F)
 		})
-}, height=function(){ w <- if(twoBtnNullOrZero_hm()) 0 else session$clientData$output_PlotHeatmap_width; round((7/12)*w)	}, width="auto")
+}, height=function(){ w <- if(twoBtnNullOrZero_hm() || input$heatmap_x==input$heatmap_y || (is.null(dat_heatmap()) || nrow(dat_heatmap())==1)) 0 else session$clientData$output_PlotHeatmap_width; round((7/12)*w)	}, width="auto")
 
 output$dlCurPlotHeatmap <- downloadHandler(
 	filename='heatmap.pdf',

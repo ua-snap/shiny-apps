@@ -182,8 +182,7 @@ column(4,
 		)
 		),
 		fluidRow(
-			conditionalPanel(condition="input.tsp == 'plot_heatmap'", column(6, uiOutput("PlotButton_hm")),
-				column(6, conditionalPanel(condition="input.plotButton_hm > 0", downloadButton("dlCurPlotHeatmap", "Download Plot", class="btn-success btn-block")))),
+			conditionalPanel(condition="input.tsp == 'plot_heatmap'", column(6, uiOutput("PlotButton_hm")), conditionalPanel(condition="input.plotButton_hm !== null", column(6, uiOutput("DlButton_hm")))),
 			conditionalPanel(condition="input.tsp == 'plot_ts'", column(6, uiOutput("PlotButton_ts")), 
 				column(6, conditionalPanel(condition="input.plotButton_ts > 0", downloadButton("dlCurPlotTS", "Download Plot", class="btn-success btn-block")))),
 			conditionalPanel(condition="input.tsp == 'plot_scatter'", column(6, uiOutput("PlotButton_sc")),
