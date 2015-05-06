@@ -411,6 +411,7 @@ dat_spatial <- reactive({
 		if(is.null(Months_original()) | is.null(input$vars) | is.null(scenarios()) | is.null(models_original()) | locSelected()==FALSE){
 			x <- NULL
 		} else {
+			gc()
 			if(input$loctype=="Cities" && length(input$locs_cities) && input$locs_cities[1]!="") { #### Deal with cities under spatial data conditions later
 				city.ind <- which(city.names %in% Locs())
 				for(i in 1:length(city.ind)) {
@@ -475,10 +476,14 @@ dat_spatial <- reactive({
 				x <- rbindlist(rsd.list)
 				rm(rsd.list, rsd, rsd.h)
 				gc()
+				setkey(x, Phase, Scenario, Model, Var, Location, Year, Month, Decade)
 			}
 			prog_d_spatial$set(message="Bootstrap resampling...", value=5)
 			rnd <- if(input$vars[1]=="Precipitation") 0 else 1
-			x <- density2bootstrap(x, n.density=n.samples, n.boot=BootSamples(), interp=TRUE, n.interp=1000, digits=rnd) # n.boot and n.interp values tentative
+			x <- x[, density2bootstrap(Val, Prob, n.boot=BootSamples(), digits=rnd), by=list(Phase, Scenario, Model, Var, Location, Year, Month, Decade)]
+			setnames(x, "V1", "Val")
+			setcolorder(x, c("Phase", "Scenario", "Model", "Var", "Location", "Val", "Year", "Month", "Decade"))
+			gc()
 			if(!is.null(input$months2seasons) && input$months2seasons){
 				prog_d_spatial$set(message="Aggregating months...", value=6)
 				x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=1000)
@@ -536,11 +541,16 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 				}
 				x <- subset(rsd.cru.final, Month %in% month.abb[match(Months_original(), month.abb)] & 
 					Year %in% currentYears() & Decade %in% substr(Decades_original(),1,4))# & Location %in% input$locs_regions & Var %in% input$vars[1])
+				x <- data.table(x)
 			}
 			if(nrow(x)==0) return()
 			rnd <- if(input$vars[1]=="Precipitation") 0 else 1
 			#prog_d_cru_spatial$set(message="CRU 3.2 bootstrap resampling...", value=3)
-			x <- density2bootstrap(x, n.density=n.samples, n.boot=BootSamples(), interp=TRUE, n.interp=1000, digits=rnd) # n.boot and n.interp values tentative
+			x <- x[, density2bootstrap(Val, Prob, n.boot=BootSamples(), digits=rnd), by=list(Var, Location, Year, Month, Decade)]
+			setnames(x, "V1", "Val")
+			x$Model <- x$Scenario <- x$Phase <- "CRU 3.2"
+			setkey(x, Phase, Scenario, Model, Var, Location, Year, Month, Decade)
+			setcolorder(x, c("Phase", "Scenario", "Model", "Var", "Location", "Val", "Year", "Month", "Decade"))
 			if(!is.null(input$months2seasons) && input$months2seasons){
 				#prog_d_cru_spatial$set(message="CRU 3.2 spatial distributions: aggregating months...", value=7)
 				x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=1000)
@@ -554,15 +564,14 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 			# Otherwise compositing prohibited.
 			if(input$convert_units){
 				#prog_d_cru_spatial$set(message="Unit conversion...", value=9)
-				x$Val[x$Var=="Temperature"] <- round((9/5)*x$Val[x$Var=="Temperature"] + 32,1)
-				x$Val[x$Var=="Precipitation"] <- round(x$Val[x$Var=="Precipitation"]/25.4,3)
+				x[Var=="Temperature", Val := round((9/5)*Val + 32, 1)]
+				x[Var=="Precipitation", Val := round(Val/25.4, 3)]
 			}
-			rownames(x) <- NULL
-			x$Model <- x$Scenario <- x$Phase <- "CRU 3.2"
 			#prog_d_cru_spatial$set(message="CRU 3.2 distributions complete.", value=10)
 			x <- x[c(ncol(x) - c(2:0), 1:(ncol(x)-3))]
 		}
 	)
+	print(x)
 	x
 })
 
