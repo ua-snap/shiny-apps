@@ -563,6 +563,7 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 			if(!is.null(input$decades2periods) && input$decades2periods){
 				#prog_d_cru_spatial$set(message="CRU 3.2 spatial distributions: aggregating decades...", value=8)
 				x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), check.years=TRUE, n.samples=BootSamples())
+				setkey(x, Phase, Scenario, Model, Var, Location, Year, Month, Decade)
 			}
 			if(is.null(x)) return()
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
