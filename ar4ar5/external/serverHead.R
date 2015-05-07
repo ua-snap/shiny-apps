@@ -116,7 +116,7 @@ periodsFromDecades <- function(d, n.p, decs, check.years=FALSE, n.samples=1){
 			periods <- paste0(substr(sapply(splt, function(x) paste(c(x[1], tail(x,1)), collapse="-")), 1, 8), 9)
 			setkey(d, Decade)
 			for(i in 1:length(periods)) d[splt[[i]], Decade := periods[i]]
-			d <- subset(d, nchar(Decade)>4)
+			d <- d[nchar(Decade) > 4,]
 		} else d <- NULL
 	} else {
 		periods <- paste0(substr(sapply(splt, function(x) paste(c(x[1], tail(x,1)), collapse="-")), 1, 8), 9)
