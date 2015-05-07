@@ -485,11 +485,11 @@ dat_spatial <- reactive({
 			gc()
 			if(!is.null(input$months2seasons) && input$months2seasons){
 				prog_d_spatial$set(message="Aggregating months...", value=6)
-				x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=1000)
+				x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=BootSamples())
 			}
 			if(!is.null(input$decades2periods) && input$decades2periods){
 				prog_d_spatial$set(message="Aggregating decades...", value=7)
-				x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), n.samples=1000)
+				x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), n.samples=BootSamples())
 			}
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
 			# Otherwise compositing prohibited.
@@ -552,11 +552,11 @@ CRU_spatial <- reactive({ #### All CRU datasets require recoding for externaliza
 			setcolorder(x, c("Phase", "Scenario", "Model", "Var", "Location", "Val", "Year", "Month", "Decade"))
 			if(!is.null(input$months2seasons) && input$months2seasons){
 				#prog_d_cru_spatial$set(message="CRU 3.2 spatial distributions: aggregating months...", value=7)
-				x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=1000)
+				x <- collapseMonths(x, "Val", as.numeric(input$n_seasons), Months_original(), n.samples=BootSamples())
 			}
 			if(!is.null(input$decades2periods) && input$decades2periods){
 				#prog_d_cru_spatial$set(message="CRU 3.2 spatial distributions: aggregating decades...", value=8)
-				x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), check.years=TRUE, n.samples=1000)
+				x <- periodsFromDecades(x, as.numeric(input$n_periods), Decades_original(), check.years=TRUE, n.samples=BootSamples())
 			}
 			if(is.null(x)) return()
 			# data from only one phase with multiple models in that phase selected, or two phases with equal number > 1 of models selected from each phase.
