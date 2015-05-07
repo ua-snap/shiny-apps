@@ -103,14 +103,10 @@ collapseMonths <- function(d, variable, n.s, mos, n.samples=1, f=function(x) rou
 	d
 }
 
-system.time( z1 <- collapseMonths(d=x, variable, n.s, mos) )
-system.time( z2 <- collapseMonths2(d=x, variable, n.s, mos) )
-identical(as.numeric(z1$Mean), z2$Mean)
-
 # @knitr sh_func07
 periodsFromDecades <- function(d, n.p, decs, check.years=FALSE, n.samples=1){
 	decs <- as.numeric(substr(decs,1,4))
-	n.mos <- length(unique(d$Month))
+	n.mos <- length(levels(d$Month))
 	p <- length(decs)/n.p
 	splt <- split(decs, rep(1:n.p, each=p))
 	if(check.years){ # Ensure inclusion only of CRU data which span an entire defined multi-decade period
@@ -118,12 +114,13 @@ periodsFromDecades <- function(d, n.p, decs, check.years=FALSE, n.samples=1){
 		if(length(keep.ind)){
 			splt <- splt[keep.ind]
 			periods <- paste0(substr(sapply(splt, function(x) paste(c(x[1], tail(x,1)), collapse="-")), 1, 8), 9)
-			for(i in 1:length(periods)) d$Decade[d$Decade %in% splt[[i]]] <- periods[i]
+			setkey(d, Decade)
+			for(i in 1:length(periods)) d[splt[[i]], Decade := periods[i]]
 			d <- subset(d, nchar(Decade)>4)
 		} else d <- NULL
 	} else {
 		periods <- paste0(substr(sapply(splt, function(x) paste(c(x[1], tail(x,1)), collapse="-")), 1, 8), 9)
-		d$Decade <- rep(periods, each=n.mos*10*p*n.samples)
+		d[, Decade := rep(periods, each=n.mos*10*p*n.samples)]
 	}
 	d
 }
