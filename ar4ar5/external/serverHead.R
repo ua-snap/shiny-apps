@@ -115,7 +115,6 @@ periodsFromDecades <- function(d, n.p, decs, check.years=FALSE, n.samples=1){
 		if(length(keep.ind)){
 			splt <- splt[keep.ind]
 			periods <- paste0(substr(sapply(splt, function(x) paste(c(x[1], tail(x,1)), collapse="-")), 1, 8), 9)
-			print(periods)
 			for(i in 1:length(periods)) d[Decade %in% splt[[i]], Decade := periods[i]]
 			d <- d[nchar(Decade) > 4,]
 		} else d <- NULL
