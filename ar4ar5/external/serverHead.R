@@ -90,11 +90,10 @@ periodLength <- function(x){
 collapseMonths <- function(d, variable, n.s, mos, n.samples=1, f=function(x) round(mean(x), 1), f.args=list()){
 	p <- length(mos)/n.s
 	ind <- as.integer(sapply(1:n.s, function(i, n, p) rep(1:n, p) + (i-1)*n, n=n.samples, p=p))
-	d <- d
 	d[, Index := ind]
 	d <- d[, lapply(1:length(variable), function(i, x, f.args) do.call(f, c(list(get(x[i])), f.args)), x=variable, f.args=f.args), by=list(Phase, Scenario, Model, Var, Location, Year, Decade, Index)]
 	d[, Index := NULL]
-	id.seasons <- sapply(split(mos, ind), function(x) paste(c(x[1], tail(x,1)), collapse="-"))
+	id.seasons <- sapply(split(mos, rep(1:n.s, each=p)), function(x) paste(c(x[1], tail(x,1)), collapse="-"))
 	id.seasons <- rep(factor(id.seasons, levels=id.seasons), each=n.samples)
 	d[, Month := id.seasons]
 	setnames(d, paste0("V", 1:length(variable)), variable)
@@ -103,19 +102,21 @@ collapseMonths <- function(d, variable, n.s, mos, n.samples=1, f=function(x) rou
 	d
 }
 
+z1 <- collapseMonths(d=x, variable="Val", n.s=2, mos=c("Jan", "Feb", "May", "Jun"), n.samples=50, f=function(x) round(mean(x), 1), f.args=list())
+
 # @knitr sh_func07
 periodsFromDecades <- function(d, n.p, decs, check.years=FALSE, n.samples=1){
 	decs <- as.numeric(substr(decs,1,4))
 	n.mos <- length(levels(d$Month))
 	p <- length(decs)/n.p
 	splt <- split(decs, rep(1:n.p, each=p))
-	if(check.years){ # Ensure inclusion only of CRU data which span an entire defined multi-decade period
+	if(check.years){ # Ensure inclusion only of CRU data which exist for multi-decade period (may be incomplete years)
 		keep.ind <- which(sapply(splt, function(x) all(x %in% unique(d$Decade))))
 		if(length(keep.ind)){
 			splt <- splt[keep.ind]
 			periods <- paste0(substr(sapply(splt, function(x) paste(c(x[1], tail(x,1)), collapse="-")), 1, 8), 9)
-			setkey(d, Decade)
-			for(i in 1:length(periods)) d[splt[[i]], Decade := periods[i]]
+			print(periods)
+			for(i in 1:length(periods)) d[Decade %in% splt[[i]], Decade := periods[i]]
 			d <- d[nchar(Decade) > 4,]
 		} else d <- NULL
 	} else {
