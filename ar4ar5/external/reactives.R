@@ -132,7 +132,7 @@ aggStatsID2 <- reactive({
 
 aggStats <- reactive({ unique(c(aggStatsID(), aggStatsID2())) })
 
-nstat <- reactive({ length(aggStats()) })
+naggStats <- reactive({ length(aggStats()) })
 
 BootSamples <- reactive({
 	x <- as.numeric(input$bootSamples)
@@ -212,9 +212,15 @@ dat_master <- reactive({
 					Scenario %in% scenarios() & Model %in% models_original(), select=-cols.drop)
 				x <- data.table(x) # make this a data table in the next round of processing the input workspaces and then remove from here
 			}
+			x <<- x
+			mos <<- Months_original()
+			variable <<- aggStats()
+			n.s <<- as.numeric(input$n_seasons)
+			np. <<- as.numeric(input$n_periods)
+			decs <<- Decades_original()
 			if(!is.null(input$months2seasons) && input$months2seasons){
 				prog_d_master$set(message="GCM time series: aggregating months...", value=4)
-				x <- collapseMonths(x, aggStatsID(), as.numeric(input$n_seasons), Months_original())
+				x <- collapseMonths(x, aggStats(), as.numeric(input$n_seasons), Months_original())
 			}
 			if(!is.null(input$decades2periods) && input$decades2periods){
 				prog_d_master$set(message="GCM time series: aggregating decades...", value=6)
@@ -337,7 +343,7 @@ CRU_master <- reactive({
 			setcolorder(x, c("Phase", "Scenario", "Model", "Var", "Location", aggStats(), "Year", "Month", "Decade"))
 			if(!is.null(input$months2seasons) && input$months2seasons){
 				#prog_d_cru_master$set(message="CRU 3.2 time series: aggregating months...")
-				x <- collapseMonths(x, aggStatsID(), as.numeric(input$n_seasons), Months_original())
+				x <- collapseMonths(x, aggStats(), as.numeric(input$n_seasons), Months_original())
 			}
 			if(!is.null(input$decades2periods) && input$decades2periods){
 				#prog_d_cru_master$set(message="CRU 3.2 time series: aggregating decades...")
