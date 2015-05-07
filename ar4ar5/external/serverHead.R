@@ -87,26 +87,25 @@ periodLength <- function(x){
 }
 
 # @knitr sh_func06
-collapseMonths <- function(d, variable, n.s, mos, n.samples=1){
-	nrx <- nrow(d)
+collapseMonths <- function(d, variable, n.s, mos, n.samples=1, f=function(x) round(mean(x), 1), f.args=list()){
 	p <- length(mos)/n.s
-	ind.keep <- rep(seq(1, nrx, by=p*n.samples), each=n.samples) + 0:(n.samples-1)
-	m <- length(ind.keep)
-	id.seasons <- sapply(split(mos, rep(1:n.s, each=p)), function(x) paste(c(x[1], tail(x,1)), collapse="-"))
-	id.seasons <- rep(rep(factor(id.seasons, levels=id.seasons), each=n.samples) , length=m)
-	v <- list()
-	for(k in 1:length(variable)){
-		if(n.samples>1) v[[k]] <- round(unlist(tapply(d[[variable[k]]], rep(1:(nrx/(p*n.samples)), each=p*n.samples), FUN=function(x, nc) rowMeans(matrix(x, ncol=nc)), nc=p)), 1)
-		if(n.samples==1) v[[k]] <- round(tapply(d[[variable[k]]], rep(1:(nrx/p), each=p), FUN=mean), 1)
-	}
-	d <- d[ind.keep,]
-	d$Month <- id.seasons
-	for(k in 1:length(variable)){
-		d[[variable[k]]] <- v[[k]]
-		if(any(d$Var=="Precipitation")) d[[variable[k]]][d$Var=="Precipitation"] <- round(p*d[[variable[k]]][d$Var=="Precipitation"])
-	}
+	ind <- as.integer(sapply(1:n.s, function(i, n, p) rep(1:n, p) + (i-1)*n, n=n.samples, p=p))
+	d <- d
+	d[, Index := ind]
+	d <- d[, lapply(1:length(variable), function(i, x, f.args) do.call(f, c(list(get(x[i])), f.args)), x=variable, f.args=f.args), by=list(Phase, Scenario, Model, Var, Location, Year, Decade, Index)]
+	d[, Index := NULL]
+	id.seasons <- sapply(split(mos, ind), function(x) paste(c(x[1], tail(x,1)), collapse="-"))
+	id.seasons <- rep(factor(id.seasons, levels=id.seasons), each=n.samples)
+	d[, Month := id.seasons]
+	setnames(d, paste0("V", 1:length(variable)), variable)
+	setcolorder(d, c("Phase", "Scenario", "Model", "Var", "Location", variable, "Year", "Month", "Decade"))
+	for(i in 1:length(variable)) d[Var=="Precipitation", variable[i] := round(p*get(variable[i]))] # multiply by p to sum precip, assumes mean() passed to f
 	d
 }
+
+system.time( z1 <- collapseMonths(d=x, variable, n.s, mos) )
+system.time( z2 <- collapseMonths2(d=x, variable, n.s, mos) )
+identical(as.numeric(z1$Mean), z2$Mean)
 
 # @knitr sh_func07
 periodsFromDecades <- function(d, n.p, decs, check.years=FALSE, n.samples=1){
