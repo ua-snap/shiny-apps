@@ -41,7 +41,7 @@ shinyUI(navbarPage(theme=shinytheme("cosmo"),
 		HTML('
 		<p style="text-align:justify">There about about 4,000 communities in the app.
 		Communities are not truly point data, e.g., weather station data.
-		Rather, they are based on SNAP\'s downscaled climate data sets and a "community" refers to the <em>grid cell</em> in which contains a community\'s coordinates.
+		Rather, they are based on SNAP\'s downscaled climate data sets and a "community" refers to the <em>grid cell</em> which contains a community\'s coordinates.
 		Communities are included from Alaska as well as the Canadian provinces Alberta, British Columbia, Manitoba, Saskatchewan, and Yukon and Northwest territories.</p>
 		
 		<p style="text-align:justify">Downscaled climate is on a 2-km by 2-km grid for all but the Northwest Territories, which is restricted to a 10-minute by 10-minute resolution.
