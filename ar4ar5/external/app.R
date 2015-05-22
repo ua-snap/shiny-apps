@@ -1,7 +1,8 @@
+# @knitr app_source
 # Source reactive expressions and other code
 source("external/reactives.R",local=T) # source reactive expressions
 source("external/io_sidebar.R",local=T) # source input/output objects associated with sidebar
-source("external/io_mainPanel.R",local=T) # source input/output objects associated with mainPanel
+source("external/io_main.R",local=T) # source input/output objects associated with mainPanel
 
 tsPlot <- source("external/plot_ts.R",local=T)$value
 scatterPlot <- source("external/plot_scatter.R",local=T)$value
@@ -9,6 +10,7 @@ varPlot <- source("external/plot_variability.R",local=T)$value
 heatPlot <- source("external/plot_heatmap.R",local=T)$value
 spatialPlot <- source("external/plot_spatial.R",local=T)$value
 
+# @knitr app_plotts
 # Specific plot function setup
 doPlot_ts <- function(...){
 	if(permitPlot() & !is.null(input$group)){
@@ -25,6 +27,7 @@ doPlot_ts <- function(...){
 	} else NULL
 }
 
+# @knitr app_plotsc
 doPlot_scatter <- function(...){
 	if(permitPlot() & !is.null(input$group2)){
 		if(!(input$group2!="None" & !length(input$colorpalettes_sc))){
@@ -38,6 +41,7 @@ doPlot_scatter <- function(...){
 	} else NULL
 }
 
+# @knitr app_plothm
 doPlot_heatmap <- function(...){
 	if(permitPlot() & !is.null(input$heatmap_x) & !is.null(input$heatmap_y) & length(input$colorpalettes_hm)){
 		heatPlot(d=dat(), d.stat=aggStatsID(), d2=dat_heatmap(), x=input$heatmap_x, y=input$heatmap_y, z=input$statHeatmap, Log=input$log_hm,
@@ -49,6 +53,7 @@ doPlot_heatmap <- function(...){
 	} else NULL
 }
 
+# @knitr app_plotvr
 doPlot_var <- function(...){
 	if(permitPlot() & !is.null(pooled.var3()) & !is.null(input$group3)){
 		if(!(input$group3!="None" & !length(input$colorpalettes_vr))){
@@ -65,6 +70,7 @@ doPlot_var <- function(...){
 	} else NULL
 }
 
+# @knitr app_plotsp
 doPlot_spatial <- function(...){
 	if(permitPlot() & !is.null(pooledVarSpatial()) & !is.null(input$groupSpatial)){
 		if(!(input$groupSpatial!="None" & !length(input$colorpalettes_sp))){
@@ -80,6 +86,7 @@ doPlot_spatial <- function(...){
 	} else NULL
 }
 
+# @knitr app_outts
 # Primary outputs
 # Time series plot
 output$PlotTS <- renderPlot({
@@ -104,6 +111,7 @@ output$dlCurTableTS <- downloadHandler(
 	filename=function(){ 'timeseries_data.csv' }, content=function(file){ write.csv(dat(), file) }
 )
 
+# @knitr app_outsc
 # Scatterplot
 plot_scatter_ht <- function(){
 	if(twoBtnNullOrZero_sc()) return(0)
@@ -138,6 +146,7 @@ output$dlCurTableScatter <- downloadHandler(
 	filename=function(){ 'scatterplot_data.csv' }, content=function(file){ write.csv(dat2(), file) }
 )
 
+# @knitr app_outvr
 # Variability plot
 output$PlotVariability <- renderPlot({
 	if(twoBtnNullOrZero_vr()) return()
@@ -161,6 +170,7 @@ output$dlCurTableVariability <- downloadHandler(
 	filename=function(){ 'variability_data.csv' }, content=function(file){ write.csv(dat(), file) }
 )
 
+# @knitr app_outhm
 # Heatmap plot
 output$PlotHeatmap <- renderPlot({
 	if(twoBtnNullOrZero_hm()) return()
@@ -170,7 +180,7 @@ output$PlotHeatmap <- renderPlot({
 		progress$set(message="Generating plot...", value=10)
 		doPlot_heatmap(show.logo=F)
 		})
-}, height=function(){ w <- if(twoBtnNullOrZero_hm()) 0 else session$clientData$output_PlotHeatmap_width; round((7/12)*w)	}, width="auto")
+}, height=function(){ w <- if(twoBtnNullOrZero_hm() || input$heatmap_x==input$heatmap_y || (is.null(dat_heatmap()) || nrow(dat_heatmap())==1)) 0 else session$clientData$output_PlotHeatmap_width; round((7/12)*w)	}, width="auto")
 
 output$dlCurPlotHeatmap <- downloadHandler(
 	filename='heatmap.pdf',
@@ -184,6 +194,7 @@ output$dlCurTableHeatmap <- downloadHandler(
 	filename=function(){ 'heatmap_data.csv' }, content=function(file){ write.csv(dat(), file) }
 )
 
+# @knitr app_outsp
 # Spatial plot
 output$PlotSpatial <- renderPlot({
 	if(twoBtnNullOrZero_sp()) return()
@@ -206,64 +217,3 @@ output$dlCurPlotSpatial <- downloadHandler(
 output$dlCurTableSpatial <- downloadHandler(
 	filename=function(){ 'spatial_data.csv' }, content=function(file){ write.csv(dat_spatial(), file) }
 )
-
-############################## Leaflet testing
-# Create the map; this is not the "real" map, but rather a proxy
-# object that lets us control the leaflet map on the page.
-#map <- createLeafletMap(session, 'map')
-
-#observe({
-#	if(is.null(input$map_click)) return()
-#	selectedCity <<- NULL
-#})
-
-#radiusFactor <- 1000
-#observe({
-#	map$clearShapes()
-#	cities <- topCitiesInBounds()
-#	if(nrow(cities) == 0) return()
-
-#	map$addCircle(
-#		cities$Lat,
-#		cities$Lon,
-#		sqrt(cities$Population)*radiusFactor/max(5, input$map_zoom)^2,
-#		cities$Location,
-#		list(weight=1.2, fill=TRUE, color='#8B008B')
-#	)
-#})
-
-#observe({
-#	event <- input$map_shape_click
-#	if(is.null(event)) return()
-#	map$clearPopups()
-    
-#	isolate({
-#		cities <- topCitiesInBounds()
-#		city <- cities[cities$Location == event$id,]
-#		selectedCity <<- city
-#		content <- as.character(tagList(
-#			tags$strong(city$Location),
-#			tags$br(),
-#			sprintf("Estimated population, %s:", 2010), #2010?
-#			tags$br(),
-#			prettyNum(city$Population, big.mark=',')
-#		))
-#		map$showPopup(event$lat, event$lng, content, event$id)
-#	})
-#})
-
-#output$desc <- reactive({
-#	if(is.null(input$map_bounds)) return(list())
-#	list(
-#		lat=mean(c(input$map_bounds$north, input$map_bounds$south)),
-#		lng=mean(c(input$map_bounds$east, input$map_bounds$west)),
-#		shownCities=nrow(topCitiesInBounds()),
-#		totalCities=nrow(citiesInBounds())
-#	)
-#})
-
-#output$citydata <- renderTable({
-#	if(nrow(topCitiesInBounds()) == 0) return(NULL)
-#	topCitiesInBounds()
-#}, include.rownames = FALSE)
-###################################################

@@ -1,5 +1,4 @@
-# x-axis variable (TS plot, Variability plot), x/y axes variables (scatter plot), grouping variable, faceting variable
-# x and y variables have no reactive dependencies for plot tabs 1 and 2, see sidebar.R
+# @knitr sb_out_01_03
 output$ShowPlotOptionsPanel <- reactive({
 	if(goBtnNullOrZero()) return()
 	isolate({
@@ -16,6 +15,7 @@ observe({
 	)
 })
 
+# @knitr sb_out_04
 output$Location <- renderUI({
 	if(is.null(input$loctype)) return()
 	if(input$loctype!="Cities") x <- selectInput("locs_regions", "Regions:", c("", region.names.out[[input$loctype]]), selected="", multiple=T, width="100%")
@@ -23,6 +23,7 @@ output$Location <- renderUI({
 	x
 })
 
+# @knitr sb_out_05_06
 output$Months2Seasons <- renderUI({
 	if(!is.null(SeasonLength())) checkboxInput("months2seasons", "Make equal-length season(s) of months", FALSE) else NULL # Do not allow unequal length seasons
 })
@@ -44,6 +45,7 @@ output$N_Seasons <- renderUI({
 })
 outputOptions(output, "N_Seasons", suspendWhenHidden=FALSE)
 
+# @knitr sb_out_07_08
 output$Decades2Periods <- renderUI({
 	if(!is.null(PeriodLength())) checkboxInput("decades2periods", "Make equal-length periods(s) of decades", FALSE) else NULL # Do not allow unequal length periods
 })
@@ -65,6 +67,7 @@ output$N_Periods <- renderUI({
 })
 outputOptions(output, "N_Periods", suspendWhenHidden=FALSE)
 
+# @knitr sb_out_09
 output$GoButton <- renderUI({
 	input$vars
 	input$vars2
@@ -89,6 +92,7 @@ output$GoButton <- renderUI({
 	actionButton("goButton", "Subset Data", icon=icon("check"), class="btn-primary btn-block")
 })
 
+# @knitr sb_out_10_11
 output$Group <- renderUI({
 	if(goBtnNullOrZero()) return()
 	input$xtime
@@ -115,6 +119,7 @@ output$Facet <- renderUI({
 #	)
 #})
 
+# @knitr sb_out_12_14
 output$Sc_X <- renderUI({
 	if(goBtnNullOrZero()) return()
 	selectInput("sc_x", "X-axis", choices=c(input$vars, input$vars2), selected=input$vars, width="100%")
@@ -134,6 +139,7 @@ output$Facet2 <- renderUI({
 	)
 })
 
+# @knitr sb_out_15_18
 output$Heatmap_x <- renderUI({
 	if(!is.null(heatmap_x_choices())) selectInput("heatmap_x", "X axis:", choices=heatmap_x_choices(), selected=heatmap_x_choices()[1], width="100%")
 })
@@ -163,6 +169,7 @@ output$StatHeatmap <- renderUI({
 	})
 })
 
+# @knitr sb_out_19_21
 output$Xvar <- renderUI({
 	if(!is.null(xvarChoices())) selectInput("xvar", "Primary axis:", choices=xvarChoices(), selected=xvarChoices()[1], width="100%")
 })
@@ -197,6 +204,7 @@ output$Facet3 <- renderUI({
 #	x
 #})
 
+# @knitr sb_out_22_25
 output$Spatial_x <- renderUI({
 	if(!is.null(spatial_x_choices())) selectInput("spatial_x", "Primary axis:", choices=spatial_x_choices(), selected=spatial_x_choices()[1], width="100%")
 })
@@ -239,6 +247,7 @@ output$PlotTypeSpatial <- renderUI({
 #	x
 #})
 
+# @knitr sb_out_26_33
 # Options for jittering, faceting, and pooling
 output$VertFacet <- renderUI({
 	if(!is.null(facet.panels())) if(facet.panels()>1) checkboxInput("vert.facet", "Vertical facet", value=FALSE)
@@ -277,10 +286,8 @@ output$PooledVarSpatial <- renderUI({
 	if(length(pooledVarSpatial())) HTML(paste('<div>Pooled variable(s): ', paste(pooledVarSpatial(), collapse=", "), '</div>', sep=""))
 })
 
-colorseq_ts <- reactive({
-	getColorSeq(d=dat(), grp=input$group, n.grp=n.groups())
-})
-
+# @knitr sb_out_34_38
+# time series plot
 output$Colorpalettes_ts <- renderUI({
 	getColorPalettes(id="colorpalettes_ts", colseq=colorseq_ts(), grp=input$group, n.grp=n.groups(),
 		fill.vs.border=input$barPlot, fill.vs.border2=dat()$Var[1]=="Precipitation")
@@ -309,11 +316,8 @@ output$Bardirection <- renderUI({
 	}
 })
 
-# Conditional inputs (tabset panel tab: scatter plot)
-colorseq_sc <- reactive({
-	getColorSeq(d=dat2(), grp=input$group2, n.grp=n.groups2())
-})
-
+# @knitr sb_out_39_42
+# scatter plot
 output$Colorpalettes_sc <- renderUI({
 	getColorPalettes(id="colorpalettes_sc", colseq=colorseq_sc(), grp=input$group2, n.grp=n.groups2())
 })
@@ -326,11 +330,10 @@ output$PlotFontSize2 <- renderUI({
 	if(!is.null(dat2())) selectInput("plotFontSize2","Font size",seq(12,24,by=2),selected=16, width="100%")
 })
 
-# Conditional inputs (tabset panel tab: heatmap)
-colorseq_hm <- reactive({
-	getColorSeq(d=dat_heatmap(), heat=TRUE)
-})
+output$Hexbin <- renderUI({ checkboxInput("hexbin", "Hex bins", FALSE) })
 
+# @knitr sb_out_43_44
+# heatmap
 output$Colorpalettes_hm <- renderUI({
 	getColorPalettes(id="colorpalettes_hm", colseq=colorseq_hm(), heat=TRUE)
 })
@@ -339,11 +342,8 @@ output$PlotFontSizeHeatmap <- renderUI({
 	if(!is.null(dat_heatmap())) selectInput("plotFontSizeHeatmap","Font size",seq(12,24,by=2),selected=16, width="100%")
 })
 
-# Conditional inputs (tabset panel tab: variability plots)
-colorseq_vr <- reactive({
-	getColorSeq(d=dat(), grp=input$group3, n.grp=n.groups3(), overlay=input$vr_showCRU)
-})
-
+# @knitr sb_out_45_50
+# variability plots
 output$Colorpalettes_vr <- renderUI({
 	getColorPalettes(id="colorpalettes_vr", colseq=colorseq_vr(), grp=input$group3, n.grp=n.groups3(), fill.vs.border=Variability(), overlay=input$vr_showCRU)
 })
@@ -393,11 +393,8 @@ output$Variability <- renderUI({
 #	}
 #})
 
+# @knitr sb_out_51_55
 # Conditional inputs (tabset panel tab: spatial plots)
-colorseq_sp <- reactive({
-	getColorSeq(d=dat_spatial(), grp=input$groupSpatial, n.grp=nGroupsSpatial(), overlay=input$sp_showCRU)
-})
-
 output$Colorpalettes_sp <- renderUI({
 	getColorPalettes(id="colorpalettes_sp", colseq=colorseq_sp(), grp=input$groupSpatial, n.grp=nGroupsSpatial(), overlay=input$sp_showCRU)
 })
@@ -425,31 +422,30 @@ output$StripDirectionSpatial <- renderUI({ #### Consider swapping this out for a
 	}
 })
 
-# Options for summarizing data in TS plot (range markers, CIs, CBs)
-#output$SummarizeByXtitle <- renderUI({ if(!is.null(input$group)) HTML(paste('<div>Summarize by ', input$xtime, '</div>', sep="", collapse="")) })
-
-#output$CLbootbar <- renderUI({ if(!is.null(input$group)) checkboxInput("clbootbar", "Group mean CI", FALSE) })
-
-# Options for summarizing data in scatter plot (hexbin)
-output$Hexbin <- renderUI({ checkboxInput("hexbin", "Hex bins", FALSE) })
-
+# @knitr sb_out_56_61
 # Plot buttons
 output$PlotButton_ts <- renderUI({
-	if(permitPlot() & !is.null(dat()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat())>0) actionButton("plotButton_ts", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
+	if(permitPlot() & !is.null(dat()) & !goBtnNullOrZero()) if(nrow(dat())>0) actionButton("plotButton_ts", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
 })
 
 output$PlotButton_sc <- renderUI({
-	if(permitPlot() & !is.null(dat2()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat2())>0) actionButton("plotButton_sc", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
+	if(permitPlot() & !is.null(dat2()) & !goBtnNullOrZero()) if(nrow(dat2())>0) actionButton("plotButton_sc", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
 })
 
 output$PlotButton_hm <- renderUI({
-	if(permitPlot() & !is.null(dat()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat())>0) actionButton("plotButton_hm", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
+	if(permitPlot() && !goBtnNullOrZero() && input$heatmap_x!=input$heatmap_y && !is.null(dat_heatmap()) && nrow(dat_heatmap()) > 1) actionButton("plotButton_hm", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
+})
+outputOptions(output, "PlotButton_hm", suspendWhenHidden=FALSE)
+
+output$DlButton_hm <- renderUI({
+	if(!is.null(input$plotButton_hm) && input$plotButton_hm > 0 && 
+		input$heatmap_x!=input$heatmap_y && !is.null(dat_heatmap()) && nrow(dat_heatmap()) > 1) downloadButton("dlCurPlotHeatmap", "Download Plot", class="btn-success btn-block") else NULL
 })
 
 output$PlotButton_vr <- renderUI({
-	if(permitPlot() & !is.null(dat()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat())>0) actionButton("plotButton_vr", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
+	if(permitPlot() & !is.null(dat()) & !goBtnNullOrZero()) if(nrow(dat())>0) actionButton("plotButton_vr", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
 })
 
 output$PlotButton_sp <- renderUI({
-	if(permitPlot() & !is.null(dat_spatial()) & (!is.null(input$goButton) && input$goButton>0)) if(nrow(dat_spatial())>0) actionButton("plotButton_sp", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
+	if(permitPlot() & !is.null(dat_spatial()) & !goBtnNullOrZero()) if(nrow(dat_spatial())>0) actionButton("plotButton_sp", "Generate Plot", icon=icon("check"), class="btn-primary btn-block")
 })

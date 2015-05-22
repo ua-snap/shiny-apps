@@ -3,7 +3,7 @@
 #### Introduction
 
 This **R** Shiny web application compares downscaled outputs from CMIP3 and CMIP5 global climate models (GCMs) in a variety of ways.
-Downscaled observation-based historical data from the Climatological Research Unit (CRU 3.1) can be included in comparisons as well. 
+Downscaled observation-based historical data from the Climatological Research Unit (CRU 3.2) can be included in comparisons as well. 
 Five general plot types are available: time series plots (not time series analysis),
 scatter plots, heat maps, various plots designed more specifically to highlight variability, and distributional plots.
 Below you can find more information regarding the data in this app, and how to manipulate and graph it.

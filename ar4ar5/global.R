@@ -1,3 +1,4 @@
+# @knitr global
 library(shinythemes)
 library(markdown)
 load("meta.RData",envir=.GlobalEnv)

@@ -1,4 +1,4 @@
-### Graphing: A Closer Look at Variability <img style="float: right; padding-left: 10px; padding-right: 10px" src="screenshots/plotVR_example_1_black.png" width="1000"/>
+### Graphing: A Closer Look at Variability <img style="float: right; padding-left: 10px; padding-right: 10px" src="img/plotVR_example_1_black.png" width="1000"/>
 Variability plot options are somewhat more complex than those for other plots.
 
 #### X-axis
@@ -20,7 +20,7 @@ All but the confidence interval are equivalent to the three options available wh
 
 #### Checkbox Options
 Options unique to the variability plots include boxplots, which may or may not have points displayed over top.
-The `Show CRU 3.1` checkbox includes CRU among GCMs already selected, akin to the heat map, rather than a strict overlay as in the time series plot.
+The `Show CRU 3.2` checkbox includes CRU among GCMs already selected, akin to the heat map, rather than a strict overlay as in the time series plot.
 Therefore, in the variability plots inclusion of CRU data is most beneficial when grouping or faceting by model, similar to the case with heat maps.
 By default the boxplot option is unchecked and magnitude of variability is shown using a bar plot.
 Checking this option has no effect when plotting bars. The `Center on mean` checkbox must also be checked.

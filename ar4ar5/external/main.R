@@ -1,3 +1,4 @@
+# @knitr main
 column(8,
 	help_tabpanel_conditional,
 	conditionalPanel(condition="input.tsp == 'plot_ts' && input.goButton !== null && input.goButton > 0",

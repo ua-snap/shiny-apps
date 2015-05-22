@@ -1,7 +1,9 @@
 tabPanel("About",
 	HTML(
 	'<p style="text-align:justify">This R Shiny web application presents climate outlooks for various Alaska and western Canada communities.
-	There are several versions of the Community Charts application. See the <a href="http://leonawicz.github.io/CommCharts4/">CommCharts4</a> documentation for more information.</p>'),
+	The type of plot shown is a range bar, or column range, plot. It shows the range of values (minimum to maximum) among SNAP\'s five downscaled CMIP5/AR5 climate models.
+	This highlights uncertainty about the future rather than focusing on an average, and without having to clutter the plot with additional ink.
+	This is the final of several versions of the Community Charts application. See the <a href="http://leonawicz.github.io/CommCharts4/">CommCharts4</a> documentation for more information.</p>'),
 		
 	HTML('
 	<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>

@@ -1,3 +1,4 @@
+# @knitr ui
 tabPanelAbout <- source("external/about.R",local=T)$value
 
 shinyUI(fluidPage(
@@ -27,7 +28,7 @@ shinyUI(fluidPage(
 			#)
 		),
 		tabPanelAbout(),
-		windowTitle="AKCAN CMIP3/CMIP5",
+		windowTitle="AKCAN AR4/AR5",
 		collapsible=TRUE,
 		#inverse=TRUE,
 		id="tsp"

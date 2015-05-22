@@ -1,3 +1,4 @@
+# @knitr plot_ts
 function(d, d.grp, d.pool, x, y, y.name, Log=FALSE, panels, grp, n.grp, ingroup.subjects=NULL, facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
 	colpal, linePlot, barPlot, pts.alpha=0.5, bartype, bardirection, show.points=TRUE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
 	plot.title="", plot.subtitle="", show.panel.text=FALSE, show.title=FALSE, lgd.pos="Top", units=c("C","mm"),
@@ -17,7 +18,7 @@ function(d, d.grp, d.pool, x, y, y.name, Log=FALSE, panels, grp, n.grp, ingroup.
 		#### Point dodging when using grouping variable
 		wid <- 0.9
 		dodge <- position_dodge(width=wid)
-		x.n <- length(unique(d[,x]))
+		x.n <- length(unique(d[, get(x)]))
 		if(is.character(grp) & n.grp>1){
 			dodge.pts <- dodgePoints(d, x, grp, n.grp, facet.by, width=wid)
 			xdodge <- "xdodge"
@@ -25,8 +26,10 @@ function(d, d.grp, d.pool, x, y, y.name, Log=FALSE, panels, grp, n.grp, ingroup.
 		}
 		if(Log){
 			units[2] <- paste("log", units[2])
-			d[y] <- round(log(d[y] + 1), 1); d.pool[y] <- round(log(d.pool[y] + 1), 1); d.grp[y] <- round(log(d.grp[y] + 1), 1)
-			if(show.overlay) overlay[y] <- round(log(overlay[y] + 1), 1)
+			logy <- paste0("Log_", y)
+			d[, c(logy) := round(log(get(y) + 1), 1)]; d.pool[, c(logy) := round(log(get(y) + 1), 1)]; d.grp[, c(logy) := round(log(get(y) + 1), 1)]
+			if(show.overlay) overlay[, c(logy) := round(log(get(y) + 1), 1)]
+			y <- logy
 		}
 		if(d$Var[1]=="Temperature") ylb <- paste0(y.name, " temperature (",units[1],")") else ylb <- paste0(y.name, " precipitation (",units[2],")")
 		main <- paste0("", tolower(d$Var[1]), ": ", plot.title)

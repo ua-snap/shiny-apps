@@ -1,3 +1,4 @@
+# @knitr sidebar
 column(4,
 	#### Data selection panel
 	conditionalPanel(condition="input.tsp == 'plot_heatmap' || input.tsp == 'plot_ts' || input.tsp == 'plot_scatter' || input.tsp == 'plot_variability' || input.tsp == 'plot_spatial'",
@@ -14,18 +15,19 @@ column(4,
 					conditionalPanel(condition="input.tsp == 'plot_scatter'", selectInput("vars2", "Variable 2:", varnames, selected=varnames[2], width="100%"))
 				),
 				column(6,
-					selectInput("aggStats", "Stat:", agg.stat.names, selected=agg.stat.names[1], width="100%"),
-					conditionalPanel(condition="input.tsp == 'plot_scatter'", selectInput("aggStats2", "Stat:", agg.stat.names, selected=agg.stat.names[1], width="100%"))
+					conditionalPanel(condition="input.tsp != 'plot_spatial'", selectInput("aggStats", "Stat:", agg.stat.names, selected=agg.stat.names[1], width="100%")),
+					conditionalPanel(condition="input.tsp == 'plot_scatter'", selectInput("aggStats2", "Stat:", agg.stat.names, selected=agg.stat.names[1], width="100%")),
+					conditionalPanel(condition="input.tsp == 'plot_spatial'", selectInput("bootSamples", "Bootstrap samples [CAUTION!]:", c(50, 100, 250, 500, 1000, 2500, 5000, 10000), width="100%"))
 				)
 			),
 			checkboxInput("convert_units", "Convert units to F, in", FALSE),
 			fluidRow(
-				column(6, selectInput("cmip3scens", "CMIP3 emissions scenarios:", choices=c("", scennames[[1]]), selected="", multiple=T, width="100%")),
-				column(6, selectInput("cmip5scens", "CMIP5 emissions scenarios:", choices=c("", scennames[[2]]), selected="", multiple=T, width="100%"))
+				column(6, selectInput("cmip3scens", "AR4 emissions scenarios:", choices=c("", scennames[[1]]), selected="", multiple=T, width="100%")),
+				column(6, selectInput("cmip5scens", "AR5 emissions scenarios:", choices=c("", scennames[[2]]), selected="", multiple=T, width="100%"))
 			),
 			fluidRow(
-				column(6, selectInput("cmip3models", "CMIP3 climate models:", choices=c("", modnames[[1]]), selected="", multiple=T, width="100%")),
-				column(6, selectInput("cmip5models", "CMIP5 climate models:", choices=c("", modnames[[2]]), selected="", multiple=T, width="100%"))
+				column(6, selectInput("cmip3models", "AR4 climate models:", choices=c("", modnames[[1]]), selected="", multiple=T, width="100%")),
+				column(6, selectInput("cmip5models", "AR5 climate models:", choices=c("", modnames[[2]]), selected="", multiple=T, width="100%"))
 			),
 			fluidRow(
 				column(12, checkboxInput("compositeModel", "Make composite(s) of selected models", FALSE))
@@ -69,7 +71,7 @@ column(4,
 			fluidRow(column(4, checkboxInput("hm_showTitle", "Title", TRUE)), column(4, checkboxInput("hm_showPanelText", "Panel text", TRUE)), column(4, checkboxInput("hm_showCRU","Show CRU 3.2", FALSE))),
 			fluidRow(column(4, checkboxInput("aspect1to1", "1:1 Aspect", FALSE)), column(4, checkboxInput("revHeatmapColors", "Reverse colors", FALSE)), column(4, checkboxInput("showHeatmapVals", "Cell values", FALSE))),
 			fluidRow(column(4, conditionalPanel(condition="input.vars !== null && input.vars[0] !== 'Temperature'", checkboxInput("log_hm", "Log transform", FALSE))), column(4, ""), column(4, "")),
-			fluidRow(column(4, checkboxInput("hm_plotThemeDark", "Dark theme", FALSE))),
+			fluidRow(column(4, checkboxInput("hm_plotThemeDark", "Dark theme", TRUE))),
 			fluidRow(
 				column(6,
 					conditionalPanel(condition="input.heatmap_x !== null && input.heatmap_y !== null",
@@ -95,7 +97,7 @@ column(4,
 				column(4, "")
 			),
 			fluidRow(column(4, uiOutput("Yrange")), column(4, ""), column(4, uiOutput("CLbootsmooth"))),
-			fluidRow(column(4, checkboxInput("ts_plotThemeDark", "Dark theme", FALSE))),
+			fluidRow(column(4, checkboxInput("ts_plotThemeDark", "Dark theme", TRUE))),
 			fluidRow(
 				column(6,
 					uiOutput("Alpha1"), uiOutput("Bardirection"),
@@ -112,7 +114,7 @@ column(4,
 			fluidRow(column(4, checkboxInput("sc_showTitle", "Title", TRUE)), column(4, checkboxInput("sc_showPanelText", "Panel text", TRUE)), column(4, checkboxInput("sc_showCRU","Show CRU 3.2", FALSE))),
 			fluidRow(column(4, checkboxInput("sc_showpts", "Show points", TRUE)), column(4, checkboxInput("sc_jitterXY", "Jitter points", FALSE)), column(4, checkboxInput("sc_showlines", "Show lines", FALSE))),
 			fluidRow(column(4, uiOutput("Hexbin")), column(4, checkboxInput("log_sc_x", "Log transform X", FALSE)), column(4, checkboxInput("log_sc_y", "Log transform Y", FALSE))),
-			fluidRow(column(4, checkboxInput("sc_plotThemeDark", "Dark theme", FALSE))),
+			fluidRow(column(4, checkboxInput("sc_plotThemeDark", "Dark theme", TRUE))),
 			fluidRow(
 				column(6, 
 				uiOutput("Alpha2"), 
@@ -139,7 +141,7 @@ column(4,
 				column(4, checkboxInput("boxplots", "Box plots", FALSE)),
 				column(4, uiOutput("VertFacet3"))
 			),
-			fluidRow(column(4, checkboxInput("vr_plotThemeDark", "Dark theme", FALSE))),
+			fluidRow(column(4, checkboxInput("vr_plotThemeDark", "Dark theme", TRUE))),
 			fluidRow(
 				column(6,
 					uiOutput("Alpha3"), uiOutput("Bardirection3"),
@@ -168,7 +170,7 @@ column(4,
 				),
 				column(4, uiOutput("VertFacetSpatial"))
 			),
-			fluidRow(column(4, checkboxInput("sp_plotThemeDark", "Dark theme", FALSE))),
+			fluidRow(column(4, checkboxInput("sp_plotThemeDark", "Dark theme", TRUE))),
 			fluidRow(
 				column(6,
 					uiOutput("AlphaSpatial"), uiOutput("DensityTypeSpatial"), uiOutput("StripDirectionSpatial"),
@@ -180,8 +182,7 @@ column(4,
 		)
 		),
 		fluidRow(
-			conditionalPanel(condition="input.tsp == 'plot_heatmap'", column(6, uiOutput("PlotButton_hm")),
-				column(6, conditionalPanel(condition="input.plotButton_hm > 0", downloadButton("dlCurPlotHeatmap", "Download Plot", class="btn-success btn-block")))),
+			conditionalPanel(condition="input.tsp == 'plot_heatmap'", column(6, uiOutput("PlotButton_hm")), conditionalPanel(condition="input.plotButton_hm !== null", column(6, uiOutput("DlButton_hm")))),
 			conditionalPanel(condition="input.tsp == 'plot_ts'", column(6, uiOutput("PlotButton_ts")), 
 				column(6, conditionalPanel(condition="input.plotButton_ts > 0", downloadButton("dlCurPlotTS", "Download Plot", class="btn-success btn-block")))),
 			conditionalPanel(condition="input.tsp == 'plot_scatter'", column(6, uiOutput("PlotButton_sc")),

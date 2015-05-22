@@ -1,3 +1,4 @@
+# @knitr plot_variability
 function(d, d.grp, d.pool, x, y, y.name, stat="SD", around.mean=FALSE, error.bars=FALSE, panels, grp, n.grp, ingroup.subjects=NULL,
 	facet.cols=min(ceiling(sqrt(panels)),5), facet.by, vert.facet=FALSE, fontsize=16,
 	colpal, boxplots=FALSE, pts.alpha=0.5, bartype, bardirection, show.points=FALSE, show.lines=FALSE, show.overlay=FALSE, overlay=NULL, jit=FALSE,
@@ -10,11 +11,10 @@ function(d, d.grp, d.pool, x, y, y.name, stat="SD", around.mean=FALSE, error.bar
 		if(show.overlay){
 			n.d <- nrow(d)
 			mods.d <- unique(d$Model)
-			yrs.tmp <- as.numeric(c(as.character(d$Year), as.character(overlay$Year)))
-			d <- data.frame(rbind(d[1:6], overlay[1:6]), Year=yrs.tmp, rbind(d[8:ncol(d)], overlay[8:ncol(overlay)]))
-			#d$Year <- yrs.tmp
-			d$Source <- factor(c(rep("Modeled", n.d), rep("Observed", nrow(overlay))))
-			d$Model <- factor(d$Model, levels=c(overlay$Model[1], mods.d))
+			d <- rbind(d, overlay)
+			if(x=="Year") d$Year <- factor(d$Year)
+			d[, Source := factor(c(rep("Modeled", n.d), rep("Observed", nrow(overlay))))]
+			d[, Model := factor(d$Model, levels=c(overlay$Model[1], mods.d))]
 		}
 		bar.pos <- "dodge"
 		if(!length(lgd.pos)) lgd.pos="Top"
@@ -25,7 +25,7 @@ function(d, d.grp, d.pool, x, y, y.name, stat="SD", around.mean=FALSE, error.bar
 		#### Point dodging when using grouping variable
 		wid <- 0.9
 		dodge <- position_dodge(width=wid)
-		x.n <- length(unique(d[,x]))
+		x.n <- length(unique(d[, get(x)]))
 		if(is.character(grp) & n.grp>1){
 			dodge.pts <- dodgePoints(d, x, grp, n.grp, facet.by, width=wid)
 			xdodge <- "xdodge"

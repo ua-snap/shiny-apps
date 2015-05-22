@@ -1,7 +1,8 @@
+# @knitr plot_heatmap
 function(d, d.stat, d2, x, y, z, Log=FALSE, panels, facet.cols=ceiling(sqrt(panels)), facet.by, fontsize=16, colpal, reverse.colors=FALSE, aspect_1to1=FALSE, show.values=FALSE,
 	show.overlay=FALSE, overlay=NULL, plot.title="", plot.subtitle="", show.panel.text=FALSE, show.title=FALSE, lgd.pos="Top", units=c("C","mm"),
 	pooled.var, plot.theme.dark=FALSE, show.logo=F, logo.mat=NULL){
-		if(is.null(d)) return(plot(0,0,type="n",axes=F,xlab="",ylab=""))
+		if(is.null(d) | length(unique(d2[, get(z)]))==1) return(plot(0,0,type="n",axes=F,xlab="",ylab=""))
 		if(plot.theme.dark) { bg.theme <- "black"; color.theme <- "white" } else { bg.theme <- "white"; color.theme <- "black" }
 		#if(show.overlay & !is.null(overlay)) show.overlay <- TRUE else show.overlay <- FALSE
 		#if(show.overlay){
@@ -19,12 +20,17 @@ function(d, d.stat, d2, x, y, z, Log=FALSE, panels, facet.cols=ceiling(sqrt(pane
 		if(d$Var[1]=="Temperature") Log <- FALSE
 		if(Log){
 			units[2] <- paste("log", units[2])
-			d[d.stat] <- round(log(d[d.stat] + 1), 1); d2[z] <- round(log(d2[z] + 1), 1)
+			logdstat <- paste0("Log_", d.stat)
+			logz <- paste0("Log_", z)
+			d[, c(logdstat) := round(log(get(d.stat) + 1), 1)]
+			d2[, c(logz) := round(log(get(z) + 1), 1)]
+			d.stat <- logdstat
+			z <- logz
 			#if(show.overlay) overlay[d.stat] <- round(log(overlay[d.stat] + 1), 1)
 		}
 		#if(d$Var[1]=="Temperature") ylb <- paste0(y.name, " temperature (",units[1],")") else ylb <- paste0(y.name, " precipitation (",units[2],")") #### Need to alter key title rather than axes titles
 		main <- paste0("Code this title: ", plot.title) # agg stat metrics adjustment required
-		if(length(unique(d2[,z]))==1) g <- ggplot(d, aes_string(x=x, y=y, fill=d.stat)) else g <- ggplot(d2, aes_string(x=x, y=y, fill=z))
+		g <- ggplot(d2, aes_string(x=x, y=y, fill=z))
 		if(plot.theme.dark) g <- g + theme_black(base_size=fontsize) else g <- g + theme_bw(base_size=fontsize)
 		g <- g + geom_tile(colour=color.theme) + theme(legend.position=tolower(lgd.pos))
 		if(aspect_1to1) g <- g + coord_fixed(ratio=1)
@@ -36,5 +42,5 @@ function(d, d.stat, d2, x, y, z, Log=FALSE, panels, facet.cols=ceiling(sqrt(pane
 		if(show.panel.text) g <- annotatePlot(g, data=d, x=x, y=y, text=plot.subtitle, col=color.theme)
 		if(show.values) g <- g + geom_text(data=d2, aes_string(fill=z, label=z))
 		g <- addLogo(g, show.logo, logo.mat, show.title, main, fontsize)
-		if(length(unique(d2[,z])) > 1) print(g) else NULL
+		print(g)
 }
