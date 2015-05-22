@@ -42,6 +42,7 @@ RCPLabel <- reactive({ switch(input$rcp, "4.5 (low)"="Low-Range Emissions (RCP 4
 FreezePoint <- reactive({ ifelse(input$units=="Fin", 32, 0) })
 Thresh <- reactive({ ifelse(input$variable=="Precipitation", 0, FreezePoint()) })
 Unit <- reactive({ if(input$variable=="Temperature") paste0("°", substr(input$units, 1, 1)) else substr(input$units, 4, 5) })
+Min <- reactive({ if(input$variable=="Temperature") NULL else 0 })
 
 CRU_loc <- reactive({ subset(d.cru32, Location==input$location) })
 CRU_var <- reactive({ subset(CRU_loc(), Var==input$variable) })
@@ -76,7 +77,7 @@ output$Chart1 <- renderChart2({
 	p$subtitle(text=paste("Historical CRU 3.2 and 5-Model Projections using", RCPLabel()), style=list(color="gray"))
 	p$legend(verticalAlign="top", y=50, itemStyle=list(color="gray"))
 	p$xAxis(categories=month.abb)
-	p$yAxis(title=list(text=paste0(input$variable, " (", Unit(), ")"), style=list(color="gray")))
+	p$yAxis(title=list(text=paste0(input$variable, " (", Unit(), ")"), style=list(color="gray")), min=Min())
 	d <- d4_dec()[5:7]
 	ddply(d, .(Decade), function(x) {
 		g <- unique(x$Decade); x$Decade <- NULL; json <- toJSONArray2(x, json=F, names=F)
