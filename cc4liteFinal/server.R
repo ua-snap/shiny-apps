@@ -39,8 +39,6 @@ Dec <- reactive({
 nDec <- reactive({ length(Dec()) })
 Colors <- reactive({ if(input$variable=="Temperature" & nDec()) c("#666666", colorRampPalette(c("gold", "orange", "orangered", "darkred"))(nDec()-1)) else c("#666666", colorRampPalette(c("aquamarine", "dodgerblue4"))(nDec()-1)) })
 RCPLabel <- reactive({ switch(input$rcp, "4.5 (low)"="Low-Range Emissions (RCP 4.5)", "6.0 (medium)"="Mid-Range Emissions (RCP 6.0)", "8.5 (high)"="High-Range Emissions (RCP 8.5)") })
-FreezePoint <- reactive({ ifelse(input$units=="Fin", 32, 0) })
-Thresh <- reactive({ ifelse(input$variable=="Precipitation", 0, FreezePoint()) })
 Unit <- reactive({ if(input$variable=="Temperature") paste0("°", substr(input$units, 1, 1)) else substr(input$units, 4, 5) })
 Min <- reactive({ if(input$variable=="Temperature") NULL else 0 })
 
