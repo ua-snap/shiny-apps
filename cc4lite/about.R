@@ -1,7 +1,9 @@
 tabPanel("About",
 	HTML(
 	'<p style="text-align:justify">This R Shiny web application presents climate outlooks for various Alaska and western Canada communities.
-	There are several versions of the Community Charts application. See the <a href="http://leonawicz.github.io/CommCharts4/">CommCharts4</a> documentation for more information.</p>'),
+	There are several versions of the Community Charts application. See the <a href="http://leonawicz.github.io/CommCharts4/">CommCharts4</a> documentation for more information.
+	The various versions depend on different versions of the <code>shinyBS</code> package, but I only have the latest version of this package on the server which is running all versions of this app.
+	This is why the version you are currently looking at is at worst broken or at best has a non-ideal bootstrap button display.</p>'),
 		
 	HTML('
 	<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>
