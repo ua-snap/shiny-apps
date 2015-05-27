@@ -70,11 +70,11 @@ shinyUI(navbarPage(theme=shinytheme("cosmo"),
 		For example, greenhouse gas concentrations in 2100 which lead to the net solar energy absorbed by each square meter of Earth 
 		averaging 4.5 W/m^2 greater than pre-industrial levels is referred to as RCP 4.5.</p>
 		
-		<p style="text-align:justify">RCP 4.5 (low). This pathway assumes that emissions peak around 2040, and that radiative forcing is stabilized shortly after 2100. SNAP terms this the "low" scenario.
-		RCP 6.0 (medium). The "medium" RCP assumes technologies and strategies for reducing greenhouse gas emissions are developed,
-		allowing emissions to peak around 2080, then decline, with total radiative forcing stabilized shortly after 2100.
-		RCP 8.5 (high). The "high" RCP is characterized by increasing greenhouse gas emissions continuing through the 21st century.
-		RCP 2.6 assumes greenhouse gas emissions peak between 2010 and 2020 and decline substantially thereafter. It is unrealistic so it is not included.</p>
+		<p style="text-align:justify">RCP 4.5 can be thought of as the "low" scenario.
+		It assumes peak emissions around 2040 with radiative forcing stabilizing around 2100.
+		RCP 6.0 (medium) assumes peak emissions around 2080, then decline due to future technology and management, with radiative forcing similarly stabilizing around 2100.
+		RCP 8.5 (high) assumes increasing emissions through 2100.
+		RCP 2.6 assumes peak emissions between 2010 and 2020 - essentially that we are already there - and then decline substantially. This is unrealistic so it is not included.</p>
 		More information on these RCPs can be found in the 2014 IPCC fifth Assessment Report.'
 	))
 	),
