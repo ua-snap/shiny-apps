@@ -49,3 +49,11 @@ output$dl_plotByDecade <- downloadHandler( # render plot to pdf for download
 		dev.off()
 	}
 )
+
+output$SeaPlot <- renderPlot({ # render plot in sidebar to show selected sea region
+		if(!is.null(input$sea) & !is.null(input$coast)){
+			id <- match(input$sea, seas)
+			if(input$coast!="Coastal only") id <- id + 3
+			f(sea.images[[id]], x=0, y=0, size=1)
+		}
+}, height=function(){ w <- session$clientData$output_SeaPlot_width; round((7.5/10.5)*w)	}, width="auto")
