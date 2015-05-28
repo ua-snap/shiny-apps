@@ -20,14 +20,6 @@ column(4,
 			column(6, radioButtons("coast", "Area:", choices=c("Coastal only","Full sea"), selected="Coastal only"))
 		)
 	),
-	wellPanel(
-		fluidRow(
-			column(6, uiOutput("tp.annstyle")),
-			column(6, uiOutput("tp.decstyle"))
-		),
-		fluidRow(
-			column(6, downloadButton("dl_plotByYear","Annual graphic", class="btn-block btn-primary")),
-			column(6, downloadButton("dl_plotByDecade","Decadal graphic", class="btn-block btn-primary"))
-		)
-	)
+	plotOutput("SeaPlot", width="100%", height="auto"),
+	br(), br()
 )
