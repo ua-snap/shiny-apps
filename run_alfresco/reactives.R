@@ -90,8 +90,8 @@ Obs_updateFiles <- reactive({
 		c6 <- !(input$climMod %in% c("CRU31", "CCSM4", "GFDL-CM3", "GISS-E2-R", "IPSL-CM5A-LR", "MRI-CGCM3") &
 			input$climPeriod %in% c("historical", "RCP 4.5", "RCP 6.0", "RCP 8.5") &
 			input$mapset %in% c("3m 50-09 trunc", "3m 50-09 trunc + L", "5m 50-09 trunc", "5m 50-09 trunc + L"))
-		c7 <- !is.logical(input$useMultipliers)
-		if(!(any(c(c1, c2, c3, c4, c5, c6, c7)))){
+		#c7 <- !is.logical(input$useMultipliers)
+		if(!(any(c(c1, c2, c3, c4, c5, c6)))){
 			
 			period <- gsub(" .", "", tolower(input$climPeriod))
 			mapset <- switch(input$mapset,
