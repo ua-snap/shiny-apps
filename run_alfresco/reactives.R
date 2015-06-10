@@ -100,7 +100,7 @@ Obs_updateFiles <- reactive({
                 "5m 50-09 trunc"="5m_cavmDistTrunc_loop",
                 "5m 50-09 trunc + L"="5m_cavmDistTrunc_loop_L"
 			)
-			if(input$useMultipliers) mapset <- paste0(mapset, "_scaled")
+			if(input$useMultipliers) mapset <- paste0(mapset, "_L")
 			flamFile <- file.path("/big_scratch/mfleonawicz/Alf_Files_20121129/gbmFlamMaps", period, input$climMod, mapset, "gbm.flamm.tif")
 			
 			for(i in JSON_current()){
