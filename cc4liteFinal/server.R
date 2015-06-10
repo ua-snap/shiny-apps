@@ -51,7 +51,7 @@ d0 <- reactive({
 			prog <- Progress$new(session, min=0, max=1)
 			on.exit(prog$close())
 			prog$set(message="Loading data...", value=1)
-			load(paste0("cc4lite_2km_plus_NWT10min.RData"), envir=.GlobalEnv)
+			load(paste0("cc4lite_2km_plus_NT10min.RData"), envir=.GlobalEnv)
 		}
 		return(d)
 	}

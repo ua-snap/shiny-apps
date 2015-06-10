@@ -55,7 +55,7 @@ shinyUI(navbarPage(theme=shinytheme("cosmo"),
 		
 		<p style="text-align:justify">Both the source CRU data and climate models are downscaled to higher resolution climatologies (either 2-km PRISM or 10-minute CRU climatologies), which are based on historical weather station observations.
 		When viewing a plot for a given community, both the historical baseline and the future decadal modeled projections come from downscaled data at a common resolution.
-		The distinction to make note of is that NWT communities are derived from much coarser data since the NWT region falls outside the 2-km PRISM extent, leaving the 10-minute scale data as the only option.
+		The distinction to make note of is that Northwest Territories (NT) communities are derived from much coarser data since the NT region falls outside the 2-km PRISM extent, leaving the 10-minute scale data as the only option.
 		More information can be found in the documentation related to this app. See the <code>About</code> tab at the top of the page for links.</p>
 		
 		<p style="text-align:justify">In the map, the relative size and particularly the color (blue, purple, and red),

@@ -13,7 +13,7 @@ Thresh <- reactive({ ifelse(input$variable=="Precipitation", 0, FreezePoint()) }
 Unit <- reactive({ if(input$variable=="Temperature") paste0("°", substr(input$units, 1, 1)) else substr(input$units, 2, 3) })
 PRISM <- reactive({
 	x <- input$location
-	if(substr(x, nchar(x)-2, nchar(x))=="NWT") return(NULL)
+	if(substr(x, nchar(x)-20, nchar(x))=="Northwest Territories") return(NULL)
 	if(input$variable=="Temperature") return(prism.t[prism.cities==x,]) else return(prism.p[prism.cities==x,]) })
 
 CRU <- reactive({ if(input$res=="10min") d.cru32.10min else d.cru32.2km })
