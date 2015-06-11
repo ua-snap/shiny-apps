@@ -1,10 +1,11 @@
+# @knitr server
 library(shiny)
 library(RJSONIO); library(assertive)
 options(scipen=999)
 
 server <- "atlas.snap.uaf.edu"
 mainDir <- "/big_scratch/shiny"
-exec <- "sbatch" # temporary additional args to sbatch
+exec <- "sbatch"
 slurmfile <- "RunAlfresco.slurm"
 
 setMethod("toJSON", "numeric",
@@ -24,4 +25,14 @@ setMethod("toJSON", "numeric",
 	} else tmp
 })
 
-shinyServer(function(input, output, session) source("external/app.R", local = TRUE))
+shinyServer(function(input, output, session){
+	output$JSON_Files <- renderUI({
+		selectInput("json_files", "Select JSON:", c("", JSON_files), "")
+	})
+	
+	source("reactives.R", local=T)
+
+	output$JSON_Lines <- renderUI({ JSON_lines() })
+
+	output$Obs_UpdateFiles <- renderUI({ Obs_updateFiles() })
+})
