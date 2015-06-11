@@ -1,5 +1,14 @@
 shinyServer(function(input, output, session){
 
+observeEvent(input$location, {
+    x <- input$location
+	if(!is.null(x) && x!=""){
+        sink("locationLog.txt", append=TRUE, split=FALSE)
+        cat(paste0(x, "\n"))
+        sink()
+    }
+})
+
 output$Map <- renderLeaflet({
 	leaflet() %>% addProviderTiles("CartoDB.Positron") %>% setView(lng=-140, lat=57, zoom=4) %>%
 		addCircleMarkers(data=cities.meta, radius = ~sqrt(10*PopClass), color = ~palfun(PopClass), stroke=FALSE, fillOpacity=0.5, layerId = ~Location)
@@ -51,7 +60,7 @@ d0 <- reactive({
 			prog <- Progress$new(session, min=0, max=1)
 			on.exit(prog$close())
 			prog$set(message="Loading data...", value=1)
-			load(paste0("cc4lite_2km_plus_NWT10min.RData"), envir=.GlobalEnv)
+			load(paste0("cc4lite_2km_plus_NT10min.RData"), envir=.GlobalEnv)
 		}
 		return(d)
 	}
@@ -84,8 +93,7 @@ output$Chart1 <- renderChart2({
 	})
 	p$exporting(enabled=F, scale=4)
 	p$set(height=400)
-	print(input$location)
 	p
 })
-
+    
 })
