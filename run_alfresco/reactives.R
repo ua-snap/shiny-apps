@@ -89,16 +89,16 @@ Obs_updateFiles <- reactive({
 		c5 <- is.na(as.numeric(unlist(strsplit(input$frp_buffers,","))))
 		c6 <- !(input$climMod %in% c("CRU32", "CCSM4", "GFDL-CM3", "GISS-E2-R", "IPSL-CM5A-LR", "MRI-CGCM3") &
 			input$climPeriod %in% c("historical", "RCP 4.5", "RCP 6.0", "RCP 8.5") &
-			input$mapset %in% c("3m 50-09 trunc", "3m 50-09 trunc + L", "5m 50-09 trunc", "5m 50-09 trunc + L"))
+			input$mapset %in% c("3m 50-13 trunc", "3m 50-13 trunc + L", "5m 50-13 trunc", "5m 50-13 trunc + L"))
 		#c7 <- !is.logical(input$useMultipliers)
 		if(!(any(c(c1, c2, c3, c4, c5, c6)))){
 			
 			period <- gsub(" .", "", tolower(input$climPeriod))
 			mapset <- switch(input$mapset,
-                "3m 50-09 trunc"="3m_cavmDistTrunc_loop",
-                "3m 50-09 trunc + L"="3m_cavmDistTrunc_loop_L",
-                "5m 50-09 trunc"="5m_cavmDistTrunc_loop",
-                "5m 50-09 trunc + L"="5m_cavmDistTrunc_loop_L"
+                "3m 50-13 trunc"="3m100n_cavmDistTrunc_loop",
+                "3m 50-13 trunc + L"="3m100n_cavmDistTrunc_loop_L",
+                "5m 50-13 trunc"="5m100n_cavmDistTrunc_loop",
+                "5m 50-13 trunc + L"="5m100n_cavmDistTrunc_loop_L"
 			)
 			#if(input$useMultipliers) mapset <- paste0(mapset, "_L")
 			flamFile <- file.path("/big_scratch/mfleonawicz/Alf_Files_20121129/gbmFlamMaps", period, input$climMod, mapset, "gbm.flamm.tif")
