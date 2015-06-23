@@ -18,7 +18,7 @@ column(4,
 			),
 			#checkboxInput("useMultipliers", "Use time series scalar coefficients", TRUE),
 			fluidRow(
-				column(6, selectInput("climMod", "Climate model:", choices=c("CRU31", "CCSM4", "GFDL-CM3", "GISS-E2-R", "IPSL-CM5A-LR", "MRI-CGCM3"), selected="CRU31", width="100%")),
+				column(6, selectInput("climMod", "Climate model:", choices=c("CRU32", "CCSM4", "GFDL-CM3", "GISS-E2-R", "IPSL-CM5A-LR", "MRI-CGCM3"), selected="CRU32", width="100%")),
 				column(6, selectInput("climPeriod", "Time Period/RCP:", choices=c("historical", "RCP 4.5", "RCP 6.0", "RCP 8.5"), selected="historical", width="100%"))
 			),
 			fluidRow(
