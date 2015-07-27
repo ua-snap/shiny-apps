@@ -74,13 +74,14 @@ Obs_updateFiles <- reactive({
 	if(is.null(input$goButton_JSON) || input$goButton_JSON == 0) return(NULL)
 	isolate(
 	if( !(is.null(user_email_address()) || is.null(all_email_addresses()) || user_email_address() == "" || all_email_addresses() == "" || 
-		!length(input$frp_pts)) || is.null(input$FireSensitivity) || is.null(input$IgnitionFactor) ){
+		!length(input$frp_pts) || is.null(input$FireSensitivity) || is.null(input$IgnitionFactor) || is.na(as.numeric(input$n_sims))) ){
 		
 		rand_seed <- as.numeric(input$randseed)
 		alf_fs <- as.numeric(input$FireSensitivity)
 		alf_ig <- as.numeric(input$IgnitionFactor)
 		alf_yr1 <- as.integer(input$year_start)
 		alf_yr2 <- as.integer(input$year_end)
+        n.sims <- as.integer(as.numeric(input$n_sims))
 		c0 <- is.na(rand_seed)
 		c1 <- is.na(alf_fs)
 		c2 <- is.na(alf_ig)
@@ -90,8 +91,8 @@ Obs_updateFiles <- reactive({
 		c6 <- !(input$climMod %in% c("CRU32", "CCSM4", "GFDL-CM3", "GISS-E2-R", "IPSL-CM5A-LR", "MRI-CGCM3") &
 			input$climPeriod %in% c("historical", "RCP 4.5", "RCP 6.0", "RCP 8.5") &
 			input$mapset %in% c("3m 50-13 trunc + Lcoef", "3m 50-13 trunc + Lmap", "5m 50-13 trunc + Lcoef", "5m 50-13 trunc + Lmap"))
-		#c7 <- !is.logical(input$useMultipliers)
-		if(!(any(c(c1, c2, c3, c4, c5, c6)))){
+		c7 <- is.na(n.sims) || n.sims < 32 || n.sims > 192
+		if(!(any(c(c1, c2, c3, c4, c5, c6, c7)))){
 			
 			period <- gsub(" .", "", tolower(input$climPeriod))
 			mapset <- switch(input$mapset,
@@ -174,7 +175,7 @@ Obs_updateFiles <- reactive({
 			if(input$skipAlf) postprocOnly <- 0 else postprocOnly <- 1
 			if(input$include_fseByVeg) includeFSE <- 1 else includeFSE <- 0
 			if(input$include_frp) includeFRP <- 1 else includeFRP <- 0
-			arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$json_files, postprocOnly, includeFSE, includeFRP, frp_arguments, alf_yr1), collapse=" ")
+			arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$json_files, postprocOnly, includeFSE, includeFRP, frp_arguments, alf_yr1, n.sims), collapse=" ")
 			sbatch_string <- paste("ssh", server, exec, slurm_arguments, file.path(outDir,slurmfile), arguments)
 			system(sbatch_string)
 			x <- paste("Alfresco job started on Atlas:\n", gsub(" ", " \n", sbatch_string))

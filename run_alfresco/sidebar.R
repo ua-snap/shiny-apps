@@ -53,8 +53,8 @@ column(4,
 				column(6, checkboxInput("include_frp", "Include FRP", FALSE))
 			),
 			fluidRow(
-				column(6, checkboxInput("group_runs", "Check if grouping runs", TRUE))#,
-				#column(6, checkboxInput("include_frp", "Include FRP", FALSE))
+				column(6, checkboxInput("group_runs", "Check if grouping runs", TRUE)),
+				column(6, numericInput("n_sims", "Number of Sims", value=32, min=32, max=192))
 			),
 			fluidRow(
 				column(6, textInput("group_name", "Group name for multiple runs:", value="myRuns")),
