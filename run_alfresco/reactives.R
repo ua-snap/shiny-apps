@@ -106,6 +106,7 @@ Obs_updateFiles <- reactive({
 			
 			for(i in JSON_current()){
 				alfJSON <- fromJSON(i, simplify=F)
+                alfJSON$Simulation$MaxReps <- n.sims
 				alfJSON$Simulation$RandSeed <- rand_seed
 				alfJSON$Simulation$FirstYear <- alf_yr1
 				alfJSON$Simulation$LastYear <- alf_yr2
