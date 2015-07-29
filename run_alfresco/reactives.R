@@ -90,18 +90,20 @@ Obs_updateFiles <- reactive({
 		c5 <- is.na(as.numeric(unlist(strsplit(input$frp_buffers,","))))
 		c6 <- !(input$climMod %in% c("CRU32", "CCSM4", "GFDL-CM3", "GISS-E2-R", "IPSL-CM5A-LR", "MRI-CGCM3") &
 			input$climPeriod %in% c("historical", "RCP 4.5", "RCP 6.0", "RCP 8.5") &
-			input$mapset %in% c("3m 50-13 trunc + Lcoef", "3m 50-13 trunc + Lmap", "5m 50-13 trunc + Lcoef", "5m 50-13 trunc + Lmap"))
+			input$mapset %in% c("3m trunc + Lcoef", "3m trunc + Lmap", "5m trunc + Lcoef", "5m trunc + Lmap"))
 		c7 <- is.na(n.sims) || n.sims < 32 || n.sims > 192
 		if(!(any(c(c1, c2, c3, c4, c5, c6, c7)))){
 			
 			period <- gsub(" .", "", tolower(input$climPeriod))
+            if(period=="historical") map_yr1 <- 1950 else map_yr1 <- alf_yr1
+            if(period=="historical") map_yr2 <- alf_yr2 else map_yr2 <- alf_yr1
 			mapset <- switch(input$mapset,
-                "3m 50-13 trunc + Lcoef"="3m100n_cavmDistTrunc_loop_L",
-                "3m 50-13 trunc + Lmap"="3m100n_cavmDistTrunc_loop_Lmap",
-                "5m 50-13 trunc + Lcoef"="5m100n_cavmDistTrunc_loop_L",
-                "5m 50-13 trunc + Lmap"="5m100n_cavmDistTrunc_loop_Lmap"
+                "3m trunc + Lcoef"="3m100n_cavmDistTrunc_loop_L",
+                "3m trunc + Lmap"="3m100n_cavmDistTrunc_loop_Lmap",
+                "5m trunc + Lcoef"="5m100n_cavmDistTrunc_loop_L",
+                "5m trunc + Lmap"="5m100n_cavmDistTrunc_loop_Lmap"
 			)
-			#if(input$useMultipliers) mapset <- paste0(mapset, "_L")
+            if(period!="historical") mapset <- gsub("_loop", "", mapset)
 			flamFile <- file.path("/big_scratch/mfleonawicz/Alf_Files_20121129/gbmFlamMaps", period, input$climMod, mapset, "gbm.flamm.tif")
 			
 			for(i in JSON_current()){
@@ -115,6 +117,9 @@ Obs_updateFiles <- reactive({
 				
 				alfJSON$Fire$TypeTransitionYears[[1]] <- alf_yr1
 				alfJSON$Climate$TransitionYears[[1]] <- alf_yr1
+                alfJSON$MapOutput$MapYearStart[[1]] <- map_yr2
+                alfJSON$MapOutput$MapYearStart[[3]] <- map_yr1
+                alfJSON$MapOutput$MapYearStart[[5]] <- map_yr1
 				alfJSON$MapOutput$MapYearStart[[6]] <- alf_yr1
 				
 				alfJSON$Climate$Values$Flammability.File <- flamFile
@@ -131,11 +136,12 @@ Obs_updateFiles <- reactive({
 				}
 			}
 			
-			alf.domain <- substr(input$json_files, 1, nchar(input$json_files)-5)
+			alf.domain <- substr(input$json_files, 4, 5)
+            if(alf.domain=="No") alf.domain <- "Noatak" else if(alf.domain=="SW") alf.domain <- "Statewide" else stop("Unknown spatial domain.")
 			domainDir <- paste0("Runs_", alf.domain)
 			userDir <- gsub("@", "_at_", user_email_address())
 			#outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/",format(Sys.time(), "%Y-%m-%d-%H-%M-%S"))
-			outDir <- file.path(mainDir, domainDir, userDir, gsub("[ -]", "", input$run_name))
+			outDir <- file.path(mainDir, domainDir, userDir, gsub("[ -]", "", input$run_name, period, input$climMod))
 			relDir <- outDir # Still need this?
 			
 			for(i in JSON_current()){
@@ -176,7 +182,7 @@ Obs_updateFiles <- reactive({
 			if(input$skipAlf) postprocOnly <- 0 else postprocOnly <- 1
 			if(input$include_fseByVeg) includeFSE <- 1 else includeFSE <- 0
 			if(input$include_frp) includeFRP <- 1 else includeFRP <- 0
-			arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$json_files, postprocOnly, includeFSE, includeFRP, frp_arguments, alf_yr1, n.sims), collapse=" ")
+			arguments <- paste(c(mainDir, outDir, relDir, paste(all_email_addresses(), collapse=","), alf.domain, input$json_files, postprocOnly, includeFSE, includeFRP, frp_arguments, alf_yr1, alf_yr2, n.sims, period), collapse=" ")
 			sbatch_string <- paste("ssh", server, exec, slurm_arguments, file.path(outDir,slurmfile), arguments)
 			system(sbatch_string)
 			x <- paste("Alfresco job started on Atlas:\n", gsub(" ", " \n", sbatch_string))
