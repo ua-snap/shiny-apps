@@ -137,7 +137,9 @@ Obs_updateFiles <- reactive({
 			}
 			
 			alf.domain <- substr(input$json_files, 4, 5)
-            if(alf.domain=="No") alf.domain <- "Noatak" else if(alf.domain=="SW") alf.domain <- "Statewide" else stop("Unknown spatial domain.")
+            n.gbm <- substr(input$json_files, nchar(input$json_files)-1, nchar(input$json_files))
+            if(substr(alf.domain, 1, 2)=="No") alf.domain <- "Noatak" else if(alf.domain=="SW") alf.domain <- "Statewide" else stop("Unknown spatial domain.")
+            alf.domain <- paste0(c(alf.domain, n.gbm), collapse="")
 			domainDir <- paste0("Runs_", alf.domain)
 			userDir <- gsub("@", "_at_", user_email_address())
 			#outDir <- paste0(mainDir,"/",domainDir,"/",userDir,"/",format(Sys.time(), "%Y-%m-%d-%H-%M-%S"))
