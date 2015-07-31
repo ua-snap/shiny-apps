@@ -94,7 +94,7 @@ Obs_updateFiles <- reactive({
 		c7 <- is.na(n.sims) || n.sims < 32 || n.sims > 192
 		if(!(any(c(c1, c2, c3, c4, c5, c6, c7)))){
 			
-			period <- gsub(" .", "", tolower(input$climPeriod))
+			period <- gsub("[ .]", "", tolower(input$climPeriod))
             if(period=="historical") map_yr1 <- 1950 else map_yr1 <- alf_yr1
             if(period=="historical") map_yr2 <- alf_yr2 else map_yr2 <- alf_yr1
 			mapset <- switch(input$mapset,
