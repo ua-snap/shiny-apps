@@ -102,8 +102,6 @@ collapseMonths <- function(d, variable, n.s, mos, n.samples=1, f=function(x) rou
 	d
 }
 
-z1 <- collapseMonths(d=x, variable="Val", n.s=2, mos=c("Jan", "Feb", "May", "Jun"), n.samples=50, f=function(x) round(mean(x), 1), f.args=list())
-
 # @knitr sh_func07
 periodsFromDecades <- function(d, n.p, decs, check.years=FALSE, n.samples=1){
 	decs <- as.numeric(substr(decs,1,4))
