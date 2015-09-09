@@ -768,7 +768,7 @@ plotTypeChoicesSpatial <- reactive({
 # Data aggregation
 datCollapseGroups <- reactive({
 	if(!is.null(dat()) & !is.null(input$group)){
-		d <- dat()
+		d <- copy(dat())
 		d[, c(input$group) := "Average"]
 		d
 	} else return()
@@ -776,7 +776,7 @@ datCollapseGroups <- reactive({
 
 datCollapsePooled <- reactive({
 	if(!is.null(dat())){
-		d <- dat()
+		d <- copy(dat())
 		if(!is.null(pooled.var())) d[, c(pooled.var()) := "Average"]
 		d
 	} else return()
@@ -784,7 +784,7 @@ datCollapsePooled <- reactive({
 
 datCollapseGroups2 <- reactive({
 	if(!is.null(dat2()) & !is.null(input$group)){
-		d <- dat2()
+		d <- copy(dat2())
 		d[, c(input$group) := "Average"]
 		d
 	} else return()
@@ -792,7 +792,7 @@ datCollapseGroups2 <- reactive({
 
 datCollapsePooled2 <- reactive({
 	if(!is.null(dat2())){
-		d <- dat2()
+		d <- copy(dat2())
 		if(!is.null(pooled.var())) d[, c(pooled.var()) := "Average"]
 		d
 	} else return()
