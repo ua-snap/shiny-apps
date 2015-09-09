@@ -1,3 +1,14 @@
+---
+output:
+  html_document:
+    toc: false
+    theme: cosmo
+    highlight: zenburn
+    keep_md: true
+---
+
+##
+##
 ### Updating Plots and Data
 Updating plots and data can occur through several means, including making a new plot of the same data,
 tabbing over to a new plot type which will reveal a new plot options panel with varied settings resulting in an entirely different plot,

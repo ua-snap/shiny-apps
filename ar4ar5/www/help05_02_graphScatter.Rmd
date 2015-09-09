@@ -1,5 +1,21 @@
-### Graphing: Scatter Plots <img style="float: right; padding-left: 10px; padding-right: 10px" src="img/plotSC_example_1_black.png" width="1000"/>
+---
+output:
+  html_document:
+    toc: false
+    theme: cosmo
+    highlight: zenburn
+    keep_md: true
+---
+
+##
+##
+### Graphing: Scatter Plots
 The scatter plot is the only bivariate plot in the app. Currently it plots temperature vs. precipitation.
+
+##
+<img class="centered" src="img/plotSC_example_1_black.png" width="100%"/>
+
+##
 
 #### X-axis
 Axis orientation, currently temperature vs. precipitation or vice versa.

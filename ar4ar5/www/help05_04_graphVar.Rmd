@@ -1,5 +1,21 @@
-### Graphing: A Closer Look at Variability <img style="float: right; padding-left: 10px; padding-right: 10px" src="img/plotVR_example_1_black.png" width="1000"/>
+---
+output:
+  html_document:
+    toc: false
+    theme: cosmo
+    highlight: zenburn
+    keep_md: true
+---
+
+##
+##
+### Graphing: A Closer Look at Variability
 Variability plot options are somewhat more complex than those for other plots.
+
+##
+<img class="centered" src="img/plotVR_example_1_black.png" width="100%"/>
+
+##
 
 #### X-axis
 The x-axis variable may be temporal like in the time series plot or any categorical variable such as in the heat maps.
