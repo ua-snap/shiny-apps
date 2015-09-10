@@ -1,7 +1,23 @@
-### Graphing: Time Series Plots <img style="float: right; padding-left: 10px; padding-right: 10px" src="img/plotTS_example_1_black.png" width="1000"/>
+---
+output:
+  html_document:
+    toc: false
+    theme: cosmo
+    highlight: zenburn
+    keep_md: true
+---
+
+##
+##
+### Graphing: Time Series Plots
 There are five classes of plots available: `Time Series Plots`, `Scatter Plots`, `Heat Maps` assorted plots more specifically designed for looking at `Variability`, and `Distributions`.
 These classes are not mutually exclusive. For instance, it is easy enough on the `Variability` plot tab for the user to select plot options to generate a time series plot
 that specifically highlights variability through time, in ways not fully available on the general `Time Series` plot tab.
+
+##
+<img class="centered" src="img/plotTS_example_1_black.png" width="100%"/>
+
+##
 
 Many of the options are redundant to all plot types whereas others are unique. I will discuss them all below, but I won't become repetitive.
 The time series description will be most in depth. Subsequent plot classes will benefit from redundant options and behaviour.

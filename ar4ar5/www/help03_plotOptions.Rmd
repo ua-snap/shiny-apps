@@ -1,4 +1,15 @@
-### Options Overload <img style="float: right" src="img/plotOptionsPanel.png"/>
+---
+output:
+  html_document:
+    toc: false
+    theme: cosmo
+    highlight: zenburn
+    keep_md: true
+---
+
+##
+##
+### Options Overload <img style="float: right; padding-left: 10px; padding-right: 10px" src="img/plotOptionsPanel.png" width="400"/>
 What are all these plot options? And why do they change when moving across the navigation menu or updating the data selections?
 
 #### Plot Options are Data-Dependent
@@ -33,7 +44,7 @@ Drawing lines connecting points along the x-axis when the x-axis is a nominal ca
 It gives a nonsensical sense of continuity. But also, this could in rare cases be useful. Given that I have bigger fish to fry, this special case has not been excised from the app.
 
 As another example, the CRU data overlay has different implementations throughout the app. There is no uniform approach that works equally well for all plot types.
-In the time series tab, there is an explicitly overlay. This is clear and powerful, but a limitation is CRU data cannot become grouped by a factor when GCMs are given a grouping factor,
+In the time series tab, there is an explicit overlay. This is clear and powerful, but a limitation is CRU data cannot become grouped by a factor when GCMs are given a grouping factor,
 because after all CRU data clearly cannot be colored the same as the GCM outputs or we couldn't tell them apart.
 
 Alternatively, in the `Variability` plot, CRU data are explicitly merged with the GCM subset as a unique "phase/scenario/model" combination (even though really it is none of those things)
