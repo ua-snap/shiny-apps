@@ -29,7 +29,7 @@ tabPanel("About",
 				<li><a href="http://rcharts.io/" target="_blank">rCharts</a></li>
 				<li><a href="http://plyr.had.co.nz/" target="_blank">plyr</a></li>
 				</ul>
-				<li>Source code on <a href="https://github.com/ua-snap/shiny-apps/tree/master/ak_ice_edge/" target="_blank">GitHub</a></li>
+				<li>Source code on <a href="https://github.com/ua-snap/shiny-apps/tree/master/cc4lite2/" target="_blank">GitHub</a></li>
 			</ul>')
 		)
 	),
