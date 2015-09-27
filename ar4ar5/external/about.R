@@ -6,7 +6,8 @@ function(){
 		
 		<p style="text-align:justify">Currently, there are five main plot types focusing on exploratory data analysis:
 		basic time series plots (not time series analysis), scatter plots, heat maps, various plots designed to highlight variability, and distributional plots.
-		A help section is under development.</p>'),
+		See the help section for more details on app usage, features, and limitations. Visit the Github page if you find a bug or other issue.
+        It may already be filed and I am not actively working on this project, but it is worth checking.</p>'),
 
 		HTML('
 		<div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>
@@ -21,21 +22,26 @@ function(){
 		
 		fluidRow(
 			column(4,
-				strong('References'),
-				p(HTML('<ul>'),
-					HTML('<li>'),a('Coded in R', href="http://www.r-project.org/", target="_blank"),HTML('</li>'),
-					HTML('<li>'),a('Built with the Shiny package', href="http://www.rstudio.com/shiny/", target="_blank"),HTML('</li>'),
-					HTML('<li>'),"Primary supporting R packages",HTML('</li>'),
-					HTML('<ul>'),
-						HTML('<li>'),a('plyr', href="http://cran.r-project.org/web/packages/plyr/index.html", target="_blank"),HTML('</li>'),
-						HTML('<li>'),a('reshape2', href="http://cran.r-project.org/web/packages/reshape2/index.html", target="_blank"),HTML('</li>'),
-						HTML('<li>'),a('ggplot2', href="http://cran.r-project.org/web/packages/ggplot2/index.html", target="_blank"),HTML('</li>'),
-						HTML('<li>'),a('gridExtra', href="http://cran.r-project.org/web/packages/gridExtra/index.html", target="_blank"),HTML('</li>'),
-						HTML('<li>'),a('png', href="http://cran.r-project.org/web/packages/png/index.html", target="_blank"),HTML('</li>'),
-						HTML('<li>'),a('Hmisc', href="http://cran.r-project.org/web/packages/Hmisc/index.html", target="_blank"),HTML('</li>'),
-					HTML('</ul>'),
-					HTML('<li>Source code on <a href="https://github.com/ua-snap/shiny-apps/tree/master/cmip3_cmip5/" target="_blank">GitHub</a></li>'),
-				HTML('</ul>'))
+				HTML('<strong>References</strong>
+                <p><ul>
+                    <li><a href="http://www.r-project.org/" target="_blank">Coded in R</a></li>
+                    <li><a href="http://www.rstudio.com/shiny/" target="_blank">Built with the Shiny package</a></li>
+                    <li>Additional supporting R packages</li>
+				<ul>
+                    <li><a href="http://cran.r-project.org/web/packages/plyr/index.html" target="_blank">plyr</a></li>
+                    <li><a href="http://cran.r-project.org/web/packages/reshape2/index.html" target="_blank">reshape2</a></li>
+                    <li><a href="https://cran.r-project.org/web/packages/data.table/index.html" target="_blank">data.table</a></li>
+                    <li><a href="https://cran.r-project.org/web/packages/RColorBrewer/index.html" target="_blank">RColorBrewer</a></li>
+                    <li><a href="http://cran.r-project.org/web/packages/ggplot2/index.html" target="_blank">ggplot2</a></li>
+                    <li><a href="http://cran.r-project.org/web/packages/gridExtra/index.html" target="_blank">gridExtra</a></li>
+                    <li><a href="http://cran.r-project.org/web/packages/png/index.html" target="_blank">png</a></li>
+                    <li><a href="http://cran.r-project.org/web/packages/Hmisc/index.html" target="_blank">Hmisc</a></li>
+                    <li><a href="https://cran.r-project.org/web/packages/markdown/index.html" target="_blank">markdown</a></li>
+                    <li><a href="https://rstudio.github.io/DT/" target="_blank">DT</a></li>
+                    <li><a href="http://rstudio.github.io/shinythemes/" target="_blank">shinythemes</a></li>
+				</ul>
+                    <li>Source code on <a href="https://github.com/ua-snap/shiny-apps/tree/master/ar4ar5/" target="_blank">GitHub</a></li>
+			</ul>')
 			)
 		),
 		value="about"
