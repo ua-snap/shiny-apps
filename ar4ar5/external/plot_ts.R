@@ -46,7 +46,7 @@ function(d, d.grp, d.pool, x, y, y.name, Log=FALSE, panels, grp, n.grp, ingroup.
 		if(length(vert.facet)) if(vert.facet) facet.cols <- 1
 		g <- ggplot(d, aes_string(x=x,y=y,group=wgl$subjects,order=grp,colour=color,fill=fill))
 		if(plot.theme.dark) g <- g + theme_black(base_size=fontsize) else g <- g + theme_bw(base_size=fontsize)
-		g <- g + ylab(ylb) + theme(legend.position=tolower(lgd.pos))
+		g <- g + ylab(ylb) + theme(legend.position=tolower(lgd.pos), legend.box="horizontal")
 		if(!show.logo && show.title) g <- g + ggtitle(bquote(atop(.(main))))
 		if(length(colpal)) g <- scaleColFillMan(g=g, default=scfm$scfm, colpal=colpal, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
 		if(!is.null(facet.by)) if(facet.by!="None") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)
@@ -103,6 +103,7 @@ function(d, d.grp, d.pool, x, y, y.name, Log=FALSE, panels, grp, n.grp, ingroup.
 			if(show.points) g <- g + geom_point(data=overlay, aes_string(x=x, y=y, group=NULL, colour=NULL, fill=NULL), position=point.pos, pch=21, size=4, fill=color.theme, colour="red", alpha=pts.alpha)
 		}
 		if(show.panel.text) g <- annotatePlot(g, data=d, x=x, y=y, text=plot.subtitle, col=color.theme, bp=barPlot, bp.position=bar.pos, n.groups=n.grp/2) #n.grp/2 is a rough estimate
+        g <- g + guides(fill=guide_legend(override.aes=list(alpha=1)), colour=guide_legend(override.aes=list(alpha=1)))
 		g <- addLogo(g, show.logo, logo.mat, show.title, main, fontsize)
 		print(g)
 }

@@ -32,7 +32,7 @@ function(d, d.stat, d2, x, y, z, Log=FALSE, panels, facet.cols=ceiling(sqrt(pane
 		main <- paste0("Code this title: ", plot.title) # agg stat metrics adjustment required
 		g <- ggplot(d2, aes_string(x=x, y=y, fill=z))
 		if(plot.theme.dark) g <- g + theme_black(base_size=fontsize) else g <- g + theme_bw(base_size=fontsize)
-		g <- g + geom_tile(colour=color.theme) + theme(legend.position=tolower(lgd.pos))
+		g <- g + geom_tile(colour=color.theme) + theme(legend.position=tolower(lgd.pos), legend.box="horizontal")
 		if(aspect_1to1) g <- g + coord_fixed(ratio=1)
 		brew.col <- colorRampPalette(rev(brewer.pal(8, colpal)))(50)
 		if(reverse.colors) brew.col <- rev(brew.col)
