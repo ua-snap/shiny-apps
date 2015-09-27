@@ -1,6 +1,7 @@
 # @knitr global
 library(shinythemes)
 library(markdown)
+library(DT)
 load("meta.RData",envir=.GlobalEnv)
 
 #### If overriding these region and city file path objects from files_meta.RData ####
@@ -24,6 +25,8 @@ if(Sys.info()["sysname"]=="Windows"){ # for local devl/testing
 	city.cru.files.path <- file.path(topDir, "city_files_CRU32")
 	city.cru.files.2km <- list.files(file.path(city.cru.files.path, "akcan2km"), full=T)
 	city.cru.files.10min <- list.files(file.path(city.cru.files.path, "world10min"), full=T)
+    city.gcm.files <- city.gcm.files.10min # using only 10-minute resolution files
+    city.cru.files <- city.cru.files.10min # using only 10-minute resolution files
 }
 ###############################################################
 
