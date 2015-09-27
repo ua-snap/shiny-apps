@@ -41,7 +41,7 @@ function(d, x, y, x.name, y.name, Logx=FALSE, Logy=FALSE, flip.axes=FALSE, panel
 		if(length(vert.facet)) if(vert.facet) facet.cols <- 1
 		g <- ggplot(d, aes_string(x=x,y=y,group=grp,order=grp,colour=color,fill=fill))
 		if(plot.theme.dark) g <- g + theme_black(base_size=fontsize) else g <- g + theme_bw(base_size=fontsize)
-		g <- g + xlab(xlb) + ylab(ylb) + theme(legend.position=tolower(lgd.pos))
+		g <- g + xlab(xlb) + ylab(ylb) + theme(legend.position=tolower(lgd.pos), legend.box="horizontal")
 		if(!show.logo && show.title) g <- g + ggtitle(bquote(atop(.(main))))
 		if(length(colpal)) g <- scaleColFillMan(g=g, default=scfm$scfm, colpal=colpal, n.grp=n.grp, cbpalette=cbpalette) # cbpalette source?
 		if(!is.null(facet.by)) if(facet.by!="None") g <- g + facet_wrap(as.formula(paste("~",facet.by)), ncol=facet.cols)
@@ -55,6 +55,7 @@ function(d, x, y, x.name, y.name, Logx=FALSE, Logy=FALSE, flip.axes=FALSE, panel
 			if(hexbin) g <- g + stat_binhex(data=overlay, aes_string(x=x, y=y, colour=NULL, fill=NULL, alpha="..count..", size="Observed"), colour=observed.col, bins=30)
 		}
 		if(show.panel.text) g <- g + annotate("text", y=max(d[[y]]), x=min(d[[x]]), label=bquote(.(plot.subtitle)), hjust=0, vjust=1, fontface=3, colour=color.theme)
+        g <- g + guides(fill=guide_legend(override.aes=list(alpha=1)), colour=guide_legend(override.aes=list(alpha=1)))
 		g <- addLogo(g, show.logo, logo.mat, show.title, main, fontsize)
 		print(g)
 }
