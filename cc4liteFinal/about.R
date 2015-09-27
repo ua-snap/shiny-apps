@@ -20,18 +20,18 @@ tabPanel("About",
 	fluidRow(
 		column(4,
 			HTML('<strong>References</strong>
-			<p><ul>
+			<p></p><ul>
 				<li><a href="http://www.r-project.org/" target="_blank">Coded in R</a></li>
 				<li><a href="http://www.rstudio.com/shiny/" target="_blank">Built with the Shiny package</a></li>
 				<li>Additional supporting R packages</li>
 				<ul>
-				<li><a href="http://rstudio.github.io/shinythemes/" target="_blank">shinythemes</a></li>
-				<li><a href="https://github.com/ebailey78/shinyBS" target="_blank">shinyBS</a></li>
-				<li><a href="http://rcharts.io/" target="_blank">rCharts</a></li>
-				<li><a href="http://plyr.had.co.nz/" target="_blank">plyr</a></li>
-				<li><a href="http://rstudio.github.io/leaflet/" target="_blank">plyr</a></li>
+                    <li><a href="http://rstudio.github.io/shinythemes/" target="_blank">shinythemes</a></li>
+                    <li><a href="https://github.com/ebailey78/shinyBS" target="_blank">shinyBS</a></li>
+                    <li><a href="http://rcharts.io/" target="_blank">rCharts</a></li>
+                    <li><a href="http://plyr.had.co.nz/" target="_blank">plyr</a></li>
+                    <li><a href="http://rstudio.github.io/leaflet/" target="_blank">plyr</a></li>
 				</ul>
-				<li>Source code on <a href="https://github.com/ua-snap/shiny-apps/tree/master/ak_ice_edge/" target="_blank">GitHub</a></li>
+				<li>Source code on <a href="https://github.com/ua-snap/shiny-apps/tree/master/cc4liteFinal/" target="_blank">GitHub</a></li>
 			</ul>')
 		)
 	),
