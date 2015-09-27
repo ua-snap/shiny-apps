@@ -15,9 +15,9 @@ column(4,
 					conditionalPanel(condition="input.tsp == 'plot_scatter'", selectInput("vars2", "Variable 2:", varnames, selected=varnames[2], width="100%"))
 				),
 				column(6,
-					conditionalPanel(condition="input.tsp != 'plot_spatial'", selectInput("aggStats", "Stat:", agg.stat.names, selected=agg.stat.names[1], width="100%")),
-					conditionalPanel(condition="input.tsp == 'plot_scatter'", selectInput("aggStats2", "Stat:", agg.stat.names, selected=agg.stat.names[1], width="100%")),
-					conditionalPanel(condition="input.tsp == 'plot_spatial'", selectInput("bootSamples", "Bootstrap samples [CAUTION!]:", c(50, 100, 250, 500, 1000, 2500, 5000, 10000), width="100%"))
+					conditionalPanel(condition="input.tsp != 'plot_spatial' && input.loctype !='Cities'", selectInput("aggStats", "Stat:", agg.stat.names, selected=agg.stat.names[1], width="100%")),
+					conditionalPanel(condition="input.tsp == 'plot_scatter' && input.loctype !='Cities'", selectInput("aggStats2", "Stat:", agg.stat.names, selected=agg.stat.names[1], width="100%")),
+					conditionalPanel(condition="input.tsp == 'plot_spatial' && input.loctype !='Cities'", selectInput("bootSamples", "Bootstrap samples [CAUTION!]:", c(50, 100, 250, 500, 1000, 2500, 5000, 10000), width="100%"))
 				)
 			),
 			checkboxInput("convert_units", "Convert units to F, in", FALSE),
@@ -45,7 +45,7 @@ column(4,
 		fluidRow(
 			column(6, 
 			conditionalPanel(condition="input.vars !== null &&
-			( (input.loctype !== 'Cities' && input.locs_regions !== null) || (input.loctype == 'Cities' && input.locs_cities !== null) ) &&
+			( (input.loctype !== 'Cities' && input.locs_regions !== null) || (input.loctype == 'Cities' && input.locs_cities !== null && input.tsp !== 'plot_spatial') ) &&
 				( (input.cmip3scens !== null && input.cmip3models !== null) || (input.cmip5scens !== null && input.cmip5models !== null) )", uiOutput("GoButton"))
 			),
 			column(6,
@@ -53,13 +53,14 @@ column(4,
 				conditionalPanel(condition="input.tsp == 'plot_ts' && input.goButton > 0", downloadButton("dlCurTableTS", "Download Data", class="btn-success btn-block")),
 				conditionalPanel(condition="input.tsp == 'plot_scatter' && input.goButton > 0", downloadButton("dlCurTableScatter", "Download Data", class="btn-success btn-block")),
 				conditionalPanel(condition="input.tsp == 'plot_variability' && input.goButton > 0", downloadButton("dlCurTableVariability", "Download Data", class="btn-success btn-block")),
-				conditionalPanel(condition="input.tsp == 'plot_spatial' && input.goButton > 0", downloadButton("dlCurTableSpatial", "Download Data", class="btn-success btn-block"))
+				conditionalPanel(condition="input.tsp == 'plot_spatial' && input.goButton > 0 && input.loctype !== 'Cities'", downloadButton("dlCurTableSpatial", "Download Data", class="btn-success btn-block"))
 			)
 		)
 	)
 	),
 	#### Plot options panel
-	conditionalPanel(condition="output.ShowPlotOptionsPanel == true && (input.tsp == 'plot_heatmap' || input.tsp == 'plot_ts' || input.tsp == 'plot_scatter' || input.tsp == 'plot_variability' || input.tsp == 'plot_spatial')",
+	conditionalPanel(condition="output.ShowPlotOptionsPanel == true &&
+        (input.tsp == 'plot_heatmap' || input.tsp == 'plot_ts' || input.tsp == 'plot_scatter' || input.tsp == 'plot_variability' || (input.tsp == 'plot_spatial' && input.loctype !== 'Cities'))",
 	wellPanel(
 		checkboxInput("showDisplayPanel1", h5("Plot Options"), TRUE),
 		conditionalPanel(condition="input.showDisplayPanel1",
@@ -68,7 +69,7 @@ column(4,
 			fluidRow(column(6, uiOutput("Heatmap_x")), column(6, uiOutput("Heatmap_y"))),
 			fluidRow(column(6,uiOutput("FacetHeatmap")), column(6, uiOutput("StatHeatmap"))),
 			fluidRow(uiOutput("PooledVarHeatmap")),
-			fluidRow(column(4, checkboxInput("hm_showTitle", "Title", TRUE)), column(4, checkboxInput("hm_showPanelText", "Panel text", TRUE)), column(4, checkboxInput("hm_showCRU","Show CRU 3.2", FALSE))),
+			fluidRow(column(4, checkboxInput("hm_showTitle", "Title", FALSE)), column(4, checkboxInput("hm_showPanelText", "Panel text", FALSE)), column(4, checkboxInput("hm_showCRU","Show CRU 3.2", FALSE))),
 			fluidRow(column(4, checkboxInput("aspect1to1", "1:1 Aspect", FALSE)), column(4, checkboxInput("revHeatmapColors", "Reverse colors", FALSE)), column(4, checkboxInput("showHeatmapVals", "Cell values", FALSE))),
 			fluidRow(column(4, conditionalPanel(condition="input.vars !== null && input.vars[0] !== 'Temperature'", checkboxInput("log_hm", "Log transform", FALSE))), column(4, ""), column(4, "")),
 			fluidRow(column(4, checkboxInput("hm_plotThemeDark", "Dark theme", TRUE))),
@@ -84,7 +85,7 @@ column(4,
 			fluidRow(column(6, selectInput("xtime", "X-axis (time)", choices=c("Month", "Year", "Decade"), selected="Year", width="100%")), column(6, uiOutput("Group"))),
 			fluidRow(column(6,uiOutput("Facet"))),
 			fluidRow(uiOutput("PooledVar")),
-			fluidRow(column(4, checkboxInput("ts_showTitle", "Title", TRUE)), column(4, checkboxInput("ts_showPanelText", "Panel text", TRUE)), column(4, checkboxInput("ts_showCRU","Show CRU 3.2", FALSE))),
+			fluidRow(column(4, checkboxInput("ts_showTitle", "Title", FALSE)), column(4, checkboxInput("ts_showPanelText", "Panel text", FALSE)), column(4, checkboxInput("ts_showCRU","Show CRU 3.2", FALSE))),
 			fluidRow(column(4, checkboxInput("ts_showpts", "Show points", TRUE)), column(4, checkboxInput("ts_jitterXY", "Jitter points", FALSE)), column(4, checkboxInput("ts_showlines", "Show lines", FALSE))),
 			fluidRow(
 				column(4, checkboxInput("linePlot", "Trend lines", FALSE)),
@@ -111,7 +112,7 @@ column(4,
 			fluidRow(column(6, uiOutput("Sc_X")), column(6, uiOutput("Group2"))),
 			fluidRow(column(6,uiOutput("Facet2"))),
 			fluidRow(uiOutput("PooledVar2")),
-			fluidRow(column(4, checkboxInput("sc_showTitle", "Title", TRUE)), column(4, checkboxInput("sc_showPanelText", "Panel text", TRUE)), column(4, checkboxInput("sc_showCRU","Show CRU 3.2", FALSE))),
+			fluidRow(column(4, checkboxInput("sc_showTitle", "Title", FALSE)), column(4, checkboxInput("sc_showPanelText", "Panel text", FALSE)), column(4, checkboxInput("sc_showCRU","Show CRU 3.2", FALSE))),
 			fluidRow(column(4, checkboxInput("sc_showpts", "Show points", TRUE)), column(4, checkboxInput("sc_jitterXY", "Jitter points", FALSE)), column(4, checkboxInput("sc_showlines", "Show lines", FALSE))),
 			fluidRow(column(4, uiOutput("Hexbin")), column(4, checkboxInput("log_sc_x", "Log transform X", FALSE)), column(4, checkboxInput("log_sc_y", "Log transform Y", FALSE))),
 			fluidRow(column(4, checkboxInput("sc_plotThemeDark", "Dark theme", TRUE))),
@@ -134,7 +135,7 @@ column(4,
 				)
 			),
 			fluidRow(uiOutput("PooledVar3")),
-			fluidRow(column(4, checkboxInput("vr_showTitle", "Title", TRUE)), column(4, checkboxInput("vr_showPanelText", "Panel text", TRUE)), column(4, checkboxInput("vr_showCRU","Show CRU 3.2", FALSE))),
+			fluidRow(column(4, checkboxInput("vr_showTitle", "Title", FALSE)), column(4, checkboxInput("vr_showPanelText", "Panel text", FALSE)), column(4, checkboxInput("vr_showCRU","Show CRU 3.2", FALSE))),
 			fluidRow(column(4, checkboxInput("vr_showpts", "Show points", TRUE)), column(4, checkboxInput("vr_jitterXY", "Jitter points", FALSE)), column(4, checkboxInput("vr_showlines", "Show lines", FALSE))),
 			fluidRow(
 				column(4, uiOutput("Variability")),
@@ -161,7 +162,7 @@ column(4,
 			sliderInput("thinSpatialSample", "Thin samples", 0.05, 1, 1, step=0.05, width="100%"),
 			#),
 			fluidRow(uiOutput("PooledVarSpatial")),
-			fluidRow(column(4, checkboxInput("sp_showTitle", "Title", TRUE)), column(4, checkboxInput("sp_showPanelText", "Panel text", TRUE)), column(4, checkboxInput("sp_showCRU","Show CRU 3.2", FALSE))),
+			fluidRow(column(4, checkboxInput("sp_showTitle", "Title", FALSE)), column(4, checkboxInput("sp_showPanelText", "Panel text", FALSE)), column(4, checkboxInput("sp_showCRU","Show CRU 3.2", FALSE))),
 			fluidRow(column(4, checkboxInput("sp_showpts", "Show points", TRUE)), column(4, checkboxInput("sp_jitterXY", "Jitter points", FALSE)), column(4, checkboxInput("sp_showlines", "Show lines", FALSE))),
 			fluidRow(
 				column(4,
