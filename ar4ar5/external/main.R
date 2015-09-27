@@ -22,8 +22,11 @@ column(8,
 		uiOutput("TableVariability")
 	),
 	conditionalPanel(condition="input.tsp == 'plot_spatial' && input.goButton !== null && input.goButton > 0",
-		plotOutput("PlotSpatial", width="100%", height="auto"),
-		uiOutput("spatialTextSub"),
-		uiOutput("TableSpatial")
+		conditionalPanel(condition="input.loctype == 'Cities'", HTML('<h4>Spatial distributions cannot be shown for city locations.<br/>Select a regional scale option.</h4>')),
+        conditionalPanel(condition="input.loctype != 'Cities'",
+            plotOutput("PlotSpatial", width="100%", height="auto"),
+            uiOutput("spatialTextSub"),
+            uiOutput("TableSpatial")
+        )
 	)
 )
