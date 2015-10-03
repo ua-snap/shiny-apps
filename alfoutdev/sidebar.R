@@ -1,7 +1,7 @@
 # @knitr sidebar
 column(4,
 	conditionalPanel(condition="input.tsp!=='about'",
-        selectInput("workspace", "Alfresco run", choices=wsfiles, selected=wsfiles[1])
+        selectInput("workspace", "Alfresco run", choices=wsfiles, selected=wsfiles[1], width="100%")
 	),
 	conditionalPanel(condition="input.tsp!=='fri_boxplot' && input.tsp!=='about' && input.tsp!=='tab_ts' && input.tsp!=='ctab_ts'",
 		wellPanel(
