@@ -89,8 +89,11 @@ column(4,
                 column(4, checkboxInput("boxplot_points", "Show points", FALSE))
 			),
             fluidRow(
-				column(4, selectInput("points_alpha", "Alpha level", choices=seq(0.1, 1, by=0.1), selected="0.1")),
-				column(8, uiOutput("Boxplot_locgroup_choices"))
+				column(6, selectInput("points_alpha", "Alpha level", choices=seq(0.1, 1, by=0.1), selected="0.1")),
+				column(6, uiOutput("Boxplot_buffer_choices"))
+			),
+            fluidRow(
+				column(12, uiOutput("Boxplot_locgroup_choices"))
 			)
 		)
 	)

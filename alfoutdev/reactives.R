@@ -15,10 +15,14 @@ output$Reg_facetBy_choices <- renderUI({
 output$Boxplot_X_choices <- renderUI({ selectInput("boxplot_X", "X-axis", choices=fri_IDvars(), selected="Source") })
 output$Boxplot_group_choices <- renderUI({ selectInput("boxplot_grp", "Group by", choices=c("", fri_IDvars()[fri_IDvars()!="Replicate"]), selected="") })
 output$Boxplot_facetBy_choices <- renderUI({ selectInput("boxplot_facetby", "Facet by", choices=fri_IDvars()[fri_IDvars()!="Replicate"], selected="", multiple=TRUE) })
+output$Boxplot_buffer_choices <- renderUI({
+    lev <- levels(rv$fri.dat$Buffer_km)
+    selectInput("boxplot_buffer", "Radial buffer (km)", choices=lev, selected=lev, multiple=TRUE)
+})
 output$Boxplot_locgroup_choices <- renderUI({
     if(!("LocGroup" %in% names(rv$fri.dat))) return()
     lev <- levels(rv$fri.dat$LocGroup)
-    selectInput("boxplot_locgroup", "Select location groups", choices=lev, selected=lev, multiple=TRUE)
+    selectInput("boxplot_locgroup", "Location groups", choices=lev, selected=lev, multiple=TRUE)
 })
 
 # server-side reactives
@@ -57,6 +61,6 @@ Boxplot_subjects <- reactive({ if(length(input$boxplot_interact)) sprintf("inter
 Boxplot_groups <- reactive({ if(length(input$boxplot_grp)) input$boxplot_grp else NULL })
 
 Boxplot_data <- reactive({
-    if(is.null(input$boxplot_locgroup) || input$boxplot_locgroup=="") return(data.table(rv$fri.dat))
-    filter(data.table(rv$fri.dat), LocGroup %in% input$boxplot_locgroup)
+    if(is.null(input$boxplot_locgroup) || input$boxplot_locgroup=="") return(filter(data.table(rv$fri.dat), Buffer_km %in% input$boxplot_buffer))
+    filter(data.table(rv$fri.dat), LocGroup %in% input$boxplot_locgroup & Buffer_km %in% input$boxplot_buffer)
 })
