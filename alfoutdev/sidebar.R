@@ -90,7 +90,7 @@ column(4,
 			),
             fluidRow(
 				column(4, selectInput("points_alpha", "Alpha level", choices=seq(0.1, 1, by=0.1), selected="0.1")),
-				column(8, uiOutput("Boxplot_Locgroup_choices"))
+				column(8, uiOutput("Boxplot_locgroup_choices"))
 			)
 		)
 	)
