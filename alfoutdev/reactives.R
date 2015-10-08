@@ -16,7 +16,7 @@ output$Boxplot_X_choices <- renderUI({ selectInput("boxplot_X", "X-axis", choice
 output$Boxplot_group_choices <- renderUI({ selectInput("boxplot_grp", "Group by", choices=c("", fri_IDvars()[fri_IDvars()!="Replicate"]), selected="") })
 output$Boxplot_facetBy_choices <- renderUI({ selectInput("boxplot_facetby", "Facet by", choices=fri_IDvars()[fri_IDvars()!="Replicate"], selected="", multiple=TRUE) })
 output$Boxplot_buffer_choices <- renderUI({
-    lev <- levels(rv$fri.dat$Buffer_km)
+    lev <- sort(unique(rv$fri.dat$Buffer_km))
     selectInput("boxplot_buffer", "Radial buffer (km)", choices=lev, selected=lev, multiple=TRUE)
 })
 output$Boxplot_locgroup_choices <- renderUI({
