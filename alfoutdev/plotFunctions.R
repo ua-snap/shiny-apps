@@ -158,7 +158,8 @@ plotFRIboxplot <- function(d, x, y, grp=NULL, Log=FALSE, colpal, ylim=NULL, show
 			g <- g + geom_point(aes_string(fill=basic.fill.clr), pch=21, size=1, colour="black", fill="red", alpha=pts.alpha, position=position_jitter(width=0.9/x.n))
 		}
 	}
-	g <- g + theme_bw(base_size=fontsize) + theme(legend.position=lgd.pos) + xlab(xlb) + ylab(ylb) + ylim(ylim)
+	g <- g + theme_bw(base_size=fontsize) + theme(legend.position=lgd.pos) + xlab(xlb) + ylab(ylb)
+    if(!is.null(ylim)) g <- g + ylim(ylim)
 	if(!is.null(facet.by)){
         string <- if(length(facet.by)==1) paste("~", facet.by) else paste(facet.by[1], "~", facet.by[2])
         g <- g + facet_wrap(as.formula(string), ncol=as.numeric(facet.cols), scales=facet.scales)
