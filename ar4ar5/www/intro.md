@@ -9,10 +9,15 @@ Select at least one climate variable, scenario, corresponding model, month, deca
 *   The latter focuses on displaying variability in different ways, which include but are not limited to time series plots.
 *   Must select unique x- and y-axis categorical variables for the heat map. Axes cover the range of factor levels of these variables.
 
-##### Scatter Plot
+##### Scatter plot
 
 *   The scatter plot is bivariate, plotting temperature and precipitation against one another.
 *   There are placeholders for specific variable selection, but currently only these two variables are available.
+
+##### Distributions
+
+*   Distributions are plotted as histograms, density curves, box plots and stripcharts. Plot type options depend on whether the x-axis variable is discrete or continuous.
+*   Bootstrap sampling is restricted in the publicly available app to limit memory usage and processing time, which is why the dropdown menu offers a single fixed sample size option.
 
 ##### Time period options
 
@@ -31,3 +36,5 @@ Select at least one climate variable, scenario, corresponding model, month, deca
 *   Plot options are based on the data in use and must be selected after subsetting the data.
 *   Since plot options are based on the data subset, any changes to data selections will require generating a new data set and selecting plot options again.
 *   As with the data download, you may plot in the browser or download the plot as a PDF via the respective buttons when subsetting is complete.
+*   The intelligence behind the automatic plot titles and the in-panel text and its placement is limited.
+Title do not always describe the data perfectly or concisely and in-panel text placement is not even within the axis limits for some plots. Both options are off by default.

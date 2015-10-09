@@ -20,12 +20,12 @@ shinyUI(
 	fluidRow(
 		source("sidebar.R",local=T)$value,
 		column(8,
-            conditionalPanel("input.tsp=='rab_ts'", plotOutput("RAB_tsplot",height="auto"), br()),
-            conditionalPanel("input.tsp=='crab_ts'", plotOutput("CRAB_tsplot",height="auto"), br()),
-            conditionalPanel("input.tsp=='tab_ts'", plotOutput("RegTAB_tsplot",height="auto"), br()),
-            conditionalPanel("input.tsp=='ctab_ts'", plotOutput("RegCTAB_tsplot",height="auto"), br()),
-            conditionalPanel("input.tsp=='frp_buffer'", plotOutput("FRP_bufferplot",height="auto"), br()),
-            conditionalPanel("input.tsp=='fri_boxplot'", plotOutput("FRI_boxplot",height="auto"), br())
+            conditionalPanel("input.tsp=='rab_ts'", plotOutput("RAB_tsplot", width="100%", height="auto"), br()),
+            conditionalPanel("input.tsp=='crab_ts'", plotOutput("CRAB_tsplot", width="100%", height="auto"), br()),
+            conditionalPanel("input.tsp=='tab_ts'", plotOutput("RegTAB_tsplot", width="100%", height="auto"), br()),
+            conditionalPanel("input.tsp=='ctab_ts'", plotOutput("RegCTAB_tsplot", width="100%", height="auto"), br()),
+            conditionalPanel("input.tsp=='frp_buffer'", plotOutput("FRP_bufferplot", width="100%", height="auto"), br()),
+            conditionalPanel("input.tsp=='fri_boxplot'", plotOutput("FRI_boxplot", width="100%", height="auto"), br())
 		)
 	)
 )))
