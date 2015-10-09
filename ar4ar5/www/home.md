@@ -1,1 +1,1 @@
-<img class="centered" src="img/home_text.png" width="1000"/>
+<img class="centered" src="img/home_text.jpg" width="1000"/>
