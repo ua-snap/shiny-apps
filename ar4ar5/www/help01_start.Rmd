@@ -48,13 +48,11 @@ I enjoy sharing my work, the code is freely available, and networking with other
 
 Mandatory caveats: I do not have time to teach you how to make apps.
 Nor will you be able to swap your data sets for mine and have this app work for you. It is far too complex to use so directly as a template, but various bits of code you may find useful in your own contexts.
-I have been developing it off and on when time permits among other duties since somewhere around February of 2014 although the exact date has become a hazy mystery to me,
-obscured by the mind fog of **R** code I have written in general since then.
 
-This is to say, if you want an app "just like this," a common sentiment I encounter, which is quite flattering and much appreciated, I must say it will not happen overnight no matter how much you borrow from this app.
+This is to say, if you want an app "just like this," it will not happen overnight no matter how much you borrow from this app.
 Even if I could write the code for this app without any planning, revision, or refactoring, just straight through as a stream-of-consciousness exercise in one sitting, it would still take quite some time to write it all out.
 And that doesn't even begin to get into the code written to parse and prep large amounts of data, which the app (among other projects) makes use of.
-In fact, even the help documentation verbosity that follows, I wrote out just for me because otherwise it would be impossible to recall all of what I had done here.
+In fact, even the help documentation verbosity that follows, I needed to write just to recall all of what I had done here.
 
 The tertiary audience would be other colleagues which do not use **R** but happen to be very interested in climate models and climate change in the Arctic.
 
