@@ -83,10 +83,12 @@ column(4,
 				column(6, uiOutput("Boxplot_facetBy_choices")),
 				column(6, selectInput("boxplot_facetcols", "Columns", choices=1:4, selected=1))
 			),
+            fluidRow(
+                column(12, uiOutput("Boxplot_ylim"))
+            ),
 			fluidRow(
-                column(4, checkboxInput("boxplot_facetScalesFree", "Free y-axes")),
-				column(4, checkboxInput("boxplot_log", "Log scale", FALSE)),
-                column(4, checkboxInput("boxplot_points", "Show points", FALSE))
+                column(6, checkboxInput("boxplot_facetScalesFree", "Free y-axes", FALSE), checkboxInput("boxplot_outliers", "Show outliers", TRUE)),
+				column(6, checkboxInput("boxplot_log", "Log scale", FALSE), checkboxInput("boxplot_points", "Show points", FALSE))
 			),
             fluidRow(
 				column(6, selectInput("points_alpha", "Alpha level", choices=seq(0.1, 1, by=0.1), selected="0.1")),

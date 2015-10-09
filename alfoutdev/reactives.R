@@ -24,6 +24,11 @@ output$Boxplot_locgroup_choices <- renderUI({
     lev <- levels(rv$fri.dat$LocGroup)
     selectInput("boxplot_locgroup", "Location groups", choices=lev, selected=lev, multiple=TRUE)
 })
+output$Boxplot_ylim <- renderUI({
+    x <- max(Boxplot_data()$FRI)
+    x <- x - x %% 10 + 10
+    sliderInput("boxplot_ylim", "FRI axis range", 0, x, c(0, x), step=10, sep="")
+})
 
 # server-side reactives
 fs_IDvars <- reactive({ sort(names(rv$d.fs)[!(names(rv$d.fs) %in% c("FS", "Year"))]) })

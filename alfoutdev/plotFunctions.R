@@ -104,7 +104,7 @@ plotRegionalTABbyTime <- function(data, vegetation, agg.veg=F, year.range, cumul
 
 # @knitr plotFRIboxplot
 # plot boxplots of fire return intervals for given buffer sizes, locations, replicates, source data
-plotFRIboxplot <- function(d, x, y, grp=NULL, Log=FALSE, colpal, show.points=TRUE, pts.alpha=1, fontsize=16, leg.pos="top", facet.by=NULL, facet.cols=1, facet.scales=NULL, lgd.pos="top"){
+plotFRIboxplot <- function(d, x, y, grp=NULL, Log=FALSE, colpal, ylim=NULL, show.points=TRUE, show.outliers=FALSE, pts.alpha=1, fontsize=16, leg.pos="top", facet.by=NULL, facet.cols=1, facet.scales=NULL, lgd.pos="top"){
 	d$Buffer_km <- factor(d$Buffer_km)
 	if(Log) { d$FRI <- log(d$FRI + 1); units <- "Log(Years)" } else units <- "(Years)"
 	dodge <- position_dodge(width = 0.9)
@@ -147,9 +147,10 @@ plotFRIboxplot <- function(d, x, y, grp=NULL, Log=FALSE, colpal, show.points=TRU
 	xlb=x
 	maintitle <- "Fire Return Interval Distributions"
 	ylb <- paste("Fire Return Interval", units)
+    outlier.col <- if(show.outliers) "black" else NA
 	if(grp==1) basic.fill.clr <- NULL else basic.fill.clr <- grp
 	g <- ggplot(d, aes_string(x=x, y=y, colour=basic.fill.clr)) + scale_color_manual(values=colpal) + scale_fill_manual(values=colpal)
-	g <- g + geom_boxplot(fill="white", outlier.colour=NA, position=dodge)
+	g <- g + geom_boxplot(fill="white", outlier.colour=outlier.col, position=dodge)
 	if(show.points){
 		if(is.character(grp) & n.grp>1){
 			g <- g + geom_point(aes_string(x=xdodge, fill=basic.fill.clr), pch=21, size=1, colour="black", alpha=pts.alpha, position=position_jitter(width=0.9/(x.n*grp.n)))
@@ -157,7 +158,7 @@ plotFRIboxplot <- function(d, x, y, grp=NULL, Log=FALSE, colpal, show.points=TRU
 			g <- g + geom_point(aes_string(fill=basic.fill.clr), pch=21, size=1, colour="black", fill="red", alpha=pts.alpha, position=position_jitter(width=0.9/x.n))
 		}
 	}
-	g <- g + theme_bw(base_size=fontsize) + theme(legend.position=lgd.pos) + xlab(xlb) + ylab(ylb)
+	g <- g + theme_bw(base_size=fontsize) + theme(legend.position=lgd.pos) + xlab(xlb) + ylab(ylb) + ylim(ylim)
 	if(!is.null(facet.by)){
         string <- if(length(facet.by)==1) paste("~", facet.by) else paste(facet.by[1], "~", facet.by[2])
         g <- g + facet_wrap(as.formula(string), ncol=as.numeric(facet.cols), scales=facet.scales)

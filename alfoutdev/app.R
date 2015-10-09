@@ -47,7 +47,7 @@ doPlot_FRPbyBuffer <- function(){
 doPlot_FRIboxplot <- function(){
 	if(!(is.null(Boxplot_data()) || is.null(input$boxplot_X) || is.null(input$boxplot_points) || is.null(input$points_alpha) || is.null(Boxplot_groups()) || is.null(input$boxplot_log) || is.null(input$boxplot_facetcols))){
 		plotFRIboxplot(d=Boxplot_data(), x=input$boxplot_X, y="FRI", grp=Boxplot_groups(),
-			colpal=cbpalette, Log=input$boxplot_log, show.points=input$boxplot_points, pts.alpha=input$points_alpha, fontsize=16, leg.pos="top",
+			colpal=cbpalette, Log=input$boxplot_log, ylim=input$boxplot_ylim, show.outliers=input$boxplot_outliers, show.points=input$boxplot_points, pts.alpha=input$points_alpha, fontsize=16, leg.pos="top",
 			facet.by=Boxplot_facetBy(), facet.cols=input$boxplot_facetcols, facet.scales=Boxplot_facetScales())
 	} else NULL
 }
