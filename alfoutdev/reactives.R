@@ -27,8 +27,9 @@ output$Boxplot_locgroup_choices <- renderUI({
 output$Boxplot_ylim <- renderUI({
     x <- max(Boxplot_data()$FRI)
     if(is.null(x)) return()
-    x <- x - x %% 10 + 10
-    sliderInput("boxplot_ylim", "FRI axis range", 0, x, c(0, x), step=10, sep="")
+    a <- input$boxplot_log
+    if(!is.null(a) && a) { x <- ceiling(log(x)); b <- 1 } else { x <- x - x %% 10 + 10; b <- 10 }
+    sliderInput("boxplot_ylim", "FRI axis range", 0, x, c(0, x), step=b, sep="")
 })
 
 # server-side reactives

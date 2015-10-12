@@ -159,7 +159,7 @@ plotFRIboxplot <- function(d, x, y, grp=NULL, Log=FALSE, colpal, ylim=NULL, show
 		}
 	}
 	g <- g + theme_bw(base_size=fontsize) + theme(legend.position=lgd.pos) + xlab(xlb) + ylab(ylb)
-    if(!is.null(ylim)) g <- g + ylim(ylim)
+    if(!is.null(ylim) && is.null(facet.by)) g <- g + ylim(ylim)
 	if(!is.null(facet.by)){
         string <- if(length(facet.by)==1) paste("~", facet.by) else paste(facet.by[1], "~", facet.by[2])
         g <- g + facet_wrap(as.formula(string), ncol=as.numeric(facet.cols), scales=facet.scales)
