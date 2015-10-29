@@ -72,8 +72,9 @@ column(4,
 	conditionalPanel(condition="input.tsp==='fri_boxplot'",
 		wellPanel(
 			fluidRow(
-				column(9, h5("Boxplot options")),
-				column(3, downloadButton("dl_FRI_boxplotPDF","Get Plot"))
+				column(4, h5("Boxplot options")),
+                column(4, uiOutput("Boxplot_GoButton")),
+				column(4, downloadButton("dl_FRI_boxplotPDF", "Get Plot", class="btn-success btn-block"))
 			),
 			fluidRow(
 				column(6, uiOutput("Boxplot_X_choices")),
@@ -96,6 +97,10 @@ column(4,
 			),
             fluidRow(
 				column(12, uiOutput("Boxplot_locgroup_choices"))
+			),
+            fluidRow(
+				column(6, uiOutput("Boxplot_replicates_choices")),
+				column(6, checkboxInput("boxplot_observed", "Include observed", TRUE))
 			)
 		)
 	)
