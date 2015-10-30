@@ -13,8 +13,14 @@ output$Reg_facetBy_choices <- renderUI({
 })
 
 output$Boxplot_X_choices <- renderUI({ selectInput("boxplot_X", "X-axis", choices=fri_IDvars(), selected="Source") })
-output$Boxplot_group_choices <- renderUI({ selectInput("boxplot_grp", "Group by", choices=c("", fri_IDvars()[fri_IDvars()!="Replicate"]), selected="") })
-output$Boxplot_facetBy_choices <- renderUI({ selectInput("boxplot_facetby", "Facet by", choices=fri_IDvars()[fri_IDvars()!="Replicate"], selected="", multiple=TRUE) })
+output$Boxplot_group_choices <- renderUI({
+    x <- if(length(input$boxplot_replicates) < 7) fri_IDvars() else fri_IDvars()[fri_IDvars()!="Replicate"]
+    selectInput("boxplot_grp", "Group by", choices=c("", x), selected="")
+})
+output$Boxplot_facetBy_choices <- renderUI({
+    x <- if(length(input$boxplot_replicates) < 7) fri_IDvars() else fri_IDvars()[fri_IDvars()!="Replicate"]
+    selectInput("boxplot_facetby", "Facet by", choices=x, selected="", multiple=TRUE)
+})
 output$Boxplot_buffer_choices <- renderUI({
     lev <- sort(unique(rv$fri.dat$Buffer_km))
     selectInput("boxplot_buffer", "Radial buffer (km)", choices=lev, selected=lev, multiple=TRUE)
@@ -24,11 +30,22 @@ output$Boxplot_locgroup_choices <- renderUI({
     lev <- levels(rv$fri.dat$LocGroup)
     selectInput("boxplot_locgroup", "Location groups", choices=lev, selected=lev, multiple=TRUE)
 })
+output$Boxplot_replicates_choices <- renderUI({
+    lev <- levels(rv$fri.dat$Replicate)
+    lev <- gsub("Rep_", "", lev[lev!="Observed"])
+    selectInput("boxplot_replicates", "Replicates", choices=lev, selected="", multiple=TRUE)
+})
 output$Boxplot_ylim <- renderUI({
+    if(is.null(Boxplot_data()) || nrow(Boxplot_data())==0) return()
     x <- max(Boxplot_data()$FRI)
     if(is.null(x)) return()
-    x <- x - x %% 10 + 10
-    sliderInput("boxplot_ylim", "FRI axis range", 0, x, c(0, x), step=10, sep="")
+    a <- input$boxplot_log
+    if(!is.null(a) && a) { x <- ceiling(log(x)); b <- 1 } else { x <- x - x %% 10 + 10; b <- 10 }
+    sliderInput("boxplot_ylim", "FRI axis range", 0, x, c(0, x), step=b, sep="")
+})
+
+output$Boxplot_GoButton <- renderUI({
+	actionButton("boxplot_goButton", "Draw Plot", icon=icon("check"), class="btn-primary btn-block")
 })
 
 # server-side reactives
@@ -67,6 +84,14 @@ Boxplot_subjects <- reactive({ if(length(input$boxplot_interact)) sprintf("inter
 Boxplot_groups <- reactive({ if(length(input$boxplot_grp)) input$boxplot_grp else NULL })
 
 Boxplot_data <- reactive({
-    if(is.null(input$boxplot_locgroup) || input$boxplot_locgroup=="") return(filter(data.table(rv$fri.dat), Buffer_km %in% input$boxplot_buffer))
-    filter(data.table(rv$fri.dat), LocGroup %in% input$boxplot_locgroup & Buffer_km %in% input$boxplot_buffer)
+    if(is.null(rv$fri.dat)) return()
+    x <- !is.null(input$boxplot_observed) && input$boxplot_observed
+    d <- if(x) data.table(rv$fri.dat) else filter(data.table(rv$fri.dat), Replicate!="Observed")
+    if(!(is.null(input$boxplot_locgroup) || input$boxplot_locgroup=="")) d <- filter(d, LocGroup %in% input$boxplot_locgroup)
+    if(!(is.null(input$boxplot_replicates) || input$boxplot_replicates=="")){
+        y <- paste0("Rep_", input$boxplot_replicates)
+        z <- if(x) c("Observed", y) else y
+        d <- filter(d, Replicate %in% z)
+    }
+    filter(d, Buffer_km %in% input$boxplot_buffer)
 })

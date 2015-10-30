@@ -64,7 +64,13 @@ output$RegCTAB_tsplot <- renderPlot({ doPlot_RegTABbyTime(year.range=input$years
 
 output$FRP_bufferplot <- renderPlot({ doPlot_FRPbyBuffer() }, height=function(){ 0.7*session$clientData$output_FRP_bufferplot_width }, width="auto")
 
-output$FRI_boxplot <- renderPlot({ doPlot_FRIboxplot() }, height=function(){ 0.7*session$clientData$output_FRI_boxplot_width }, width="auto")
+output$FRI_boxplot <- renderPlot({
+    if(is.null(input$boxplot_goButton) || input$boxplot_goButton==0) return()
+    isolate({ 
+    doPlot_FRIboxplot() 
+    }) 
+    },
+    height=function(){ 0.7*session$clientData$output_FRI_boxplot_width }, width="auto")
 
 # PDF download buttons for each plot
 output$dl_RAB_tsplotPDF <- downloadHandler(
