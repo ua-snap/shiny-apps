@@ -13,7 +13,7 @@ function(){
 		Aggregate summaries appear above both of these panel graphics, where the top left scatterplot and loess smoothing curve represent the average of daily obserrvations across the selected years.
 		To the right, the two bars also represent averages of the selected years. In both cases, the averages exclude data from the first and/or last year if either year is incomplete.</p>
 		
-		<p style="text-align:justify">Data are downloaded in real-time using the <a href="http://rcc-acis.unl.edu/" target="_blank">Applied Climate Information System</a> (ACIS) API.</p>
+		<p style="text-align:justify">Data are downloaded in real-time using the <a href="http://rcc-acis.org/" target="_blank">Applied Climate Information System</a> (ACIS) API.</p>
 		
 		<p style="text-align:justify">Inspiration for the plot format came from Stephen Von Worley\'s
 		<a href="http://www.datapointed.net/2012/02/san-francisco-rain-year-before-after-valentines-day/" target="_blank">Is California heading into a drought?</a> graphic.</p>
