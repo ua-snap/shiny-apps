@@ -104,7 +104,7 @@ Obs_updateFiles <- reactive({
                 "5m trunc + Lmap"="5m100n_cavmDistTrunc_loop_Lmap"
 			)
             if(period!="historical") mapset <- gsub("_loop", "", mapset)
-			flamFile <- file.path("/big_scratch/mfleonawicz/Alf_Files_20121129/gbmFlamMaps", period, input$climMod, mapset, "gbm.flamm.tif")
+			flamFile <- file.path("/atlas_scratch/mfleonawicz/projects/Flammability/data/gbmFlammability/samples_based", period, input$climMod, mapset, "gbm.flamm.tif")
 			
 			for(i in JSON_current()){
 				alfJSON <- fromJSON(i, simplify=F)
