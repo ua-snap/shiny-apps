@@ -27,9 +27,9 @@ doPlot_RABbyTime <- function(...){
 
 # Plot Regional TAB ~ time
 doPlot_RegTABbyTime <- function(...){
-	if(!(is.null(Reg_subjects()) || is.null(Reg_groups()) || is.null(input$reg_vegetation) || is.null(input$reg_aggveg) || is.null(input$reg_facetcols) ||
+	if(!(is.null(Reg_domain()) || is.null(Reg_subjects()) || is.null(Reg_groups()) || is.null(input$reg_vegetation) || is.null(input$reg_aggveg) || is.null(input$reg_facetcols) ||
         (input$reg_aggveg && (Reg_groups()=="Vegetation" || (!is.null(Reg_facetBy()) && Reg_facetBy()=="Vegetation"))))){
-	plotRegionalTABbyTime(data=rv$d.fs, vegetation=input$reg_vegetation, agg.veg=input$reg_aggveg, subject=Reg_subjects(), grp=Reg_groups(),
+	plotRegionalTABbyTime(data=rv$d.fs, domain=Reg_domain(), vegetation=input$reg_vegetation, agg.veg=input$reg_aggveg, subject=Reg_subjects(), grp=Reg_groups(),
 		colpal=cbpalette, fontsize=16, leg.pos="top", facet.by=Reg_facetBy(), facet.cols=input$reg_facetcols, facet.scales=Reg_facetScales(), ...)
 	} else NULL
 }
@@ -54,21 +54,31 @@ doPlot_FRIboxplot <- function(){
 }
 
 # Primary plot reactive outputs
-output$RAB_tsplot <- renderPlot({ doPlot_RABbyTime(year.range=input$yearsrab) }, height=function(){ 0.7*session$clientData$output_RAB_tsplot_width }, width="auto")
+output$RAB_tsplot <- renderPlot({
+    if(is.null(input$ts_site_rab_goButton) || input$ts_site_rab_goButton==0) return()
+    isolate({ doPlot_RABbyTime(year.range=input$yearsrab) })
+    }, height=function(){ 0.7*session$clientData$output_RAB_tsplot_width }, width="auto")
 
-output$CRAB_tsplot <- renderPlot({ doPlot_RABbyTime(year.range=input$yearscrab, cumulative=TRUE) }, height=function(){ 0.7*session$clientData$output_CRAB_tsplot_width }, width="auto")
+output$CRAB_tsplot <- renderPlot({
+    if(is.null(input$ts_site_crab_goButton) || input$ts_site_crab_goButton==0) return()
+    isolate({ doPlot_RABbyTime(year.range=input$yearscrab, cumulative=TRUE) })
+    }, height=function(){ 0.7*session$clientData$output_CRAB_tsplot_width }, width="auto")
 
-output$RegTAB_tsplot <- renderPlot({ doPlot_RegTABbyTime(year.range=input$yearsrab) }, height=function(){ 0.7*session$clientData$output_RegTAB_tsplot_width }, width="auto")
+output$RegTAB_tsplot <- renderPlot({
+    if(is.null(input$ts_reg_tab_goButton) || input$ts_reg_tab_goButton==0) return()
+    isolate({ doPlot_RegTABbyTime(year.range=input$yearsrab) })
+    }, height=function(){ 0.7*session$clientData$output_RegTAB_tsplot_width }, width="auto")
 
-output$RegCTAB_tsplot <- renderPlot({ doPlot_RegTABbyTime(year.range=input$yearscrab, cumulative=TRUE) }, height=function(){ 0.7*session$clientData$output_RegCTAB_tsplot_width }, width="auto")
+output$RegCTAB_tsplot <- renderPlot({
+    if(is.null(input$ts_reg_ctab_goButton) || input$ts_reg_ctab_goButton==0) return()
+    isolate({ doPlot_RegTABbyTime(year.range=input$yearscrab, cumulative=TRUE) })
+    }, height=function(){ 0.7*session$clientData$output_RegCTAB_tsplot_width }, width="auto")
 
 output$FRP_bufferplot <- renderPlot({ doPlot_FRPbyBuffer() }, height=function(){ 0.7*session$clientData$output_FRP_bufferplot_width }, width="auto")
 
 output$FRI_boxplot <- renderPlot({
     if(is.null(input$boxplot_goButton) || input$boxplot_goButton==0) return()
-    isolate({ 
-    doPlot_FRIboxplot() 
-    }) 
+    isolate({ doPlot_FRIboxplot() })
     },
     height=function(){ 0.7*session$clientData$output_FRI_boxplot_width }, width="auto")
 
