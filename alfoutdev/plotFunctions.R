@@ -56,14 +56,14 @@ plotRABbyTime <- function(data, buffersize, year.range, cumulative=F, subject, g
 
 # @knitr plotRegionalTABbyTime
 # plot time series of regional cumulative or non-cumulative annual total area burned for a given vegetation class or collection of vegetation classes
-plotRegionalTABbyTime <- function(data, vegetation, agg.veg=F, year.range, cumulative=F, subject, grp="", colpal, fontsize=16, lgd.pos="top", facet.by=NULL, facet.cols=1, facet.scales=NULL, ...){
-    d <- data.table(filter(data, Vegetation %in% vegetation & Year >= year.range[1] & Year <= year.range[2]))
+plotRegionalTABbyTime <- function(data, domain, vegetation, agg.veg=F, year.range, cumulative=F, subject, grp="", colpal, fontsize=16, lgd.pos="top", facet.by=NULL, facet.cols=1, facet.scales=NULL, ...){
+    d <- data.table(filter(data, Domain %in% domain & Vegetation %in% vegetation & Year >= year.range[1] & Year <= year.range[2]))
     if(agg.veg) {
         d[, Vegetation:=NULL]
-        d <- group_by(d, Source, Replicate, Year)
+        d <- group_by(d, Domain, Source, Replicate, Year)
         given.veg <- ""
     } else {
-        d <- group_by(d, Source, Replicate, Vegetation, Year)
+        d <- group_by(d, Domain, Source, Replicate, Vegetation, Year)
         given.veg <- "| Vegetation"
     }
 	xlb="Year"
@@ -76,9 +76,6 @@ plotRegionalTABbyTime <- function(data, vegetation, agg.veg=F, year.range, cumul
 		maintitle <- paste(year.range[1], "-", year.range[2], "Regional Total Area Burned ~ Time", given.veg)
 		ylb <- expression("TAB ("~km^2~")")
 	}
-    print(head(d))
-    print(subject)
-    print(grp)
 	g <- ggplot(d, aes_string(x="Year", y="Value", group=subject, colour="Source"))
 	if(cumulative){
 		if(grp!=""){

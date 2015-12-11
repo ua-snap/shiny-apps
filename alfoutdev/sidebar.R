@@ -22,31 +22,32 @@ column(4,
 				column(4, uiOutput("Reg_facetBy_choices")),
 				column(4, selectInput("reg_facetcols", "Columns", choices=1:4, selected=1))
 			),
-            checkboxInput("reg_facetScalesFree", "Free y-axes")
+            fluidRow(
+                column(4, selectInput("reg_domain", "Domain", choices=c("Masked", "Full"), selected="Masked")),
+                column(8, checkboxInput("reg_facetScalesFree", "Free y-axes"))
+            )
 		)
 	),
 	conditionalPanel(condition="input.tsp==='rab_ts' || input.tsp==='crab_ts' || input.tsp==='tab_ts' || input.tsp==='ctab_ts'",
 		wellPanel(
 			fluidRow(
-				column(9, h5("Time series options")),
-				column(3,
-					conditionalPanel(condition="input.tsp==='rab_ts'",
-						downloadButton("dl_RAB_tsplotPDF","Get Plot")
-					),
-					conditionalPanel(condition="input.tsp==='crab_ts'",
-						downloadButton("dl_CRAB_tsplotPDF","Get Plot")
-					),
-                    conditionalPanel(condition="input.tsp==='tab_ts'",
-						downloadButton("dl_RegTAB_tsplotPDF","Get Plot")
-					),
-					conditionalPanel(condition="input.tsp==='ctab_ts'",
-						downloadButton("dl_RegCTAB_tsplotPDF","Get Plot")
-					)
-				)
+				column(4, h5("Time series options")),
+                conditionalPanel(condition="input.tsp==='rab_ts'",
+                    column(4, uiOutput("TS_Site_RAB_GoButton")),
+                    column(4, downloadButton("dl_RAB_tsplotPDF","Get Plot", class="btn-success btn-block"))),
+                conditionalPanel(condition="input.tsp==='crab_ts'",
+                    column(4, uiOutput("TS_Site_CRAB_GoButton")),
+                    column(4, downloadButton("dl_CRAB_tsplotPDF","Get Plot", class="btn-success btn-block"))),
+                conditionalPanel(condition="input.tsp==='tab_ts'",
+                    column(4, uiOutput("TS_Reg_TAB_GoButton")),
+                    column(4, downloadButton("dl_RegTAB_tsplotPDF","Get Plot", class="btn-success btn-block"))),
+                conditionalPanel(condition="input.tsp==='ctab_ts'",
+                    column(4, uiOutput("TS_Reg_CTAB_GoButton")),
+                    column(4, downloadButton("dl_RegCTAB_tsplotPDF","Get Plot", class="btn-success btn-block")))
 			),
 			fluidRow(
 				conditionalPanel(condition="input.tsp==='rab_ts' || input.tsp==='crab_ts'",
-                    column(6, selectInput("buffersize", "Buffer radius (km)", choices=buffersize, selected=buffersize[6]))),
+                    column(6, selectInput("buffersize", "Buffer radius (km)", choices=buffersize, selected=buffersize[1]))),
                 conditionalPanel(condition="input.tsp==='tab_ts' || input.tsp==='ctab_ts'",
                     column(12, selectInput("reg_vegetation", "Select vegetation", choices=vegclasses, selected=vegclasses, multiple=TRUE),
                         checkboxInput("reg_aggveg", "Combine vegetation", FALSE)))

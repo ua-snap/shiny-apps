@@ -44,12 +44,28 @@ output$Boxplot_ylim <- renderUI({
     sliderInput("boxplot_ylim", "FRI axis range", 0, x, c(0, x), step=b, sep="")
 })
 
+output$TS_Site_RAB_GoButton <- renderUI({
+	actionButton("ts_site_rab_goButton", "Draw Plot", icon=icon("check"), class="btn-primary btn-block")
+})
+
+output$TS_Site_CRAB_GoButton <- renderUI({
+	actionButton("ts_site_crab_goButton", "Draw Plot", icon=icon("check"), class="btn-primary btn-block")
+})
+
+output$TS_Reg_TAB_GoButton <- renderUI({
+	actionButton("ts_reg_tab_goButton", "Draw Plot", icon=icon("check"), class="btn-primary btn-block")
+})
+
+output$TS_Reg_CTAB_GoButton <- renderUI({
+	actionButton("ts_reg_ctab_goButton", "Draw Plot", icon=icon("check"), class="btn-primary btn-block")
+})
+
 output$Boxplot_GoButton <- renderUI({
 	actionButton("boxplot_goButton", "Draw Plot", icon=icon("check"), class="btn-primary btn-block")
 })
 
 # server-side reactives
-fs_IDvars <- reactive({ sort(names(rv$d.fs)[!(names(rv$d.fs) %in% c("FS", "Year"))]) })
+fs_IDvars <- reactive({ sort(names(rv$d.fs)[!(names(rv$d.fs) %in% c("Domain", "FS", "Year"))]) })
 rab_IDvars <- reactive({ sort(names(rv$rab.dat)[!(names(rv$rab.dat) %in% c("Buffer_km", "Value", "Year"))]) })
 fri_IDvars <- reactive({ sort(names(rv$fri.dat)[!(names(rv$fri.dat) %in% c("Value", "FRI"))]) })
 
@@ -65,10 +81,15 @@ subjects <- reactive({ sprintf("interaction(%s)", paste0(c("Replicate", "Locatio
 
 Reg_subjects <- reactive({
     if(!is.null(input$reg_aggveg)){
-        if(input$reg_aggveg) x <- sprintf("interaction(%s)", paste0(c("Replicate"), collapse = ", "))
-        if(!input$reg_aggveg) x <- sprintf("interaction(%s)", paste0(c("Replicate", "Vegetation"), collapse = ", "))
+        if(input$reg_aggveg) x <- sprintf("interaction(%s)", paste0(c("Domain", "Replicate"), collapse = ", "))
+        if(!input$reg_aggveg) x <- sprintf("interaction(%s)", paste0(c("Domain", "Replicate", "Vegetation"), collapse = ", "))
     } else x <- NULL
 	x
+})
+
+Reg_domain <- reactive({
+    x <- input$reg_domain
+    if(is.null(x) || x=="") c("Masked", "Full") else x
 })
 
 groups <- reactive({ if(length(input$grp)) input$grp else NULL })
