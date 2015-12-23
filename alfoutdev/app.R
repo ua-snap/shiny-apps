@@ -19,9 +19,9 @@ source("reactives.R",local=T) # Source reactive expressions and other code
 # Primary plot outputs reactive expressions
 # Plot RAB ~ time
 doPlot_RABbyTime <- function(...){
-	if(!(is.null(subjects()) || is.null(groups()) || is.null(input$buffersize) || is.null(input$facetcols))){
+	if(!(is.null(subjects()) || is.null(groups()) || is.null(input$buffersize))){
 	plotRABbyTime(data=rv$rab.dat, buffersize=input$buffersize, subject=subjects(), grp=groups(),
-        colpal=cbpalette, fontsize=16, leg.pos="top", facet.by=facetBy(), facet.cols=input$facetcols, facet.scales=facetScales(), ...)
+        colpal=cbpalette, fontsize=16, leg.pos="top", facet.by=facetBy(), facet.scales=facetScales(), ...)
 	} else NULL
 }
 
@@ -36,10 +36,10 @@ doPlot_RegTABbyTime <- function(...){
 
 # Plot FRP ~ buffer radius
 doPlot_FRPbyBuffer <- function(){
-	if(!(is.null(subjects()) || is.null(groups()) || is.null(input$minbuffersize) || is.null(input$facetcols))){
+	if(!(is.null(subjects()) || is.null(groups()) || is.null(input$minbuffersize))){
 		plotFRPbyBuffer(data=rv$frp.dat, min.buffer=input$minbuffersize, subject=subjects(), grp=groups(),
 			colpal=cbpalette, fontsize=16, leg.pos="top", maintitle=main.frp, xlb=xlb.frp, ylb=ylb.frp,
-			facet.by=facetBy(), facet.cols=input$facetcols, facet.scales=facetScales())
+			facet.by=facetBy(), facet.scales=facetScales())
 	} else NULL
 }
 

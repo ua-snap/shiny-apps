@@ -1,6 +1,6 @@
 # @knitr plotFRPbyBuffer
 # plot FRP ~ buffer radius, grouped/colored by modeled vs. observed
-plotFRPbyBuffer <- function(data, min.buffer, colpal, subject, grp="", fontsize=16, leg.pos="top", maintitle="", xlb="", ylb="", facet.by=NULL, facet.cols=1, facet.scales=NULL){
+plotFRPbyBuffer <- function(data, min.buffer, colpal, subject, grp="", fontsize=16, leg.pos="top", maintitle="", xlb="", ylb="", facet.by=NULL, facet.scales=NULL){
 	d <- filter(data.table(data), Buffer_km >= as.numeric(min.buffer))
 	g <- ggplot(d, aes_string(x="Buffer_km", y="FRP", group=subject, colour="Source")) +
 		scale_color_manual(values=colpal) + scale_fill_manual(values=colpal)
@@ -13,14 +13,14 @@ plotFRPbyBuffer <- function(data, min.buffer, colpal, subject, grp="", fontsize=
 		ggtitle(bquote(paste(.(maintitle) >= .(paste(min.buffer,"km"))))) + xlab(xlb) + ylab(ylb)
 	if(!is.null(facet.by)){
         string <- if(length(facet.by)==1) paste("~", facet.by) else paste(facet.by[1], "~", facet.by[2])
-        g <- g + facet_wrap(as.formula(string), ncol=as.numeric(facet.cols), scales=facet.scales)
+        g <- g + facet_grid(as.formula(string), switch="both", scales=facet.scales) + theme(strip.background = element_blank())
     }
 	print(g)
 }
 
 # @knitr plotRABbyTime
 # plot time series of cumulative or non-cumulative annual relative area burned for a given buffer size
-plotRABbyTime <- function(data, buffersize, year.range, cumulative=F, subject, grp="", colpal, fontsize=16, lgd.pos="top", facet.by=NULL, facet.cols=1, facet.scales=NULL, ...){
+plotRABbyTime <- function(data, buffersize, year.range, cumulative=F, subject, grp="", colpal, fontsize=16, lgd.pos="top", facet.by=NULL, facet.scales=NULL, ...){
     d <- data.table(data)
 	d <- filter(d, Buffer_km %in% as.numeric(buffersize) & Year >= year.range[1] & Year <= year.range[2])
 	xlb="Year"
@@ -49,7 +49,7 @@ plotRABbyTime <- function(data, buffersize, year.range, cumulative=F, subject, g
 	g <- g + theme_bw(base_size=fontsize) + theme(legend.position=tolower(lgd.pos)) + ggtitle(bquote(paste(.(maintitle) == .(paste(buffersize,"km"))))) + xlab(xlb) + ylab(ylb)
 	if(!is.null(facet.by)){
         string <- if(length(facet.by)==1) paste("~", facet.by) else paste(facet.by[1], "~", facet.by[2])
-        g <- g + facet_wrap(as.formula(string), ncol=as.numeric(facet.cols), scales=facet.scales)
+        g <- g + facet_grid(as.formula(string), switch="both", scales=facet.scales) + theme(strip.background = element_blank())
     }
 	print(g)
 }
@@ -94,7 +94,7 @@ plotRegionalTABbyTime <- function(data, domain, vegetation, agg.veg=F, year.rang
 	g <- g + theme_bw(base_size=fontsize) + theme(legend.position=tolower(lgd.pos)) + ggtitle(ttl) + xlab(xlb) + ylab(ylb)
 	if(!is.null(facet.by)){
         string <- if(length(facet.by)==1) paste("~", facet.by) else paste(facet.by[1], "~", facet.by[2])
-        g <- g + facet_wrap(as.formula(string), ncol=as.numeric(facet.cols), scales=facet.scales)
+        g <- g + facet_wrap(as.formula(string), ncol=as.numeric(facet.cols), switch="x", scales=facet.scales) + theme(strip.background = element_blank())
     }
 	print(g)
 }
@@ -159,7 +159,7 @@ plotFRIboxplot <- function(d, x, y, grp=NULL, Log=FALSE, colpal, ylim=NULL, show
     if(!is.null(ylim) && is.null(facet.by)) g <- g + coord_cartesian(ylim=ylim)
 	if(!is.null(facet.by)){
         string <- if(length(facet.by)==1) paste("~", facet.by) else paste(facet.by[1], "~", facet.by[2])
-        g <- g + facet_wrap(as.formula(string), ncol=as.numeric(facet.cols), scales=facet.scales)
+        g <- g + facet_wrap(as.formula(string), ncol=as.numeric(facet.cols), switch="x", scales=facet.scales)  + theme(strip.background = element_blank())
     }
 	print(g)
 }

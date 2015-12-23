@@ -7,9 +7,8 @@ column(4,
 		wellPanel(
 			h5("Define subjects, groups, and panels"),
 			fluidRow(
-				column(4, uiOutput("Group_choices")),
-				column(4, uiOutput("FacetBy_choices")),
-				column(4, selectInput("facetcols", "Columns", choices=1:4, selected=1))
+				column(6, uiOutput("Group_choices")),
+				column(6, uiOutput("FacetBy_choices"))
 			),
             checkboxInput("facetScalesFree", "Free y-axes")
 		)
