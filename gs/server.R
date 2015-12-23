@@ -44,7 +44,7 @@ DataLoaded <- reactive({
         on.exit(prog$close())
         prog$set(message="Loading GBM modeling data...", value=1)
         load(paste0("appdata_gbm.RData"), envir=.GlobalEnv)
-        prog$set(message="Loading that degree day data...", value=2)
+        prog$set(message="Loading thaw degree day data...", value=2)
         load(paste0("appdata_qmap.RData"), envir=.GlobalEnv)
     }
     return(TRUE)
