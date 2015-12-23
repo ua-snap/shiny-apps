@@ -1,3 +1,5 @@
+lapply(list("gbm", "tidyr", "grid", "gridExtra", "ggplot2", "rasterVis", "leaflet", "data.table", "dplyr"), function(x) library(x, character.only=T))
+
 rTheme <- function(pch = 19, cex = 0.7, region=colorRampPalette(rev(c("darkred", "firebrick1", "white", "royalblue", "darkblue")))(19), ...){
     theme <- custom.theme.2(pch = pch, cex = cex, region = region, ...)
     theme$strip.background$col <- theme$strip.shingle$col <- theme$strip.border$col <- "transparent"
@@ -36,6 +38,19 @@ get_swapped_gbm_preds <- function(model, data, regions){
 
 shinyServer(function(input, output, session){
 
+DataLoaded <- reactive({
+    if(!exists("d.gbm1")){
+        prog <- Progress$new(session, min=0, max=2)
+        on.exit(prog$close())
+        prog$set(message="Loading GBM modeling data...", value=1)
+        load(paste0("appdata_gbm.RData"), envir=.GlobalEnv)
+        prog$set(message="Loading that degree day data...", value=2)
+        load(paste0("appdata_qmap.RData"), envir=.GlobalEnv)
+    }
+    return(TRUE)
+})
+observe(DataLoaded())
+
 GBM_Plottype <- reactive({ if(is.null(input$gbm_plottype)) NULL else input$gbm_plottype })
 GBM_Region <- reactive({ if(is.null(input$gbm_region)) NULL else input$gbm_region })
 
@@ -48,8 +63,20 @@ output$GBM_Region2_Choices <- renderUI({
 
 GBM_Region2 <- reactive({ if(is.null(input$gbm_region2)) NULL else input$gbm_region2 })
 
+GBM_RI_AllRegions_ggObj <- reactive({
+    d <- unnest(d.gbm1, RI) %>% data.table %>% filter(Method=="CV") %>% group_by(Region) %>%
+        mutate(barorder=as.numeric(strsplit(paste(RI, collapse=","), ",")[[1]][1])) %>% mutate(Region=factor(Region, levels=unique(Region)[order(unique(barorder))]))
+    d$Predictor <- factor(gsub("_", "\n", as.character(d$Predictor)), levels=gsub("_", "\n", as.character(levels(d$Predictor))))
+    d$Region <- factor(gsub(" ", "\n", as.character(d$Region)), levels=gsub(" ", "\n", as.character(levels(d$Region))))
+    g <- ggplot(d, aes(Region, RI, fill=Predictor)) + geom_bar(stat="identity", position="stack") +
+        scale_fill_manual("", values=clrs[2:5]) + coord_flip() + ggtitle("All regions") +
+        theme_gray(base_size=16) + theme(legend.position="bottom", legend.box="horizontal", strip.background=element_blank())
+    g
+})
+observe(GBM_RI_AllRegions_ggObj())
+
 # Plots: quantile mapping of GCMs
-doPlot_gbm <- function(model, preds, data, regions, clrs){
+doPlot_gbm <- function(model, preds, data, regions, clrs, inplot=NULL){
     if(is.null(GBM_Plottype())) return()
     region <- regions[1]
     if(GBM_Plottype()=="Error curves"){ # GBM train, test, and cross=validation error curves
@@ -74,10 +101,12 @@ doPlot_gbm <- function(model, preds, data, regions, clrs){
         d$Predictor <- factor(gsub("_", "\n", as.character(d$Predictor)), levels=gsub("_", "\n", as.character(levels(d$Predictor))))
         g1 <- ggplot(filter(d, Region==region), aes(Predictor, RI)) + geom_bar(stat="identity") + ggtitle(region) +
             theme_gray(base_size=16) + theme(legend.position="bottom", legend.box="horizontal", strip.background=element_blank())
-        d$Region <- factor(gsub(" ", "\n", as.character(d$Region)), levels=gsub(" ", "\n", as.character(levels(d$Region))))
-        g2 <- ggplot(d, aes(Region, RI, fill=Predictor)) + geom_bar(stat="identity", position="stack") +
-            scale_fill_manual("", values=clrs) + coord_flip() + ggtitle("All regions") +
-            theme_gray(base_size=16) + theme(legend.position="bottom", legend.box="horizontal", strip.background=element_blank())
+        if(is.null(inplot)){
+            d$Region <- factor(gsub(" ", "\n", as.character(d$Region)), levels=gsub(" ", "\n", as.character(levels(d$Region))))
+            g2 <- ggplot(d, aes(Region, RI, fill=Predictor)) + geom_bar(stat="identity", position="stack") +
+                scale_fill_manual("", values=clrs) + coord_flip() + ggtitle("All regions") +
+                theme_gray(base_size=16) + theme(legend.position="bottom", legend.box="horizontal", strip.background=element_blank())
+        } else g2 <- inplot
         g <- grid.arrange(g1, g2, ncol=2, widths=c(0.8, 1.2), top=grid.text("Predictor relative influence on start of growing season", gp=gpar(fontsize=20)))
     }
     if(GBM_Plottype()=="Partial dependence"){ # Partial dependence of predictors
@@ -99,12 +128,11 @@ doPlot_gbm <- function(model, preds, data, regions, clrs){
             theme_gray(base_size=16) + theme(legend.position="bottom", legend.box="horizontal", strip.background=element_blank())
         g <- grid.arrange(g1, g2, ncol=2)
     }
-    if(GBM_Plottype()=="Exchangeability"){
+    if(GBM_Plottype()=="Exchangeability"){ # Time series and scatter plot of observed and fitted values using swapped GBM models
         if(is.null(GBM_Region2()) || GBM_Region2()=="") return()
         d <- get_swapped_gbm_preds(model, data, regions)
         f1 <- function(d){
             ggplot(d, aes(x=Year, y=SOS, colour=Source)) + scale_colour_manual("", values=clrs) + geom_line(size=1) + geom_point() +
-                #ggtitle("Observed and modeled start of growing season\nwhen swapping regional GBM predictive models") +
                 scale_x_continuous(breaks=c(1982,1990,2000,2010)) + facet_grid(~Region, switch="x") +
                 theme_gray(base_size=16) + theme(legend.position="bottom", legend.box="horizontal", strip.background=element_blank())
         }
@@ -116,7 +144,6 @@ doPlot_gbm <- function(model, preds, data, regions, clrs){
         d <- rbind(d1, d2)
         f2 <- function(d){
             ggplot(d, aes(x=Fitted, y=Observed, colour=GBM)) + scale_colour_manual("", values=clrs[-1]) + geom_point() + geom_smooth(method='lm',formula=y~x) +
-                #ggtitle("Observed vs. fitted values") +
                 scale_x_continuous(breaks=c(1982,1990,2000,2010)) + facet_grid(~Region, switch="x") +
                 theme_gray(base_size=16) + theme(legend.position="bottom", legend.box="horizontal", strip.background=element_blank())
         }
@@ -141,7 +168,7 @@ GBM_colors <- reactive({
     switch(x, clrs[c(1,5,4)], clrs[2:5], clrs, clrs[c(1,4)], clrs[c(1,4,5)])
 })
 
-doPlot_gbm_wrapper <- function() doPlot_gbm(d.gbm1, d.gbm.preds, d.gbm.data, c(GBM_Region(), GBM_Region2()), GBM_colors())
+doPlot_gbm_wrapper <- function() doPlot_gbm(d.gbm1, d.gbm.preds, d.gbm.data, c(GBM_Region(), GBM_Region2()), GBM_colors(), GBM_RI_AllRegions_ggObj())
 
 output$Plot_GBM <- renderPlot({ doPlot_gbm_wrapper() }, height=function(){ GBM_plotheight()*session$clientData$output_Plot_GBM_width }, width="auto")
 
@@ -235,22 +262,35 @@ output$dl_Plot_QMAP_Nonspatial <- downloadHandler(
 )
 
 # Maps: quantile mapping of GCMs
-get_qmap_rasters <- function(rlist, msk, model, region, regions, stat, pct){
-    if(is.null(region) || region=="") return()
-    msk[msk!=match(region, regions)] <- NA
-    stats <- c("mean", "SD", "pct05", "pct95")
-    ind <- match(stat, stats)
-    r1 <- subset(rlist[[model]]$diffx1x0[[pct]], ind)
-    r2 <- subset(rlist[[model]]$diffx1mx0[[pct]], ind)
-    r1[is.nan(r1)] <- NA
-    r2[is.nan(r2)] <- NA
-    s <- stack(r1, r2)
-    s <- mask(s, msk)
-    names(s) <- c("Original", "Mapped")
-    trim(s)
-}
-
-QMAP_rasters <- reactive({ get_qmap_rasters(maplist, ecomask, input$gcm, QMAP_Spatial_Region(), regions, Timestat(), Clim_Threshold()) })
+QMAP_rasters <- reactive({
+    get_qmap_rasters <- function(rlist, msk, model, region, regions, stat, pct){
+        if(is.null(region) || region=="") return()
+        msk[msk!=match(region, regions)] <- NA
+        prog$inc(1)
+        stats <- c("mean", "SD", "pct05", "pct95")
+        ind <- match(stat, stats)
+        r1 <- subset(rlist[[model]]$diffx1x0[[pct]], ind)
+        r2 <- subset(rlist[[model]]$diffx1mx0[[pct]], ind)
+        prog$inc(1)
+        r1[is.nan(r1)] <- NA
+        prog$inc(1)
+        r2[is.nan(r2)] <- NA
+        prog$inc(1)
+        s <- stack(r1, r2)
+        prog$inc(1)
+        s <- mask(s, msk)
+        prog$inc(1)
+        names(s) <- c("Original", "Mapped")
+        trim(s)
+    }
+    
+    if(input$region_map!=""){
+        prog <- Progress$new(session, min=0, max=7)
+        on.exit(prog$close())
+        prog$set(message="Compiling map data...", value=1)
+        get_qmap_rasters(maplist, ecomask, input$gcm, QMAP_Spatial_Region(), regions, Timestat(), Clim_Threshold())
+    } else NULL
+})
 
 doPlot_qmapSpatial <- function(s, shp, model, region, stat, pct.lab, theme){
     if(is.null(s)) return()
