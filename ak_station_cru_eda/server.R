@@ -432,7 +432,7 @@ shinyServer(function(input, output, session){
 				se=SE,    # Don't add shaded confidence region
 				fullrange=T)
 			}
-			if(input$reglns) p <- p + geom_line(shape=1)
+			if(input$reglns) p <- p + geom_line()
 			if(input$regpts) p <- p + geom_point(shape=1)
 			print(p)
 		}
