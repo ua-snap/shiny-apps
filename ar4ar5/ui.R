@@ -7,7 +7,7 @@ shinyUI(fluidPage(
 	theme="cyborg_bootstrap.css",
 	tags$head(tags$link(rel="stylesheet", type="text/css", href="mystyles.css")),
 	navbarPage(
-		title=div(a(img(src="./img/SNAP_acronym_100px.png", width="50%"), "", href="http://snap.uaf.edu", target="_blank")),
+		title=div(a(img(src="./img/SNAP_acronym_100px.png", width="80%"), "", href="http://snap.uaf.edu", target="_blank")),
 		tabPanel("Home", includeMarkdown("www/home.md"), value="home"),
 		tabPanel("Time Series", value="plot_ts"),
 		tabPanel("Scatter Plot", value="plot_scatter"),
