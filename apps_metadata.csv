@@ -1,0 +1,24 @@
+App,Generation
+ak_daily_precipitation,Gen 1
+ak_ice_edge,Gen 2
+ak_station_cru_eda,Gen 0
+akcan_climate,Gen 1
+alfoutdev,Gen 2
+ar4ar5,Gen 2
+cc4lite,Gen 2
+cc4lite2,Gen 2
+cc4liteFinal,Gen 2
+gbm_example,Gen 1
+gs,Gen 2
+monty_hall,Gen 1
+plot3D,Gen 1
+random_forest_example,Gen 1
+run_alfresco,Gen 1
+RV_distributions,Gen 0
+RV_distributionsV2,Gen 0
+RV_distributionsV3,Gen 0
+RV_distributionsV4,Gen 0
+sea_ice_coverage,Gen 0
+sea_ice_winds,Gen 0
+temp_wind_events,Gen 0
+tree_rings,Gen 0
