@@ -5,11 +5,11 @@ output: html_document
 runtime: shiny
 ---
 
-```{r, echo=FALSE, results="hide"}
+```{r, echo=FALSE, results="hide", message=FALSE, warning=FALSE}
 library(knitr)
-opts_chunk$set(cache=FALSE, eval=TRUE, messages=FALSE, warnings=FALSE)
+opts_chunk$set(cache=FALSE, eval=TRUE, message=FALSE, warning=FALSE)
 lapply(list.files(pattern="ex_0.*.shiny.R"), read_chunk)
-library(shiny)
+library(shinyapps)
 ```
 
 Using leaflet in R is fairly simple and there are plently of online resources and examples available already.
