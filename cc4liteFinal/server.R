@@ -23,21 +23,21 @@ observeEvent(input$Map_marker_click, {
 	}
 })
 
-observeEvent(input$location, {
-	p <- input$Map_marker_click
-	p2 <- subset(cities.meta, Location==input$location)
-	if(nrow(p2)==0){
-		leafletProxy("Map") %>% removeMarker(layerId="Selected")
-	} else {
-		leafletProxy("Map") %>% setView(lng=p2$Lon, lat=p2$Lat, input$Map_zoom) %>% addCircleMarkers(p2$Lon, p2$Lat, radius=10, color="black", fillColor="orange", fillOpacity=1, opacity=1, stroke=TRUE, layerId="Selected")
-	}
-})
-
 observeEvent(input$Map_marker_click, {
 	p <- input$Map_marker_click
 	if(!is.null(p$id)){
 		if(is.null(input$location)) updateSelectInput(session, "location", selected=p$id)
 		if(!is.null(input$location) && input$location!=p$id) updateSelectInput(session, "location", selected=p$id)
+	}
+})
+
+observeEvent(input$location, {
+	p <- input$Map_marker_click
+	p2 <- subset(cities.meta, Location==input$location)
+	if(nrow(p2)==0){
+		leafletProxy("Map") %>% removeMarker(layerId="Selected")
+	} else if(input$location!=p$id){
+		leafletProxy("Map") %>% setView(lng=p2$Lon, lat=p2$Lat, input$Map_zoom) %>% addCircleMarkers(p2$Lon, p2$Lat, radius=10, color="black", fillColor="orange", fillOpacity=1, opacity=1, stroke=TRUE, layerId="Selected")
 	}
 })
 
