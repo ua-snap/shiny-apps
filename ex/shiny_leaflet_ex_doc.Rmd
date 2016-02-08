@@ -1,0 +1,173 @@
+---
+title: "Shiny leaflet example"
+author: "Matthew Leonawicz"
+output: html_document
+runtime: shiny
+---
+
+```{r, echo=FALSE, results="hide"}
+library(knitr)
+opts_chunk$set(cache=FALSE, eval=TRUE, messages=FALSE, warnings=FALSE)
+lapply(list.files(pattern="ex_0.*.shiny.R"), read_chunk)
+library(shiny)
+```
+
+Using leaflet in R is fairly simple and there are plently of online resources and examples available already.
+See the RStudio [tutorial](https://rstudio.github.io/leaflet/) to get started if you haven't already.
+Below I present a series of examples which build upon each other.
+The code displays both point data and raster data on leaflet maps with Shiny app integration.
+The focus here is to show the utility of event observation on the server side for integrating the behavior of browser elements, namely, the leaflet map.
+
+##
+##
+### Version 0 - Use observers
+
+The app does not much in this version, but it provides a clear view of how to use observers in Shiny apps to ensure that various inputs and outputs remain mutually well behaved.
+Here I use `observeEvent` three distinct times to tie together the reactive behavior of instances of `selectInput` and `leafletOutput`.
+The entire `ui.R` at this point is:
+
+```{r ui00, eval=FALSE}
+```
+
+In `server.R` note the three observers. They constitute the entire code block except for the initial, relatively simple call to `renderLeaflet`.
+Comments mark the role performed by each call to `observeEvent`, which:
+
+*    Update the `leafletOutput` map when clicked
+*    Update the `selectInput` when the map is clicked
+*    Update the `leafletOutput` when the `selectInput` changes
+
+```{r server00, eval=FALSE}
+```
+
+Care must be taken to ensure each observer does not update when it shouldn't. One can easily trigger another. Infinite recursion is not hard to imagine in this context.
+But fortunately it is not too difficult to make the three `observeEvent` calls work well together.
+Use the app here to see the interaction between map clicks and the location selection menu. Version one will build upon this interaction.
+
+```{r, echo=FALSE}
+shinyAppFile(
+  "ex_00_shiny.R",
+  options=list(width="100%", height=400)
+)
+```
+
+##
+##
+### Version 1 - Another observer
+
+A single addition of a `checkboxInput` for toggling the location `selectInput` menu.
+This requires one more observer in `server.R` but its integration is not complicated.
+`ui.R` now looks like the following, with a corresponding nested `conditionalInput` statement:
+
+```{r ui01, eval=FALSE}
+```
+
+The server side requires only the following addition of an `observe` call. No changes to the three `observeEvent` calls are necessary.
+
+```{r server01observer, eval=FALSE}
+```
+
+Showing the group of points on the map is straightforward.
+When hiding the group, I also elect to remove the marker for a selected point if one is selected when the checkbox is deselected.
+
+```{r, echo=FALSE}
+shinyAppFile(
+  "ex_01_shiny.R",
+  options=list(width="100%", height=400)
+)
+```
+
+I do not want a selected location in the map to return as selected when the checkbox for showing map points is rechecked.
+This is a matter of preference and may make more sense in the context of my completed.
+Similarly, I hide the `selectInput` when the checkbox is unchecked in the same call to `observe`.
+
+##
+##
+### Version 2 - Raster data
+
+In the final version of the app, the inclusion of rasterized map layers appears a more fundamental component of the app and the points overlay appears a relatively supplemental feature.
+When I designed the app, the raster layers in fact came first. I present this toy example in reverse order so that the first three observers could be explored initially with minimal app clutter.
+
+Adding the rasterized map will require more observers, but they are all less opaque than the first three.
+`ui.R` now includes a `sliderInput` for selecting a decade (the raster maps are decadal averages of future climate model projections) and a `checkboxInput` for toggling the map legend.
+
+```{r ui02, eval=FALSE}
+```
+
+Reactive objects are added to store the current raster layer, its extracted values, and a corresponding color palette in `server.R`
+
+```{r server02obj, eval=FALSE}
+```
+
+and the required observers are:
+
+In the first call to `observe` above, a rasterized map is removed by `removeTiles` (if present) before a new one is added.
+The second observer corresponds to the new `checkboxInput`. `clearControls` will remove an existing legend.
+
+```{r server02obs, eval=FALSE}
+```
+
+The three reactive objects are one line each, there is only the one reactive output, and by far the bulk of the code in `server.R` is for the six observers.
+The version two app here allows for essentially independent use of either the raster data or the point data.
+
+```{r, echo=FALSE}
+shinyAppFile(
+  "ex_02_shiny.R",
+  options=list(width="100%", height=500)
+)
+```
+
+The color palette is generated reactively, specific to the current raster map, and for this data won't appear to change much as you move the slider.
+Things are getting a bit cramped in this display window but I will leave it as is.
+
+##
+##
+### Version 3 - Point data and modals
+
+Returning to the point data, the app employs a modal popup window to display location-specific data when requested by the user for a currently selected map location.
+This further helps to separate and create the distinction between the map data and the point data in the app,
+which although related, will be used in different ways to highlight different information.
+
+For the modal, use the [shinyBS](https://ebailey78.github.io/shinyBS/index.html) package.
+
+Use `bsModal` in `ui.R`. Standard reactive inputs and outputs can be contained within. The modal is triggered by the referenced `actionButton`.
+
+```{r ui03, eval=FALSE}
+```
+
+On the server side, I add the point data (simply hardcoded here) and simple `renderPlot` and `renderDataTable` outputs to be displayed within the modal window.
+
+```{r server03pointdata, eval=FALSE}
+```
+
+Select a location and click the action button to which the modal is tied. Note how the rest of the app is grayed out when the modal is active.
+
+```{r, echo=FALSE}
+shinyAppFile(
+  "ex_03_shiny.R",
+  options=list(width="100%", height=500)
+)
+```
+
+##
+#### Side note
+In the version at the time this document I found that the modal itself was also grayed out (making it impossible to interact with and close out, leaving the app running but being unable to interact with it).
+I don't know exactly where the original conflict came from, but I solved it by adding custom CSS to set the modal backdrop to have a z-index of 1000.
+But if you need a similar fix for `bsModal`, I would not expect this to be a perfect fix in all app contexts.
+
+```
+.modal-backdrop {
+z-index: 1000;
+}
+```
+
+##
+##
+### Additional resources
+
+Code for the series of apps shown here can be found on [Github](https://github.com/leonawicz/nwt).
+This includes the toy data sets used here so that you can run the app.
+
+See the more advanced [complete app](http://shiny.snap.uaf.edu/nwtapp/) on which this example is based.
+
+For another example, see [my first app using leaflet](http://shiny.snap.uaf.edu/cc4liteFinal/),
+which contains thousands of communities across Alaska and western Canada but which does not use rasterized maps.
