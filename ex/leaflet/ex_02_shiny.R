@@ -45,15 +45,15 @@ observe({
   proxy %>% removeTiles(layerId="rasimg") %>% addRasterImage(ras(), colors=pal(), opacity=0.8, layerId="rasimg")
 })
 
-  observe({
-    proxy <- leafletProxy("Map")
-    proxy %>% clearControls()
-    if (input$legend) {
-      proxy %>% addLegend(position="bottomright", pal=pal(), values=ras_vals(), title="Precipitation (mm)")
-    }
-  })
+observe({
+  proxy <- leafletProxy("Map")
+  proxy %>% clearControls()
+  if (input$legend) {
+    proxy %>% addLegend(position="bottomright", pal=pal(), values=ras_vals(), title="Precipitation (mm)")
+  }
+})
 
-  # @knitr server02remainder2
+# @knitr server02remainder2
   observe({ # show or hide location markers
     proxy <- leafletProxy("Map")
     if (input$show_communities) {

@@ -22,7 +22,7 @@ The focus here is to show the utility of event observation on the server side fo
 ##
 ### Version 0 - Use observers
 
-The app does not much in this version, but it provides a clear view of how to use observers in Shiny apps to ensure that various inputs and outputs remain mutually well behaved.
+The app does not do much in this version, but it provides a clear view of how to use observers in Shiny apps to ensure that various inputs and outputs remain mutually well behaved.
 Here I use `observeEvent` three distinct times to tie together the reactive behavior of instances of `selectInput` and `leafletOutput`.
 The entire `ui.R` at this point is:
 
@@ -100,11 +100,11 @@ Reactive objects are added to store the current raster layer, its extracted valu
 
 and the required observers are:
 
-In the first call to `observe` above, a rasterized map is removed by `removeTiles` (if present) before a new one is added.
-The second observer corresponds to the new `checkboxInput`. `clearControls` will remove an existing legend.
-
 ```{r server02obs, eval=FALSE}
 ```
+
+In the first call to `observe` above, a rasterized map is removed by `removeTiles` (if present) before a new one is added.
+The second observer corresponds to the new `checkboxInput`. `clearControls` will remove an existing legend.
 
 The three reactive objects are one line each, there is only the one reactive output, and by far the bulk of the code in `server.R` is for the six observers.
 The version two app here allows for essentially independent use of either the raster data or the point data.
