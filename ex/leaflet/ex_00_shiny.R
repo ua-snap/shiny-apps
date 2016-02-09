@@ -2,7 +2,7 @@ library(shiny)
 library(dplyr)
 library(leaflet)
 
-load("nwt_locations.RData")
+#load("nwt_locations.RData")
 
 lon <- -119.25
 lat <- 69.333
