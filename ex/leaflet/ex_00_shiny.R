@@ -1,11 +1,6 @@
-# @knitr super_chunk
-
-
-# @knitr setup
 library(shiny)
 library(dplyr)
 library(leaflet)
-
 stop(paste("Current working directory is:", getwd(), "; should be: /var/www/shiny-server/shiny-apps/ex/leaflet/"))
 load("nwt_locations.RData")
 

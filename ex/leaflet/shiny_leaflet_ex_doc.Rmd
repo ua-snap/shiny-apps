@@ -7,19 +7,12 @@ runtime: shiny
 
 ```{r, echo=FALSE, results="hide", message=FALSE, warning=FALSE}
 library(knitr)
-opts_chunk$set(cache=FALSE, eval=TRUE, message=FALSE, warning=FALSE)
-files <- normalizePath(list.files(pattern="ex_0.*.shiny.R", full.names=TRUE))
-opts_knit$set(root.dir = dirname(files[1]))
+wd <- getwd()
+opts_chunk$set(cache=FALSE, eval=TRUE, message=FALSE, warning=FALSE, root.dir=normalizePath(wd))
+opts_knit$set(root.dir=normalizePath(wd))
+files <- list.files(pattern="ex_0.*.shiny.R", full.names=TRUE)
 lapply(files, read_chunk)
-setwd(dirname(files[1]))
 library(shiny)
-knit_hooks$set(set.dir = function(before, options, envir) {
-    if (before) setwd("/var/www/shiny-server/shiny-apps/ex/leaflet")
-})
-```
-
-```{r, super_chunk, set.dir=TRUE}
-
 ```
 
 Using leaflet in R is fairly simple and there are plently of online resources and examples available already.
@@ -54,7 +47,7 @@ But fortunately it is not too difficult to make the three `observeEvent` calls w
 Use the app here to see the interaction between map clicks and the location selection menu. Version one will build upon this interaction.
 
 ```{r, echo=FALSE}
-shinyAppFile(files[1], options=list(width="100%", height=400, root.dir=dirname(files[1])))
+shinyAppFile(files[1], options=list(width="100%", height=400))
 ```
 
 ##
@@ -77,7 +70,7 @@ Showing the group of points on the map is straightforward.
 When hiding the group, I also elect to remove the marker for a selected point if one is selected when the checkbox is deselected.
 
 ```{r, echo=FALSE}
-shinyAppFile(files[2], options=list(width="100%", height=400, root.dir=dirname(files[1])))
+shinyAppFile(files[2], options=list(width="100%", height=400))
 ```
 
 I do not want a selected location in the map to return as selected when the checkbox for showing map points is rechecked.
