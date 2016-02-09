@@ -7,7 +7,7 @@ runtime: shiny
 
 ```{r, echo=FALSE, results="hide", message=FALSE, warning=FALSE}
 library(knitr)
-opts_chunk$set(cache=FALSE, eval=TRUE, message=FALSE, warning=FALSE)
+opts_chunk$set(cache=FALSE, eval=TRUE, message=FALSE, warning=FALSE, root.dir = '.')
 files <- list.files(pattern="ex_0.*.shiny.R", full.names=TRUE)
 lapply(files, read_chunk)
 library(shiny)
