@@ -8,7 +8,8 @@ runtime: shiny
 ```{r, echo=FALSE, results="hide", message=FALSE, warning=FALSE}
 library(knitr)
 opts_chunk$set(cache=FALSE, eval=TRUE, message=FALSE, warning=FALSE)
-lapply(list.files(pattern="ex_0.*.shiny.R"), read_chunk)
+files <- list.files(pattern="ex_0.*.shiny.R", full.names=TRUE)
+lapply(files, read_chunk)
 library(shiny)
 ```
 
@@ -44,10 +45,7 @@ But fortunately it is not too difficult to make the three `observeEvent` calls w
 Use the app here to see the interaction between map clicks and the location selection menu. Version one will build upon this interaction.
 
 ```{r, echo=FALSE}
-shinyAppFile(
-  "ex_00_shiny.R",
-  options=list(width="100%", height=400)
-)
+shinyAppFile(files[1], options=list(width="100%", height=400))
 ```
 
 ##
@@ -70,10 +68,7 @@ Showing the group of points on the map is straightforward.
 When hiding the group, I also elect to remove the marker for a selected point if one is selected when the checkbox is deselected.
 
 ```{r, echo=FALSE}
-shinyAppFile(
-  "ex_01_shiny.R",
-  options=list(width="100%", height=400)
-)
+shinyAppFile(files[2], options=list(width="100%", height=400))
 ```
 
 I do not want a selected location in the map to return as selected when the checkbox for showing map points is rechecked.
@@ -110,10 +105,7 @@ The three reactive objects are one line each, there is only the one reactive out
 The version two app here allows for essentially independent use of either the raster data or the point data.
 
 ```{r, echo=FALSE}
-shinyAppFile(
-  "ex_02_shiny.R",
-  options=list(width="100%", height=500)
-)
+shinyAppFile(files[3], options=list(width="100%", height=500))
 ```
 
 The color palette is generated reactively, specific to the current raster map, and for this data won't appear to change much as you move the slider.
@@ -142,10 +134,7 @@ On the server side, I add the point data (simply hardcoded here) and simple `ren
 Select a location and click the action button to which the modal is tied. Note how the rest of the app is grayed out when the modal is active.
 
 ```{r, echo=FALSE}
-shinyAppFile(
-  "ex_03_shiny.R",
-  options=list(width="100%", height=500)
-)
+shinyAppFile(files[4], options=list(width="100%", height=500))
 ```
 
 ##
