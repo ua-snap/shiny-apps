@@ -7,14 +7,10 @@ runtime: shiny
 
 ```{r, echo=FALSE, results="hide", message=FALSE, warning=FALSE}
 library(knitr)
-wd <- getwd()
-opts_chunk$set(cache=FALSE, eval=TRUE, message=FALSE, warning=FALSE, root.dir=normalizePath(wd))
-opts_knit$set(root.dir=normalizePath(wd))
+opts_chunk$set(cache=FALSE, eval=TRUE, message=FALSE, warning=FALSE)
 files <- list.files(pattern="ex_0.*.shiny.R", full.names=TRUE)
 lapply(files, read_chunk)
 library(shiny)
-load("nwt_testing_subset.RData")
-load("nwt_locations.RData")
 ```
 
 Using leaflet in R is fairly simple and there are plently of online resources and examples available already.
@@ -49,7 +45,7 @@ But fortunately it is not too difficult to make the three `observeEvent` calls w
 Use the app here to see the interaction between map clicks and the location selection menu. Version one will build upon this interaction.
 
 ```{r, echo=FALSE}
-shinyAppFile(files[1], options=list(width="100%", height=400, wd="/var/www/shiny-server/shiny-apps/ex/leaflet"))
+shinyAppFile(files[1], options=list(width="100%", height=400))
 ```
 
 ##
