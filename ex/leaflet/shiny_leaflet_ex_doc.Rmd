@@ -13,9 +13,13 @@ opts_knit$set(root.dir = dirname(files[1]))
 lapply(files, read_chunk)
 setwd(dirname(files[1]))
 library(shiny)
+knit_hooks$set(set.dir = function(before, options, envir) {
+    if (before) setwd("/var/www/shiny-server/shiny-apps/ex/leaflet")
+})
 ```
 
-```{r, super_chunk, code=setwd("/var/www/shiny-server/shiny-apps/ex/leaflet")}
+```{r, super_chunk, set.dir=TRUE}
+
 ```
 
 Using leaflet in R is fairly simple and there are plently of online resources and examples available already.
