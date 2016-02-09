@@ -6,3 +6,8 @@
   background-color: #9933cc;
   opacity: 1.0;
 }
+
+/* Allows pop-up modal to not be greyed out*/
+.modal-backdrop {
+z-index: 1000;
+}
