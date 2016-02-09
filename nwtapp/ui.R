@@ -6,7 +6,7 @@ shinyUI(navbarPage(theme="http://bootswatch.com/spacelab/bootstrap.css", inverse
   collapsible=TRUE,
   id="nb",
   tabPanel("Climate", value="vis",
-  bsModal("Modal_Loc", "Community Insights", "btn_modal_loc", size = "large",
+  bsModal("modal_loc", "Community Insights", "btn_modal_loc", size = "large",
     fluidRow(
       column(3,
         selectInput("loc_variable", "", var.labels, var.labels[1]),
@@ -24,7 +24,7 @@ shinyUI(navbarPage(theme="http://bootswatch.com/spacelab/bootstrap.css", inverse
         selectInput("loc_toy", "", toy_list, toy_list[[1]][1])
       )
    ),
-   plotOutput("TestPlot")
+   plotOutput("TS_Plot")
   ),
   div(class="outer",
   tags$head(includeCSS("www/styles.css")),
