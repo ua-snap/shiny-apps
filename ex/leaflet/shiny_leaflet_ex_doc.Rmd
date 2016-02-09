@@ -47,7 +47,7 @@ But fortunately it is not too difficult to make the three `observeEvent` calls w
 Use the app here to see the interaction between map clicks and the location selection menu. Version one will build upon this interaction.
 
 ```{r, echo=FALSE}
-shinyAppFile(files[1], options=list(width="100%", height=400))
+shinyAppFile(files[1], options=list(width="100%", height=400, root.dir=dirname(files[1])))
 ```
 
 ##
@@ -70,7 +70,7 @@ Showing the group of points on the map is straightforward.
 When hiding the group, I also elect to remove the marker for a selected point if one is selected when the checkbox is deselected.
 
 ```{r, echo=FALSE}
-shinyAppFile(files[2], options=list(width="100%", height=400))
+shinyAppFile(files[2], options=list(width="100%", height=400, root.dir=dirname(files[1])))
 ```
 
 I do not want a selected location in the map to return as selected when the checkbox for showing map points is rechecked.
