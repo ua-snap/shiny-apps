@@ -2,7 +2,8 @@ library(shiny)
 library(dplyr)
 library(leaflet)
 
-load("/var/www/shiny-server/shiny-apps/ex/leaflet/nwt_locations.RData")
+setwd("/var/www/shiny-server/shiny-apps/ex/leaflet") # Eris server
+load("nwt_locations.RData")
 
 lon <- -119.25
 lat <- 69.333

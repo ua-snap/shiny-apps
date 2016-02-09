@@ -3,6 +3,7 @@ library(raster)
 library(dplyr)
 library(leaflet)
 
+setwd("/var/www/shiny-server/shiny-apps/ex/leaflet") # Eris server
 load("nwt_testing_subset.RData")
 load("nwt_locations.RData")
 
