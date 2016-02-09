@@ -13,6 +13,8 @@ opts_knit$set(root.dir=normalizePath(wd))
 files <- list.files(pattern="ex_0.*.shiny.R", full.names=TRUE)
 lapply(files, read_chunk)
 library(shiny)
+load("nwt_testing_subset.RData")
+load("nwt_locations.RData")
 ```
 
 Using leaflet in R is fairly simple and there are plently of online resources and examples available already.

@@ -1,9 +1,8 @@
 library(shiny)
 library(dplyr)
 library(leaflet)
-if(!is.null(options()$wd)) setwd(options()$wd)
-stop(paste("Current working directory is:", getwd(), "; should be: /var/www/shiny-server/shiny-apps/ex/leaflet/"))
-load("nwt_locations.RData")
+
+#load("nwt_locations.RData")
 
 lon <- -119.25
 lat <- 69.333
