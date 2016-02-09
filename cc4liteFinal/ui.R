@@ -39,7 +39,7 @@ shinyUI(navbarPage(theme=shinytheme("cosmo"),
 	),
 	bsModal("modal_loc", "Alaska and western Canada communities", "help_loc_btn", size="large",
 		HTML('
-		<p style="text-align:justify">There about about 4,000 communities in the app.
+		<p style="text-align:justify">There are about 4,000 communities in the app.
 		Communities are not truly point data, e.g., weather station data.
 		Rather, they are based on SNAP\'s downscaled climate data sets and a "community" refers to the <em>grid cell</em> which contains a community\'s coordinates.
 		Communities are included from Alaska as well as the Canadian provinces Alberta, British Columbia, Manitoba, Saskatchewan, and Yukon and Northwest territories.</p>
