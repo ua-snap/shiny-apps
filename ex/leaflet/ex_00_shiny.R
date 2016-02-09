@@ -1,7 +1,7 @@
 library(shiny)
 library(dplyr)
 library(leaflet)
-
+stop(getwd())
 load("nwt_locations.RData")
 
 lon <- -119.25
