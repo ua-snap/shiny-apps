@@ -8,8 +8,8 @@ runtime: shiny
 ```{r, echo=FALSE, results="hide", message=FALSE, warning=FALSE}
 library(knitr)
 opts_chunk$set(cache=FALSE, eval=TRUE, message=FALSE, warning=FALSE)
-opts_knit$set(root.dir = dirname(files[1]))
 files <- normalizePath(list.files(pattern="ex_0.*.shiny.R", full.names=TRUE))
+opts_knit$set(root.dir = dirname(files[1]))
 lapply(files, read_chunk)
 setwd(dirname(files[1]))
 library(shiny)
