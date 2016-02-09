@@ -15,6 +15,9 @@ setwd(dirname(files[1]))
 library(shiny)
 ```
 
+```{r, super_chunk, code=setwd("/var/www/shiny-server/shiny-apps/ex/leaflet"))
+```
+
 Using leaflet in R is fairly simple and there are plently of online resources and examples available already.
 See the RStudio [tutorial](https://rstudio.github.io/leaflet/) to get started if you haven't already.
 Below I present a series of examples which build upon each other.
