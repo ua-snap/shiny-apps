@@ -7,9 +7,9 @@ library(dplyr)
 library(leaflet)
 library(ggplot2)
 
-# Eris server
-load("/var/www/shiny-server/shiny-apps/ex/leaflet/nwt_testing_subset.RData")
-load("/var/www/shiny-server/shiny-apps/ex/leaflet/nwt_locations.RData")
+setwd("/var/www/shiny-server/shiny-apps/idocs/ex_leaflet") # Eris server
+load("nwt_testing_subset.RData")
+load("nwt_locations.RData")
 
 decades <- seq(2010, 2090, by=10)
 lon <- -119.25
