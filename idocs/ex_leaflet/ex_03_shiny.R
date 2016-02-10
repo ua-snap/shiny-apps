@@ -1,5 +1,6 @@
 library(shiny)
 library(shinyBS)
+library(rgdal)
 library(raster)
 library(data.table)
 library(dplyr)

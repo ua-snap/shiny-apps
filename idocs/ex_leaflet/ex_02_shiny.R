@@ -1,4 +1,5 @@
 library(shiny)
+library(rgdal)
 library(raster)
 library(dplyr)
 library(leaflet)
