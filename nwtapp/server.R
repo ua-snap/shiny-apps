@@ -209,7 +209,9 @@ shinyServer(function(input, output, session) {
   })
 
   # Outputs for location modal
-  output$TestPlot <- renderPlot({
+  output$TS_Plot <- renderPlot({
+    req(input$modal_loc)
+    if(!input$modal_loc) return()
     d <- Data_sub2()
     d2 <- filter(d, Model!="CRU 3.2")
     p <- Loc_Var()=="pr"

@@ -1,12 +1,31 @@
 source("about.R", local=T)
 
-shinyUI(navbarPage(theme=shinytheme("spacelab"), inverse=TRUE,
-  #tags$style(type="text/css", "html, body {width:100%;height:100%}"),
+shinyUI(navbarPage(theme="http://bootswatch.com/spacelab/bootstrap.css", inverse=TRUE,
   title=HTML('<div><a href="http://snap.uaf.edu" target="_blank"><img src="./img/SNAP_acronym_100px.png" width="100%"></a></div>'),
   windowTitle="NT Climate",
   collapsible=TRUE,
   id="nb",
   tabPanel("Climate", value="vis",
+  bsModal("modal_loc", "Community Insights", "btn_modal_loc", size = "large",
+    fluidRow(
+      column(3,
+        selectInput("loc_variable", "", var.labels, var.labels[1]),
+        checkboxInput("loc_deltas", "Display deltas", FALSE)
+      ),
+      column(3,
+        selectInput("loc_rcp", "", rcp.labels, rcp.labels[1]),
+        checkboxInput("loc_cru", "Show historical", FALSE)
+      ),
+      column(3,
+        selectInput("loc_stat", "", c("All GCMs", "Mean GCM", "Both"), "All GCMs"),
+        checkboxInput("loc_trend", "Smooth trend", FALSE)
+      ),
+      column(3,
+        selectInput("loc_toy", "", toy_list, toy_list[[1]][1])
+      )
+   ),
+   plotOutput("TS_Plot")
+  ),
   div(class="outer",
   tags$head(includeCSS("www/styles.css")),
   leafletOutput("Map", width="100%", height="100%"),
@@ -32,26 +51,6 @@ shinyUI(navbarPage(theme=shinytheme("spacelab"), inverse=TRUE,
             actionButton("btn_modal_loc", "Community Insights", class="btn-block"))
       )
     )
-  ),
-  bsModal("Modal_Loc", "Community Insights", "btn_modal_loc", size = "large",
-    fluidRow(
-      column(3,
-        selectInput("loc_variable", "", var.labels, var.labels[1]),
-        checkboxInput("loc_deltas", "Display deltas", FALSE)
-      ),
-      column(3,
-        selectInput("loc_rcp", "", rcp.labels, rcp.labels[1]),
-        checkboxInput("loc_cru", "Show historical", FALSE)
-      ),
-      column(3,
-        selectInput("loc_stat", "", c("All GCMs", "Mean GCM", "Both"), "All GCMs"),
-        checkboxInput("loc_trend", "Smooth trend", FALSE)
-      ),
-      column(3,
-        selectInput("loc_toy", "", toy_list, toy_list[[1]][1])
-      )
-    ),
-    plotOutput("TestPlot")
   ),
   absolutePanel(id="controls", top=60, left=-20, height=300, width=300, draggable=TRUE,
     plotOutput("sp_density_plot", width="100%", height="auto")
