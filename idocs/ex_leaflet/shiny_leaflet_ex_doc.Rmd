@@ -144,18 +144,6 @@ shinyAppFile(files[4], options=list(width="100%", height=500))
 ```
 
 ##
-#### Side note
-In the version at the time this document I found that the modal itself was also grayed out (making it impossible to interact with and close out, leaving the app running but being unable to interact with it).
-I don't know exactly where the original conflict came from, but I solved it by adding custom CSS to set the modal backdrop to have a z-index of 1000.
-But if you need a similar fix for `bsModal`, I would not expect this to be a perfect fix in all app contexts.
-
-```
-.modal-backdrop {
-z-index: 1000;
-}
-```
-
-##
 ##
 ### Additional resources
 
