@@ -21,6 +21,7 @@ load("nwt_data_pr_tas_CRU32_1961_1990_climatology.RData")
 load("nwt_locations.RData")
 
 r <- subset(cru6190$pr, 1)
+ext <- c(floor(xmin(r)), ceiling(xmax(r)), floor(ymin(r)), ceiling(ymax(r)))
 lon <- (xmin(r)+xmax(r))/2
 lat <- (ymin(r)+ymax(r))/2
 decades <- seq(2010, 2090, by=10)

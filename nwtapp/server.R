@@ -11,6 +11,14 @@ shinyServer(function(input, output, session) {
 
   RCPs <- reactive({ rcps[rcp.labels==input$rcp] })
 
+  Extent <- reactive({
+    x <- input$lon_range
+    y <- input$lat_range
+    if(x[1]==x[2]) x <- x + c(-0.5, 0.5)
+    if(y[1]==y[2]) y <- y + c(-0.5, 0.5)
+    extent(c(x, y))
+  })
+
   sea_func <- reactive({ if(Variable()=="pr") sum else mean })
 
   stat_func <- reactive({
@@ -22,7 +30,7 @@ shinyServer(function(input, output, session) {
 
   CRU_ras <- reactive({
     idx <- match(input$toy, names(cru6190[[Variable()]]))
-    subset(cru6190[[Variable()]], idx)
+    subset(cru6190[[Variable()]], idx) %>% crop(Extent())
   })
 
   # prepping GCM/CRU, raw/deltas, months/seasons, models/stats, temp/precip
@@ -35,13 +43,13 @@ shinyServer(function(input, output, session) {
       if(monthly){
         x[[mo]] %>% subset(dec)
       } else {
-        calc(brick(lapply(x[mo2], function(x, idx) subset(x, idx), idx=dec)), f_sea) %>% round(1)
+        calc(brick(lapply(x[mo2], function(x, idx, e) subset(x, idx) %>% crop(e), idx=dec, e=Extent())), f_sea) %>% round(1)
       }
     }
 
     mung_stats <- function(x, monthly, mo, dec, mo2, f_sea, f_stat, statid){
       if(!monthly) mo <- mo2
-      x <- x %>% do(., Maps=.$Maps[[1]][mo] %>% purrr::map(~subset(.x, dec)) %>% brick %>% calc(f_sea))
+      x <- x %>% do(., Maps=.$Maps[[1]][mo] %>% purrr::map(~subset(.x, dec)) %>% brick %>% crop(Extent()) %>% calc(f_sea))
       x <- f_stat(brick(x$Maps))
       if(statid=="Spread") x <- calc(x, function(x) x[2]-x[1])
       round(x, 1)
