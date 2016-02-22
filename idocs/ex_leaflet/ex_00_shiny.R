@@ -2,6 +2,7 @@ library(shiny)
 library(dplyr)
 library(leaflet)
 
+setwd("/var/www/shiny-server/shiny-apps/idocs/ex_leaflet") # Eris server
 load("nwt_locations.RData")
 
 lon <- -119.25

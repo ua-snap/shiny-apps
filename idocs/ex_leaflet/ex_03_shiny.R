@@ -7,6 +7,7 @@ library(dplyr)
 library(leaflet)
 library(ggplot2)
 
+setwd("/var/www/shiny-server/shiny-apps/idocs/ex_leaflet") # Eris server
 load("nwt_testing_subset.RData")
 load("nwt_locations.RData")
 
