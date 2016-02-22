@@ -3,6 +3,8 @@ about <- tabPanel("About",
     '<p style="text-align:justify">This R Shiny web application presents future climate outlooks for Northwest Territories (NT), Canada.
     Decadal maps show spatially explicit projections of temperature and precipitation based on SNAP\'s downscaled CMIP5 global climate models (GCMs) for three emissions scenarios.
     Climate trends are available as raw values or as changes from 1961-1990 baseline averages.
+    Historical baselines are based on SNAP\'s downscaled historical data from the Climatological Research Unit (CRU) version 3.2 time series
+    and the CRU 10-minute resolution climatology 2.0, to which the GCMs are also downscaled.
     When viewing raw values, available maps consist of individual GCMs or maps which aggregate or compare those models.</p>
     <p style="text-align:justify">NT communities are also available. When viewing a community summary, a time series plot will appear highlighting trends for the community.
     Even though the maps are at a decadal resolution, community data is annual.
@@ -17,10 +19,10 @@ about <- tabPanel("About",
     Changes in temperature are differences whereas changes in precipitation are proportional.</p>'
   ),
   fluidRow(
-    column(3, actionButton("help_rcp_btn", "More About RCPs", class="btn-block"), br()),
-    column(3, actionButton("help_loc_btn", "About communities", class="btn-block"), br())
+    column(3, actionButton("btn_help_rcps", "More About RCPs", class="btn-block"), br()),
+    column(3, actionButton("btn_help_locs", "About communities", class="btn-block"), br())
   ),
-  bsModal("modal_rcp", "Representative Concentration Pathways", "help_rcp_btn", size="large",
+  bsModal("modal_help_rcps", "Representative Concentration Pathways", "btn_help_rcps", size="large",
     HTML('
       <p style="text-align:justify">Together the RCPs show a range of possible future atmospheric greenhouse gas concentrations driven by human activity.
       The RCP values represent radiative forcing (W/m^2) in 2100 relative to pre-industrial levels.
@@ -35,7 +37,7 @@ about <- tabPanel("About",
       More information on these RCPs can be found in the 2014 IPCC fifth Assessment Report.'
     )
   ),
-  bsModal("modal_loc", "Northwest Territories communities", "help_loc_btn", size="large",
+  bsModal("modal_help_locs", "Northwest Territories communities", "btn_help_locs", size="large",
     HTML('
       <p style="text-align:justify">The Northwest Territories communities in this app are a small subset of about 4,000 communities
       in the Alaska and western Canada <a href="http://shiny.snap.uaf.edu/cc4liteFinal/">Community Charts app</a>.

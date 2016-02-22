@@ -30,6 +30,7 @@ ui <- bootstrapPage(
 
 # @knitr server02
 server <- function(input, output, session) {
+  acm_defaults <- function(map, x, y) addCircleMarkers(map, x, y, radius=6, color="black", fillColor="orange", fillOpacity=1, opacity=1, weight=2, stroke=TRUE, layerId="Selected")
 # @knitr server02obj
 ras <- reactive({ subset(x, which(decades==input$dec)) })
 ras_vals <- reactive({ values(ras()) })
@@ -38,7 +39,7 @@ pal <- reactive({ colorNumeric(c("#0C2C84", "#41B6C4", "#FFFFCC"), ras_vals(), n
 # @knitr server02remainder1
   output$Map <- renderLeaflet({
     leaflet() %>% setView(lon, lat, 4) %>% addTiles() %>%
-      addCircleMarkers(data=locs, radius = ~10, color= ~"#000000", stroke=FALSE, fillOpacity=0.5, group="locations", layerId = ~loc)
+      addCircleMarkers(data=locs, radius=6, color="black", stroke=FALSE, fillOpacity=0.5, group="locations", layerId = ~loc)
   })
 
 # @knitr server02obs
@@ -72,7 +73,7 @@ observe({
     if(p$id=="Selected"){
       proxy %>% removeMarker(layerId="Selected")
     } else {
-      proxy %>% setView(lng=p$lng, lat=p$lat, input$Map_zoom) %>% addCircleMarkers(p$lng, p$lat, radius=10, color="black", fillColor="orange", fillOpacity=1, opacity=1, stroke=TRUE, layerId="Selected")
+      proxy %>% setView(lng=p$lng, lat=p$lat, input$Map_zoom) %>% acm_defaults(p$lng, p$lat)
     }
   })
 
@@ -90,9 +91,9 @@ observe({
     if(nrow(p2)==0){
       proxy %>% removeMarker(layerId="Selected")
     } else if(length(p$id) && input$location!=p$id){
-      proxy %>% setView(lng=p2$lon, lat=p2$lat, input$Map_zoom) %>% addCircleMarkers(p2$lon, p2$lat, radius=10, color="black", fillColor="orange", fillOpacity=1, opacity=1, stroke=TRUE, layerId="Selected")
+      proxy %>% setView(lng=p2$lon, lat=p2$lat, input$Map_zoom) %>% acm_defaults(p2$lon, p2$lat)
     } else if(!length(p$id)){
-      proxy %>% setView(lng=p2$lon, lat=p2$lat, input$Map_zoom) %>% addCircleMarkers(p2$lon, p2$lat, radius=10, color="black", fillColor="orange", fillOpacity=1, opacity=1, stroke=TRUE, layerId="Selected")
+      proxy %>% setView(lng=p2$lon, lat=p2$lat, input$Map_zoom) %>% acm_defaults(p2$lon, p2$lat)
     }
   })
 

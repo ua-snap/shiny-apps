@@ -1,5 +1,9 @@
 source("about.R", local=T)
 
+# for shinyapps.io, use theme="spacelab.css" with file in www folder.
+# for local/RStudio and shiny-server, use theme="http://bootswatch.com/spacelab/bootstrap.css" (this is ignored on shinyapps.io)
+# shinytheme() from shinythemes package must be avoided because it conflicts with bsModal in shinyBS.
+
 shinyUI(navbarPage(theme="http://bootswatch.com/spacelab/bootstrap.css", inverse=TRUE,
   title=HTML('<div><a href="http://snap.uaf.edu" target="_blank"><img src="./img/SNAP_acronym_100px.png" width="100%"></a></div>'),
   windowTitle="NT Climate",
@@ -23,8 +27,12 @@ shinyUI(navbarPage(theme="http://bootswatch.com/spacelab/bootstrap.css", inverse
       column(3,
         selectInput("loc_toy", "", toy_list, toy_list[[1]][1])
       )
-   ),
-   plotOutput("TS_Plot")
+    ),
+    plotOutput("TS_Plot"),
+    fluidRow(
+      column(3, downloadButton("dl_tsplot", "Get Plot", class="btn-block")),
+      column(3, downloadButton("dl_loc_data", "Get Data", class="btn-block"))
+    )
   ),
   div(class="outer",
   tags$head(includeCSS("www/styles.css")),
@@ -52,16 +60,17 @@ shinyUI(navbarPage(theme="http://bootswatch.com/spacelab/bootstrap.css", inverse
       )
     )
   ),
-  absolutePanel(id="controls", top=60, left=-20, height=300, width=300, draggable=TRUE,
+  absolutePanel(id="controls", top=60, left=-20, height=300, width=300, draggable=FALSE,
     plotOutput("sp_density_plot", width="100%", height="auto")
   ),
   absolutePanel(bottom=10, left=10,
     conditionalPanel(is_gcm_string, checkboxInput("deltas", "Display deltas", FALSE)),
     checkboxInput("show_communities", "Show communities", TRUE),
+    checkboxInput("show_colpal", "Show color options", FALSE),
     checkboxInput("legend", "Show legend", TRUE),
-    checkboxInput("show_colpal", "Show color options", FALSE)
+    checkboxInput("ttips", "Show popup details", TRUE)
   ),
-  absolutePanel(id="controls", bottom=160, left=-10, height=200, width=320,
+  absolutePanel(id="controls", bottom=200, left=-10, height=190, width=320,
     conditionalPanel("input.show_colpal == true",
     wellPanel(
       fluidRow(
