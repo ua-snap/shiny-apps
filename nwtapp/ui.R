@@ -10,6 +10,7 @@ shinyUI(navbarPage(theme="http://bootswatch.com/spacelab/bootstrap.css", inverse
   collapsible=TRUE,
   id="nb",
   tabPanel("Climate", value="vis",
+  shpPolyInput("user_shapefile", "Upload polygon shapefile", "btn_modal_shp"),
   bsModal("modal_loc", "Community Insights", "btn_modal_loc", size = "large",
     fluidRow(
       column(3,
@@ -37,9 +38,7 @@ shinyUI(navbarPage(theme="http://bootswatch.com/spacelab/bootstrap.css", inverse
   div(class="outer",
   tags$head(includeCSS("www/styles.css")),
   leafletOutput("Map", width="100%", height="100%"),
-  absolutePanel(top=20, left=60, height=20, width=600,
-    h4("Northwest Territories Future Climate Outlook")
-  ),
+  absolutePanel(top=20, left=60, height=20, width=600, h4("Northwest Territories Future Climate Outlook")),
   absolutePanel(id="controls", top=20, right=-10, height=200, width=400,
     sliderInput("dec", "Decade", min=min(decades), max=max(decades), value=max(decades), step=10, sep="", post="s", width="100%"),
     wellPanel(
@@ -58,6 +57,20 @@ shinyUI(navbarPage(theme="http://bootswatch.com/spacelab/bootstrap.css", inverse
           conditionalPanel("input.location !== null && input.location !== ''",
             actionButton("btn_modal_loc", "Community Insights", class="btn-block"))
       )
+    ),
+    conditionalPanel("input.show_extent == true",
+      fluidRow(
+        column(6, sliderInput("lon_range", "Longitude", min=ext[1], max=ext[2], value=ext[1:2], step=1, sep="", post="°", width="100%")),
+        column(6, sliderInput("lat_range", "Latitude", min=ext[3], max=ext[4], value=ext[3:4], step=1, sep="", post="°", width="100%"))
+      ),
+      fluidRow(
+        column(6,
+          actionButton("btn_modal_shp", "Upload shapefile", class="btn-block"),
+          uiOutput("Shp_On")
+        ),
+        column(3, h4("Mask:")),
+        column(3, uiOutput("Mask_in_use"))
+      )
     )
   ),
   absolutePanel(id="controls", top=60, left=-20, height=300, width=300, draggable=FALSE,
@@ -66,11 +79,12 @@ shinyUI(navbarPage(theme="http://bootswatch.com/spacelab/bootstrap.css", inverse
   absolutePanel(bottom=10, left=10,
     conditionalPanel(is_gcm_string, checkboxInput("deltas", "Display deltas", FALSE)),
     checkboxInput("show_communities", "Show communities", TRUE),
+    checkboxInput("show_extent", "Show/crop extent", FALSE),
     checkboxInput("show_colpal", "Show color options", FALSE),
     checkboxInput("legend", "Show legend", TRUE),
     checkboxInput("ttips", "Show popup details", TRUE)
   ),
-  absolutePanel(id="controls", bottom=200, left=-10, height=190, width=320,
+  absolutePanel(id="controls", bottom=240, left=-10, height=190, width=320,
     conditionalPanel("input.show_colpal == true",
     wellPanel(
       fluidRow(

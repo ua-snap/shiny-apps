@@ -1,7 +1,10 @@
+eb <- element_blank()
+theme1 <- theme(plot.background=eb, legend.position="bottom")
+theme_blank <- theme(axis.line=eb, axis.text.x=eb, axis.text.y=eb, axis.ticks=eb, axis.title.x=eb, axis.title.y=eb,
+  legend.position="none", panel.background=eb, panel.border=eb, panel.grid.major=eb, panel.grid.minor=eb, plot.background=eb)
 acm_defaults <- function(map, x, y) addCircleMarkers(map, x, y, radius=6, color="black", fillColor="orange", fillOpacity=1, opacity=1, weight=2, stroke=TRUE, layerId="Selected")
 
 shinyServer(function(input, output, session) {
-
   # setup
   Monthly <- reactive({ input$toy %in% month.abb })
   Mos <- reactive({ if(Monthly()) input$toy else month.abb[sea.idx[[input$toy]]] })
@@ -10,6 +13,15 @@ shinyServer(function(input, output, session) {
   Variable <- reactive({ vars[var.labels==input$variable] })
 
   RCPs <- reactive({ rcps[rcp.labels==input$rcp] })
+
+  Extent <- reactive({
+    x <- input$lon_range
+    y <- input$lat_range
+    e <- extent(c(x, y))
+    if(is.null(raster::intersect(e, extent(r)))) e <- extent(r)
+    if(length(which(!is.na(crop(r, e)[]))) < 3) e <- extent(r)
+    e
+  })
 
   sea_func <- reactive({ if(Variable()=="pr") sum else mean })
 
@@ -20,12 +32,32 @@ shinyServer(function(input, output, session) {
       Spread=function(x,...) range(x,...))
   })
 
-  CRU_ras <- reactive({
-    idx <- match(input$toy, names(cru6190[[Variable()]]))
-    subset(cru6190[[Variable()]], idx)
+  # MODULE: polygon shapefile upload and related reactive objects
+  shp <- callModule(shpPoly, "user_shapefile", r=r)
+
+  Shp_plot_ht <- reactive({
+    if(is.null(shp())) return(0)
+    e <- extent(shp()$shp_original)[]
+    round(100*(e[4]-e[3])/(e[2]-e[1]))
   })
 
+  output$Shp_Plot <- renderPlot({
+    if(!is.null(shp())){
+      ggplot(fortify(shp()$shp_original), aes(x=long, y=lat, group=group)) +
+        geom_polygon(fill="steelblue4") + geom_path(colour="black") + coord_equal() + theme_blank
+    }
+  }, height=function() Shp_plot_ht(), bg="transparent")
+
+  output$Mask_in_use <- renderUI({ if(is.null(shp())) h4("None") else plotOutput("Shp_Plot", height="auto") })
+
+  output$Shp_On <- renderUI({ if(!is.null(shp())) checkboxInput("shp_on", "Shapefile active", TRUE) })
+
   # prepping GCM/CRU, raw/deltas, months/seasons, models/stats, temp/precip
+  CRU_ras <- reactive({
+    idx <- match(input$toy, names(cru6190[[Variable()]]))
+    subset(cru6190[[Variable()]], idx) %>% crop(Extent())
+  })
+
   ras <- reactive({
     dec.idx <- which(decades==input$dec)
     mon.idx <- switch(input$toy, Winter=c(1,2,12), Spring=3:5, Summer=6:8, Fall=9:11)
@@ -35,13 +67,13 @@ shinyServer(function(input, output, session) {
       if(monthly){
         x[[mo]] %>% subset(dec)
       } else {
-        calc(brick(lapply(x[mo2], function(x, idx) subset(x, idx), idx=dec)), f_sea) %>% round(1)
+        calc(brick(lapply(x[mo2], function(x, idx, e) subset(x, idx) %>% crop(e), idx=dec, e=Extent())), f_sea) %>% round(1)
       }
     }
 
     mung_stats <- function(x, monthly, mo, dec, mo2, f_sea, f_stat, statid){
       if(!monthly) mo <- mo2
-      x <- x %>% do(., Maps=.$Maps[[1]][mo] %>% purrr::map(~subset(.x, dec)) %>% brick %>% calc(f_sea))
+      x <- x %>% do(., Maps=.$Maps[[1]][mo] %>% purrr::map(~subset(.x, dec)) %>% brick %>% crop(Extent()) %>% calc(f_sea))
       x <- f_stat(brick(x$Maps))
       if(statid=="Spread") x <- calc(x, function(x) x[2]-x[1])
       round(x, 1)
@@ -63,6 +95,12 @@ shinyServer(function(input, output, session) {
       if(input$deltas & Variable()=="tas") x <- x - CRU_ras()
     }
 
+    if(!is.null(shp()) && (is.null(input$shp_on) || input$shp_on)){
+      if(!is.null(raster::intersect(extent(x), extent(shp()$shp)))){
+        x.masked <- try(crop(x, shp()$shp) %>% mask(shp()$shp), TRUE)
+        if(!(class(x.masked)=="try-error") && length(which(!is.na(x.masked[]))) > 2) x <- x.masked
+      }
+    }
     x[is.nan(x)] <- NA
     x
   })

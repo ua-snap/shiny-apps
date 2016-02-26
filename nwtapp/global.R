@@ -6,6 +6,7 @@ library(shiny)
 library(shinyBS)
 library(shinyjs)
 library(leaflet)
+library(DT)
 library(rgdal)
 library(raster)
 library(data.table)
@@ -14,6 +15,8 @@ library(tidyr)
 library(ggplot2)
 })
 
+source("mod_shpPoly.R")
+
 options(warn = -1) # # haven't figured out how to suppress warning from colors(.)
 
 load("nwt_data.RData")
@@ -21,6 +24,7 @@ load("nwt_data_pr_tas_CRU32_1961_1990_climatology.RData")
 load("nwt_locations.RData")
 
 r <- subset(cru6190$pr, 1)
+ext <- c(round(xmin(r), 1), round(xmax(r), 1), round(ymin(r), 1), round(ymax(r), 1))
 lon <- (xmin(r)+xmax(r))/2
 lat <- (ymin(r)+ymax(r))/2
 decades <- seq(2010, 2090, by=10)
@@ -43,5 +47,3 @@ colpals <- RColorBrewer::brewer.pal.info
 dv <- rownames(colpals)[colpals["category"]=="div"]
 sq <- rownames(colpals)[colpals["category"]=="seq"]
 colpals_list <- list(Divergent=c(Custom="Custom div", dv), Sequential=c(Custom="Custom seq", sq))
-
-theme1 <- theme(plot.background=element_blank(), legend.position="bottom")
