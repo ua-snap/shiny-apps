@@ -10,6 +10,7 @@ shinyUI(navbarPage(theme="http://bootswatch.com/spacelab/bootstrap.css", inverse
   collapsible=TRUE,
   id="nb",
   tabPanel("Climate", value="vis",
+  shpPolyInput("user_shapefile", "Upload polygon shapefile", "btn_modal_shp"),
   bsModal("modal_loc", "Community Insights", "btn_modal_loc", size = "large",
     fluidRow(
       column(3,
@@ -58,8 +59,19 @@ shinyUI(navbarPage(theme="http://bootswatch.com/spacelab/bootstrap.css", inverse
       )
     ),
     conditionalPanel("input.show_extent == true",
-      sliderInput("lon_range", "Longitude", min=ext[1], max=ext[2], value=ext[1:2], step=1, sep="", post="°", width="100%"),
-      sliderInput("lat_range", "Latitude", min=ext[3], max=ext[4], value=ext[3:4], step=1, sep="", post="°", width="100%"))
+      fluidRow(
+        column(6, sliderInput("lon_range", "Longitude", min=ext[1], max=ext[2], value=ext[1:2], step=1, sep="", post="°", width="100%")),
+        column(6, sliderInput("lat_range", "Latitude", min=ext[3], max=ext[4], value=ext[3:4], step=1, sep="", post="°", width="100%"))
+      ),
+      fluidRow(
+        column(6,
+          actionButton("btn_modal_shp", "Upload shapefile", class="btn-block"),
+          uiOutput("Shp_On")
+        ),
+        column(3, h4("Mask:")),
+        column(3, uiOutput("Mask_in_use"))
+      )
+    )
   ),
   absolutePanel(id="controls", top=60, left=-20, height=300, width=300, draggable=FALSE,
     plotOutput("sp_density_plot", width="100%", height="auto")
