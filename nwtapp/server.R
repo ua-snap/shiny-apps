@@ -319,6 +319,9 @@ shinyServer(function(input, output, session) {
       addTooltip(session, "mod_or_stat", "Individual climate models or a statistic combining all five.", "left", options=list(container="body"))
       addTooltip(session, "location", "Enter a community. Menu filters as you type. Or select a community on map.", "left", options=list(container="body"))
       addTooltip(session, "deltas", "Display projected change from 1961-1990 baseline average instead of raw climate values.", "right", options=list(container="body"))
+      addTooltip(session, "lat_range", "If cropped to a rectangle with insufficient data, the map will revert to its full extent.", "left", options=list(container="body"))
+      addTooltip(session, "btn_modal_shp", "Upload a polygon shapefile for arbitrary masking.
+        Once uploaded, the mask can be toggled on or off and may be combined with lon/lat sliders. Using a mask adds some delay.", "bottom", options=list(container="body"))
     } else {
       removeTooltip(session, "dec")
       removeTooltip(session, "toy")
@@ -326,6 +329,8 @@ shinyServer(function(input, output, session) {
       removeTooltip(session, "mod_or_stat")
       removeTooltip(session, "location")
       removeTooltip(session, "deltas")
+      removeTooltip(session, "lat_range")
+      removeTooltip(session, "btn_modal_shp")
     }
   })
 
