@@ -43,8 +43,10 @@ shinyServer(function(input, output, session) {
 
   output$Shp_Plot <- renderPlot({
     if(!is.null(shp())){
-      ggplot(fortify(shp()$shp_original), aes(x=long, y=lat, group=group)) +
-        geom_polygon(fill="steelblue4") + geom_path(colour="black") + coord_equal() + theme_blank
+      d <- fortify(shp()$shp_original)
+      ggplot(d, aes(x=long, y=lat, group=group)) +
+        geom_polygon(fill="steelblue4") + geom_polygon(data=filter(d, hole==TRUE), fill="white") +
+        geom_path(colour="gray20") + coord_equal() + theme_blank
     }
   }, height=function() Shp_plot_ht(), bg="transparent")
 
