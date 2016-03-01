@@ -69,11 +69,22 @@ shpPoly <- function(input, output, session, r=NULL){
 
   output$Shp_Plot <- renderPlot({
     if(!is.null(shp())){
-      d <- fortify(shp())
-      ggplot(d, aes(x=long, y=lat, group=group)) +
-        geom_polygon(fill="steelblue4") + geom_polygon(data=filter(d, hole==TRUE), fill="white") +
-        geom_path(colour="gray20") + coord_equal() + theme_blank
+      cl <- class(shp())
+      if(cl=="SpatialPointsDataFrame"){
+        d <- data.frame(shp()@coords, group=1)
+        names(d) <- c("long", "lat", "group")
+      } else d <- fortify(shp())
+      g <- ggplot(d, aes(x=long, y=lat, group=group)) + coord_equal() + theme_blank
+      if(cl=="SpatialPolygonsDataFrame"){
+        g <- g + geom_polygon(fill="steelblue4") + geom_path(colour="gray20")
+        if("hole" %in% names(d)) g <- g + geom_polygon(data=filter(d, hole==TRUE), fill="white")
+      } else if(cl=="SpatialLinesDataFrame"){
+        g <- g + geom_path(colour="steelblue4", size=2)
+      } else {
+        g <- g + geom_point(colour="steelblue4", size=2)
+      }
     }
+    g
   }, height=function() plot_ht())
   output$Map <- renderLeaflet({ leaflet() %>% setView(0, 0, zoom=2) %>% addTiles() })
   output$Map_Summary <- renderPrint({ req(shp_wgs84()); summary(shp_wgs84()) })
@@ -95,7 +106,11 @@ shpPoly <- function(input, output, session, r=NULL){
 
   observe({
     if(!is.null(shp()) && tp()=="final"){
-      leafletProxy(ns("Map")) %>% clearShapes() %>% setView(lon(), lat(), zoom=2) %>% addPolygons(data=shp_wgs84(), weight=2)
+      cl <- class(shp_wgs84())
+      x <- leafletProxy(ns("Map")) %>% clearShapes() %>% clearMarkers() %>% setView(lon(), lat(), zoom=2)
+      if(cl=="SpatialPolygonsDataFrame") x %>% addPolygons(data=shp_wgs84(), weight=2)
+      if(cl=="SpatialLinesDataFrame") x %>% addPolylines(data=shp_wgs84(), weight=2)
+      if(cl=="SpatialPointsDataFrame") x %>% addCircleMarkers(data=shp_wgs84(), weight=2, radius=6)
     }
   })
 
