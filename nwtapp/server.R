@@ -17,9 +17,18 @@ shinyServer(function(input, output, session) {
   Extent <- reactive({
     x <- input$lon_range
     y <- input$lat_range
+    re <- extent(r)
     e <- extent(c(x, y))
-    if(is.null(raster::intersect(e, extent(r)))) e <- extent(r)
-    if(length(which(!is.na(crop(r, e)[]))) < 3) e <- extent(r)
+    if(is.null(raster::intersect(e, re))) return(re)
+    if(length(which(!is.na(crop(r, e)[]))) < 3) return(re)
+    if(!is.null(shp())){
+      e2 <- raster::intersect(e, extent(shp()$shp))
+      if(is.null(e2)){
+        return(re)
+      } else {
+        if(length(which(!is.na((crop(r, e2) %>% mask(shp()$shp))[]))) < 3) return(re)
+      }
+    }
     e
   })
 
@@ -43,11 +52,22 @@ shinyServer(function(input, output, session) {
 
   output$Shp_Plot <- renderPlot({
     if(!is.null(shp())){
-      d <- fortify(shp()$shp_original)
-      ggplot(d, aes(x=long, y=lat, group=group)) +
-        geom_polygon(fill="steelblue4") + geom_polygon(data=filter(d, hole==TRUE), fill="white") +
-        geom_path(colour="gray20") + coord_equal() + theme_blank
+      cl <- class(shp()$shp_original)
+      if(cl=="SpatialPointsDataFrame"){
+        d <- data.frame(shp()$shp_original@coords, group=1)
+        names(d) <- c("long", "lat", "group")
+      } else d <- fortify(shp()$shp_original)
+      g <- ggplot(d, aes(x=long, y=lat, group=group)) + coord_equal() + theme_blank
+      if(cl=="SpatialPolygonsDataFrame"){
+        g <- g + geom_polygon(fill="steelblue4") + geom_path(colour="gray20")
+        if("hole" %in% names(d)) g <- g + geom_polygon(data=filter(d, hole==TRUE), fill="white")
+      } else if(cl=="SpatialLinesDataFrame"){
+        g <- g + geom_path(colour="steelblue4", size=2)
+      } else {
+        g <- g + geom_point(colour="steelblue4", size=2)
+      }
     }
+    g
   }, height=function() Shp_plot_ht(), bg="transparent")
 
   output$Mask_in_use <- renderUI({ if(is.null(shp())) h4("None") else plotOutput("Shp_Plot", height="auto") })
@@ -84,7 +104,6 @@ shinyServer(function(input, output, session) {
     if(!(p %in% models)){
       x <- filter(d, Var==Variable() & RCP==RCPs()) %>% group_by(Model, add=T) %>%
         mung_stats(Monthly(), mon_index(), dec.idx, mon.idx, sea_func(), stat_func(), p)
-      return(x)
     }
 
     if(p %in% models){
