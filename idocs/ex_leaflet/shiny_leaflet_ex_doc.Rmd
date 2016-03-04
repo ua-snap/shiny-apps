@@ -3,8 +3,9 @@ title: "Shiny leaflet example"
 author: "Matthew Leonawicz"
 output:
   html_document:
-    theme: cerulean
+    theme: spacelab
     highlight: zenburn
+    code_folding: show
     includes:
       in_header: include/in_header.html
       before_body: include/navbar.html
