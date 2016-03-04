@@ -5,6 +5,7 @@ shinyUI(navbarPage(theme=shinytheme("cosmo"),
 	windowTitle="CC4L",
 	collapsible=TRUE,
 	id="tsp",
+  tags$head(includeScript("ga-cc4liteFinal.js"), includeScript("ga-allapps.js")),
 	tags$head(tags$link(rel="stylesheet", type="text/css", href="styles.css")),
 	conditionalPanel("input.tsp=='commChart'",
 	fluidRow(
