@@ -118,7 +118,7 @@ importance.melt <- reactive({
 d.new <- reactive({
 	if(!is.null(rf1())){
 		mds <- cmdscale(1 - rf1()$proximity, eig=TRUE) ## Do MDS on 1 - proximity
-		d <- data.frame(mds$points,d.sub()[,input$response],mds$eig,dat()[,1],as.numeric(margin(rf1())),outlier(rf1()))
+		d <- data.frame(mds$points, d.sub()[,input$response], mds$eig,dat()[,1], as.numeric(randomForest::margin(rf1())), randomForest::outlier(rf1()))
 		names(d) <- c("Dim.1","Dim.2",input$response,"Eigen values",names(dat())[1],"Margin","Outliers")
 	} else d <- NULL
 	d
