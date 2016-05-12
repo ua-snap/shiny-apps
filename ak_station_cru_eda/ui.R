@@ -10,6 +10,7 @@ headerPanel_2 <- function(title, h, windowTitle=title) {
 
 shinyUI(fluidPage(theme=shinytheme("united"),
 	headerPanel_2(uiOutput("header"), h3, "CRU/Weather Station EDA"),
+  tags$head(includeScript("ga-ak_station_cru_eda.js"), includeScript("ga-allapps.js")),
 	column(4,
 	wellPanel(
 		selectInput("dataset", "Choose a dataset:", choices=c("Weather stations (w/ missing data)", "Weather stations (CRU-substituted NAs)", "2-km downscaled CRU 3.1"), selected="2-km downscaled CRU 3.1"),

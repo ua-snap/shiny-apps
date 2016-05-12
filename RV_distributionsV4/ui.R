@@ -2,6 +2,7 @@ library(shiny)
 tabPanelAbout <- source("about.r")$value
 library(shinythemes)
 shinyUI(fluidPage(theme=shinytheme("united"),
+  tags$head(includeScript("ga-RV_distributionsV4.js"), includeScript("ga-allapps.js")),
 	headerPanel(
 		HTML('Distributions of Random Variables v4
 			<a href="http://snap.uaf.edu" target="_blank"><img align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" /></a>'

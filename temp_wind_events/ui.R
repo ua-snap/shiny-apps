@@ -16,6 +16,7 @@ shinyUI(fluidPage(theme=shinytheme("spacelab"),
 			<a href="http://snap.uaf.edu" target="_blank"><img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" /></a>'
 		), h3, "CMIP5 Quantile-mapped GCM Daily Data"
 	),
+  tags$head(includeScript("ga-temp_wind_events.js"), includeScript("ga-allapps.js")),
 	wellPanel(
 		fluidRow(
 			column(2, selectInput("mo", "Show months:", choices=c("All",mos), selected="Jan", multiple=T, width="100%")),

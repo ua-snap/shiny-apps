@@ -14,6 +14,7 @@ shinyUI(fluidPage(theme=shinytheme("flatly"),
 			<a href="http://snap.uaf.edu" target="_blank"><img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" /></a>'
 		), h3, "GBM Example"
 	),
+  tags$head(includeScript("ga-gbm_example.js"), includeScript("ga-allapps.js")),
 	fluidRow(
 		source("external/sidebar.R",local=T)$value,
 		source("external/main.R",local=T)$value
