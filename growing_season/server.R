@@ -1,4 +1,4 @@
-lapply(list("gbm", "tidyr", "grid", "gridExtra", "ggplot2", "rasterVis", "leaflet", "data.table", "dplyr"), function(x) library(x, character.only=T))
+library(gbm); library(tidyr); library(grid); library(gridExtra); library(ggplot2); library(rasterVis); library(leaflet); library(data.table); library(dplyr)
 
 rTheme <- function(pch = 19, cex = 0.7, region=colorRampPalette(rev(c("darkred", "firebrick1", "white", "royalblue", "darkblue")))(19), ...){
     theme <- custom.theme.2(pch = pch, cex = cex, region = region, ...)
@@ -283,7 +283,7 @@ QMAP_rasters <- reactive({
         names(s) <- c("Original", "Mapped")
         trim(s)
     }
-    
+
     if(input$region_map!=""){
         prog <- Progress$new(session, min=0, max=7)
         on.exit(prog$close())

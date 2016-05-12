@@ -1,4 +1,6 @@
-lapply(list("shiny", "shinythemes", "shinyBS"), function(x) library(x, character.only=T))
+library(shiny)
+#library(shinythemes)
+library(shinyBS)
 #lapply(list.files(pattern="^appdata_.*.\\.RData$"), load, envir=.GlobalEnv)
 regions <- c("Alaska Range Transition", "Aleutian Meadows", "Arctic Tundra", "Bering Taiga", "Bering Tundra", "Coast Mountains Transition", "Coastal Rainforests", "Intermontane Boreal", "Pacific Mountains Transition")
 gbm_plot_types <- c("Error curves", "Predictor strength", "Partial dependence", "GBM predictions", "Exchangeability")

@@ -1,12 +1,14 @@
-shinyUI(navbarPage(theme=shinytheme("cosmo"),
+shinyUI(navbarPage(
 	title=HTML('<div><a href="http://snap.uaf.edu" target="_blank"><img src="./img/SNAP_acronym_100px.png" width="80%"></a></div>'),
 	tabPanel("Home", value="home"),
     tabPanel("GBM modeling", value="gbm"),
 	tabPanel("Quantile mapping", value="qmap"),
+    tabPanel("SOS predictions", value="qmap"),
     #tabPanel("About", value="about"),
 	windowTitle="Alaska Growing Season",
 	collapsible=TRUE,
 	id="tsp",
+  tags$head(includeScript("ga-gs.js"), includeScript("ga-allapps.js")),
 	tags$head(tags$link(rel="stylesheet", type="text/css", href="styles.css")),
 	conditionalPanel("input.tsp=='home'",
 	fluidRow(
@@ -14,28 +16,28 @@ shinyUI(navbarPage(theme=shinytheme("cosmo"),
             HTML(
             '<p style="text-align:justify">This app highlights analysis of historical and projected trends in Alaska growing season onset.
             Generalized boosted regression/gradient boosting machine (GBM) models are used to estimate start of season (SOS) as a function of surface air temperature.</p>
-            
+
             <p style="text-align:justify">This is done using a derived proxy variable for temperature: the day of year on which cumulative thaw degree days for the year reaches a given percentile of climatological mean total thaw degree days (DOY TDD).
             Threshold percentiles considered are 5, 10, 15 and 20 percent.</p>
-            
+
             <p style="text-align:justify">GBM models for SOS as a function of the four DOY TDD percentile variables are fitted separately for each of nine Alaska ecological regions.
             The GBM models use spatially explicit data. Results shown here are aggregated back to the ecoregion scale.</p>
-            
+
             <p style="text-align:justify">In order to make projections of SOS based on DOY TDD with the GBM models,
             future daily temperature model outputs from global climate models (GCMs) are first quantile mapped to the 1979-2010 NARR-based DOY TDD data.</p>
-            
+
             <p style="text-align:justify">Quantile mapping provides a robust method for bias and variance correction,
             mapping multiple properties of the GCM-based DOY TDD percentile variables\' distributions to correspond with those based on the NARR baseline data.
             This maps GCM data into the functional space of the GBM models built on NARR data,
             permitting more direct and meaningful comparison of NARR and GCM DOY TDD data in the context of estimating future growing season start dates.</p>'),
-                
+
             HTML('
             <div style="clear: left;"><img src="http://www.gravatar.com/avatar/52c27b8719a7543b4b343775183122ea.png" alt="" style="float: left; margin-right:5px" /></div>
             <p>Matthew Leonawicz<br/>
             Statistician | useR<br/>
-            <a href="http://leonawicz.github.io" target="_blank">Github.io</a> | 
-            <a href="http://blog.snap.uaf.edu" target="_blank">Blog</a> | 
-            <a href="https://twitter.com/leonawicz" target="_blank">Twitter</a> | 
+            <a href="http://leonawicz.github.io" target="_blank">Github.io</a> |
+            <a href="http://blog.snap.uaf.edu" target="_blank">Blog</a> |
+            <a href="https://twitter.com/leonawicz" target="_blank">Twitter</a> |
             <a href="http://www.linkedin.com/in/leonawicz" target="_blank">Linkedin</a> <br/>
             <a href="http://www.snap.uaf.edu/", target="_blank">Scenarios Network for Alaska & Arctic Planning</a>
             </p>')
@@ -121,7 +123,7 @@ shinyUI(navbarPage(theme=shinytheme("cosmo"),
 		HTML('
 		<p style="text-align:justify">This is a description...</p>'
 	)),
-	
+
 	bsModal("modal_qmap", "Quantile mapping GCM data to NARR baseline", "help_qmap_btn", size="large",
 		HTML('
 		<p style="text-align:justify">This is a description...</p>'
