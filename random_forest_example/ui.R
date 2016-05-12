@@ -28,6 +28,7 @@ shinyUI(fluidPage(theme=shinytheme("flatly"),
 		#inverse=TRUE,
 		id="tsp"
 	),
+  tags$head(includeScript("ga-random_forest_example.js"), includeScript("ga-allapps.js")),
 	#tags$head(tags$link(rel="stylesheet", type="text/css", href="styles.css")),
 	fluidRow(column(12, "I would use dropdown menus to condense the navbar above but 'tabsetPanel' cannot take an 'id' argument in the current version of Shiny.")),
 	fluidRow(

@@ -18,6 +18,7 @@ shinyUI(fluidPage(theme=shinytheme("spacelab"),
 			<a href="http://snap.uaf.edu" target="_blank"><img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" /></a>'
 		), h3, "Modeled Arctic Sea Ice Coverage"
 	),
+  tags$head(includeScript("ga-sea_ice_coverage.js"), includeScript("ga-allapps.js")),
 	fluidRow(column(4,
 		wellPanel(
 			conditionalPanel( # Tab 1 only, part 1

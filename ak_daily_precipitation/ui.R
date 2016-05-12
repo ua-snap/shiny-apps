@@ -10,6 +10,7 @@ headerPanel_2 <- function(title, h, windowTitle=title) {
 }
 
 shinyUI(fluidPage(theme="cyborg_bootstrap.css",
+  tags$head(includeScript("ga-ak_daily_precipitation.js"), includeScript("ga-allapps.js")),
 	tags$head(
 		tags$link(rel="stylesheet", type="text/css", href="mystyles.css")
 	),

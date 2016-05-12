@@ -6,6 +6,7 @@ shinyUI(fluidPage(theme=shinytheme("spacelab"),
 			<a href="http://snap.uaf.edu" target="_blank"><img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" /></a>'
 		), h3, "Wind events and sea ice"
 	),
+  tags$head(includeScript("ga-sea_ice_winds.js"), includeScript("ga-allapps.js")),
 	fluidRow(
 		source("external/sidebar.R",local=T)$value,
 		source("external/main.R",local=T)$value

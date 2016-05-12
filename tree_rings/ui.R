@@ -5,6 +5,7 @@ shinyUI(fluidPage(theme=shinytheme("journal"),
 			<a href="http://snap.uaf.edu" target="_blank"><img align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" /></a>'
 		), h3, "Tree growth and climate"
 	),
+  tags$head(includeScript("ga-tree_rings.js"), includeScript("ga-allapps.js")),
 	fluidRow(
 		source("external/sidebar.R", local=T)$value,
 		source("external/main.R", local=T)$value

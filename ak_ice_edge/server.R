@@ -1,4 +1,4 @@
-lapply(list("shiny", "raster", "rasterVis", "png", "gridExtra"), function(x) library(x, character.only=T))
+library(shiny); library(raster); library(rasterVis); library(png); library(gridExtra)
 
 logo <- readPNG("www/img/SNAP_acronym_100px.png")
 logo.alpha <- 1

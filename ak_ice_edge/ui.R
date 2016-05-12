@@ -1,7 +1,7 @@
 library(shinythemes)
 
 shinyUI(fluidPage(theme=shinytheme("cosmo"),
-	progressInit(),
+  tags$head(includeScript("ga-ak_ice_edge.js"), includeScript("ga-allapps.js")),
 	tags$head(tags$link(rel="stylesheet", type="text/css", href="styles.css")),
 	navbarPage(
 		title=HTML('<div><a href="http://snap.uaf.edu" target="_blank"><img src="./img/SNAP_acronym_100px.png" width="80%"></a></div>'),
