@@ -1,8 +1,6 @@
 library(shiny)
-pkgs <- c("raster","maps","mapproj","grid", "rasterVis")
-
+library(maps); library(mapproj); library(grid); library(rgdal); library(raster); library(rasterVis)
 load("Totals.RData", envir=.GlobalEnv)
-library(raster); library(maps); library(mapproj); library(grid); library(rasterVis)
 
 mm <- map("world", proj="stereographic", xlim=c(-180,180), ylim=c(47,90), interior=FALSE, lwd=1,plot=F)
 clrs <- c("#8B2500","#000080","#FF8C00","#1E90FF","#FF1493","#000000") #"#CD9B1D"
@@ -18,17 +16,17 @@ shinyServer(function(input, output, session){
 		checkboxInput("regpts","Show sample points",TRUE)
 	}
 	})
-	
+
 	output$reglines <- renderUI({
 	if(length(input$dataset)){
 		checkboxInput("reglns","Show time series line(s)",FALSE)
 	}
 	})
-	
+
 	output$semiTrans <- renderUI({
 		if(length(transparency())) if(transparency()) sliderInput("semi.trans", "Samples transparency", 10, 90, 40, step=10, sep="")
 	})
-	
+
 	transparency <- reactive({
 		trans <- F
 		if(length(input$reglnslm1)) if(input$reglnslm1) trans <- T
@@ -36,7 +34,7 @@ shinyServer(function(input, output, session){
 		if(length(input$reglnslo)) if(input$reglnslo) trans <- T
 		trans
 	})
-	
+
 	# Reactive month/season variable, years, and rows for subsetting data.frame and numeric data objects
 	mo.vec <- reactive({
 		if(length(input$mo)){
@@ -54,7 +52,7 @@ shinyServer(function(input, output, session){
 		}
 		mo.vec
 	})
-	
+
 	mo2.vec <- reactive({
 		if(length(input$mo2)){
 			if(input$mo2=="Annual Avg") {
@@ -71,7 +69,7 @@ shinyServer(function(input, output, session){
 		}
 		mo2.vec
 	})
-	
+
 	yrs <- reactive({
 	if(length(input$yrs)){
 		yrs <- c(input$yrs[1],input$yrs[2])
@@ -79,22 +77,22 @@ shinyServer(function(input, output, session){
 		yrs
 	} else NULL
 	})
-	
+
 	rows <- reactive({
 		rows <- (yrs()[1]-1860+1):(yrs()[2]-1860+1)
 		if(input$mo=="Dec-Mar Avg") rows <- rows - 1
 		rows
 	})
-	
+
 	# Plot color specific to model
 	clr <- reactive({
 		if(length(input$dataset))clr <- clrs[match(input$dataset,modnames)]
 	})
-	
+
 	pch.vals <- reactive({
 		if(length(input$dataset)) pch.vals <- pch[match(input$dataset,modnames)]
 	})
-	
+
 	# List of numeric vectors of values, one per each model, by month or seasonal average
 	dat <- reactive({
 		if(length(input$dataset)){
@@ -113,14 +111,14 @@ shinyServer(function(input, output, session){
 		} else dat <- NULL
 		dat
 	})
-	
+
 	# List of subsetted data
 	dat2 <- reactive({
 		dat <- list()
 		for(i in 1:length(dat())) dat[[i]] <- dat()[[i]][rows()]
 		dat
 	})
-	
+
 	# Observed data, by month or seasonal average
 	datObs <- reactive({
 		dat <- list()
@@ -135,14 +133,14 @@ shinyServer(function(input, output, session){
 		}
 		dat
 	})
-	
+
 	# Observed, subsetted data
 	dat2Obs <- reactive({
 		dat <- list()
 		dat[[1]] <- na.omit(datObs()[[1]])
 		dat
 	})
-	
+
 	# Regression models
 	lm1 <- reactive({
 	if(!is.null(yrs())){
@@ -156,7 +154,7 @@ shinyServer(function(input, output, session){
 		lm1
 	}
 	})
-	
+
 	lm2 <- reactive({
 	if(!is.null(yrs())){
 		lm2 <- list()
@@ -169,7 +167,7 @@ shinyServer(function(input, output, session){
 		lm2
 	}
 	})
-	
+
 	lo <- reactive({
 	if(length(input$smoothing.fraction)){
 		lo <- list()
@@ -182,44 +180,44 @@ shinyServer(function(input, output, session){
 		lo
 	}
 	})
-	
+
 	output$lm1_summary <- renderPrint({
 		lapply(lm1(),summary)
 	})
-	
+
 	output$lm2_summary <- renderPrint({
 		lapply(lm2(),summary)
 	})
-	
+
 	output$lo_summary <- renderPrint({
 		lapply(lo(),summary)
 	})
-	
+
 	# Regression model sidebar elements
 	output$reglineslm1 <- renderUI({
 	if(length(input$dataset)){
 		checkboxInput("reglnslm1","Linear trend",FALSE)
 	}
 	})
-	
+
 	output$reglineslm2 <- renderUI({
 	if(length(input$dataset)){
 		checkboxInput("reglnslm2","Quadratic trend",FALSE)
 	}
 	})
-	
+
 	output$reglineslo <- renderUI({
 	if(length(input$dataset)){
 		checkboxInput("reglnslo","Locally weighted LOESS",FALSE)
 	}
 	})
-	
+
 	output$loSpan <- renderUI({
 	if(length(input$dataset) & length(input$reglnslo)){
 		if(input$reglnslo) sliderInput("smoothing.fraction", "Smoothing fraction:", 0.15, 1, 0.75, 0.05, sep="")
 	}
 	})
-	
+
 	# Time series plot and fitted trend lines
 	doPlotTS <- function(margins=c(5,5,2,0)+0.1,main="",cex.lb=1.3,cex.ax=1.1,cex.leg=1.2){
 		if(length(input$dataset)){
@@ -265,13 +263,13 @@ shinyServer(function(input, output, session){
 			mtext(text = main, side = 3, adj = 0, line=2, cex=1.3)
 		}
 	}
-	
+
 	output$plot <- renderPlot({
 		doPlotTS()
 	},
 	height=function(){ w <- session$clientData$output_plot_width; round(0.75*w)	}, width="auto"
 	)
-	
+
 	# Reactive variables for map plot
 	decade <- reactive({
 		if(length(input$dataset)){
@@ -279,21 +277,21 @@ shinyServer(function(input, output, session){
 		} else decade <- NULL
 		decade
 	})
-	
+
 	season <- reactive({
 		if(length(input$dataset)){
 			season <- mos.sub <- match(mo2.vec(),mos)
 		} else season <- NULL
 		season
 	})
-	
+
 	laynum <- reactive({
 		if(length(input$dataset)){
 			laynum <- 12*(decade()-1) + season()
 		} else laynum <- NULL
 		laynum
 	})
-	
+
 	dat.map <- reactive({
 		if(length(input$dataset)){
 			dat <- list()
@@ -307,7 +305,7 @@ shinyServer(function(input, output, session){
 		} else dat <- NULL
 		dat
 	})
-	
+
 	# Map plot
 	doPlotMap <- function(){
 		if(length(input$mo2)){
@@ -335,13 +333,13 @@ shinyServer(function(input, output, session){
 			print(update(p, strip=strip.custom(factor.levels=modnames)))
 		}
 	}
-	
+
 	output$plot2 <- renderPlot({
 		doPlotMap()
 	},
 	height=function(){ w <- session$clientData$output_plot2_width; round(0.75*w)	}, width="auto"
 	)
-	
+
 	output$dlCurPlotTS <- downloadHandler(
 		filename = 'curPlotTS.pdf',
 		content = function(file){
@@ -359,5 +357,5 @@ shinyServer(function(input, output, session){
 			dev.off()
 		}
 	)
-	
+
 })
