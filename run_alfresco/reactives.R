@@ -158,7 +158,8 @@ Obs_updateFiles <- reactive({
 				system(paste("ssh", server, "rm -rf", outDir))
 				system(paste("ssh", server, "mkdir -p", outDir))
 				system(paste("ssh", server, "chmod 2775", outDir))
-				system(paste("ssh", server, "Rscript", "/big_scratch/mfleonawicz/Alf_Files_20121129/make_sensitivity_ignition_maps.R", alf_ig, alf_fs, outDir, alf.domain))
+        system(paste("ssh", server, "cp", file.path("/atlas_scratch/mfleonawicz/projects/Flammability/code/alfresco/make_sensitivity_ignition_maps.R"), file.path(outDir,"make_sensitivity_ignition_maps.R")))
+				system(paste("ssh", server, "Rscript", file.path(outDir,"make_sensitivity_ignition_maps.R"), alf_ig, alf_fs, outDir, alf.domain))
 			}
 			system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco.slurm"), file.path(outDir,"RunAlfresco.slurm")))
 			system(paste("ssh", server, "cp", file.path(mainDir,"CompileData.slurm"), file.path(outDir,"CompileData.slurm")))
