@@ -34,9 +34,10 @@ observeEvent(input$Map_marker_click, {
 observeEvent(input$location, {
 	p <- input$Map_marker_click
 	p2 <- subset(cities.meta, Location==input$location)
+  print(p)
 	if(nrow(p2)==0){
 		leafletProxy("Map") %>% removeMarker(layerId="Selected")
-	} else if(input$location!=p$id){
+	} else if(is.null(p$id) || input$location!=p$id){
 		leafletProxy("Map") %>% setView(lng=p2$Lon, lat=p2$Lat, input$Map_zoom) %>% addCircleMarkers(p2$Lon, p2$Lat, radius=10, color="black", fillColor="orange", fillOpacity=1, opacity=1, stroke=TRUE, layerId="Selected")
 	}
 })
