@@ -13,7 +13,7 @@ doPlot <- function(filename,addLogo=F, cex.master=1.3, cex.lab=1.3, cex.axis=1.1
 		tformColMar=function(x) recursiveLog(x,N=input$tfColMar),
 		bars=plotBars(), bar.means=plotMeanBars(), marginal=plotMarginal(), loess.span=0.2, col.totals="gray80", bg.plot="black",
 		main.title=paste(input$loc,"daily precipitation"), xlb="", ylab="", logo=addLogo, logofile=logo, show.title=show.title,
-		pch=21, col.ax.lab="white", col.main="white", col.lab="white", col.axis="white", cex.lab=cex.lab, cex.axis=cex.axis, las=2, cex.master=cex.master, px.wd=2*1200, px.ht=2*plotHeight(), resolution=2*150,
+		pch=21, col.ax.lab="white", col.main="white", col.lab="white", col.axis="white", cex.lab=cex.lab, cex.axis=cex.axis, las=1, cex.master=cex.master, px.wd=2*1200, px.ht=2*plotHeight(), resolution=2*150,
 		marg.ht.exp=10*ht.compression(),
 		max.na.per.month=input$maxNAperMo, max.na.per.year=input$maxNAperYr)
 }
