@@ -142,7 +142,8 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 	# Plot: setup main panel graphic
 	par(mar=c(5,10*png.adjust.cex,0,2))
 	plot(0, 0, xlim=c(1,365), ylim=c(1-1,yrs.n+1), type="n", axes=F, xlab=xlb, main="", xaxs="i", yaxs="i",...)
-	axis(1,at=x.at,labels=x.labels,col=col.ax.lab,cex.axis=1.7*cex.axis,...)
+	#axis(1,at=x.at,labels=x.labels,col=col.ax.lab,cex.axis=1.7*cex.axis,...)
+	axis(1,at=x.at,labels=month.abb,col=col.ax.lab,cex.axis=1.7*cex.axis,...)
 	col.na <- "#FF00FF" # hard-coded color for NA values
 	axis(2,at=1:yrs.n,labels=gsub("-"," - ",as.character(yrs)),col=col.ax.lab,cex.axis=1.7*cex.axis,...)
 	abline(h=1:yrs.n,lty=1,col="gray")
