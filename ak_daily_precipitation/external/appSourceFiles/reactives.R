@@ -52,7 +52,7 @@ colPal <- reactive({
 		if(input$dailyColPal=="WtOrRd") x <- c("white","orange","orangered")
 		if(input$dailyColPal=="BlPr") x <- c("deepskyblue","purple")
 		if(input$dailyColPal=="BnGn") x <- c("chocolate4","chocolate","chartreuse4","darkgreen")
-		if(input$dailyColPal=="WtBl") x <- c("white","dodgerblue")
+		if(input$dailyColPal=="WtBl") x <- c("white","dodgerblue", "blue")
 	} else x <- NULL
 	x
 })
