@@ -59,11 +59,11 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 		if(!is.null(file)) png(file,width=px.wd,height=px.ht,res=resolution)
 		png.adjust.cex <- (sqrt(72/resolution))
 		cex.exp <- cex.exp*png.adjust.cex
-		marginal.pts.cex <- 2.0*png.adjust.cex
+		marginal.pts.cex <- 4.0*png.adjust.cex
 		cex.axis <- cex.axis*png.adjust.cex
 	} else {
 		png.adjust.cex <- 1.0
-		marginal.pts.cex <- 2.0
+		marginal.pts.cex <- 4.0
 	}
 	par(bg=bg.plot)
 	if(bars & marginal){
@@ -78,6 +78,7 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 	par(mar=c(0,0,0,0))
 	plot.new()
 	if(show.title) legend("center",main.title,bty="n",text.col=col.ax.lab,cex=3*png.adjust.cex)
+	#if(show.title) legend("left","Fairbanks, Alaska daily precipitation, 1950 - 2016",bty="n",text.col=col.ax.lab,cex=3*png.adjust.cex)
 	
 	# Plot: smoothed marginal seasonal signal (optional) and bar means (optional)
 	if(marginal){
@@ -129,7 +130,11 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 			means <- abs(rowMeans(means[,-drop.ind],na.rm=T))
 			clrs.means <- gsub(paste0("NA",alpha),"#000000",paste0(pal(num.colors)[as.numeric(cut(tformColBar(c(means,abs(unlist(v.bars.list)))),breaks=num.colors))],alpha))[1:2]
 			bp <- barplot(means,col=clrs.means,border=NA,axes=F,ylab=expression("Mean 6-mo. totals"~('in')~""),col.lab=col.ax.lab,cex.lab=cex.master*png.adjust.cex)
-			text(bp,max(means)/20,labels=c(expression(italic("before")),expression(italic("after"))),col=col.totals,pos=4,srt=90,cex=cex.master*png.adjust.cex)
+			
+			BA.date <- paste(as.numeric(dates[n1+1,]),sep="",collapse="/")
+			before <- paste(as.character(bquote("before"~.(BA.date)))[2:3],collapse=" ")
+			after <- paste(as.character(bquote("after"~.(BA.date)))[2:3],collapse=" ")
+			text(bp,max(means)/20,labels=c(eval(bquote(expression(italic(.(before))))),eval(bquote(expression(italic(.(after)))))),col=col.totals,pos=4,srt=90,cex=2*cex.master*png.adjust.cex)
 			axis(2,col=col.ax.lab,cex.axis=cex.axis,...)
 		}
 	}
@@ -137,9 +142,9 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 	# Plot: setup main panel graphic
 	par(mar=c(5,10*png.adjust.cex,0,2))
 	plot(0, 0, xlim=c(1,365), ylim=c(1-1,yrs.n+1), type="n", axes=F, xlab=xlb, main="", xaxs="i", yaxs="i",...)
-	axis(1,at=x.at,labels=x.labels,col=col.ax.lab,cex.axis=cex.axis,...)
+	axis(1,at=x.at,labels=x.labels,col=col.ax.lab,cex.axis=1.7*cex.axis,...)
 	col.na <- "#FF00FF" # hard-coded color for NA values
-	axis(2,at=1:yrs.n,labels=gsub("-"," - ",as.character(yrs)),col=col.ax.lab,cex.axis=cex.axis,...)
+	axis(2,at=1:yrs.n,labels=gsub("-"," - ",as.character(yrs)),col=col.ax.lab,cex.axis=1.7*cex.axis,...)
 	abline(h=1:yrs.n,lty=1,col="gray")
 	abline(v=x.at,lty=2,col="gray")
 	if(mo1!=1) arrows(x0=365-day1,y0=1-0.4,y1=1+0.4,length=0.125,angle=90,code=3,col=col.ax.lab,lwd=3)
@@ -165,17 +170,12 @@ dailyPlot <- function(d,file=NULL,mo1=7,cex.exp=1,xaxis.day=15,main.title="Plot"
 		plot(0, 0, xlim=range(v.bars.list,na.rm=T), ylim=c(1-1,yrs.n+1), type="n", axes=F, xlab="", main="", xaxs="i", yaxs="i", ...)
 		for(i in 1:yrs.n){
 			v <- v.bars.list[[i]]
-			rect(v[1], (1:yrs.n)[i]-0.25, 0, (1:yrs.n)[i]+0.25, col=clrs.all[1,i],border=NA,...) # floating bars are made using rect(), not barplot()
-			rect(0, (1:yrs.n)[i]-0.25, v[2], (1:yrs.n)[i]+0.25, col=clrs.all[2,i],border=NA,...)
+			rect(v[1], (1:yrs.n)[i]-0.35, 0, (1:yrs.n)[i]+0.5, col=clrs.all[1,i],border=NA,...) # floating bars are made using rect(), not barplot()
+			rect(0, (1:yrs.n)[i]-0.35, v[2], (1:yrs.n)[i]+0.5, col=clrs.all[2,i],border=NA,...)
 			abline(v=0,col=col.ax.lab)
-			text(0,(1:yrs.n)[i],labels=paste(abs(v[1]),"in"),pos=2,col=col.totals,cex=cex.master*png.adjust.cex)
-			text(0,(1:yrs.n)[i],labels=paste(v[2],"in"),pos=4,col=col.totals,cex=cex.master*png.adjust.cex)
+			text(0,(1:yrs.n)[i],labels=paste(abs(v[1]),"in"),pos=2,col=col.totals,cex=1.5*cex.master*png.adjust.cex)
+			text(0,(1:yrs.n)[i],labels=paste(v[2],"in"),pos=4,col=col.totals,cex=1.5*cex.master*png.adjust.cex)
 		}
-		par(xpd=T)
-		text(0,(1:yrs.n)[1]-0.5,expression(italic("before")),pos=2,col=col.totals,cex=cex.master*png.adjust.cex)
-		BA.date <- paste(as.numeric(dates[n1+1,]),sep="",collapse="/")
-		after <- paste(as.character(bquote("after"~.(BA.date)))[2:3],collapse=" ")
-		text(0,(1:yrs.n)[1]-0.5,bquote(italic(.(after))),pos=4,col=col.totals,cex=cex.master*png.adjust.cex)
 	}
 	
 	# Plot: Add a logo to bottom right of plot
