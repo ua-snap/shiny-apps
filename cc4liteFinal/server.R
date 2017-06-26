@@ -34,7 +34,6 @@ observeEvent(input$Map_marker_click, {
 observeEvent(input$location, {
 	p <- input$Map_marker_click
 	p2 <- subset(cities.meta, Location==input$location)
-  print(p)
 	if(nrow(p2)==0){
 		leafletProxy("Map") %>% removeMarker(layerId="Selected")
 	} else if(is.null(p$id) || input$location!=p$id){
