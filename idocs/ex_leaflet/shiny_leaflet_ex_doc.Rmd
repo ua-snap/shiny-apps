@@ -1,14 +1,21 @@
 ---
 title: "Shiny leaflet example"
 author: "Matthew Leonawicz"
+resource_files:
+- ex_00_shiny.R
+- ex_01_shiny.R
+- ex_02_shiny.R
+- ex_03_shiny.R
+- nwt_locations.RData
+- nwt_testing_subset.RData
 output:
   html_document:
-    theme: spacelab
-    highlight: zenburn
     code_folding: show
+    highlight: zenburn
     includes:
-      in_header: include/in_header.html
       before_body: include/navbar.html
+      in_header: include/in_header.html
+    theme: spacelab
 runtime: shiny
 ---
 
@@ -155,3 +162,9 @@ See the more advanced [complete app](http://shiny.snap.uaf.edu/nwtapp/) on which
 
 For another example, see [my first app using leaflet](http://shiny.snap.uaf.edu/cc4liteFinal/),
 which contains thousands of communities across Alaska and western Canada but which does not use rasterized maps.
+
+This app is written in the [R programming language](https://www.r-project.org/) and built with the [Shiny](https://shiny.rstudio.com/)
+web application framework for R. Is your organization looking for similar web applications or dashboards for your data and analytics needs?
+SNAP designs R Shiny apps and other web-based tools and software ranging from simple to complex and suitable for a variety of stakeholders
+whose purposes include public outreach and scientific communication, directly supporting scientific research,
+and organizational data access and analytics. [Contact us](https://www.snap.uaf.edu/about/contact/) for details.
