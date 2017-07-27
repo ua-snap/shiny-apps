@@ -15,7 +15,7 @@ shinyUI(fluidPage(
 	),
 	fluidRow(
 		source("sidebar.R",local=T)$value,
-		column(8,
+		column(6,
 			tabsetPanel(
 				tabPanel("Home", 
 					h1("Welcome to the Alfresco web GUI"), h3("Powered by R and Shiny"), div(verbatimTextOutput("sbatch_call"), style="height: 400px;"), value="home"),
