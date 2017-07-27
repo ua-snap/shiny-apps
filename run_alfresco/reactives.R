@@ -79,6 +79,8 @@ Obs_updateFiles <- reactive({
 		rand_seed <- as.numeric(input$randseed)
 		alf_fs <- as.numeric(input$FireSensitivity)
 		alf_ig <- as.numeric(input$IgnitionFactor)
+		alf_fsfmo <- input$FireSensFMO
+		alf_igfmo <- input$IgnitFacFMO
 		alf_yr1 <- as.integer(input$year_start)
 		alf_yr2 <- as.integer(input$year_end)
         n.sims <- as.integer(as.numeric(input$n_sims))
@@ -117,9 +119,9 @@ Obs_updateFiles <- reactive({
 				
 				alfJSON$Fire$TypeTransitionYears[[1]] <- alf_yr1
 				alfJSON$Climate$TransitionYears[[1]] <- alf_yr1
-                alfJSON$MapOutput$MapYearStart[[1]] <- map_yr2
-                alfJSON$MapOutput$MapYearStart[[3]] <- map_yr1
-                alfJSON$MapOutput$MapYearStart[[5]] <- map_yr1
+        alfJSON$MapOutput$MapYearStart[[1]] <- map_yr2
+        alfJSON$MapOutput$MapYearStart[[3]] <- map_yr1
+        alfJSON$MapOutput$MapYearStart[[5]] <- map_yr1
 				alfJSON$MapOutput$MapYearStart[[6]] <- alf_yr1
 				
 				alfJSON$Climate$Values$Flammability.File <- flamFile
@@ -158,8 +160,10 @@ Obs_updateFiles <- reactive({
 				system(paste("ssh", server, "rm -rf", outDir))
 				system(paste("ssh", server, "mkdir -p", outDir))
 				system(paste("ssh", server, "chmod 2775", outDir))
-        system(paste("ssh", server, "cp", file.path(mainDir, "make_sensitivity_ignition_maps.R"), file.path(outDir,"make_sensitivity_ignition_maps.R")))
-				system(paste("ssh", server, "Rscript", file.path(outDir,"make_sensitivity_ignition_maps.R"), alf_ig, alf_fs, outDir, alf.domain))
+        system(paste("ssh", server, "cp", 
+                     file.path(mainDir, "make_sensitivity_ignition_maps.R"), file.path(outDir,"make_sensitivity_ignition_maps.R")))
+				system(paste("ssh", server, "Rscript", 
+				             file.path(outDir,"make_sensitivity_ignition_maps.R"), alf_ig, alf_fs, alf_igfmo, alf_fsfmo, outDir, alf.domain))
 			}
 			system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco.slurm"), file.path(outDir,"RunAlfresco.slurm")))
 			system(paste("ssh", server, "cp", file.path(mainDir,"CompileData.slurm"), file.path(outDir,"CompileData.slurm")))
