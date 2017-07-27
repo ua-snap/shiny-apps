@@ -5,3 +5,4 @@ restart.txt
 run_alfresco/*.JSON
 run_alfresco/external/appSourceFiles/alfresco_json_defaults.txt
 alfresco/
+.Rproj.user
