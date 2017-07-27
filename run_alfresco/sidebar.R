@@ -35,8 +35,12 @@ column(4,
 				column(6, numericInput("IgnitionFactor", "Fire Ignition Factor", value=default_Fire.IgnitionFactor, min=0.00001, max=0.1))
 			),
 			fluidRow(
-			  column(6, selectInput("FireSensFMO", "Sens. FMO", c("None", "Refuges"), width="100%"),
-			  column(6, selectInput("IgnitFacFMO", "Ignit. FMO", c("None", "Refuges"), width="100%")
+			  column(6, selectInput("FireSensFMO", "Sens. FMO", c("None", "Refuges"), width="100%")),
+			  column(6, selectInput("IgnitFacFMO", "Ignit. FMO", c("None", "Refuges"), width="100%"))
+			),
+			fluidRow(
+			  column(6, sliderInput("FireSensFMOMax", "Max suppression", 0, 1, 0, 0.01, width="100%")),
+			  column(6, sliderInput("IgnitFacFMOMax", "Max suppression", 0, 1, 0, 0.01, width="100%"))
 			),
 			fluidRow(
 				column(6, selectInput("frp_pts", "Fire Return Period locations", c("", list.files("pts", pattern=".csv$")), width="100%")),

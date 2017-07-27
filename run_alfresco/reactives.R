@@ -81,6 +81,8 @@ Obs_updateFiles <- reactive({
 		alf_ig <- as.numeric(input$IgnitionFactor)
 		alf_fsfmo <- input$FireSensFMO
 		alf_igfmo <- input$IgnitFacFMO
+		alf_fsfmomax <- input$FireSensFMOMax
+		alf_igfmomax <- input$IgnitFacFMOMax
 		alf_yr1 <- as.integer(input$year_start)
 		alf_yr2 <- as.integer(input$year_end)
         n.sims <- as.integer(as.numeric(input$n_sims))
@@ -106,7 +108,8 @@ Obs_updateFiles <- reactive({
                 "5m trunc + Lmap"="5m100n_cavmDistTrunc_loop_Lmap"
 			)
             if(period!="historical") mapset <- gsub("_loop", "", mapset)
-			flamFile <- file.path("/atlas_scratch/mfleonawicz/projects/Flammability/data/gbmFlammability/samples_based", period, input$climMod, mapset, "gbm.flamm.tif")
+			flamFile <- file.path("/atlas_scratch/mfleonawicz/projects/Flammability/data/gbmFlammability/samples_based", 
+			                      period, input$climMod, mapset, "gbm.flamm.tif")
 			
 			for(i in JSON_current()){
 				alfJSON <- fromJSON(i, simplify=F)
@@ -163,7 +166,8 @@ Obs_updateFiles <- reactive({
         system(paste("ssh", server, "cp", 
                      file.path(mainDir, "make_sensitivity_ignition_maps.R"), file.path(outDir,"make_sensitivity_ignition_maps.R")))
 				system(paste("ssh", server, "Rscript", 
-				             file.path(outDir,"make_sensitivity_ignition_maps.R"), alf_ig, alf_fs, alf_igfmo, alf_fsfmo, outDir, alf.domain))
+				             file.path(outDir,"make_sensitivity_ignition_maps.R"), 
+				             alf_ig, alf_fs, alf_igfmo, alf_fsfmo, alf_igfmomax, alf_fsfmomax, outDir, alf.domain))
 			}
 			system(paste("ssh", server, "cp", file.path(mainDir,"RunAlfresco.slurm"), file.path(outDir,"RunAlfresco.slurm")))
 			system(paste("ssh", server, "cp", file.path(mainDir,"CompileData.slurm"), file.path(outDir,"CompileData.slurm")))
