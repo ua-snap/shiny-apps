@@ -79,8 +79,8 @@ Obs_updateFiles <- reactive({
 		rand_seed <- as.numeric(input$randseed)
 		alf_fs <- as.numeric(input$FireSensitivity)
 		alf_ig <- as.numeric(input$IgnitionFactor)
-		alf_fsfmo <- input$FireSensFMO
-		alf_igfmo <- input$IgnitFacFMO
+		alf_fsfmo <- gsub(" ", "_", input$FireSensFMO)
+		alf_igfmo <- gsub(" ", "_", input$IgnitFacFMO)
 		alf_fsfmomax <- input$FireSensFMOMax
 		alf_igfmomax <- input$IgnitFacFMOMax
 		alf_yr1 <- as.integer(input$year_start)
