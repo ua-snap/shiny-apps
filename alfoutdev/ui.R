@@ -14,6 +14,7 @@ shinyUI(
     tabPanel("Site FRP ~ Buffer", value="frp_buffer"),
     tabPanel("Site FRI Boxplots", value="fri_boxplot"),
     tabPanelAbout(),
+    tags$head(includeScript("ga-alfoutdev.js"), includeScript("ga-allapps.js")),
     fluidRow(
       source("sidebar.R",local=T)$value,
       column(8,
@@ -24,9 +25,6 @@ shinyUI(
               conditionalPanel("input.tsp=='frp_buffer'", plotOutput("FRP_bufferplot", width="100%", height="auto"), br()),
               conditionalPanel("input.tsp=='fri_boxplot'", plotOutput("FRI_boxplot", width="100%", height="auto"), br())
       )
-    ),
-    tagList(
-      tags$head(includeScript("ga-alfoutdev.js"), includeScript("ga-allapps.js"))
     )
   )
 )
