@@ -35,7 +35,7 @@ column(6,
 			),
 			fluidRow(
 			  column(4, numericInput("IgnitionFactor", "Fire Ignition Factor", value=default_Fire.IgnitionFactor, min=0.00001, max=0.1)),
-			  column(4, selectInput("IgnitFacFMO", "Ignit. FMO", c("None", "Refuges"), width="100%")),
+			  column(4, selectInput("IgnitFacFMO", "Ignit. FMO", c("None", "15-km buffered"), width="100%")),
 			  column(4, sliderInput("IgnitFacFMOMax", "Max suppression", 0, 1, 0, 0.01, width="100%"))
 			),
 			fluidRow(
