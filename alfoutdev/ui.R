@@ -14,7 +14,6 @@ shinyUI(
     tabPanel("Site FRP ~ Buffer", value="frp_buffer"),
     tabPanel("Site FRI Boxplots", value="fri_boxplot"),
     tabPanelAbout(),
-    tags$head(includeScript("ga-alfoutdev.js"), includeScript("ga-allapps.js")),
     fluidRow(
       source("sidebar.R",local=T)$value,
       column(8,
