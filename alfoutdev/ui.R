@@ -3,7 +3,7 @@ tabPanelAbout <- source("about.R",local=T)$value
 
 shinyUI(
   navbarPage(theme=shinytheme("cosmo"),
-    title=HTML('<div><a href="http://snap.uaf.edu" target="_blank"><img src="./img/SNAP_acronym_100px.png" width="80%"></a></div>'),
+    title=HTML('<div><a href="http://snap.uaf.edu" target="_blank"><img src="SNAP_acronym_100px.png" width="80%"></a></div>'),
     windowTitle="Alf Out Dev",
     collapsible=TRUE,
     id="tsp",
@@ -26,7 +26,6 @@ shinyUI(
       )
     ),
     tagList(
-      tags$head(tags$link(rel="stylesheet", type="text/css", href="styles.css")),
       tags$head(includeScript("ga-alfoutdev.js"), includeScript("ga-allapps.js"))
     )
   )
