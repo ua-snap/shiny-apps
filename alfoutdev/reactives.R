@@ -60,6 +60,14 @@ output$TS_Reg_CTAB_GoButton <- renderUI({
 	actionButton("ts_reg_ctab_goButton", "Draw Plot", icon=icon("check"), class="btn-primary btn-block")
 })
 
+output$FS_Reg_TAB_GoButton <- renderUI({
+  actionButton("fs_reg_tab_goButton", "Draw Plot", icon=icon("check"), class="btn-primary btn-block")
+})
+
+output$FS_Reg_CTAB_GoButton <- renderUI({
+  actionButton("fs_reg_ctab_goButton", "Draw Plot", icon=icon("check"), class="btn-primary btn-block")
+})
+
 output$Boxplot_GoButton <- renderUI({
 	actionButton("boxplot_goButton", "Draw Plot", icon=icon("check"), class="btn-primary btn-block")
 })
@@ -81,8 +89,8 @@ subjects <- reactive({ sprintf("interaction(%s)", paste0(c("Replicate", "Locatio
 
 Reg_subjects <- reactive({
     if(!is.null(input$reg_aggveg)){
-        if(input$reg_aggveg) x <- sprintf("interaction(%s)", paste0(c("Domain", "Replicate"), collapse = ", "))
-        if(!input$reg_aggveg) x <- sprintf("interaction(%s)", paste0(c("Domain", "Replicate", "Vegetation"), collapse = ", "))
+        if(input$reg_aggveg) x <- sprintf("interaction(%s)", paste0(c("Run", "Source", "Domain", "Replicate"), collapse = ", "))
+        if(!input$reg_aggveg) x <- sprintf("interaction(%s)", paste0(c("Run", "Source", "Domain", "Replicate", "Vegetation"), collapse = ", "))
     } else x <- NULL
 	x
 })
