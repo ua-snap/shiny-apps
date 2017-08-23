@@ -16,7 +16,7 @@
 		"IsForcedVegTransitions" : false,
 		"UseUniqueVegAndAgePerRep" : true,
 		"UseUniqueBurnSeverityPerRep" : true,
-		"YearOfUniqueInputPerRep" : 1900
+		"YearOfUniqueInputPerRep" : 1949
 	},
 	"RasterSettings" : {
 		"XULCorner" : -656204.44,
@@ -252,11 +252,11 @@
 			0
 		],
 		"MapYearStart" : [
-			1949,
+			2013,
 			0,
-			1949,
+			1950,
 			0,
-			1949,
+			1950,
 			1,
 			0
 		],
