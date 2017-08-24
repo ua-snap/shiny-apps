@@ -1,0 +1,6 @@
+This R Shiny web application enables a user to launch ALFRESCO jobs on SNAP's Atlas cluster conveniently via an internet browser.
+The user selects options for their ALFRESCO job and then submits the job.
+The ALFRESCO job will run followed by post-processing of ALFRESCO outputs in R yielding some stock summaries, graphics, and data.
+When complete, these results are emailed to the users of the app.
+Also included in the email is a link to new, an auto-generated Shiny app that provides interactive exploration of the post-processing results
+Results from multiple ALFRESCO jobs can be compared in the results app as long as they are each launched with the same run group name.

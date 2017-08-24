@@ -171,7 +171,7 @@ Obs_updateFiles <- reactive({
 	isolate(
 	if( !(is.null(all_email_addresses()) || all_email_addresses() == "" || 
 		!length(input$frp_pts) || is.null(input$FireSensitivity) || 
-		is.null(input$IgnitionFactor) || is.na(as.numeric(input$n_sims))) ){
+		is.null(input$IgnitionFactor) || is.na(as.numeric(input$n_sims)) || .Platform$OS.type != "unix") ){
 		
 		alf_fs <- as.numeric(input$FireSensitivity)
 		alf_ig <- as.numeric(input$IgnitionFactor)

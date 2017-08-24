@@ -3,7 +3,7 @@ column(6,
 	tags$head(
 		tags$link(rel="stylesheet", type="text/css", href="styles_black_lightblue.css")
 	),
-	conditionalPanel(condition="input.tsp!=='rcode'",
+	conditionalPanel(condition="input.tsp!=='info'",
 		wellPanel(
 			fluidRow(
 			  column(6, textInput("useremail","Email results to:", value="paul.duffy@neptuneinc.org")),
@@ -55,7 +55,7 @@ column(6,
 			    bsModal("msy", "Additional plot settings", "msy_btn", size="large", uiOutput("msy_input_panel"))
 			  ),
 			  column(6, actionButton("goButton_JSON","Save .JSON / run Alfresco", class="btn-block"))
-			)
-		)
+			),
+			style="background-color: rgba(255, 255, 255, 0.9);")
 	)
 )

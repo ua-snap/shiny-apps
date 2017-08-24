@@ -1,6 +1,5 @@
 # @knitr server
 library(shiny)
-library(RJSONIO)
 library(assertive)
 options(scipen=999)
 
@@ -40,6 +39,6 @@ flam_map_sets <- c(
 
 shinyServer(function(input, output, session){
 	source("reactives.R", local=TRUE)
-	output$JSON_Lines <- renderText({ rv$json_lines })
+	output$JSON_lines <- renderText({ rv$json_lines })
 	output$Obs_UpdateFiles <- renderUI({ Obs_updateFiles() })
 })
