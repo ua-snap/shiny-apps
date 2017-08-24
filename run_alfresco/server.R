@@ -1,6 +1,7 @@
 # @knitr server
 library(shiny)
-library(RJSONIO); library(assertive)
+library(RJSONIO)
+library(assertive)
 options(scipen=999)
 
 server <- "atlas.snap.uaf.edu"
@@ -25,14 +26,20 @@ setMethod("toJSON", "numeric",
 	} else tmp
 })
 
+models <- c("CRU32", "CCSM4", "GFDL-CM3", "GISS-E2-R", "IPSL-CM5A-LR", "MRI-CGCM3")
+rcps <- c("historical", "RCP 4.5", "RCP 6.0", "RCP 8.5")
+map_yr_start_ids <- c("Burn severity history"="bsh", "Burn severity"="bs", "Vegetation"="veg",
+                      "Fire"="fire", "Age"="age", "Fire scar"="fs", "Basal area"="ba")
+default_map_flags <- as.integer(c(1, 0, 1, 0, 1, 1, 0))
+flam_map_sets <- c(
+  "3m trunc + Lcoef"="3m100n_cavmDistTrunc_loop_L",
+  "3m trunc + Lmap"="3m100n_cavmDistTrunc_loop_Lmap",
+  "5m trunc + Lcoef"="5m100n_cavmDistTrunc_loop_L",
+  "5m trunc + Lmap"="5m100n_cavmDistTrunc_loop_Lmap"
+)
+
 shinyServer(function(input, output, session){
-	output$JSON_Files <- renderUI({
-		selectInput("json_files", "Select JSON:", c("", JSON_files), "")
-	})
-	
-	source("reactives.R", local=T)
-
-	output$JSON_Lines <- renderUI({ JSON_lines() })
-
+	source("reactives.R", local=TRUE)
+	output$JSON_Lines <- renderText({ rv$json_lines })
 	output$Obs_UpdateFiles <- renderUI({ Obs_updateFiles() })
 })
