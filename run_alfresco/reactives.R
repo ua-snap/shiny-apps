@@ -132,7 +132,7 @@ userDir <- reactive({ gsub("@", "_at_", all_email_addresses()[1]) })
 outDir <- reactive({ 
   file.path(mainDir, domainDir(), userDir(), gsub("[ ]", "", input$run_name, period(), input$climMod)) 
 })
-relDir <- reactive({ outDir }) # Still need this?
+relDir <- reactive({ outDir() }) # Still need this?
 
 observe({
   if(is.null(input$json_files) || input$json_files == ""){
@@ -168,7 +168,7 @@ Obs_updateFiles <- reactive({
 	isolate(
 	if( !(is.null(all_email_addresses()) || all_email_addresses() == "" || 
 		!length(input$frp_pts) || is.null(input$FireSensitivity) || 
-		is.null(input$IgnitionFactor) || is.na(as.numeric(input$n_sims)) || .Platform$OS.type != "unix") ){
+		is.null(input$IgnitionFactor) || is.na(as.numeric(input$n_sims)) )){
 		
 		alf_fs <- as.numeric(input$FireSensitivity)
 		alf_ig <- as.numeric(input$IgnitionFactor)
@@ -235,7 +235,13 @@ Obs_updateFiles <- reactive({
 			                     alf_yr1(), alf_yr2(), n.sims(), period()), collapse=" ")
 			sbatch_string <- paste("ssh", server, exec, slurm_arguments, file.path(outDir(), slurmfile), arguments)
 			system(sbatch_string)
-			x <- paste("Alfresco job started on Atlas:\n", gsub(" ", " \n", sbatch_string))
+			sbatch_string2 <- strsplit(sbatch_string, " ")[[1]]
+			x <- paste("Alfresco job started on Atlas. Full system call to sbatch:\n", 
+			           paste(sbatch_string2[1:4], collapse=" "), "\n  ",
+			           paste(sbatch_string2[5:8], collapse="\n   "), "\n  ",
+			           paste(sbatch_string2[9:10], collapse="\n   "), "\n  ",
+			           paste(sbatch_string2[11:17], collapse=" "), "\n  ",
+			           paste(sbatch_string2[18:20], collapse=" "), "\n")
 		}
 		if(substr(x,1,8)!="Alfresco") x <- "Alfresco job did not launch"
 		
