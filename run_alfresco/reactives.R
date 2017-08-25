@@ -53,9 +53,7 @@ output$msy_input_panel <- renderUI({
                            map_yr_start_ids[c(1, 3, 5, 6)], inline=TRUE, width="100%"),
         bsTooltip("msy_flags", "Only checked map types will be output by ALFRESCO. Default starting years for map outputs are the first year of a run, no earlier than 1949, except for fire scar maps. Maps toggled off by default show the final run year as the default, but are not output.")
       ),
-      column(6,
-        numericInput(x[1], names(x[1]), m, m, alf_yr2(), 1,  width="100%"),
-      )
+      column(6, numericInput(x[1], names(x[1]), m, m, alf_yr2(), 1,  width="100%"))
     ),
     fluidRow(
       column(6,
