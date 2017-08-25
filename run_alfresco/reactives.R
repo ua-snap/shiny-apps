@@ -50,15 +50,19 @@ output$msy_input_panel <- renderUI({
     fluidRow(
       column(6,
         checkboxGroupInput("msy_flags", "Include output maps", map_yr_start_ids, 
-                           map_yr_start_ids[c(1, 3, 5, 6)], inline=TRUE, width="100%")
+                           map_yr_start_ids[c(1, 3, 5, 6)], inline=TRUE, width="100%"),
+        bsTooltip("msy_flags", "Only checked map types will be output by ALFRESCO. Default starting years for map outputs are the first year of a run, no earlier than 1949, except for fire scar maps. Maps toggled off by default show the final run year as the default, but are not output.")
       ),
-      column(6, numericInput(x[1], names(x[1]), m, m, alf_yr2(), 1,  width="100%"))
+      column(6,
+        numericInput(x[1], names(x[1]), m, m, alf_yr2(), 1,  width="100%"),
+      )
     ),
     fluidRow(
       column(6,
         numericInput(x[2], names(x[2]), alf_yr2(), m, alf_yr2(), 1,  width="100%"),
         numericInput(x[4], names(x[4]), alf_yr2(), m, alf_yr2(), 1,  width="100%"),
-        numericInput(x[6], names(x[6]), alf_yr1(), alf_yr1(), alf_yr2(), 1,  width="100%")
+        numericInput(x[6], names(x[6]), alf_yr1(), alf_yr1(), alf_yr2(), 1,  width="100%"),
+        bsTooltip(x[6], "Note that fire scar maps are required for post-processing of ALFRESCO runs. It is recommended to output these maps for all years and discard unneeded maps at a later time.")
       ),
       column(6,
         numericInput(x[3], names(x[3]), m, m, alf_yr2(), 1,  width="100%"),

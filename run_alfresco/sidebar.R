@@ -6,8 +6,14 @@ column(6,
 	conditionalPanel(condition="input.tsp!=='info'",
 		wellPanel(
 			fluidRow(
-			  column(6, textInput("useremail","Email results to:", value="paul.duffy@neptuneinc.org")),
-				column(6, selectInput("json_files", "JSON", all_json_files, "cruSW5m.JSON", width="100%"))
+			  column(6,
+			    textInput("useremail","Email results to:", value="paul.duffy@neptuneinc.org"),
+			    bsTooltip("useremail", "Results will be emailed when the job is finished, including a url to a new Shiny app for an interactive look at the model outputs.")
+			   ),
+				column(6,
+				  selectInput("json_files", "JSON", all_json_files, "cruSW5m.JSON", width="100%"),
+				  bsTooltip("json_files", "ALFRESCO parameters from the selected file can be viewed on the next tab. They are updated in real time as input settings below are changed. Various input fields update and populate with defaults based on the naming convention of the input file. The current file is sent to the Atlas cluster when ALFRESCO is launched.")
+				)
 			),
 			fluidRow(
 			  column(3, uiOutput("RCP_opts")),
@@ -45,16 +51,19 @@ column(6,
 			),
 			fluidRow(
 			  column(4, numericInput("randseed", "Random Seed", value=1234799211)),
-				column(4, checkboxInput("update_json_defaults", "Save Sen/Ign as new defaults", TRUE)),
+				column(4, checkboxInput("update_json_defaults", "Save Sen/Ign as new defaults", FALSE)),
 				column(4, checkboxInput("skipAlf", "Skip Alfresco/Rerun R", FALSE))
 			),
 			fluidRow(
 			  column(6, 
-			    actionButton("msy_btn","Map years options", class="btn-block"),
-			    bsTooltip("msy_btn", "Set starting years from each type of map output."),
-			    bsModal("msy", "Additional plot settings", "msy_btn", size="large", uiOutput("msy_input_panel"))
+			    actionButton("msy_btn","Output map options", class="btn-block"),
+			    bsTooltip("msy_btn", "Select output map types and starting years.", placement="top"),
+			    bsModal("msy", "Output map options", "msy_btn", size="large", uiOutput("msy_input_panel"))
 			  ),
-			  column(6, actionButton("goButton_JSON","Save .JSON / run Alfresco", class="btn-block"))
+			  column(6,
+			    actionButton("goButton_JSON", "Run Alfresco", class="btn-block"),
+			    bsTooltip("goButton_JSON", "ALFRESCO will launch on the Atlas cluster only if running this app from the Eris server. Please wait a moment for the call to complete. When successful, a printout of the command line call to sbatch on Atlas will apear to the right.", placement="top")
+			  )
 			),
 			style="background-color: rgba(255, 255, 255, 0.9);")
 	)
