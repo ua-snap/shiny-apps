@@ -1,2 +1,2 @@
-default_Fire.Sensitivity=66000
-default_Fire.IgnitionFactor=0.002
+default_Fire.Sensitivity=24225
+default_Fire.IgnitionFactor=0.00245
