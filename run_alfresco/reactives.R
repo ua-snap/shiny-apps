@@ -13,12 +13,9 @@ all_email_addresses <- reactive({
 })
 
 hist_run <- reactive({ substr(input$json_files, 1, 3) == "cru" })
-domain <- reactive({
-  x <- substr(input$json_files, 4, 5)
-  if(x == "No") x <- "Noatak" else if(x == "SW") x <- "Statewide" else stop("Unknown spatial domain.")
-  x
-})
-gbm_set <- reactive({ substr(strsplit("cruNoatak3m.JSON", domain())[[1]][2], 1, 2) })
+domain_abb <- reactive({ if(substr(input$json_files, 4, 5) == "SW") "SW" else "Noatak" })
+domain <- reactive({ if(domain_abb() == "SW") "Statewide" else "Noatak" })
+gbm_set <- reactive({ substr(strsplit(input$json_files, domain_abb())[[1]][2], 1, 2) })
 period <- reactive({ if(is.null(input$climPeriod)) "historical" else gsub("[ .]", "", tolower(input$climPeriod)) })
 mapset <- reactive({
   x <- switch(domain(), "Noatak"=flam_map_sets[c(1, 3)], "Statewide"=flam_map_sets[c(2, 4)])
