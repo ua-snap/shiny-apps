@@ -60,7 +60,7 @@
 			"RandExplicit.Replicate" : [
 				false
 			],
-			"Flammability.File" : "/atlas_scratch/mfleonawicz/projects/Flammability/data/gbmFlammability/samples_based/historical/CRU32/3m100n_cavmDistTrunc_loop_Lmap/gbm.flamm.tif",
+			"Flammability.File" : "/atlas_scratch/mfleonawicz/projects/Flammability/data/gbmFlammability/samples_based/rcp45/CCSM4/3m100n_cavmDistTrunc_Lmap/gbm.flamm.tif",
 			"StepsAndRampsEnabled" : false
 		},
 		"Offsets" : {
@@ -138,10 +138,10 @@
 		],
 		"HumanIgnition.Basename" : "Fire/HumanIgnitions/HIg_Default_0.txt",
 		"Spatial.IgnitionFactor" : [
-			"/big_scratch/shiny/Runs_Statewide/paul.duffy_at_neptuneinc.org/m3TL_24250s_002425i_historical_CRU32/ignition.tif"
+			"/big_scratch/shiny/Runs_Statewide/paul.duffy_at_neptuneinc.org/fmo00s00i_rcp45_CCSM4/ignition.tif"
 		],
 		"Spatial.Sensitivity" : [
-			"/big_scratch/shiny/Runs_Statewide/paul.duffy_at_neptuneinc.org/m3TL_24250s_002425i_historical_CRU32/sensitivity.tif"
+			"/big_scratch/shiny/Runs_Statewide/paul.duffy_at_neptuneinc.org/fmo00s00i_rcp45_CCSM4/sensitivity.tif"
 		],
 		"Suppression" : {
 			"On" : false,
@@ -252,13 +252,13 @@
 			0
 		],
 		"MapYearStart" : [
+			2099,
+			2099,
 			2014,
-			0,
-			2014,
-			0,
+			2099,
 			2014,
 			2014,
-			0
+			2099
 		],
 		"MapYearFreq" : [
 			1,
@@ -570,7 +570,7 @@
 		"Output.DetailLevel" : "MAXIMUM",
 		"FirstYear" : 2014,
 		"LastYear" : 2099,
-		"MaxReps" : 64,
+		"MaxReps" : 32,
 		"CropNeighbors" : true
 	}
 }

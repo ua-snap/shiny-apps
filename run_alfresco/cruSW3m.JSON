@@ -138,10 +138,10 @@
 		],
 		"HumanIgnition.Basename" : "Fire/HumanIgnitions/HIg_Default_0.txt",
 		"Spatial.IgnitionFactor" : [
-			"/big_scratch/shiny/Runs_Statewide/paul.duffy_at_neptuneinc.org/m3TL_24250s_002425i_historical_CRU32/ignition.tif"
+			"/big_scratch/shiny/Runs_Statewide/paul.duffy_at_neptuneinc.org/fmo00s00i_historical_CRU32/ignition.tif"
 		],
 		"Spatial.Sensitivity" : [
-			"/big_scratch/shiny/Runs_Statewide/paul.duffy_at_neptuneinc.org/m3TL_24250s_002425i_historical_CRU32/sensitivity.tif"
+			"/big_scratch/shiny/Runs_Statewide/paul.duffy_at_neptuneinc.org/fmo00s00i_historical_CRU32/sensitivity.tif"
 		],
 		"Suppression" : {
 			"On" : false,
@@ -252,13 +252,13 @@
 			0
 		],
 		"MapYearStart" : [
+			2013,
+			2013,
 			1949,
-			0,
-			1949,
-			0,
+			2013,
 			1949,
 			1,
-			0
+			2013
 		],
 		"MapYearFreq" : [
 			1,
@@ -570,7 +570,7 @@
 		"Output.DetailLevel" : "MAXIMUM",
 		"FirstYear" : 1,
 		"LastYear" : 2013,
-		"MaxReps" : 64,
+		"MaxReps" : 32,
 		"CropNeighbors" : true
 	}
 }
