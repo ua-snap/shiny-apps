@@ -32,13 +32,18 @@ output$Model_opts <- renderUI({
   m <- if(hist_run()) models[1] else models[2:6]
   selectInput("climMod", "CRU/GCM", m, width="100%")
 })
-output$Year_opts <- renderUI({
-  yrs <- if(hist_run()) c(1, 2013) else c(2014, 2099)
-  sliderInput("year_range", "Run years", yrs[1], yrs[2], yrs, 1, width="100%")
+output$Year_opts1 <- renderUI({
+  yr <- if(hist_run()) 1 else 2014
+  numericInput("year1", "Start year", yr, 1, 2014, 1, width="100%")
 })
 
-alf_yr1 <- reactive({ as.integer(input$year_range[1]) })
-alf_yr2 <- reactive({ as.integer(input$year_range[2]) })
+output$Year_opts2 <- renderUI({
+  yr <- if(hist_run()) 2013 else 2099
+  numericInput("year2", "End year", yr, 2013, 2099, 1, width="100%")
+})
+
+alf_yr1 <- reactive({ as.integer(input$year1) })
+alf_yr2 <- reactive({ as.integer(input$year2) })
 min_msy <- reactive({ max(alf_yr1(), 1949) })
 
 output$msy_input_panel <- renderUI({

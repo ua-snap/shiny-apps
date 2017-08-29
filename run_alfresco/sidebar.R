@@ -18,7 +18,8 @@ column(6,
 			fluidRow(
 			  column(3, uiOutput("RCP_opts")),
 			  column(3, uiOutput("Model_opts")),
-			  column(6, uiOutput("Year_opts"))
+			  column(3, uiOutput("Year_opts1")),
+			  column(3, uiOutput("Year_opts2"))
 			),
 			hr(style="border-color:#000000;"),
 			fluidRow(
