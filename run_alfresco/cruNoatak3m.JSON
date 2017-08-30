@@ -138,10 +138,10 @@
 		],
 		"HumanIgnition.Basename" : "Fire/HumanIgnitions/HIg_Default_0.txt",
 		"Spatial.IgnitionFactor" : [
-			"/big_scratch/shiny/Runs_Noatak/paul.duffy_at_neptuneinc.org/m3TL_26250s_0025i_historical_CRU32/ignition.tif"
+			"/big_scratch/shiny/Runs_Noatak/paul.duffy@neptuneinc.org/m3TL_26250s_0025i_historical_CRU32/ignition.tif"
 		],
 		"Spatial.Sensitivity" : [
-			"/big_scratch/shiny/Runs_Noatak/paul.duffy_at_neptuneinc.org/m3TL_26250s_0025i_historical_CRU32/sensitivity.tif"
+			"/big_scratch/shiny/Runs_Noatak/paul.duffy@neptuneinc.org/m3TL_26250s_0025i_historical_CRU32/sensitivity.tif"
 		],
 		"Suppression" : {
 			"On" : false,
