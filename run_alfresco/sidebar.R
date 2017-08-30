@@ -12,7 +12,8 @@ column(6,
 			   ),
 				column(6,
 				  selectInput("json_files", "JSON", all_json_files, "cruSW5m.JSON", width="100%"),
-				  bsTooltip("json_files", "ALFRESCO parameters from the selected file can be viewed on the next tab. They are updated in real time as input settings below are changed. Various input fields update and populate with defaults based on the naming convention of the input file. The current file is sent to the Atlas cluster when ALFRESCO is launched.")
+				  bsTooltip("json_files", "ALFRESCO parameters from the selected file can be viewed on the next tab. They are updated in real time as input settings below are changed. Various input fields update and populate with defaults based on the naming convention of the input file. The current file is sent to the Atlas cluster when ALFRESCO is launched.", 
+				            placement="right", options=list(container="body"))
 				)
 			),
 			fluidRow(
@@ -56,12 +57,28 @@ column(6,
 				column(4, checkboxInput("skipAlf", "Skip Alfresco/Rerun R", FALSE))
 			),
 			fluidRow(
-			  column(6, 
+			  column(4, 
 			    actionButton("msy_btn","Output map options", class="btn-block"),
 			    bsTooltip("msy_btn", "Select output map types and starting years.", placement="top"),
 			    bsModal("msy", "Output map options", "msy_btn", size="large", uiOutput("msy_input_panel"))
 			  ),
-			  column(6,
+			  column(4, 
+			    actionButton("secrun_btn","Secondary run options", class="btn-block"),
+			    bsTooltip("secrun_btn", "Setup a secondary run that starts from final-year outputs of an existing run.", placement="top"),
+			    bsModal("secrun", "Secondary runs", "secrun_btn", size="large", 
+            fluidRow(
+              column(6,
+                checkboxInput("secrun_use", "Run is secondary", FALSE),
+                bsTooltip("secrun_use", "If checked, this run is assumed to follow an existing run whose final-year map outputs have been prepared on the Atlas cluster for use as first-year inputs to this run. Ensure the start year for this run is set appropriately. Prior year outputs from the previous run are assumed available as inputs.")
+              ),
+              column(6,
+                textInput("prev_run_name", "Previous run name", value=default_prev_run_name),
+                bsTooltip("secrun_use", "Edit the default previous run name if necessary.")
+              )
+            )
+			    )
+			  ),
+			  column(4,
 			    actionButton("goButton_JSON", "Run Alfresco", class="btn-block"),
 			    bsTooltip("goButton_JSON", "ALFRESCO will launch on the Atlas cluster only if running this app from the Eris server. Please wait a moment for the call to complete. When successful, a printout of the command line call to sbatch on Atlas will apear to the right.", placement="top")
 			  )

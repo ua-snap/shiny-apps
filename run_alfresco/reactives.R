@@ -33,13 +33,13 @@ output$Model_opts <- renderUI({
   selectInput("climMod", "CRU/GCM", m, width="100%")
 })
 output$Year_opts1 <- renderUI({
-  yr <- if(hist_run()) 1 else 2014
-  numericInput("year1", "Start year", yr, 1, 2014, 1, width="100%")
+  yrs <- if(hist_run()) c(1, 2012) else c(2014, 2098)
+  numericInput("year1", "Start year", yrs[1], yrs[1], yrs[2], 1, width="100%")
 })
 
 output$Year_opts2 <- renderUI({
-  yr <- if(hist_run()) 2013 else 2099
-  numericInput("year2", "End year", yr, 2013, 2099, 1, width="100%")
+  yrs <- if(hist_run()) c(input$year1 + 1, 2013) else c(input$year1 + 1, 2099)
+  numericInput("year2", "End year", yrs[2], yrs[1], yrs[2], 1, width="100%")
 })
 
 alf_yr1 <- reactive({ as.integer(input$year1) })
@@ -91,16 +91,17 @@ output$GroupName <- renderUI({
   textInput("group_name", "Group name for multiple runs", value=v)
 })
 
-output$RunName <- renderUI({
+default_run_name <- reactive({
   sfmo <- 100*input$FireSensFMOMax
   ifmo <- 100*input$IgnitFacFMOMax
   if(sfmo == 100) sfmo <- 99
   if(ifmo == 100) ifmo <- 99
   if(sfmo < 10) sfmo <- paste0(0, sfmo)
   if(ifmo < 10) ifmo <- paste0(0, ifmo)
-  v <- paste0("fmo", sfmo, "s", ifmo, "i_", period(), "_", input$climMod)
-  textInput("run_name", "Unique run name", value=v)
+  paste0("fmo", sfmo, "s", ifmo, "i_", period(), "_", input$climMod)
 })
+
+output$RunName <- renderUI({ textInput("run_name", "Unique run name", value=default_run_name()) })
 
 default_map_starts <- reactive({
   x <- list(alf_yr2(), alf_yr2(), min_msy(), alf_yr2(), min_msy(), alf_yr1(), alf_yr2())
@@ -141,28 +142,61 @@ outDir <- reactive({
 })
 relDir <- reactive({ outDir() }) # Still need this?
 
+observeEvent(hist_run(), {
+  if(hist_run()){
+    updateCheckboxInput(session, "secrun_use", value=FALSE)
+  } else {
+    updateCheckboxInput(session, "secrun_use", value=TRUE)
+  }
+})
+
+secondary_run <- reactive({
+  if(is.null(input$secrun_use)) return(FALSE)
+  input$secrun_use
+})
+
+previous_run <- reactive({
+  if(is.null(input$prev_run_name)) return(default_prev_run_name)
+  input$prev_run_name
+})
+
 observe({
   if(is.null(input$json_files) || input$json_files == ""){
     rv$json_lines <- "No JSON file loaded."
     return()
   }
   alfJSON <- fromJSON(input$json_files, simplify=FALSE)
+  
+  # Landscape inputs
+  if(hist_run() && (is.null(input$secrun_use) || !input$secrun_use)){
+    landscape_path <- "/big_scratch/mfleonawicz/Alf_Files_20121129/Spinup300Year_32Reps"
+    alfJSON$Landscape$YearOfUniqueInputPerRep <- 1900L
+  } else {
+    landscape_path <- file.path("/big_scratch/shiny/secondary_run_inputs", domain(), previous_run())
+    alfJSON$Landscape$YearOfUniqueInputPerRep <- alf_yr1() - 1L
+  }
+  alfJSON$Landscape$BurnSeverityInputFile <- file.path(landscape_path, "BurnSeverityHistory.tif")
+  alfJSON$Landscape$AgeInputFile <- file.path(landscape_path, "Age.tif")
+  alfJSON$Landscape$VegInputFile <- file.path(landscape_path, "Veg.tif")
+  
+  # Simulation
   alfJSON$Simulation$MaxReps <- n.sims()
   alfJSON$Simulation$RandSeed <- rand_seed()
   alfJSON$Simulation$FirstYear <- alf_yr1()
   alfJSON$Simulation$LastYear <- alf_yr2()
+  
+  # Fire, climate and transition years
   alfJSON$Fire$Sensitivity[[1]] <- alf_fs()
   alfJSON$Fire$IgnitionFactor[[1]] <- alf_ig()
-  
   alfJSON$Fire$TypeTransitionYears[[1]] <- alf_yr1()
   alfJSON$Climate$TransitionYears[[1]] <- alf_yr1()
-  
-  alfJSON$MapOutput$MapYearStart[1:7] <- map_yr_start()
-  alfJSON$MapOutput$MapRepFreq[1:7] <- alfJSON$MapOutput$MapYearFreq[1:7] <- map_yr_flags()
-  
   alfJSON$Climate$Values$Flammability.File <- flamFile()
   alfJSON$Fire$Spatial.IgnitionFactor[[1]] <- file.path(outDir(), "ignition.tif")
   alfJSON$Fire$Spatial.Sensitivity[[1]] <- file.path(outDir(), "sensitivity.tif")
+  
+  # Map output types and start years
+  alfJSON$MapOutput$MapYearStart[1:7] <- map_yr_start()
+  alfJSON$MapOutput$MapRepFreq[1:7] <- alfJSON$MapOutput$MapYearFreq[1:7] <- map_yr_flags()
   
   alfJSON <- toJSON(alfJSON, pretty=TRUE)
   rv$json_lines <- alfJSON
