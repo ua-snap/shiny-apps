@@ -135,7 +135,7 @@ flamFile <- reactive({
 })
 
 domainDir <- reactive({ paste0("Runs_", domain()) })
-userDir <- reactive({ gsub("@", "_at_", all_email_addresses()[1]) })
+userDir <- reactive({ all_email_addresses()[1] })
 outDir <- reactive({ 
   file.path(mainDir, domainDir(), userDir(), gsub("[ ]", "", input$run_name, period(), input$climMod)) 
 })
