@@ -9,9 +9,9 @@
 		"SiteInputFile" : "/big_scratch/mfleonawicz/Alf_Files_20121129/centaksite.tif",
 		"TreeDensityInputFile" : "/big_scratch/mfleonawicz/Alf_Files_20121129/centaktreedensity.tif",
 		"TopoInputFile" : "/big_scratch/mfleonawicz/Alf_Files_20121129/centakslope.tif",
-		"BurnSeverityInputFile" : "/big_scratch/shiny/Final_Statewide_5m/gcmRunInputs/BurnSeverityHistory.tif",
-		"AgeInputFile" : "/big_scratch/shiny/Final_Statewide_5m/gcmRunInputs/Age.tif",
-		"VegInputFile" : "/big_scratch/shiny/Final_Statewide_5m/gcmRunInputs/Veg.tif",
+		"BurnSeverityInputFile" : "/big_scratch/shiny/secondary_run_inputs/Statewide/fmo00s00i_historical_CRU32/BurnSeverityHistory.tif",
+		"AgeInputFile" : "/big_scratch/shiny/secondary_run_inputs/Statewide/fmo00s00i_historical_CRU32/Age.tif",
+		"VegInputFile" : "/big_scratch/shiny/secondary_run_inputs/Statewide/fmo00s00i_historical_CRU32/Veg.tif",
 		"VegTransitionFile" : "Input/Initialization/VegTransitions.tif",
 		"IsForcedVegTransitions" : false,
 		"UseUniqueVegAndAgePerRep" : true,
@@ -138,10 +138,10 @@
 		],
 		"HumanIgnition.Basename" : "Fire/HumanIgnitions/HIg_Default_0.txt",
 		"Spatial.IgnitionFactor" : [
-			"/big_scratch/shiny/Runs_Statewide/paul.duffy_at_neptuneinc.org/fmo00s00i_rcp45_CCSM4/ignition.tif"
+			"/big_scratch/shiny/Runs_Statewide/paul.duffy@neptuneinc.org/fmo00s00i_rcp45_CCSM4/ignition.tif"
 		],
 		"Spatial.Sensitivity" : [
-			"/big_scratch/shiny/Runs_Statewide/paul.duffy_at_neptuneinc.org/fmo00s00i_rcp45_CCSM4/sensitivity.tif"
+			"/big_scratch/shiny/Runs_Statewide/paul.duffy@neptuneinc.org/fmo00s00i_rcp45_CCSM4/sensitivity.tif"
 		],
 		"Suppression" : {
 			"On" : false,

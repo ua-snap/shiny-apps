@@ -9,9 +9,9 @@
 		"SiteInputFile" : "/big_scratch/mfleonawicz/Alf_Files_20121129/centaksite.tif",
 		"TreeDensityInputFile" : "/big_scratch/mfleonawicz/Alf_Files_20121129/centaktreedensity.tif",
 		"TopoInputFile" : "/big_scratch/mfleonawicz/Alf_Files_20121129/centakslope.tif",
-		"BurnSeverityInputFile" : "/big_scratch/mfleonawicz/Alf_Files_20121129/Spinup300Year_32Reps/BurnSeverityHistory.tif",
-		"AgeInputFile" : "/big_scratch/mfleonawicz/Alf_Files_20121129/Spinup300Year_32Reps/Age.tif",
-		"VegInputFile" : "/big_scratch/mfleonawicz/Alf_Files_20121129/Spinup300Year_32Reps/Veg.tif",
+		"BurnSeverityInputFile" : "/big_scratch/shiny/secondary_run_inputs/Statewide/fmo00s00i_historical_CRU32/BurnSeverityHistory.tif",
+		"AgeInputFile" : "/big_scratch/shiny/secondary_run_inputs/Statewide/fmo00s00i_historical_CRU32/Age.tif",
+		"VegInputFile" : "/big_scratch/shiny/secondary_run_inputs/Statewide/fmo00s00i_historical_CRU32/Veg.tif",
 		"VegTransitionFile" : "Input/Initialization/VegTransitions.tif",
 		"IsForcedVegTransitions" : false,
 		"UseUniqueVegAndAgePerRep" : true,
@@ -33,7 +33,7 @@
 		"IsMonthly" : true,
 		"NumHistory" : 1,
 		"TransitionYears" : [
-			1
+			1950
 		],
 		"Values" : {
 			"Type" : [
@@ -106,7 +106,7 @@
 			"SPATIAL"
 		],
 		"TypeTransitionYears" : [
-			1
+			1950
 		],
 		"Enabled" : true,
 		"SpreadRadius" : 1000,
@@ -138,10 +138,10 @@
 		],
 		"HumanIgnition.Basename" : "Fire/HumanIgnitions/HIg_Default_0.txt",
 		"Spatial.IgnitionFactor" : [
-			"/big_scratch/shiny/Runs_Statewide/paul.duffy_at_neptuneinc.org/m5TL_24225s_00245i_historical_CRU32/ignition.tif"
+			"/big_scratch/shiny/Runs_Statewide/paul.duffy@neptuneinc.org/fmo00s00i_historical_CRU32/ignition.tif"
 		],
 		"Spatial.Sensitivity" : [
-			"/big_scratch/shiny/Runs_Statewide/paul.duffy_at_neptuneinc.org/m5TL_24225s_00245i_historical_CRU32/sensitivity.tif"
+			"/big_scratch/shiny/Runs_Statewide/paul.duffy@neptuneinc.org/fmo00s00i_historical_CRU32/sensitivity.tif"
 		],
 		"Suppression" : {
 			"On" : false,
@@ -253,12 +253,12 @@
 		],
 		"MapYearStart" : [
 			2013,
-			0,
+			2013,
 			1950,
-			0,
+			2013,
 			1950,
-			1,
-			0
+			1950,
+			2013
 		],
 		"MapYearFreq" : [
 			1,
@@ -568,9 +568,9 @@
 	"Simulation" : {
 		"RandSeed" : 1234799211,
 		"Output.DetailLevel" : "MAXIMUM",
-		"FirstYear" : 1,
+		"FirstYear" : 1950,
 		"LastYear" : 2013,
-		"MaxReps" : 64,
+		"MaxReps" : 32,
 		"CropNeighbors" : true
 	}
 }
