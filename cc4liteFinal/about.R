@@ -8,14 +8,14 @@ tabPanel("About",
 	A range is shown similarly for the 30-year historical baseline comparison period, which is inclusive of inter-annual variability, 
   but does not include other sources of uncertainty.
 	This is the final of several versions of the R Shiny-based Community Charts application. 
-  See the <a href="http://leonawicz.github.io/CommCharts4/">CommCharts4</a> documentation for more information.</p>'),
+  See the <a href="https://leonawicz.github.io/CommCharts4/">CommCharts4</a> documentation for more information.</p>'),
   h2("Contact information"),
   HTML('
     <div style="clear: left;"><img src="https://www.gravatar.com/avatar/5ab20ebc3829054f8af7b1ea4a317269?s=128"
     alt="" style="float: left; margin-right:5px" /></div>
     <p>Matthew Leonawicz<br/>
     Statistician | useR<br/>
-    <a href="http://leonawicz.github.io" target="_blank">Github.io</a> |
+    <a href="https://leonawicz.github.io" target="_blank">Github.io</a> |
     <a href="http://blog.snap.uaf.edu" target="_blank">Blog</a> |
     <a href="https://twitter.com/leonawicz" target="_blank">Twitter</a> |
     <a href="http://www.linkedin.com/in/leonawicz" target="_blank">Linkedin</a> <br/>
