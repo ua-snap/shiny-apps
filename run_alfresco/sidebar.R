@@ -37,7 +37,7 @@ column(6,
 			hr(style="border-color:#000000;"),
 			fluidRow(
 				column(4, uiOutput("PointLocs")),
-				column(4, textInput("frp_buffers", "Fire Return Period buffers", value="0,1,2,4,8")),
+				column(4, textInput("frp_buffers", "Fire Return Period buffers", value="5")),
 				column(4, selectInput("fire_cause", "Empirical fire sources", choices=c("Lightning", "All"), selected="Lightning", width="100%"))
 			),
 			fluidRow(
