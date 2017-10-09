@@ -44,7 +44,7 @@ rcauchy2 <- function(n = nn, cau.location = 0, cau.scale = 1) rcauchy(n, locatio
 rchisq2 <- function(n = nn, chisq.df = 1) rchisq(n,df = chisq.df)
 rexp2 <- function(n = nn, exp.rate = 1) rexp(n = n, rate = exp.rate)
 rf2 <- function(n = nn, F.df1 = 1, F.df2 = 15) rf(n, df1 = F.df1, df2 = F.df2)
-rGamma2 <- function(n = nn, gam.shape = 1, gam.rate = 1) rGamma(n, shape = gam.shape, rate = gam.rate)
+rgamma2 <- function(n = nn, gam.shape = 1, gam.rate = 1) rgamma(n, shape = gam.shape, rate = gam.rate)
 rlaplace2 <- function(n = nn, lap.location = 0, lap.scale = 1) rlaplace(n, location = lap.location, scale = lap.scale)
 rlogis2 <- function(n = nn, logi.location = 0, logi.scale = 1) rlogis(n, location = logi.location, scale = logi.scale)
 rpareto2 <- function(n = nn, pareto.scale = 1, pareto.shape = 3) rpareto(n, scale = pareto.scale, shape = pareto.shape)
