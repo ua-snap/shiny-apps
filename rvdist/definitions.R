@@ -1,6 +1,6 @@
 # Distribution labels
 continuous = c("Beta" = "beta", "Cauchy" = "cauchy", "Chi-squared" = "chisq", "Exponential" = "exp",
-               "F" = "F", "~Gamma~" = "gam", "Laplace (Double Exponential)" = "lap", "Logistic" = "logi",
+               "F" = "F", "Gamma" = "gam", "Laplace (Double Exponential)" = "lap", "Logistic" = "logi",
                "Log-Normal" = "lognorm", "Normal" = "norm", "Pareto" = "pareto", "t" = "t", 
                "Uniform" = "unif", "Weibull" = "weib")
 discrete = c("Bernoulli"="bern", "Binomial"="bin", "Discrete Uniform" = "dunif", "Geometric" = "geom",
