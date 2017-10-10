@@ -7,14 +7,13 @@ old_subs <- rep("Probability distributions", 4)
 old_labs <- lapply(paste("RVs version", 1:4), h4)
 app_title <- "Distributions of random variables"
 
-library(shinythemes)
 library(apputils)
 library(snaputils)
-shinyUI(fluidPage(theme = shinytheme("cosmo"), title = app_title,
+shinyUI(fluidPage(title = app_title,
   use_apputils(),
 	fluidRow(column(12,
 		HTML('<h1>Distributions of Random Variables
-			<a href="http://snap.uaf.edu" target="_blank"><img align="right" src="SNAP_acronym_color.svg" height="35px"/></a></h1>'
+			<a href="http://snap.uaf.edu" target="_blank"><img align="right" src="snap_acronym_color.svg" height="35px"/></a></h1>'
 		)
 	)),
   conditionalPanel("input.tsp === 'Plot'",
@@ -48,7 +47,7 @@ shinyUI(fluidPage(theme = shinytheme("cosmo"), title = app_title,
           p("The apps below are the 2013 versions, which were part of a series showing sucessive additions to the app as it was originally developed. These were made when the Shiny package was in alpha and are maintained only as legacy examples."),
           app_showcase(old_apps_url, old_app_img, old_titles, old_subs, old_labs),
           hr(),
-          contactinfo(snap = "snap_color.svg", iarc = "iarc_375.jpg", uaf = "UAFLogo_A_286.png"),
+          contactinfo(snap = "snap_color.svg", iarc = "iarc.jpg", uaf = "uaf.png"),
           br(), br()
 				), id = "tsp"
 			)
