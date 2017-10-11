@@ -1,13 +1,21 @@
-source("external/uiHead.R", local=T)
-shinyUI(fluidPage(theme=shinytheme("journal"),
-	headerPanel_2(
-		HTML('Tree growth and climate: Bootstrapped moving average correlations
-			<a href="http://snap.uaf.edu" target="_blank"><img align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" /></a>'
-		), h3, "Tree growth and climate"
-	),
-  tags$head(includeScript("ga-tree_rings.js"), includeScript("ga-allapps.js")),
+about <- "This web application displays plots of bootstrapped, 50-year moving average correlations between tree growth and both temperature and precipitation at various sites."
+title <- "Tree growth and climate"
+link <- '<a href="http://snap.uaf.edu" target="_blank"><img align="right" src="snap_acronym_color.svg" height="35px"/></a>'
+header <- HTML(paste0('<h2>', title, link, '</h2>'))
+
+shinyUI(fluidPage(title = title, 
+  header,
 	fluidRow(
-		source("external/sidebar.R", local=T)$value,
-		source("external/main.R", local=T)$value
+	  column(3,
+      wellPanel(
+        selectInput("dataset", "Dataset:", data.names, width="100%"),
+        p(about, style = "text-align: justify;"),
+        fluidRow(
+          column(6, downloadButton("dl_macorplotPDF","Get PDF", class = "btn-block")),
+          column(6, downloadButton("dl_macorplotPNG","Get PNG", class = "btn-block"))
+        )
+      )
+	  ),
+	  column(9, plotOutput("macorplot", width="100%", height="auto"))
 	)
 ))
