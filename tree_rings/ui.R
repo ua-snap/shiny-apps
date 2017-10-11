@@ -8,7 +8,7 @@ shinyUI(fluidPage(title = title,
 	fluidRow(
 	  column(3,
       wellPanel(
-        selectInput("dataset", "Dataset:", data.names, width="100%"),
+        selectInput("dataset", "Dataset:", data.names, width = "100%"),
         p(about, style = "text-align: justify;"),
         fluidRow(
           column(6, downloadButton("dl_macorplotPDF","Get PDF", class = "btn-block")),
@@ -16,6 +16,6 @@ shinyUI(fluidPage(title = title,
         )
       )
 	  ),
-	  column(9, plotOutput("macorplot", width="100%", height="auto"))
+	  column(9, plotOutput("macorplot", width = "100%", height = "auto"))
 	)
 ))
