@@ -1,5 +1,3 @@
-library(shiny)
-load("treerings.RData", envir = .GlobalEnv)
 source("plot.R")
 colpal <- colorRampPalette(c("navyblue", "dodgerblue", "white", "orange", "darkred"))(21)
 
