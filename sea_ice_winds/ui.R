@@ -40,7 +40,7 @@ shinyUI(fluidPage(theme = shinytheme("spacelab"),
 	             column(6, radioButtons("coast", "Area:", choices = c("Coastal only", "Full sea"), selected = "Coastal only"))
 	           )
 	         ), 
-	         plotOutput("SeaPlot", width = "100%", height = "auto"), 
+	         uiOutput("sea_img"),
 	         br(), br()
 	  ), 
 	  column(8, 

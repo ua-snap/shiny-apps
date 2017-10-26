@@ -1,5 +1,4 @@
-library(Hmisc)
-library(png)
+sea_images <- paste0("img/sea_", rep(c("coastal_", "full_"), each = 3), seas, ".png")
 
 tsPlot <- function(x, w, i, yrs, decadal = FALSE, v1name, v2name, cex1, mn, xlb, ylb, ...){
   clrs <- c("orange", "dodgerblue")
@@ -160,12 +159,12 @@ shinyServer(function(input, output, session){
     }
   )
   
-  output$SeaPlot <- renderPlot({ # render plot in sidebar to show selected sea region
+  output$sea_img <- renderUI({ # render graphic in sidebar to show selected sea region
     if(!is.null(input$sea) & !is.null(input$coast)){
       id <- match(input$sea, seas)
       if(input$coast != "Coastal only") id <- id + 3
-      f(sea.images[[id]], x = 0, y = 0, size = 1)
+      img(src = sea_images[id], width = "100%", height = "auto")
     }
-  }, height = function(){ w <- session$clientData$output_SeaPlot_width; round((7.5/10.5)*w)	}, width = "auto")
+  })
   
 })
