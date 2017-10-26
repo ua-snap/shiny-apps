@@ -1,7 +1,4 @@
 library(shiny)
-library(Hmisc)
-library(png)
-
 load("wind_ice.RData", envir = .GlobalEnv)
 sea.images <- lapply(list.files("www/img", pattern = "^sea_.*.png$", full.names = TRUE), readPNG)
 

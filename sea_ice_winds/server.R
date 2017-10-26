@@ -1,3 +1,6 @@
+library(Hmisc)
+library(png)
+
 tsPlot <- function(x, w, i, yrs, decadal = FALSE, v1name, v2name, cex1, mn, xlb, ylb, ...){
   clrs <- c("orange", "dodgerblue")
   seq.dec <- yrs
