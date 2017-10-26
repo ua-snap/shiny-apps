@@ -1,1 +1,1 @@
-load("qm.RData", envir=.GlobalEnv)
+load("qm.RData")
