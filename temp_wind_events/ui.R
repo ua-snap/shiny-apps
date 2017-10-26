@@ -1,4 +1,3 @@
-library(shiny)
 library(shinythemes)
 
 tabPanelAbout <- source("about.R")$value

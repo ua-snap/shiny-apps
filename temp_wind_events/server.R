@@ -1,4 +1,3 @@
-library(shiny)
 library(reshape2)
 library(raster)
 library(dplyr)
