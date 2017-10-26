@@ -12,8 +12,8 @@ headerPanel_2 <- function(title, h, windowTitle = title) {
 shinyUI(fluidPage(theme = shinytheme("spacelab"), 
 	headerPanel_2(
 		HTML('CMIP5 Quantile-mapped GCM Daily Data
-			<a href = "http://accap.uaf.edu" target = "_blank"><img id = "stats_logo" align = "right" style = "margin-left: 15px;" alt = "ACCAP Logo" src = "./img/ACCAP_acronym_100px.png" /></a>
-			<a href = "http://snap.uaf.edu" target = "_blank"><img id = "stats_logo" align = "right" alt = "SNAP Logo" src = "./img/SNAP_acronym_100px.png" /></a>'
+			<a href="http://accap.uaf.edu" target="_blank"><img id="stats_logo" align="right" style="margin-left: 15px;" alt="ACCAP Logo" src="./img/ACCAP_acronym_100px.png" /></a>
+			<a href="http://snap.uaf.edu" target="_blank"><img id="stats_logo" align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" /></a>'
 		), h3, "CMIP5 Quantile-mapped GCM Daily Data"
 	), 
 	wellPanel(
