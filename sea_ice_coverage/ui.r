@@ -19,7 +19,7 @@ shinyUI(fluidPage(theme = shinytheme("spacelab"),
 		wellPanel(
 			conditionalPanel( # Tab 1 only, part 1
 				condition = "input.tsp == 'ts'", 
-				selectInput("dataset", "Choose RCP 8.5 sea ice model:", choices = modnames, selected = modnames[1], multiple = T, width = "100%"), 
+				selectInput("dataset", "Choose RCP 8.5 sea ice model:", choices = modnames, selected = modnames[6], multiple = T, width = "100%"), 
 				sliderInput("yrs", "Year range:", 1860, 2099, c(1979, 2011), step = 1, sep = "", width = "100%"), 
 				selectInput("mo", "Seasonal period:", choices = c(mos, "Dec-Mar Avg", "Jun-Sep Avg", "Annual Avg"), selected = "Jan")
 			), 
@@ -32,11 +32,11 @@ shinyUI(fluidPage(theme = shinytheme("spacelab"),
 		conditionalPanel( # Tab 1 only,  part 2
 			condition = "input.tsp == 'ts'", 
 			wellPanel(
-				uiOutput("regpoints"), 
-				uiOutput("reglines"), 
-				uiOutput("reglineslm1"), 
-				uiOutput("reglineslm2"), 
-				uiOutput("reglineslo"), 
+			  checkboxInput("regpts", "Show sample points", TRUE),
+			  checkboxInput("reglns", "Show time series line(s)", TRUE),
+			  checkboxInput("reglnslm1", "Linear trend", FALSE),
+			  checkboxInput("reglnslm2", "Quadratic trend", FALSE),
+			  checkboxInput("reglnslo", "Locally weighted LOESS", FALSE),
 				uiOutput("loSpan"), 
 				checkboxInput("fix.xy", "Full fixed (x, y) limits", value = F), 
 				uiOutput("semiTrans"), 
