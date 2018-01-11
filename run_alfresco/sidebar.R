@@ -25,7 +25,7 @@ column(6,
 			hr(style="border-color:#000000;"),
 			fluidRow(
 				column(4, numericInput("FireSensitivity", "Fire Sensitivity", value=default_Fire.Sensitivity, min=1, max=100000)),
-				column(4, selectInput("FireSensFMO", "Sens. FMO", c("None", "15-km buffered"), width="100%")),
+				column(4, selectInput("FireSensFMO", "Sens. FMO", c("None", "Standard", "15-km buffered"), width="100%")),
 				column(4, sliderInput("FireSensFMOMax", "Max suppression", 0, 1, 0, 0.01, width="100%"))
 				
 			),
