@@ -525,7 +525,7 @@
 			],
 			"FireProb.IsAgeDependent" : true,
 			"FireProb" : [
-				1.7,
+				1.675,
 				0.5,
 				1
 			],
